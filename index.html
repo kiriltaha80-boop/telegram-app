@@ -1,205 +1,1002 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pact & Passion</title>
-    
-    <!-- Open Graph (og:) метатеги для красивого предпросмотра -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kiriltaha80-boop.github.io/telegram-app/">
-    <meta property="og:title" content="Pact & Passion">
-    <meta property="og:description" content="Эксклюзивное приложение Pact & Passion">
-    <meta property="og:image" content="https://kiriltaha80-boop.github.io/telegram-app/cover.jpg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Pact & Passion</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-color: #0C0A10;
+      --card-bg: rgba(22, 18, 30, 0.88);
+      --card-border: rgba(230, 57, 86, 0.25);
+      --accent-color: #E63956;
+      --accent-gradient: linear-gradient(135deg, #E63956 0%, #B82342 100%);
+      --accent-soft: rgba(230, 57, 86, 0.15);
+      --ovulation-color: #E8A0BF;
+      --text-main: #F5F3F7;
+      --text-muted: #9A91A5;
+      --border-color: rgba(255, 255, 255, 0.08);
+    }
 
-    <!-- Подключаем Telegram Web App SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
 
-    <style>
-        /* Базовые стили на весь экран */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
+    body {
+      margin: 0;
+      padding: 12px 12px 80px 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+      max-width: 393px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            background-color: #0d0d0d;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: #ffffff;
-        }
+    /* AMBIENT LIGHTS */
+    .ambient-glow {
+      position: fixed;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+    .glow-1 { top: -50px; left: -50px; background: #E63956; }
+    .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
 
-        /* Контейнер игры Phaser */
-        #game-container {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
+    /* SPLASH SCREEN */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 120px;
+      transition: opacity 0.8s ease, visibility 0.8s;
+      background-color: #5d0309;
+      overflow: hidden;
+    }
 
-        /* Эффект затемнения по краям (виньетка) */
-        .screen-vignette {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Клики проходят сквозь виньетку */
-            background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%);
-            z-index: 5; /* Поверх игры, но под интерфейсом */
-        }
+    .splash-bg {
+      position: absolute;
+      inset: 0;
+      background-color: #5d0309;
+      background-image: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png');
+      background-size: 168% auto;
+      background-position: center 35%;
+      background-repeat: no-repeat;
+      z-index: 1;
+      border-radius: 0 0 120px 120px;
+      -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 95%);
+      mask-image: radial-gradient(ellipse 90% 75% at 50% 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 95%);
+    }
 
-        /* Нижнее навигационное меню */
-        .nav-menu {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 75px;
-            background: rgba(15, 15, 15, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 10;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
+    .splash-bottom-fade {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 100% 60% at 50% 85%, #5d0309 30%, rgba(93, 3, 9, 0.7) 65%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            cursor: pointer;
-            color: #b3b3b3;
-            font-size: 10px;
-            transition: color 0.2s ease;
-        }
+    .contract-stage {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      padding: 0 20px;
+      transform: translateY(-80px);
+    }
 
-        .nav-item.active {
-            color: #ffffff;
-        }
+    .typewriter {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 0;
+      text-shadow: 0 0 20px rgba(230, 57, 86, 0.9);
+    }
 
-        /* Округлый контейнер для иконок в едином стиле */
-        .nav-avatar-wrapper {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 4px;
-            font-size: 18px;
-            transition: all 0.2s ease;
-        }
+    .splash-subtitle {
+      font-size: 10px;
+      color: var(--accent-color);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 6px;
+    }
 
-        .nav-item.active .nav-avatar-wrapper {
-            background: rgba(255, 59, 48, 0.2);
-            border-color: #ff3b30;
-            box-shadow: 0 0 10px rgba(255, 59, 48, 0.4);
-        }
+    .loading-line-bg {
+      width: 140px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
 
-        .nav-text {
-            line-height: 1;
-        }
-    </style>
+    .loading-line-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--accent-gradient);
+      box-shadow: 0 0 12px var(--accent-color);
+      animation: fillBar 2.5s ease forwards;
+    }
+
+    @keyframes fillBar { to { width: 100%; } }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* CARDS & CONTAINERS */
+    .card {
+      position: relative;
+      z-index: 2;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* UNIFIED DESKTOP BLOCK SHIFTED DOWN 200PX */
+    .desktop-wrapper {
+      margin-top: 200px;
+      width: 100%;
+    }
+
+    /* DESKTOP GRID (4 COLS EXACT 393x852) */
+    .desktop-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px 8px;
+      padding: 2px;
+    }
+
+    .desktop-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .desktop-tile:active {
+      transform: scale(0.92);
+    }
+
+    .tile-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(35, 26, 48, 0.9) 0%, rgba(18, 13, 26, 0.95) 100%);
+      border: 1px solid rgba(230, 57, 86, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      margin-bottom: 4px;
+    }
+
+    .tile-name {
+      font-size: 9px;
+      font-weight: 500;
+      color: #E2DFEC;
+      text-align: center;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+    }
+
+    /* CONTRACT / SESSION LIST */
+    .contract-list { display: flex; flex-direction: column; gap: 8px; }
+    .contract-item {
+      background: rgba(10, 8, 16, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .contract-info .name { font-size: 11px; font-weight: 600; color: #fff; }
+    .contract-info .reward { font-size: 9px; color: var(--accent-color); margin-top: 2px; font-weight: 600; }
+
+    .small-btn {
+      background: var(--accent-gradient);
+      border: none;
+      color: #ffffff;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(230, 57, 86, 0.35);
+    }
+    .small-btn:active { transform: scale(0.95); opacity: 0.9; }
+
+    /* FIXED BOTTOM NAVIGATION BAR */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      max-width: 393px;
+      margin: 0 auto;
+      background: rgba(12, 10, 16, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      z-index: 999;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.15s ease;
+      position: relative;
+    }
+
+    .nav-item:active { transform: scale(0.88); }
+    .nav-item.active { color: var(--accent-color); }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-color);
+    }
+
+    .nav-icon-svg { width: 18px; height: 18px; }
+
+    /* CYCLE SECTION */
+    .cycle-card {
+      background: linear-gradient(160deg, rgba(30, 20, 42, 0.85) 0%, rgba(15, 11, 22, 0.85) 100%);
+      border: 1px solid rgba(230, 57, 86, 0.35);
+      padding: 12px;
+    }
+
+    .cycle-two-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cycle-big-box {
+      background: rgba(10, 8, 16, 0.65);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .cycle-big-box .box-lbl {
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 2px;
+    }
+    .cycle-big-box .box-val {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(230, 57, 86, 0.6);
+      line-height: 1.1;
+    }
+    .cycle-big-box .box-sub { font-size: 8px; color: var(--text-muted); margin-top: 3px; }
+
+    .cycle-settings-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .cycle-settings-panel.open { max-height: 200px; opacity: 1; margin-bottom: 10px; }
+
+    .calendar-grid-wrapper {
+      cursor: pointer;
+    }
+
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; text-align: center; margin-top: 4px; }
+    .calendar-weekday { font-size: 8px; color: var(--text-muted); font-weight: 600; padding-bottom: 1px; }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      border-radius: 5px;
+      background: rgba(10, 8, 16, 0.6);
+      border: 1px solid var(--border-color);
+      color: #ccc;
+    }
+    .cal-day.today { border-color: #fff; font-weight: 800; color: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, 0.5); }
+    .cal-day.period { background: var(--accent-gradient); color: #fff; border: none; }
+    .cal-day.ovulation { background: var(--ovulation-color); color: #16121E; font-weight: bold; border: none; }
+    .cal-day.empty { background: transparent; border: none; }
+
+    .form-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
+    .form-group label { font-size: 9px; color: var(--text-muted); }
+    .form-control {
+      background: rgba(10, 8, 16, 0.6);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      outline: none;
+    }
+
+    .profile-avatar-container {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 6px auto;
+    }
+    .profile-avatar-img {
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--accent-color); box-shadow: 0 0 14px rgba(230, 57, 86, 0.5);
+    }
+
+    .messenger-item {
+      background: rgba(10, 8, 16, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 8px 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .messenger-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent-color); object-fit: cover; }
+    .messenger-info { flex: 1; }
+    .messenger-info .name { font-size: 11px; font-weight: 600; color: #fff; }
+    .messenger-info .preview { font-size: 9px; color: var(--text-muted); margin-top: 1px; }
+
+    .sub-screen-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .back-action-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      cursor: pointer;
+    }
+
+    /* 3 dots settings button outside without circle border */
+    .settings-dots-outside {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 4px;
+      margin-bottom: 2px;
+    }
+    .settings-dots-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .settings-dots-btn:active { color: #fff; }
+  </style>
 </head>
 <body>
 
-    <!-- Контейнер для Phaser -->
-    <div id="game-container"></div>
+  <!-- AMBIENT LIGHTS -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
 
-    <!-- Атмосферное затемнение по углам -->
-    <div class="screen-vignette"></div>
+  <div id="splash-screen">
+    <div class="splash-bg"></div>
+    <div class="splash-bottom-fade"></div>
+    <div class="contract-stage">
+      <h1 class="typewriter">Pact & Passion</h1>
+      <div class="splash-subtitle">• RESTRICTED 18+ •</div>
+      <div class="loading-line-bg">
+        <div class="loading-line-fill"></div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Нижняя панель навигации -->
-    <div class="nav-menu">
-        <!-- Мужская сессия -->
-        <div class="nav-item active" onclick="switchTab('session-male', this)">
-            <div class="nav-avatar-wrapper">♂</div>
-            <div class="nav-text">Сессия</div>
+  <!-- 1. РАБОЧИЙ СТОЛ (HOME DESKTOP) СДВИНУТ НА 200PX ВНИЗ -->
+  <div id="tab-home" class="tab-content active">
+    <div class="desktop-wrapper">
+      <div class="desktop-grid">
+        <!-- 1. МУЖСКАЯ СЕССИЯ ♂ -->
+        <div class="desktop-tile" onclick="openSubScreen('male-session')">
+          <div class="tile-icon" style="font-size: 26px; font-weight: 800; color: #4A90E2;">
+            ♂
+          </div>
+          <div class="tile-name">Сессия ♂</div>
         </div>
 
-        <!-- Женская сессия -->
-        <div class="nav-item" onclick="switchTab('session-female', this)">
-            <div class="nav-avatar-wrapper">♀</div>
-            <div class="nav-text">Сессия</div>
+        <!-- 2. ЖЕНСКАЯ СЕССИЯ ♀ -->
+        <div class="desktop-tile" onclick="openSubScreen('female-session')">
+          <div class="tile-icon" style="font-size: 26px; font-weight: 800; color: var(--accent-color);">
+            ♀
+          </div>
+          <div class="tile-name">Сессия ♀</div>
         </div>
 
-        <!-- Магазин -->
-        <div class="nav-item" onclick="switchTab('shop', this)">
-            <div class="nav-avatar-wrapper">🛍️</div>
-            <div class="nav-text">Магазин</div>
+        <!-- 3. КАЛЕНДАРЬ -->
+        <div class="desktop-tile" onclick="openSubScreen('cycle')">
+          <div class="tile-icon">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
+              <rect x="3" y="4" width="18" height="18" rx="5" ry="5"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="tile-name">Календарь</div>
         </div>
 
-        <!-- Секс -->
-        <div class="nav-item" onclick="switchTab('sex', this)">
-            <div class="nav-avatar-wrapper">🔥</div>
-            <div class="nav-text">Секс</div>
+        <!-- 4. КОНТРАКТ -->
+        <div class="desktop-tile" onclick="openSubScreen('contract')">
+          <div class="tile-icon">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="tile-name">Контракт</div>
         </div>
 
-        <!-- Шоп -->
-        <div class="nav-item" onclick="switchTab('market', this)">
-            <div class="nav-avatar-wrapper">🛒</div>
-            <div class="nav-text">Шоп</div>
+        <!-- 5. МАГАЗИН -->
+        <div class="desktop-tile" onclick="openSubScreen('shop')">
+          <div class="tile-icon">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+          </div>
+          <div class="tile-name">Магазин</div>
         </div>
 
-        <!-- Подарки -->
-        <div class="nav-item" onclick="switchTab('gifts', this)">
-            <div class="nav-avatar-wrapper">🎁</div>
-            <div class="nav-text">Подарки</div>
+        <!-- 6. СЕКС-ШОП -->
+        <div class="desktop-tile" onclick="openSubScreen('sexshop')">
+          <div class="tile-icon" style="font-size: 20px;">
+            🔮
+          </div>
+          <div class="tile-name">Секс-шоп</div>
         </div>
 
-        <!-- Баллы -->
-        <div class="nav-item" onclick="switchTab('points', this)">
-            <div class="nav-avatar-wrapper">💎</div>
-            <div class="nav-text">Баллы</div>
+        <!-- 7. ПОДАРКИ -->
+        <div class="desktop-tile" onclick="openSubScreen('gifts')">
+          <div class="tile-icon" style="font-size: 20px;">
+            🎁
+          </div>
+          <div class="tile-name">Подарки</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: МУЖСКАЯ СЕССИЯ ♂ -->
+  <div id="tab-male-session" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #4A90E2; font-size: 11px;">Мужская Сессия ♂</div>
+      </div>
+      <div class="contract-list">
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Энергия Лидера</div>
+            <div class="reward">+150 Страсти</div>
+          </div>
+          <button class="small-btn" id="task-m-1" onclick="completeTask(150, this, 'taskM1')">Активировать</button>
+        </div>
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Силовой Ритуал</div>
+            <div class="reward">+200 Страсти</div>
+          </div>
+          <button class="small-btn" id="task-m-2" onclick="completeTask(200, this, 'taskM2')">Активировать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: ЖЕНСКАЯ СЕССИЯ ♀ -->
+  <div id="tab-female-session" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: var(--accent-color); font-size: 11px;">Женская Сессия ♀</div>
+      </div>
+      <div class="contract-list">
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Утренний Ритуал Грации</div>
+            <div class="reward">+100 Страсти</div>
+          </div>
+          <button class="small-btn" id="task-f-1" onclick="completeTask(100, this, 'taskF1')">Активировать</button>
+        </div>
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Вечерняя Гармония</div>
+            <div class="reward">+250 Страсти</div>
+          </div>
+          <button class="small-btn" id="task-f-2" onclick="completeTask(250, this, 'taskF2')">Активировать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: КАЛЕНДАРЬ -->
+  <div id="tab-cycle" class="tab-content">
+    <div class="settings-dots-outside">
+      <button class="settings-dots-btn" onclick="toggleCycleSettings()" title="Настройки">⋯</button>
     </div>
 
-    <script>
-        // Инициализация Telegram Web App SDK
-        const tg = window.Telegram.WebApp;
+    <div class="card cycle-card">
+      <div class="cycle-two-boxes">
+        <div class="cycle-big-box">
+          <div class="box-lbl">До месячных</div>
+          <div id="box-period-val" class="box-val">...</div>
+          <div id="box-period-sub" class="box-sub">...</div>
+        </div>
+        <div class="cycle-big-box">
+          <div class="box-lbl">До овуляции</div>
+          <div id="box-ovulation-val" class="box-val" style="color: var(--ovulation-color);">...</div>
+          <div id="box-ovulation-sub" class="box-sub">...</div>
+        </div>
+      </div>
+    </div>
 
-        tg.ready();
-        tg.expand();
+    <div class="card cycle-settings-panel" id="cycle-settings">
+      <div style="font-weight: 700; margin-bottom: 6px; font-size: 11px; color: #fff;">Настройки цикла</div>
+      <div class="form-group">
+        <label>Дата начала последних месячных:</label>
+        <input type="date" id="cycle-start-input" class="form-control" onchange="updateCycleSettings()">
+      </div>
+      <div class="form-group">
+        <label>Длительность цикла (дней):</label>
+        <input type="number" id="cycle-length-input" class="form-control" value="28" min="20" max="45" onchange="updateCycleSettings()">
+      </div>
+    </div>
 
-        // Запрос полноэкранного режима
-        if (tg.requestFullscreen) {
-            tg.requestFullscreen();
+    <div class="card">
+      <div id="cal-month-year" style="font-weight: 700; color: #fff; font-size: 11px; margin-bottom: 4px;">Календарь</div>
+      <div class="calendar-grid-wrapper" onclick="toggleCycleSettings()">
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: КОНТРАКТ -->
+  <div id="tab-contract" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #fff; font-size: 11px;">Контракт</div>
+      </div>
+      <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
+        Здесь фиксируются правила, взаимные обязательства и уровни допуска для совместных сессий.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: МАГАЗИН -->
+  <div id="tab-shop" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #fff; font-size: 11px;">Магазин</div>
+      </div>
+      <div class="contract-list">
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Премиум Статус</div>
+            <div class="reward">500 Страсти</div>
+          </div>
+          <button class="small-btn">Получить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: СЕКС-ШОП -->
+  <div id="tab-sexshop" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #fff; font-size: 11px;">Секс-шоп</div>
+      </div>
+      <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
+        Каталог специализированных атрибутов и аксессуаров для ваших сессий.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: ПОДАРКИ -->
+  <div id="tab-gifts" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #fff; font-size: 11px;">Подарки</div>
+      </div>
+      <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
+        Награды и сюрпризы, разблокированные за успешное выполнение протоколов.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: МЕССЕНДЖЕР -->
+  <div id="tab-messenger" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #fff; font-size: 11px;">Сообщения</div>
+      </div>
+      <div class="contract-list">
+        <div class="messenger-item" onclick="openSubScreen('chat-1')">
+          <img class="messenger-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
+          <div class="messenger-info">
+            <div class="name">Pact Bot</div>
+            <div class="preview">Новое задание получено...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB-SCREEN: CHAT DEMO -->
+  <div id="tab-chat-1" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 700; color: #fff; font-size: 11px;">Чат с Pact Bot</div>
+      </div>
+      <div style="background: rgba(10,8,16,0.6); padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 10px; color: #ddd; margin-bottom: 6px;">
+        Pact Bot: Готовы ли вы принять условия сегодняшнего контракта?
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Написать ответ...">
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: ПРОФИЛЬ -->
+  <div id="tab-profile" class="tab-content">
+    <div class="card" style="text-align: center;">
+      <div class="profile-avatar-container">
+        <img id="main-profile-avatar" class="profile-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
+      </div>
+      <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px;">Уровень 1: Адепт</div>
+      <div style="font-size: 9px; color: var(--text-muted);">ID: 74819203</div>
+    </div>
+  </div>
+
+  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <div class="nav-bar">
+    <!-- 1. ПРОФИЛЬ -->
+    <div class="nav-item" id="nav-profile" onclick="openSubScreen('profile')" title="Профиль">
+      <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    </div>
+
+    <!-- 2. НАЗАД -->
+    <div class="nav-item" id="nav-back" onclick="handleBackAction()" title="Назад">
+      <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+      </svg>
+    </div>
+
+    <!-- 3. ДОМОЙ / РАБОЧИЙ СТОЛ -->
+    <div class="nav-item active" id="nav-home" onclick="goHome()" title="Главная">
+      <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </div>
+
+    <!-- 4. МЕССЕНДЖЕР -->
+    <div class="nav-item" id="nav-messenger" onclick="openSubScreen('messenger')" title="Сообщения">
+      <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      try {
+        if (tg.isVersionAtLeast && tg.isVersionAtLeast('8.0') && typeof tg.requestFullscreen === 'function') {
+          tg.requestFullscreen();
         }
+      } catch (e) { console.warn('requestFullscreen:', e); }
 
-        // Отключение вертикальных свайпов (чтобы не сворачивало игру)
-        if (tg.disableVerticalSwipes) {
-            tg.disableVerticalSwipes();
+      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        const user = tg.initDataUnsafe.user;
+        if (user.photo_url) {
+          document.getElementById('main-profile-avatar').src = user.photo_url;
         }
+      }
+    }
 
-        // Синхронизация цвета шапки с темным стилем приложения
-        tg.setHeaderColor('#0d0d0d');
-        tg.setBackgroundColor('#0d0d0d');
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) splash.classList.add('hidden');
+    }, 2500);
 
-        // Функция переключения вкладок в интерфейсе
-        function switchTab(tabName, element) {
-            // Убираем класс активности у всех элементов
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            // Добавляем текущему
-            element.classList.add('active');
+    let cycleStartDate = localStorage.getItem('pact_cycle_start') || getInitialCycleDate();
+    let cycleLength = parseInt(localStorage.getItem('pact_cycle_length')) || 28;
+    let points = parseInt(localStorage.getItem('pact_points')) || 1250;
+    let completedTasks = JSON.parse(localStorage.getItem('pact_completed_tasks') || '{}');
+    let navigationHistory = ['home'];
 
-            console.log("Переключено на вкладку:", tabName);
-            // Здесь можно вызвать логику переключения сцены в Phaser
+    function getInitialCycleDate() {
+      const d = new Date();
+      d.setDate(d.getDate() - 7);
+      return d.toISOString().split('T')[0];
+    }
+
+    function saveAppData() {
+      localStorage.setItem('pact_cycle_start', cycleStartDate);
+      localStorage.setItem('pact_cycle_length', cycleLength);
+      localStorage.setItem('pact_points', points);
+      localStorage.setItem('pact_completed_tasks', JSON.stringify(completedTasks));
+    }
+
+    function renderScreen(screenName) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+      const targetTab = document.getElementById('tab-' + screenName);
+      if (targetTab) targetTab.classList.add('active');
+
+      if (screenName === 'home') {
+        document.getElementById('nav-home')?.classList.add('active');
+      } else if (screenName === 'profile') {
+        document.getElementById('nav-profile')?.classList.add('active');
+      } else if (screenName === 'messenger' || screenName === 'chat-1') {
+        document.getElementById('nav-messenger')?.classList.add('active');
+      }
+    }
+
+    function openSubScreen(screenId) {
+      if (navigationHistory[navigationHistory.length - 1] !== screenId) {
+        navigationHistory.push(screenId);
+      }
+      renderScreen(screenId);
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
+
+    function goHome() {
+      navigationHistory = ['home'];
+      renderScreen('home');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    }
+
+    function handleBackAction() {
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop();
+        const prevScreen = navigationHistory[navigationHistory.length - 1];
+        renderScreen(prevScreen);
+        if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      } else {
+        goHome();
+      }
+    }
+
+    function completeTask(reward, btn, taskId) {
+      if (completedTasks[taskId] || !btn) return;
+      points += reward;
+      completedTasks[taskId] = true;
+      saveAppData();
+
+      btn.innerText = "Готово ✓";
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.background = "rgba(76, 204, 84, 0.2)";
+      btn.style.boxShadow = "none";
+      btn.style.color = "#4ccc54";
+
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    }
+
+    function toggleCycleSettings() {
+      const panel = document.getElementById('cycle-settings');
+      panel.classList.toggle('open');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    }
+
+    function updateCycleSettings() {
+      const dateInput = document.getElementById('cycle-start-input').value;
+      const lengthInput = parseInt(document.getElementById('cycle-length-input').value);
+
+      if (dateInput) cycleStartDate = dateInput;
+      if (lengthInput && lengthInput >= 20 && lengthInput <= 45) cycleLength = lengthInput;
+
+      saveAppData();
+      calculateCycle();
+    }
+
+    function getDaysWord(num) {
+      const n = Math.abs(num) % 100;
+      const n1 = n % 10;
+      if (n > 10 && n < 20) return 'ДНЕЙ';
+      if (n1 > 1 && n1 < 5) return 'ДНЯ';
+      if (n1 === 1) return 'ДЕНЬ';
+      return 'ДНЕЙ';
+    }
+
+    function calculateCycle() {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      const start = new Date(cycleStartDate);
+      start.setHours(0,0,0,0);
+
+      const diffDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+      let currentDayOfCycle = (diffDays % cycleLength) + 1;
+      if (currentDayOfCycle <= 0) currentDayOfCycle += cycleLength;
+
+      const daysUntilNext = cycleLength - currentDayOfCycle;
+      const ovulationDay = cycleLength - 14;
+      const daysUntilOvulation = ovulationDay - currentDayOfCycle;
+
+      document.getElementById('box-period-val').innerText = daysUntilNext + ' ' + getDaysWord(daysUntilNext);
+      document.getElementById('box-period-sub').innerText = currentDayOfCycle + '-й день цикла';
+
+      if (daysUntilOvulation > 0) {
+        document.getElementById('box-ovulation-val').innerText = daysUntilOvulation + ' ' + getDaysWord(daysUntilOvulation);
+        document.getElementById('box-ovulation-sub').innerText = "Фертильное окно";
+      } else if (daysUntilOvulation === 0) {
+        document.getElementById('box-ovulation-val').innerText = "СЕГОДНЯ!";
+        document.getElementById('box-ovulation-sub').innerText = "Пик овуляции";
+      } else {
+        document.getElementById('box-ovulation-val').innerText = "ПРОШЛА";
+        document.getElementById('box-ovulation-sub').innerText = "Лютеиновая фаза";
+      }
+
+      renderCalendar(today, start);
+    }
+
+    function renderCalendar(today, start) {
+      const grid = document.getElementById('calendar-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+      const weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+      const monthLabel = document.getElementById('cal-month-year');
+      if (monthLabel) monthLabel.innerText = monthNames[today.getMonth()] + ' ' + today.getFullYear();
+
+      weekdays.forEach(day => {
+        const d = document.createElement('div');
+        d.className = 'calendar-weekday';
+        d.innerText = day;
+        grid.appendChild(d);
+      });
+
+      const year = today.getFullYear();
+      const month = today.getMonth();
+      const firstDay = new Date(year, month, 1);
+      let startingDay = firstDay.getDay() - 1;
+      if (startingDay === -1) startingDay = 6;
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < startingDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      const ovulationDay = cycleLength - 14;
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'cal-day';
+        dayEl.innerText = day;
+
+        const currentDate = new Date(year, month, day);
+        currentDate.setHours(0,0,0,0);
+
+        if (currentDate.getTime() === today.getTime()) dayEl.classList.add('today');
+
+        const diffDays = Math.floor((currentDate - start) / (1000 * 60 * 60 * 24));
+        let dayOfCycle = (diffDays % cycleLength) + 1;
+        if (dayOfCycle <= 0) dayOfCycle += cycleLength;
+
+        if (dayOfCycle <= 5) dayEl.classList.add('period');
+        else if (dayOfCycle >= (ovulationDay - 1) && dayOfCycle <= (ovulationDay + 1)) dayEl.classList.add('ovulation');
+
+        grid.appendChild(dayEl);
+      }
+    }
+
+    window.addEventListener('load', () => {
+      document.getElementById('cycle-start-input').value = cycleStartDate;
+      document.getElementById('cycle-length-input').value = cycleLength;
+
+      ['taskM1', 'taskM2', 'taskF1', 'taskF2'].forEach(taskId => {
+        if (completedTasks[taskId]) {
+          const btnMap = { 'taskM1': 'task-m-1', 'taskM2': 'task-m-2', 'taskF1': 'task-f-1', 'taskF2': 'task-f-2' };
+          const btn = document.getElementById(btnMap[taskId]);
+          if (btn) {
+            btn.innerText = "Готово ✓";
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.style.background = "rgba(76, 204, 84, 0.2)";
+            btn.style.color = "#4ccc54";
+          }
         }
-    </script>
+      });
+
+      calculateCycle();
+    });
+  </script>
 </body>
 </html>
