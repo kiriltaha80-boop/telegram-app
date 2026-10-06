@@ -14,6 +14,8 @@
       --card-bg: #161620;
       --accent-color: #ff0044;
       --accent-soft: rgba(255, 0, 68, 0.15);
+      --ovulation-color: #ff6699;
+      --ovulation-soft: rgba(255, 102, 153, 0.2);
       --text-main: #ffffff;
       --text-muted: #8e8e9f;
       --border-color: #262636;
@@ -33,7 +35,7 @@
       overflow-x: hidden;
     }
 
-    /* ЭКРАН ЗАСТАВКИ (SPLASH SCREEN - ИСХОДНАЯ ВЕРСИЯ) */
+    /* ЭКРАН ЗАСТАВКИ (SPLASH SCREEN) */
     #splash-screen {
       position: fixed;
       inset: 0;
@@ -42,30 +44,47 @@
       flex-direction: column;
       justify-content: flex-end;
       align-items: center;
-      padding-bottom: 90px;
+      padding-bottom: 120px;
       transition: opacity 0.8s ease, visibility 0.8s;
-      background-color: #3b0005;
+      background-color: #5d0309;
       overflow: hidden;
     }
 
     .splash-bg {
       position: absolute;
       inset: 0;
-      background-color: #3b0005;
-      background-image: url('IMG_0407.png');
-      background-size: 135% auto;
-      background-position: center 25%;
+      background-color: #5d0309;
+      background-image: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png');
+      background-size: 168% auto;
+      background-position: center 35%;
       background-repeat: no-repeat;
       z-index: 1;
-      filter: brightness(0.72) contrast(1.15);
+      filter: none;
+      border-radius: 0 0 120px 120px;
+      -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 95%);
+      mask-image: radial-gradient(ellipse 90% 75% at 50% 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 95%);
+    }
+
+    .splash-bottom-fade {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 100% 60% at 50% 85%, #5d0309 30%, rgba(93, 3, 9, 0.7) 65%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .splash-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 35%, rgba(93, 3, 9, 0.45) 65%, rgba(40, 1, 5, 0.9) 100%);
+      z-index: 3;
+      pointer-events: none;
     }
 
     .splash-overlay {
       position: absolute;
       inset: 0;
-      background: 
-        radial-gradient(circle at center, transparent 30%, rgba(20, 0, 4, 0.65) 75%, rgba(5, 0, 2, 0.95) 100%),
-        linear-gradient(to bottom, rgba(10, 0, 3, 0.3) 0%, transparent 40%, rgba(5, 0, 2, 0.85) 85%, #070709 100%);
+      background: linear-gradient(to bottom, transparent 60%, rgba(20, 0, 3, 0.5) 80%, rgba(7, 7, 9, 0.95) 100%);
       z-index: 4;
       pointer-events: none;
     }
@@ -88,7 +107,7 @@
     }
 
     .typewriter {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 900;
       color: #ffffff;
       letter-spacing: 3px;
@@ -98,7 +117,7 @@
       white-space: nowrap;
       overflow: hidden;
       width: 0;
-      text-shadow: 0 0 12px rgba(255, 0, 68, 0.6), 0 2px 5px rgba(0, 0, 0, 0.9);
+      text-shadow: 0 0 15px rgba(255, 0, 68, 0.8), 0 2px 6px rgba(0, 0, 0, 0.9);
       animation: typeText 2.8s steps(13, end) 0.3s forwards;
     }
 
@@ -138,7 +157,7 @@
       background: var(--accent-color);
       border-radius: 3px;
       box-shadow: 0 0 10px var(--accent-color);
-      animation: fillBar 3s ease 0.3s forwards;
+      animation: fillBar 8.5s ease 0.3s forwards;
     }
 
     @keyframes fillBar {
@@ -186,59 +205,13 @@
       background: transparent; border: 1px solid var(--accent-color);
       color: var(--accent-color); padding: 6px 12px; border-radius: 8px;
       font-size: 12px; font-weight: 600; cursor: pointer;
-    }
-
-    /* КАЛЕНДАРЬ ЦИКЛА */
-    .cycle-card { text-align: center; }
-    .cycle-phase-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-      background: var(--accent-soft);
-      color: var(--accent-color);
-      border: 1px solid var(--accent-color);
-      margin-top: 6px;
-    }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 14px;
-    }
-    .calendar-day-header {
-      font-size: 11px;
-      color: var(--text-muted);
-      padding: 4px 0;
-    }
-    .calendar-day {
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      border-radius: 8px;
-      background: #101018;
-      border: 1px solid var(--border-color);
-    }
-    .calendar-day.today {
-      border-color: #ffffff;
-      font-weight: 800;
-    }
-    .calendar-day.period {
-      background: rgba(255, 0, 68, 0.35);
-      border-color: var(--accent-color);
-      color: #fff;
-    }
-    .calendar-day.ovulation {
-      background: rgba(255, 105, 180, 0.25);
-      border-color: #ff69b4;
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
     }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* НАВИГАЦИОННАЯ ПАНЕЛЬ */
     .nav-bar {
       position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
       background: #101018; border-top: 1px solid var(--border-color);
@@ -251,7 +224,194 @@
     .nav-item.active { color: var(--accent-color); }
     .nav-icon { font-size: 20px; margin-bottom: 3px; }
 
-    /* АВАТАР */
+    /* СТИЛИ ЖЕНСКОГО КАЛЕНДАРЯ */
+    .cycle-card {
+      background: linear-gradient(145deg, #181420 0%, #101018 100%);
+      border: 1px solid rgba(255, 0, 68, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .cycle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .cycle-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gear-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .gear-btn:active {
+      transform: scale(0.9);
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+    .cycle-phase-tag {
+      background: var(--accent-soft);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .cycle-main-stat {
+      text-align: center;
+      padding: 10px 0;
+    }
+    .cycle-day-big {
+      font-size: 42px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 0 15px rgba(255, 0, 68, 0.5);
+    }
+    .cycle-subtext {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .cycle-grid-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .cycle-mini-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .cycle-mini-box .title {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .cycle-mini-box .val {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ВЫПАДАЮЩАЯ ПАНЕЛЬ НАСТРОЕК ЦИКЛА */
+    .cycle-settings-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, margin-bottom 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+      margin-bottom: 0;
+    }
+    .cycle-settings-panel.open {
+      max-height: 250px;
+      opacity: 1;
+      margin-bottom: 16px;
+    }
+
+    /* СЕТКА КАЛЕНДАРЯ */
+    .calendar-container {
+      margin-top: 15px;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+    .calendar-weekday {
+      font-size: 11px;
+      color: var(--text-muted);
+      padding-bottom: 4px;
+      font-weight: 600;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border-radius: 8px;
+      background: #101018;
+      border: 1px solid var(--border-color);
+      color: #ccc;
+      position: relative;
+    }
+    .cal-day.today {
+      border-color: #fff;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+    }
+    .cal-day.period {
+      background: var(--accent-color);
+      color: #fff;
+      font-weight: bold;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 8px rgba(255, 0, 68, 0.4);
+    }
+    .cal-day.ovulation {
+      background: var(--ovulation-color);
+      color: #fff;
+      font-weight: bold;
+      border-color: var(--ovulation-color);
+      box-shadow: 0 0 8px rgba(255, 102, 153, 0.4);
+    }
+    .cal-day.empty {
+      background: transparent;
+      border: none;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .form-group label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .form-control {
+      background: #101018;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--accent-color);
+    }
+
+    /* АВАТАРЫ И МОДАЛКИ */
     .nav-avatar-wrapper {
       position: relative;
       width: 26px;
@@ -267,11 +427,7 @@
       box-shadow: 0 0 10px rgba(255, 0, 68, 0.6);
       transform: scale(1.08);
     }
-    .nav-avatar-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .nav-avatar-img { width: 100%; height: 100%; object-fit: cover; }
 
     .profile-avatar-container {
       position: relative;
@@ -281,68 +437,28 @@
       cursor: pointer;
     }
     .profile-avatar-img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--accent-color);
-      box-shadow: 0 0 15px rgba(255, 0, 68, 0.4);
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--accent-color); box-shadow: 0 0 15px rgba(255, 0, 68, 0.4);
     }
 
     .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      padding: 20px;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px); z-index: 9999; display: flex;
+      align-items: center; justify-content: center; opacity: 0;
+      pointer-events: none; transition: opacity 0.3s ease; padding: 20px;
     }
     .modal-backdrop.open { opacity: 1; pointer-events: auto; }
     .avatar-modal {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; text-align: center;
     }
-    .avatar-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 16px 0;
-    }
+    .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
     .avatar-option {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      width: 100%; aspect-ratio: 1; border-radius: 50%; object-fit: cover;
+      border: 2px solid transparent; cursor: pointer; transition: all 0.2s ease;
     }
     .avatar-option.selected {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 12px rgba(255, 0, 68, 0.8);
-      transform: scale(1.05);
-    }
-
-    .cycle-input {
-      background: #101018;
-      border: 1px solid var(--border-color);
-      color: #fff;
-      padding: 8px;
-      border-radius: 8px;
-      width: 100%;
-      margin-top: 6px;
-      margin-bottom: 12px;
+      border-color: var(--accent-color); box-shadow: 0 0 12px rgba(255, 0, 68, 0.8); transform: scale(1.05);
     }
   </style>
 </head>
@@ -351,6 +467,8 @@
   <!-- SPLASH SCREEN -->
   <div id="splash-screen">
     <div class="splash-bg"></div>
+    <div class="splash-bottom-fade"></div>
+    <div class="splash-vignette"></div>
     <div class="splash-overlay"></div>
     <div class="contract-stage">
       <div class="typewriter-container">
@@ -363,7 +481,7 @@
     </div>
   </div>
 
-  <!-- HEADER -->
+  <!-- ОСНОВНОЙ ИНТЕРФЕЙС -->
   <div class="header">
     <h1 class="title">
       Pact & Passion
@@ -372,7 +490,7 @@
     <div class="user-welcome" id="user-greeting">Привет, Игрок!</div>
   </div>
 
-  <!-- TAB: PAKTS -->
+  <!-- ВКЛАДКА: ПАКТЫ -->
   <div id="tab-pacts" class="tab-content active">
     <div class="card">
       <div class="stats-container">
@@ -408,46 +526,61 @@
     </div>
   </div>
 
-  <!-- TAB: CALENDAR -->
-  <div id="tab-calendar" class="tab-content">
+  <!-- ВКЛАДКА: ЖЕНСКИЙ КАЛЕНДАРЬ -->
+  <div id="tab-cycle" class="tab-content">
     <div class="card cycle-card">
-      <div style="font-size: 14px; color: var(--text-muted);">Текущая фаза:</div>
-      <div class="cycle-phase-badge" id="phase-badge">Фолликулярная фаза</div>
-      
-      <div class="stats-container" style="margin-top: 16px;">
-        <div class="stat-item">
-          <div class="val" id="cycle-day-val">8 день</div>
-          <div class="lbl">День цикла</div>
+      <div class="cycle-header">
+        <div class="cycle-header-left">
+          <div style="font-weight: 700; font-size: 14px;">Трекер Цикла</div>
+          <button class="gear-btn" onclick="toggleCycleSettings()" title="Настройки цикла">⚙️</button>
         </div>
-        <div class="stat-item">
-          <div class="val" id="next-period-val">20 дней</div>
-          <div class="lbl">До месячных</div>
-        </div>
+        <div id="cycle-phase" class="cycle-phase-tag">Фолликулярная</div>
       </div>
 
-      <div class="calendar-grid">
-        <div class="calendar-day-header">Пн</div>
-        <div class="calendar-day-header">Вт</div>
-        <div class="calendar-day-header">Ср</div>
-        <div class="calendar-day-header">Чт</div>
-        <div class="calendar-day-header">Пт</div>
-        <div class="calendar-day-header">Сб</div>
-        <div class="calendar-day-header">Вс</div>
-        <!-- Дни календаря заполняются через JS -->
+      <div class="cycle-main-stat">
+        <div id="cycle-day-num" class="cycle-day-big">8 ДЕНЬ</div>
+        <div id="cycle-next-text" class="cycle-subtext">Следующий цикл через 20 дней</div>
+      </div>
+
+      <div class="cycle-grid-details">
+        <div class="cycle-mini-box">
+          <div class="title">Шанс беременности</div>
+          <div id="cycle-conception-chance" class="val" style="color: var(--accent-color);">Низкий</div>
+        </div>
+        <div class="cycle-mini-box">
+          <div class="title">Овуляция</div>
+          <div id="cycle-next-date" class="val">Через 6 дней</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- СКРЫТЫЕ НАСТРОЙКИ (СКРЫВАЮТСЯ ПО ШЕСТЕРЕНКЕ) -->
+    <div class="card cycle-settings-panel" id="cycle-settings">
+      <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <span>Настройки цикла</span>
+        <span style="font-size: 11px; color: var(--accent-color); cursor: pointer;" onclick="toggleCycleSettings()">Закрыть ✕</span>
+      </div>
+      <div class="form-group">
+        <label>Дата начала последних месячных:</label>
+        <input type="date" id="cycle-start-input" class="form-control" onchange="updateCycleSettings()">
+      </div>
+      <div class="form-group">
+        <label>Длительность цикла (дней):</label>
+        <input type="number" id="cycle-length-input" class="form-control" value="28" min="20" max="45" onchange="updateCycleSettings()">
       </div>
     </div>
 
     <div class="card">
-      <div style="font-weight: 600; margin-bottom: 12px;">Настройки цикла</div>
-      <label style="font-size: 12px; color: var(--text-muted);">Дата начала последнего цикла:</label>
-      <input type="date" id="cycle-start-input" class="cycle-input" onchange="updateCycleData()">
-      
-      <label style="font-size: 12px; color: var(--text-muted);">Средняя длина цикла (дней):</label>
-      <input type="number" id="cycle-length-input" class="cycle-input" value="28" min="20" max="45" onchange="updateCycleData()">
+      <div class="calendar-header">
+        <div id="cal-month-year">Октябрь 2026</div>
+      </div>
+      <div class="calendar-grid" id="calendar-grid">
+        <!-- Сетка генерируется через JS -->
+      </div>
     </div>
   </div>
 
-  <!-- TAB: LEADERBOARD -->
+  <!-- ВКЛАДКА: РЕЙТИНГ -->
   <div id="tab-leaderboard" class="tab-content">
     <div class="card">
       <div style="font-weight: 600; margin-bottom: 12px;">Топ Игроков</div>
@@ -464,7 +597,7 @@
     </div>
   </div>
 
-  <!-- TAB: PROFILE -->
+  <!-- ВКЛАДКА: ПРОФИЛЬ -->
   <div id="tab-profile" class="tab-content">
     <div class="card" style="text-align: center;">
       <div class="profile-avatar-container" onclick="openAvatarModal()">
@@ -478,13 +611,13 @@
     </div>
   </div>
 
-  <!-- NAV BAR -->
+  <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ -->
   <div class="nav-bar">
     <div class="nav-item active" onclick="switchTab('pacts', this)">
       <div class="nav-icon">📜</div>
       <div>Пакты</div>
     </div>
-    <div class="nav-item" onclick="switchTab('calendar', this)">
+    <div class="nav-item" onclick="switchTab('cycle', this)">
       <div class="nav-icon">🌸</div>
       <div>Календарь</div>
     </div>
@@ -500,7 +633,7 @@
     </div>
   </div>
 
-  <!-- MODAL -->
+  <!-- МОДАЛЬНОЕ ОКНО ВЫБОРА АВАТАРА -->
   <div class="modal-backdrop" id="avatar-modal">
     <div class="avatar-modal">
       <div style="font-size: 18px; font-weight: 800;">Выберите аватар</div>
@@ -531,12 +664,13 @@
       }
     }
 
+    /* Таймер скрытия экрана заставки */
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) splash.classList.add('hidden');
+    }, 8500);
+
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) splash.classList.add('hidden');
-      }, 3000);
-      
       initCycleTracker();
     });
 
@@ -583,79 +717,162 @@
       if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
     }
 
-    /* РАСЧЕТ И ЛОГИКА ЦИКЛА */
-    function initCycleTracker() {
-      const today = new Date();
-      const defaultStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-      
-      const savedStart = localStorage.getItem('cycle_start') || defaultStart.toISOString().split('T')[0];
-      const savedLen = localStorage.getItem('cycle_len') || 28;
-
-      document.getElementById('cycle-start-input').value = savedStart;
-      document.getElementById('cycle-length-input').value = savedLen;
-
-      updateCycleData();
+    /* СКРЫТИЕ/ПОКАЗ НАСТРОЕК ЦИКЛА В ШЕСТЕРЕНКУ */
+    function toggleCycleSettings() {
+      const panel = document.getElementById('cycle-settings');
+      panel.classList.toggle('open');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
     }
 
-    function updateCycleData() {
-      const startDateVal = document.getElementById('cycle-start-input').value;
-      const cycleLen = parseInt(document.getElementById('cycle-length-input').value) || 28;
+    /* ЛОГИКА ЖЕНСКОГО КАЛЕНДАРЯ И ОВУЛЯЦИИ */
+    let cycleStartDate = localStorage.getItem('cycleStartDate') || getInitialCycleDate();
+    let cycleLength = parseInt(localStorage.getItem('cycleLength')) || 28;
 
-      if (!startDateVal) return;
+    function getInitialCycleDate() {
+      const d = new Date();
+      d.setDate(d.getDate() - 7);
+      return d.toISOString().split('T')[0];
+    }
 
-      localStorage.setItem('cycle_start', startDateVal);
-      localStorage.setItem('cycle_len', cycleLen);
+    function initCycleTracker() {
+      document.getElementById('cycle-start-input').value = cycleStartDate;
+      document.getElementById('cycle-length-input').value = cycleLength;
+      calculateCycle();
+    }
 
-      const startDate = new Date(startDateVal);
-      const today = new Date();
-      
-      const diffTime = Math.abs(today - startDate);
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      const currentDayIndex = (diffDays % cycleLen) + 1;
-      const daysUntilNext = cycleLen - currentDayIndex;
+    function updateCycleSettings() {
+      const dateInput = document.getElementById('cycle-start-input').value;
+      const lengthInput = parseInt(document.getElementById('cycle-length-input').value);
 
-      document.getElementById('cycle-day-val').innerText = currentDayIndex + " день";
-      document.getElementById('next-period-val').innerText = daysUntilNext + " дней";
-
-      const phaseBadge = document.getElementById('phase-badge');
-      if (currentDayIndex <= 5) {
-        phaseBadge.innerText = "Менструальная фаза";
-      } else if (currentDayIndex <= 13) {
-        phaseBadge.innerText = "Фолликулярная фаза";
-      } else if (currentDayIndex <= 16) {
-        phaseBadge.innerText = "Овуляция (Фертильное окно)";
-      } else {
-        phaseBadge.innerText = "Лютеиновая фаза";
+      if (dateInput) {
+        cycleStartDate = dateInput;
+        localStorage.setItem('cycleStartDate', cycleStartDate);
+      }
+      if (lengthInput && lengthInput > 0) {
+        cycleLength = lengthInput;
+        localStorage.setItem('cycleLength', cycleLength);
       }
 
-      renderCalendarGrid(currentDayIndex, cycleLen);
+      calculateCycle();
     }
 
-    function renderCalendarGrid(currentDay, cycleLen) {
-      const grid = document.querySelector('.calendar-grid');
-      const headers = grid.querySelectorAll('.calendar-day-header');
+    function calculateCycle() {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      const start = new Date(cycleStartDate);
+      start.setHours(0,0,0,0);
+
+      const diffTime = today - start;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      let currentDayOfCycle = (diffDays % cycleLength) + 1;
+      if (currentDayOfCycle <= 0) currentDayOfCycle += cycleLength;
+
+      const daysUntilNext = cycleLength - currentDayOfCycle + 1;
+
+      // Расчет овуляции (обычно за 14 дней до конца цикла)
+      const ovulationDay = cycleLength - 14;
+      const daysUntilOvulation = ovulationDay - currentDayOfCycle;
+
+      let ovulationText = "";
+      if (daysUntilOvulation > 0) {
+        ovulationText = `Через ${daysUntilOvulation} дн.`;
+      } else if (daysUntilOvulation === 0) {
+        ovulationText = "Сегодня! 🔥";
+      } else {
+        ovulationText = "Прошла";
+      }
+
+      // Определение фазы
+      let phase = "Фолликулярная";
+      let chance = "Низкий";
+      let phaseColor = "var(--accent-color)";
+
+      if (currentDayOfCycle <= 5) {
+        phase = "Менструация";
+        chance = "Очень низкий";
+      } else if (currentDayOfCycle >= (ovulationDay - 2) && currentDayOfCycle <= (ovulationDay + 2)) {
+        phase = "Овуляция";
+        chance = "Высокий 🔥";
+        phaseColor = "var(--ovulation-color)";
+      } else if (currentDayOfCycle > (ovulationDay + 2)) {
+        phase = "Лютеиновая";
+        chance = "Низкий";
+      }
+
+      // Обновление UI
+      document.getElementById('cycle-day-num').innerText = `${currentDayOfCycle} ДЕНЬ`;
+      document.getElementById('cycle-phase').innerText = phase;
+      document.getElementById('cycle-phase').style.borderColor = phaseColor;
+      document.getElementById('cycle-phase').style.color = phaseColor;
+      document.getElementById('cycle-next-text').innerText = `Следующий цикл через ${daysUntilNext} дней`;
+      document.getElementById('cycle-conception-chance').innerText = chance;
+      document.getElementById('cycle-next-date').innerText = ovulationText;
+
+      renderCalendar(today, start);
+    }
+
+    function renderCalendar(today, start) {
+      const grid = document.getElementById('calendar-grid');
       grid.innerHTML = '';
-      headers.forEach(h => grid.appendChild(h));
 
-      for (let i = 1; i <= 28; i++) {
-        const dayDiv = document.createElement('div');
-        dayDiv.classList.add('calendar-day');
-        dayDiv.innerText = i;
+      const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+      const weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
-        const dayInCycle = ((i - 1) % cycleLen) + 1;
-        
-        if (dayInCycle <= 5) {
-          dayDiv.classList.add('period');
-        } else if (dayInCycle >= 13 && dayInCycle <= 15) {
-          dayDiv.classList.add('ovulation');
+      document.getElementById('cal-month-year').innerText = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+
+      // Дни недели
+      weekdays.forEach(day => {
+        const d = document.createElement('div');
+        d.className = 'calendar-weekday';
+        d.innerText = day;
+        grid.appendChild(d);
+      });
+
+      const year = today.getFullYear();
+      const month = today.getMonth();
+
+      const firstDayOfMonth = new Date(year, month, 1);
+      let startingDay = firstDayOfMonth.getDay() - 1; // 0 для Пн
+      if (startingDay === -1) startingDay = 6;
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      // Пустые ячейки в начале
+      for (let i = 0; i < startingDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      const ovulationDay = cycleLength - 14;
+
+      // Дни месяца
+      for (let day = 1; day <= totalDays; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'cal-day';
+        dayEl.innerText = day;
+
+        const currentDate = new Date(year, month, day);
+        currentDate.setHours(0,0,0,0);
+
+        if (currentDate.getTime() === today.getTime()) {
+          dayEl.classList.add('today');
         }
 
-        if (i === currentDay) {
-          dayDiv.classList.add('today');
+        // Расчет фазы дня в календаре
+        const diffDays = Math.floor((currentDate - start) / (1000 * 60 * 60 * 24));
+        let dayOfCycle = (diffDays % cycleLength) + 1;
+        if (dayOfCycle <= 0) dayOfCycle += cycleLength;
+
+        if (dayOfCycle <= 5) {
+          dayEl.classList.add('period');
+        } else if (dayOfCycle >= (ovulationDay - 1) && dayOfCycle <= (ovulationDay + 1)) {
+          dayEl.classList.add('ovulation');
         }
 
-        grid.appendChild(dayDiv);
+        grid.appendChild(dayEl);
       }
     }
   </script>
