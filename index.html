@@ -8,11 +8,13 @@
   <meta http-equiv="Expires" content="0">
   <title>Pact & Passion</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
     :root {
       --bg-color: #070709;
       --card-bg: #161620;
       --accent-color: #ff0044;
+      --accent-glow: rgba(255, 0, 68, 0.6);
       --text-main: #ffffff;
       --text-muted: #8e8e9f;
       --border-color: #262636;
@@ -21,6 +23,7 @@
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     body {
@@ -32,7 +35,6 @@
       overflow-x: hidden;
     }
 
-    /* ЕКРАН ЗАСТАВКИ (SPLASH SCREEN) */
     #splash-screen {
       position: fixed;
       inset: 0;
@@ -41,15 +43,440 @@
       flex-direction: column;
       justify-content: flex-end;
       align-items: center;
-      padding-bottom: 90px;
+      padding-bottom: 90px; /* Text moved slightly down */
       transition: opacity 0.8s ease, visibility 0.8s;
-      background-color: #3b0005;
+      background-color: #3b0005; /* Deep dark crimson */
       overflow: hidden;
     }
 
-    /* ФОНОВЕ ЗОБРАЖЕННЯ З ЗНИЖЕНОЮ ЯСКРАВІСТЮ ТА ЦЕНТРОВАНИМ СИЛУЕТОМ */
+    /* BACKGROUND SILHOUETTE IMAGE WITH DIMMED BRIGHTNESS */
     .splash-bg {
       position: absolute;
       inset: 0;
       background-color: #3b0005;
-      background-image: url
+      background-image: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png');
+      background-size: 135% auto; /* Scaled like the photo sample */
+      background-position: center 25%; /* Centered silhouette placement */
+      background-repeat: no-repeat;
+      z-index: 1;
+      filter: brightness(0.72) contrast(1.15); /* Dimmed brightness for exact look */
+    }
+
+    /* DARK RED VIGNETTE AND GRADIENT OVERLAYS */
+    .splash-overlay {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at center, transparent 30%, rgba(20, 0, 4, 0.65) 75%, rgba(5, 0, 2, 0.95) 100%),
+        linear-gradient(to bottom, rgba(10, 0, 3, 0.3) 0%, transparent 40%, rgba(5, 0, 2, 0.85) 85%, #070709 100%);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .contract-stage {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .typewriter-container {
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .typewriter {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin: 0;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      text-shadow: 0 0 12px var(--accent-glow), 0 2px 5px rgba(0, 0, 0, 0.9);
+      animation: typeText 2.8s steps(13, end) 0.3s forwards;
+    }
+
+    @keyframes typeText {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .splash-subtitle {
+      font-size: 11px;
+      color: var(--accent-color);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0;
+      font-weight: 700;
+      margin-top: 4px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+      animation: fadeInSub 0.8s ease 3.2s forwards;
+    }
+
+    @keyframes fadeInSub {
+      to { opacity: 0.9; }
+    }
+
+    .loading-line-bg {
+      width: 150px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+
+    .loading-line-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 3px;
+      box-shadow: 0 0 10px var(--accent-color);
+      animation: fillBar 8.5s ease 0.3s forwards;
+    }
+
+    @keyframes fillBar {
+      to { width: 100%; }
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .header { text-align: center; margin-bottom: 20px; }
+    .title {
+      font-size: 24px; font-weight: 800; color: var(--accent-color);
+      letter-spacing: 1px; margin: 0; text-transform: uppercase;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .header-age {
+      font-size: 11px; border: 1px solid var(--accent-color);
+      padding: 2px 6px; border-radius: 6px; color: var(--accent-color);
+    }
+    .user-welcome { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
+
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: 16px; padding: 20px; margin-bottom: 16px;
+    }
+
+    .stats-container { display: flex; justify-content: space-around; text-align: center; }
+    .stat-item .val { font-size: 22px; font-weight: 700; color: var(--accent-color); }
+    .stat-item .lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    .contract-list { display: flex; flex-direction: column; gap: 10px; }
+    .contract-item {
+      background: #101018; border: 1px solid var(--border-color);
+      padding: 14px; border-radius: 10px; display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .contract-info .name { font-size: 14px; font-weight: 600; }
+    .contract-info .reward { font-size: 12px; color: var(--accent-color); margin-top: 2px; }
+
+    .small-btn {
+      background: transparent; border: 1px solid var(--accent-color);
+      color: var(--accent-color); padding: 6px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .small-btn:active { transform: scale(0.96); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .nav-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
+      background: #101018; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-around; align-items: center; z-index: 100;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      color: var(--text-muted); font-size: 11px; cursor: pointer;
+    }
+    .nav-item.active { color: var(--accent-color); }
+    .nav-icon { font-size: 20px; margin-bottom: 3px; }
+
+    .nav-avatar-wrapper {
+      position: relative;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid var(--text-muted);
+      overflow: hidden;
+      margin-bottom: 2px;
+      transition: all 0.25s ease;
+    }
+    .nav-item.active .nav-avatar-wrapper {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px var(--accent-glow);
+      transform: scale(1.08);
+    }
+    .nav-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-avatar-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 12px auto;
+      cursor: pointer;
+    }
+    .profile-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-color);
+      box-shadow: 0 0 15px rgba(255, 0, 68, 0.4);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+    .avatar-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .avatar-option {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .avatar-option.selected {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 12px rgba(255, 0, 68, 0.8);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="splash-screen">
+    <div class="splash-bg"></div>
+    <div class="splash-overlay"></div>
+    <div class="contract-stage">
+      <div class="typewriter-container">
+        <h1 class="typewriter">Pact & Passion</h1>
+      </div>
+      <div class="splash-subtitle">• RESTRICTED 18+ •</div>
+      <div class="loading-line-bg">
+        <div class="loading-line-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header">
+    <h1 class="title">
+      Pact & Passion
+      <span class="header-age">18+</span>
+    </h1>
+    <div class="user-welcome" id="user-greeting">Привет, Игрок!</div>
+  </div>
+
+  <!-- PACTS TAB -->
+  <div id="tab-pacts" class="tab-content active">
+    <div class="card">
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="val" id="points-val">1,250</div>
+          <div class="lbl">Страсть</div>
+        </div>
+        <div class="stat-item">
+          <div class="val" id="contracts-val">2</div>
+          <div class="lbl">Активных Пакта</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight: 600; margin-bottom: 12px;">Текущие пакты</div>
+      <div class="contract-list">
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Утренний ритуал</div>
+            <div class="reward">+100 Страсти</div>
+          </div>
+          <button class="small-btn" onclick="completeTask(100, this)">Выполнить</button>
+        </div>
+        <div class="contract-item">
+          <div class="contract-info">
+            <div class="name">Ночная исповедь</div>
+            <div class="reward">+250 Страсти</div>
+          </div>
+          <button class="small-btn" onclick="completeTask(250, this)">Выполнить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD TAB -->
+  <div id="tab-leaderboard" class="tab-content">
+    <div class="card">
+      <div style="font-weight: 600; margin-bottom: 12px;">Топ Игроков</div>
+      <div class="contract-list">
+        <div class="contract-item">
+          <div>1. Alex_VIP</div>
+          <div style="color: var(--accent-color); font-weight: bold;">15,400</div>
+        </div>
+        <div class="contract-item">
+          <div>2. Вы</div>
+          <div style="color: var(--accent-color); font-weight: bold;" id="my-rank-val">1,250</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="tab-profile" class="tab-content">
+    <div class="card" style="text-align: center;">
+      <div class="profile-avatar-container" onclick="openAvatarModal()">
+        <img id="main-profile-avatar" class="profile-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
+      </div>
+      <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">Уровень 1: Адепт</div>
+      <button class="small-btn" style="margin-bottom: 12px;" onclick="openAvatarModal()">Сменить аватар</button>
+      <div style="font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px;">
+        Контент предназначен строго для лиц старше 18 лет.
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item active" onclick="switchTab('pacts', this)">
+      <div class="nav-icon">📜</div>
+      <div>Пакты</div>
+    </div>
+    <div class="nav-item" onclick="switchTab('leaderboard', this)">
+      <div class="nav-icon">🏆</div>
+      <div>Рейтинг</div>
+    </div>
+    <div class="nav-item" onclick="switchTab('profile', this)">
+      <div class="nav-avatar-wrapper">
+        <img id="nav-avatar-img" class="nav-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Profile">
+      </div>
+      <div>Профиль</div>
+    </div>
+  </div>
+
+  <!-- AVATAR SELECTION MODAL -->
+  <div class="modal-backdrop" id="avatar-modal">
+    <div class="avatar-modal">
+      <div style="font-size: 18px; font-weight: 800;">Выберите аватар</div>
+      <div class="avatar-grid">
+        <img class="avatar-option selected" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" onclick="selectAvatar(this)">
+        <img class="avatar-option" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" onclick="selectAvatar(this)">
+        <img class="avatar-option" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" onclick="selectAvatar(this)">
+        <img class="avatar-option" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80" onclick="selectAvatar(this)">
+        <img class="avatar-option" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=80" onclick="selectAvatar(this)">
+        <img class="avatar-option" src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80" onclick="selectAvatar(this)">
+      </div>
+      <button class="small-btn" style="width: 100%; padding: 10px; background: var(--accent-color); color: #fff;" onclick="closeAvatarModal()">Сохранить</button>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    if (tg) {
+      try {
+        tg.ready();
+        tg.expand();
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+          document.getElementById('user-greeting').innerText = `Привет, ${tg.initDataUnsafe.user.first_name}!`;
+        }
+      } catch (e) {
+        console.error("Telegram WebApp init error:", e);
+      }
+    }
+
+    // Hide splash screen after loading animation
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) splash.classList.add('hidden');
+    }, 9000);
+
+    let points = 1250;
+
+    function completeTask(reward, btn) {
+      points += reward;
+      document.getElementById('points-val').innerText = points.toLocaleString();
+      document.getElementById('my-rank-val').innerText = points.toLocaleString();
+      btn.innerText = "Готово ✓";
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.borderColor = "#4ccc54";
+      btn.style.color = "#4ccc54";
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    }
+
+    function switchTab(tabName, el) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabName).classList.add('active');
+      el.classList.add('active');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
+
+    function openAvatarModal() {
+      document.getElementById('avatar-modal').classList.add('open');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    }
+
+    function closeAvatarModal() {
+      document.getElementById('avatar-modal').classList.remove('open');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    }
+
+    function selectAvatar(imgEl) {
+      document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+      imgEl.classList.add('selected');
+      
+      const newSrc = imgEl.src;
+      document.getElementById('nav-avatar-img').src = newSrc;
+      document.getElementById('main-profile-avatar').src = newSrc;
+
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
+  </script>
+</body>
+</html>
