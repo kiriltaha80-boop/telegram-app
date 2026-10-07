@@ -2539,32 +2539,34 @@ loadSavedWallpaper();
 
   // 2. ЗАПУСК ВСЕХ МОДУЛЕЙ
   function initAppModules() {
-    const modules = [
-      { name: 'Роли', fn: updateRoleUI },
-      { name: 'Рабочий стол', fn: renderDesktop },
-      { name: 'Календарь', fn: renderCycleInfo },
-      { name: 'Задачи', fn: renderTasks },
-      { name: 'Контракты', fn: renderContractAndGifts },
-      { name: 'Товары', fn: renderProducts },
-      { name: 'Чат', fn: renderChat }
-    ];
+  const modules = [
+    { name: 'Роли', fn: updateRoleUI },
+    { name: 'Рабочий стол', fn: renderDesktop },
+    { name: 'Календарь', fn: renderCycleInfo },
+    { name: 'Задачи', fn: renderTasks },
+    { name: 'Контракты', fn: renderContractAndGifts },
+    { name: 'Товары', fn: renderProducts },
+    { name: 'Чат', fn: renderChat }
+  ];
 
-    modules.forEach(mod => {
-      try {
-        if (typeof mod.fn === 'function') {
-          mod.fn();
-        }
-      } catch (err) {
-        console.warn(`[Модуль ${mod.name}] Ошибка:`, err);
+  modules.forEach(mod => {
+    try {
+      if (typeof mod.fn === 'function') {
+        mod.fn();
       }
-    });
+    } catch (err) {
+      console.warn(`[Модуль ${mod.name}] Ошибка:`, err);
+    }
+  });
 
-    // Теперь вызов сработает гарантированно
+  // Гарантированно убираем заставку после запуска всех модулей
+  if (typeof hideSplash === 'function') {
     hideSplash();
   }
+}
 
-  // Запуск при старте
-  initAppModules();
+// Запуск инициализации при старте
+initAppModules();
 </script>
 
 <!-- ПРОВЕРОЧНАЯ КНОПКА С ПРЯМЫМИ СТИЛЯМИ (ВСТАВИТЬ ПЕРЕД </body>) -->
