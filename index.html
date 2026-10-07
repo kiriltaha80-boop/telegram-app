@@ -1470,6 +1470,20 @@
   <!-- 24. JAVASCRIPT ЛОГИКА ПРИЛОЖЕНИЯ                             -->
   <!-- ============================================================ -->
   <script>
+   
+    function toggleDesktopEditMode() {
+  isDesktopEditMode = !isDesktopEditMode;
+  
+  // Находим кнопку обоев по ID
+  const wallpaperBtn = document.getElementById('dock-wallpaper-btn');
+  
+  if (isDesktopEditMode) {
+    wallpaperBtn?.classList.add('active'); // Показать
+  } else {
+    wallpaperBtn?.classList.remove('active'); // Скрыть
+  }
+}
+    
     // -------------------------------------------------------------
     // А) Инициализация Telegram WebApp
     // -------------------------------------------------------------
