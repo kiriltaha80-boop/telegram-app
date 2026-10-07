@@ -1,320 +1,639 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Pact & Passion</title>
-  <!-- Подключение Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root {
-      --bg-color: #0C0A10;
-      --card-bg: #16121E;
-      --accent-ruby: #E63956;
-      --accent-pink: #E8A0BF;
-      --text-main: #F5EBE6;
-      --text-muted: #A098AC;
-      --border-color: rgba(232, 160, 191, 0.15);
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PWA Desktop Interface</title>
+    <style>
+        :root {
+            --top-space-height: 150px;
+            --bottom-nav-height: 65px;
+            --bg-color: #0d0f12;
+            --card-bg: #1a1d24;
+            --accent-pink: #ff2a6d;
+            --accent-purple: #9b51e0;
+            --accent-gold: #ffb703;
+            --text-main: #f0f0f0;
+            --text-muted: #8a8d9b;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: var(--font-family);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding-top: calc(env(safe-area-inset-top, 20px) + 120px);
-      padding-bottom: 90px;
-      overflow-x: hidden;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Splash Screen */
-    #splash-screen {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, #1E162B 0%, #0C0A10 100%);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.5s ease;
-    }
+        /* Top Area (Reserved) */
+        .top-reserved-area {
+            height: var(--top-space-height);
+            background: linear-gradient(180deg, rgba(255, 42, 109, 0.15) 0%, rgba(13, 15, 18, 0) 100%);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
 
-    #splash-screen.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+        /* Main Workspace */
+        .app-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: calc(var(--bottom-nav-height) + 20px);
+        }
 
-    .splash-title {
-      font-size: 28px;
-      letter-spacing: 4px;
-      color: var(--accent-pink);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      font-weight: 300;
-    }
+        /* Grid System */
+        .desktop-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
 
-    .splash-subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-      letter-spacing: 1px;
-    }
+        .desktop-tile {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    /* Главный контейнер */
-    .container {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
+        .desktop-tile.widget-span-2 { grid-column: span 2; }
+        .desktop-tile.widget-span-4 { grid-column: span 4; }
 
-    /* Шапка с профилем и переключателем ролей */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+        /* Jiggle animation for edit mode */
+        .edit-mode .desktop-tile {
+            animation: jiggle 0.25s infinite alternate ease-in-out;
+        }
 
-    .role-switcher {
-      display: flex;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 4px;
-    }
+        @keyframes jiggle {
+            0% { transform: rotate(-1.5deg); }
+            100% { transform: rotate(1.5deg); }
+        }
 
-    .role-btn {
-      padding: 6px 14px;
-      border-radius: 16px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+        .tile-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
 
-    .role-btn.active {
-      background: var(--accent-ruby);
-      color: #FFF;
-      box-shadow: 0 2px 10px rgba(230, 57, 86, 0.4);
-    }
+        .tile-title {
+            font-size: 11px;
+            text-align: center;
+            color: var(--text-main);
+            font-weight: 500;
+        }
 
-    /* Карточки */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
+        /* Control Overlays in Edit Mode */
+        .tile-controls {
+            display: none;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            gap: 4px;
+            z-index: 10;
+        }
 
-    .card-title {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        .edit-mode .tile-controls {
+            display: flex;
+        }
 
-    .balance-value {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--accent-pink);
-    }
+        .btn-tile-delete {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    /* Календарный блок */
-    .calendar-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
+        .move-controls {
+            display: none;
+            position: absolute;
+            bottom: 4px;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 6px;
+        }
 
-    .cal-window {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      padding: 12px;
-      border: 1px solid var(--border-color);
-    }
+        .edit-mode .move-controls {
+            display: flex;
+        }
 
-    .cal-window-title {
-      font-size: 12px;
-      color: var(--accent-pink);
-      margin-bottom: 6px;
-    }
+        .btn-move {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 10px;
+            cursor: pointer;
+        }
 
-    /* Нижний Dock / Навигация */
-    .dock {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 448px;
-      height: 60px;
-      background: rgba(22, 18, 30, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-color);
-      border-radius: 30px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-    }
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: rgba(26, 29, 36, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+        }
 
-    .dock-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: var(--text-muted);
-      font-size: 11px;
-      text-decoration: none;
-      cursor: pointer;
-    }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 10px;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-    .dock-item.active {
-      color: var(--accent-pink);
-    }
+        .nav-item.active {
+            color: var(--accent-pink);
+        }
 
-    .dock-icon {
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-  </style>
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 420px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-pink);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .photo-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Splash Screen -->
-  <div id="splash-screen">
-    <div class="splash-title">Pact & Passion</div>
-    <div class="splash-subtitle">Загрузка пространства...</div>
-  </div>
-
-  <!-- Главный Контент -->
-  <div class="container">
-    <header class="header">
-      <div style="font-weight: 600; font-size: 18px;">Pact & Passion</div>
-      <div class="role-switcher">
-        <button class="role-btn active" id="btn-sub" onclick="setRole('sub')">Нижняя 😇</button>
-        <button class="role-btn" id="btn-dom" onclick="setRole('dom')">Верхний 😈</button>
-      </div>
-    </header>
-
-    <!-- Экран Нижней (😇) -->
-    <main id="view-sub">
-      <div class="card">
-        <div class="card-title">Баланс очков трат</div>
-        <div class="balance-value">1 250 PTS</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Женский Календарь</div>
-        <div class="calendar-container">
-          <div class="cal-window">
-            <div class="cal-window-title">Фаза и статус</div>
-            <div style="font-size: 14px;">Комфортный период</div>
-          </div>
-          <div class="cal-window">
-            <div class="cal-window-title">Прогноз</div>
-            <div style="font-size: 14px;">Следующий этап: через 8 дней</div>
-          </div>
+    <!-- Top Reserved Space -->
+    <div class="top-reserved-area">
+        <div>
+            <span style="font-size: 12px; color: var(--text-muted);">Статус Роли</span>
+            <h3 id="role-display">ВЕРХНИЙ 😈</h3>
         </div>
-      </div>
-    </main>
-
-    <!-- Экран Верхнего (😈) -->
-    <main id="view-dom" style="display: none;">
-      <div class="card">
-        <div class="card-title">Баланс очков заботы</div>
-        <div class="balance-value">3 400 PTS</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Управление Контрактом</div>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">
-          Все условия и правила взаимодействия активны.
-        </p>
-      </div>
-    </main>
-  </div>
-
-  <!-- Нижний Dock -->
-  <nav class="dock">
-    <div class="dock-item active">
-      <span class="dock-icon">👤</span>
-      <span>Профиль</span>
+        <button id="toggle-edit-btn" onclick="toggleEditMode()" style="background: rgba(255,255,255,0.1); border:none; color:white; padding: 8px 12px; border-radius: 12px; font-size: 12px;">⚙️ Настроить</button>
     </div>
-    <div class="dock-item">
-      <span class="dock-icon">🏠</span>
-      <span>Главная</span>
+
+    <!-- Main Workspace / Desktop Grid -->
+    <div class="app-container">
+        <!-- Shop / Sub View Container (Hidden by default) -->
+        <div id="sub-screen-container" style="display: none; margin-bottom: 15px;">
+            <button onclick="closeSubScreen()" style="background:none; border:none; color: var(--accent-pink); margin-bottom: 10px; cursor:pointer;">◄ Назад на Главную</button>
+            <div id="sub-screen-content"></div>
+        </div>
+
+        <!-- Desktop Screen Grid -->
+        <div class="desktop-grid" id="desktop-grid">
+            <!-- Dynamic Items Render Here -->
+        </div>
     </div>
-    <div class="dock-item">
-      <span class="dock-icon">💬</span>
-      <span>Чат</span>
+
+    <!-- Unified Add Product Modal -->
+    <div class="modal-overlay" id="add-product-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Добавить Товар</h3>
+                <span onclick="closeAddProductModal()" style="cursor:pointer; font-size: 18px;">✕</span>
+            </div>
+
+            <!-- Shop Target Selector Tabs -->
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="tab-boutique" onclick="switchShopTab('boutique')">🛍️ Бутик</button>
+                <button class="tab-btn" id="tab-sexshop" onclick="switchShopTab('sexshop')">🔮 Секс-шоп</button>
+            </div>
+
+            <form id="add-product-form" onsubmit="handleProductSubmit(event)">
+                <input type="hidden" id="target-shop" value="boutique">
+
+                <div class="form-group">
+                    <label>Название товара</label>
+                    <input type="text" id="prod-title" class="form-control" required placeholder="Введите название...">
+                </div>
+
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select id="prod-category" class="form-control" required>
+                        <!-- Options populate dynamically based on tab -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Описание товара</label>
+                    <textarea id="prod-description" class="form-control" placeholder="Подробности, особенности, размер..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Главное фото (Обложка URL)</label>
+                    <input type="url" id="prod-main-img" class="form-control" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label>Дополнительные фото (до 4 шт.)</label>
+                    <div class="photo-slots">
+                        <input type="url" id="prod-sub-img-1" class="form-control" placeholder="Фото 1">
+                        <input type="url" id="prod-sub-img-2" class="form-control" placeholder="Фото 2">
+                        <input type="url" id="prod-sub-img-3" class="form-control" placeholder="Фото 3">
+                        <input type="url" id="prod-sub-img-4" class="form-control" placeholder="Фото 4">
+                    </div>
+                </div>
+
+                <div class="form-group" id="price-rubles-group">
+                    <label>Цена (в Рублях ₽)</label>
+                    <input type="number" id="prod-price-rub" class="form-control" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Цена (в Баллах / Очках 🔥)</label>
+                    <input type="number" id="prod-price-pts" class="form-control" placeholder="0">
+                </div>
+
+                <button type="submit" class="btn-primary">Сохранить Товар</button>
+            </form>
+        </div>
     </div>
-  </nav>
 
-  <script>
-    // Инициализация Telegram WebApp
-    const tg = window.Telegram?.WebApp;
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="openProfile()">
+            <div class="nav-icon">👤</div>
+            <span>Профиль</span>
+        </div>
+        <div class="nav-item active" onclick="closeSubScreen()">
+            <div class="nav-icon">🏠</div>
+            <span>Главная</span>
+        </div>
+        <div class="nav-item" onclick="openMessenger()">
+            <div class="nav-icon">💬</div>
+            <span>Чаты</span>
+        </div>
+    </div>
 
-    if (tg) {
-      try {
-        tg.ready();
-        tg.expand();
+    <script>
+        // Store & State
+        let isEditMode = false;
+        
+        const categoriesBoutique = ["Нижнее белье", "Комплект", "Пижамы", "Пеньюары", "Ночная одежда"];
+        const categoriesSexShop = ["Игрушки", "Бондаж", "Косметика & Уход", "Аксессуары"];
 
-        if (tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) {
-          tg.requestFullscreen?.();
+        let desktopTiles = JSON.parse(localStorage.getItem('desktop_tiles_v1')) || [
+            { id: 'tile-boutique', type: 'icon', title: 'Бутик', icon: '🛍️', action: 'openBoutique', span: 1 },
+            { id: 'tile-sexshop', type: 'icon', title: 'Секс-шоп', icon: '🔮', action: 'openSexShop', span: 1 },
+            { id: 'widget-stats', type: 'widget-stats', title: 'Баланс Очков', span: 2 },
+            { id: 'widget-quote', type: 'widget-quote', title: 'Обет / Договор', span: 4 }
+        ];
+
+        let boutiqueProducts = JSON.parse(localStorage.getItem('boutique_prods')) || [];
+        let sexShopProducts = JSON.parse(localStorage.getItem('sexshop_prods')) || [];
+
+        // Save State
+        function saveDesktopState() {
+            localStorage.setItem('desktop_tiles_v1', JSON.stringify(desktopTiles));
         }
-        if (tg.isVersionAtLeast && tg.isVersionAtLeast('7.7')) {
-          tg.disableVerticalSwipes?.();
+
+        // Render Desktop
+        function renderDesktop() {
+            const grid = document.getElementById('desktop-grid');
+            grid.innerHTML = '';
+
+            desktopTiles.forEach((tile, index) => {
+                const el = document.createElement('div');
+                el.className = `desktop-tile ${tile.span > 1 ? 'widget-span-' + tile.span : ''}`;
+                
+                let innerHTML = `
+                    <div class="tile-controls">
+                        <button class="btn-tile-delete" onclick="deleteTile(${index})">✕</button>
+                    </div>
+                    <div class="move-controls">
+                        <button class="btn-move" onclick="moveTile(${index}, -1)">▲ / ◄</button>
+                        <button class="btn-move" onclick="moveTile(${index}, 1)">▼ / ►</button>
+                    </div>
+                `;
+
+                if (tile.type === 'icon') {
+                    innerHTML += `
+                        <div onclick="executeAction('${tile.action}')" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+                            <div class="tile-icon">${tile.icon}</div>
+                            <div class="tile-title">${tile.title}</div>
+                        </div>
+                    `;
+                } else if (tile.type === 'widget-stats') {
+                    innerHTML += `
+                        <div style="width:100%; text-align:center;">
+                            <div style="font-size:10px; color:var(--text-muted);">${tile.title}</div>
+                            <div style="font-size:18px; font-weight:bold; color:var(--accent-gold); margin-top:4px;">🔥 1,250 PTS</div>
+                        </div>
+                    `;
+                } else if (tile.type === 'widget-quote') {
+                    innerHTML += `
+                        <div style="width:100%; text-align:center; padding: 4px;">
+                            <div style="font-size:10px; color:var(--accent-pink); font-weight:bold;">📜 Дневное Соглашение</div>
+                            <div style="font-size:12px; margin-top:4px; font-style:italic;">"Полное подчинение правилам вечера"</div>
+                        </div>
+                    `;
+                }
+
+                el.innerHTML = innerHTML;
+                grid.appendChild(el);
+            });
         }
-      } catch (e) {
-        console.warn('Telegram WebApp init error:', e);
-      }
-    }
 
-    // Скрытие Splash Screen после загрузки
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) splash.classList.add('hidden');
-      }, 800);
-    });
+        // Move Tiles
+        function moveTile(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex >= 0 && newIndex < desktopTiles.length) {
+                const temp = desktopTiles[index];
+                desktopTiles[index] = desktopTiles[newIndex];
+                desktopTiles[newIndex] = temp;
+                saveDesktopState();
+                renderDesktop();
+            }
+        }
 
-    // Логика переключения ролей
-    function setRole(role) {
-      const btnSub = document.getElementById('btn-sub');
-      const btnDom = document.getElementById('btn-dom');
-      const viewSub = document.getElementById('view-sub');
-      const viewDom = document.getElementById('view-dom');
+        // Delete Tile
+        function deleteTile(index) {
+            desktopTiles.splice(index, 1);
+            saveDesktopState();
+            renderDesktop();
+        }
 
-      if (role === 'sub') {
-        btnSub.classList.add('active');
-        btnDom.classList.remove('active');
-        viewSub.style.display = 'block';
-        viewDom.style.display = 'none';
-      } else {
-        btnDom.classList.add('active');
-        btnSub.classList.remove('active');
-        viewDom.style.display = 'block';
-        viewSub.style.display = 'none';
-      }
-    }
-  </script>
+        // Toggle Edit Mode
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const container = document.querySelector('.app-container');
+            const btn = document.getElementById('toggle-edit-btn');
+            
+            if (isEditMode) {
+                container.classList.add('edit-mode');
+                btn.innerText = '✓ Готово';
+                btn.style.background = 'var(--accent-pink)';
+            } else {
+                container.classList.remove('edit-mode');
+                btn.innerText = '⚙️ Настроить';
+                btn.style.background = 'rgba(255,255,255,0.1)';
+            }
+        }
+
+        // Modal Logic & Shop Tabs
+        function openAddProductModal(defaultShop = 'boutique') {
+            document.getElementById('add-product-modal').classList.add('active');
+            switchShopTab(defaultShop);
+        }
+
+        function closeAddProductModal() {
+            document.getElementById('add-product-modal').classList.remove('active');
+        }
+
+        function switchShopTab(shop) {
+            document.getElementById('target-shop').value = shop;
+            const tabBoutique = document.getElementById('tab-boutique');
+            const tabSexShop = document.getElementById('tab-sexshop');
+            const categorySelect = document.getElementById('prod-category');
+            const priceRubGroup = document.getElementById('price-rubles-group');
+
+            categorySelect.innerHTML = '';
+
+            if (shop === 'boutique') {
+                tabBoutique.classList.add('active');
+                tabSexShop.classList.remove('active');
+                priceRubGroup.style.display = 'block';
+
+                categoriesBoutique.forEach(cat => {
+                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            } else {
+                tabSexShop.classList.add('active');
+                tabBoutique.classList.remove('active');
+                priceRubGroup.style.display = 'none';
+
+                categoriesSexShop.forEach(cat => {
+                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            }
+        }
+
+        function handleProductSubmit(e) {
+            e.preventDefault();
+            const shop = document.getElementById('target-shop').value;
+            
+            const product = {
+                id: Date.now(),
+                title: document.getElementById('prod-title').value,
+                category: document.getElementById('prod-category').value,
+                description: document.getElementById('prod-description').value,
+                mainImg: document.getElementById('prod-main-img').value || 'https://via.placeholder.com/150',
+                subImages: [
+                    document.getElementById('prod-sub-img-1').value,
+                    document.getElementById('prod-sub-img-2').value,
+                    document.getElementById('prod-sub-img-3').value,
+                    document.getElementById('prod-sub-img-4').value
+                ].filter(Boolean),
+                pricePts: document.getElementById('prod-price-pts').value || 0,
+                priceRub: document.getElementById('prod-price-rub').value || 0
+            };
+
+            if (shop === 'boutique') {
+                boutiqueProducts.push(product);
+                localStorage.setItem('boutique_prods', JSON.stringify(boutiqueProducts));
+                if (document.getElementById('sub-screen-container').style.display !== 'none') openBoutique();
+            } else {
+                sexShopProducts.push(product);
+                localStorage.setItem('sexshop_prods', JSON.stringify(sexShopProducts));
+                if (document.getElementById('sub-screen-container').style.display !== 'none') openSexShop();
+            }
+
+            document.getElementById('add-product-form').reset();
+            closeAddProductModal();
+        }
+
+        // Sub Screen Navigation & Section Handlers
+        function executeAction(actionName) {
+            if (actionName === 'openBoutique') openBoutique();
+            if (actionName === 'openSexShop') openSexShop();
+        }
+
+        function openBoutique() {
+            const container = document.getElementById('sub-screen-content');
+            document.getElementById('sub-screen-container').style.display = 'block';
+            document.getElementById('desktop-grid').style.display = 'none';
+
+            let itemsHtml = boutiqueProducts.map(p => `
+                <div style="background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:10px;">
+                    <img src="${p.mainImg}" style="width:100%; height:140px; object-fit:cover; border-radius:8px;">
+                    <h4 style="margin-top:8px;">${p.title}</h4>
+                    <div style="font-size:11px; color:var(--accent-pink);">${p.category}</div>
+                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">${p.description}</p>
+                    <div style="font-weight:bold; font-size:13px;">${p.priceRub} ₽ / ${p.pricePts} PTS</div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2>🛍️ Бутик</h2>
+                    <button onclick="openAddProductModal('boutique')" style="background:var(--accent-pink); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить Товар</button>
+                </div>
+                ${itemsHtml || '<p style="color:var(--text-muted);">Товаров пока нет</p>'}
+            `;
+        }
+
+        function openSexShop() {
+            const container = document.getElementById('sub-screen-content');
+            document.getElementById('sub-screen-container').style.display = 'block';
+            document.getElementById('desktop-grid').style.display = 'none';
+
+            let itemsHtml = sexShopProducts.map(p => `
+                <div style="background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:10px;">
+                    <img src="${p.mainImg}" style="width:100%; height:140px; object-fit:cover; border-radius:8px;">
+                    <h4 style="margin-top:8px;">${p.title}</h4>
+                    <div style="font-size:11px; color:var(--accent-purple);">${p.category}</div>
+                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">${p.description}</p>
+                    <div style="font-weight:bold; font-size:13px; color:var(--accent-gold);">${p.pricePts} PTS</div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2>🔮 Секс-шоп</h2>
+                    <button onclick="openAddProductModal('sexshop')" style="background:var(--accent-purple); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить Товар</button>
+                </div>
+                ${itemsHtml || '<p style="color:var(--text-muted);">Товаров пока нет</p>'}
+            `;
+        }
+
+        function closeSubScreen() {
+            document.getElementById('sub-screen-container').style.display = 'none';
+            document.getElementById('desktop-grid').style.display = 'grid';
+        }
+
+        function openProfile() { alert('Раздел Профиль'); }
+        function openMessenger() { alert('Раздел Чаты'); }
+
+        // Initial Initialization
+        renderDesktop();
+    </script>
 </body>
 </html>
