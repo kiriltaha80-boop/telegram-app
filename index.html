@@ -1,80 +1,15 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <!-- ============================================================ -->
-  <!-- 1. МЕТАДАННЫЕ И СИСТЕМНЫЕ НАСТРОЙКИ TELEGRAM                 -->
-  <!-- ============================================================ -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Pact & Passion</title>
   
-  <!-- Подключение Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-    
-   /* СЕТКА И ШАПКА РАБОЧЕГО СТОЛА */
-.desktop-wrapper {
-  margin-top: 10px;
-  width: 100%;
-}
-
-.desktop-header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 0 4px;
-}
-
-.desktop-actions-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Кнопка смены роли */
-.role-toggle-btn {
-  background: rgba(230, 57, 86, 0.18);
-  border: 1px solid rgba(230, 57, 86, 0.5);
-  border-radius: 16px;
-  padding: 6px 12px;
-  color: #FFF;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* Кнопки «Обои» и «Настроить» */
-.edit-desktop-btn {
-  background: rgba(22, 18, 30, 0.85);
-  border: 1px solid rgba(232, 160, 191, 0.25);
-  border-radius: 16px;
-  padding: 6px 12px;
-  color: #F5EBE6;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.edit-desktop-btn:active {
-  transform: scale(0.94);
-  border-color: #E63956;
-}
-
-.edit-desktop-btn.active {
-  background: #E63956;
-  border-color: #E63956;
-  color: #FFF;
-}
-    
-    /* ============================================================ */
-    /* 2. ЦВЕТОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ ТЕМЫ (CSS ROOT)            */
-    /* ============================================================ */
-  <style>
-    /* ЖЕСТКИЙ СБРОС: ФОН НИКОГДА НЕ БУДЕТ БЕЛЫМ */
+    /* 1. БАЗОВЫЕ НАСТРОЙКИ И ПЕРЕМЕННЫЕ */
     html, body {
       background-color: #0C0A10 !important;
       color: #F5F3F7;
@@ -106,10 +41,11 @@
     }
 
     body {
-      padding: calc(env(safe-area-inset-top, 0px) + 90px) 14px calc(env(safe-area-inset-bottom, 0px) + 95px) 14px;
+      padding: calc(env(safe-area-inset-top, 0px) + 20px) 14px calc(env(safe-area-inset-bottom, 0px) + 95px) 14px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow-x: hidden;
       position: relative;
+      transition: background 0.4s ease;
     }
 
     /* Фоновые неоновые круги */
@@ -125,9 +61,8 @@
     }
     .glow-1 { top: -50px; left: -50px; background: #E63956; }
     .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
-    /* ============================================================ */
-    /* 3. СТИЛИ ЭКРАНА ЗАСТАВКИ (SPLASH SCREEN)                    */
-    /* ============================================================ */
+
+    /* 2. ЭКРАН ЗАСТАВКИ (SPLASH SCREEN) */
     #splash-screen {
       position: fixed;
       inset: 0;
@@ -137,7 +72,7 @@
       justify-content: flex-end;
       align-items: center;
       padding-bottom: 120px;
-      transition: opacity 0.8s ease, visibility 0.8s;
+      transition: opacity 0.7s ease, visibility 0.7s ease;
       background-color: #5d0309;
       overflow: hidden;
       cursor: pointer;
@@ -211,60 +146,32 @@
       height: 100%;
       background: var(--accent-gradient);
       box-shadow: 0 0 12px var(--accent-color);
-      animation: fillBar 2.2s ease forwards;
+      animation: fillBar 1.8s ease forwards;
     }
 
     @keyframes fillBar { to { width: 100%; } }
 
     #splash-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
     }
 
-    .card {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    }
-
-    .desktop-grid {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px 8px;
-      padding: 4px 0;
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* ============================================================ */
-    /* 4. СЕТКА РАБОЧЕГО СТОЛА И КОЛОНКИ (DESKTOP GRID)            */
-    /* ============================================================ */
+    /* 3. ШАПКА И РАБОЧИЙ СТОЛ */
     .desktop-wrapper {
-      margin-top: 10px;
+      position: relative;
       width: 100%;
+      min-height: calc(100vh - 200px);
     }
 
-   <div class="desktop-actions-group">
-    <button id="btn-wallpaper" class="edit-desktop-btn" onclick="openWallpaperModal()">
-      🖼️ Обои
-    </button>
-    <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
-      ⚙️ Настроить
-    </button>
-  </div>
-</div>
+    .desktop-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 0 4px;
+    }
 
-    /* Кнопка смены роли (Верхний / Нижня) */
     .role-toggle-btn {
       background: rgba(230, 57, 86, 0.18);
       border: 1px solid rgba(230, 57, 86, 0.5);
@@ -280,32 +187,28 @@
       align-items: center;
       gap: 8px;
       box-shadow: 0 4px 15px rgba(230, 57, 86, 0.25);
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
     .role-toggle-btn:active { transform: scale(0.94); }
 
-    /* Кнопка режима настройки сетки */
     .edit-desktop-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 6px 14px;
+      background: rgba(22, 18, 30, 0.85);
+      border: 1px solid rgba(232, 160, 191, 0.25);
       border-radius: 16px;
+      padding: 8px 14px;
+      color: #F5EBE6;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
       transition: all 0.2s ease;
     }
     .edit-desktop-btn.active {
       background: var(--accent-gradient);
       border-color: var(--accent-color);
+      color: #fff;
       box-shadow: 0 0 12px rgba(230, 57, 86, 0.4);
     }
 
-    /* Главная сетка: 4 равные колонки */
     .desktop-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -316,6 +219,16 @@
     .desktop-item-wrapper {
       position: relative;
       user-select: none;
+      touch-action: pan-y;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .edit-mode .desktop-item-wrapper { touch-action: none; }
+    .desktop-item-wrapper.is-dragging { opacity: 0.45; transform: scale(0.92); z-index: 100; }
+    .desktop-item-wrapper.drag-over {
+      transform: scale(1.08);
+      outline: 2px dashed var(--accent-color);
+      outline-offset: 4px;
+      border-radius: 16px;
     }
 
     .desktop-tile {
@@ -338,7 +251,7 @@
       justify-content: center;
       color: #fff;
       font-size: 26px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
     }
 
     .tile-label {
@@ -350,15 +263,9 @@
       line-height: 1.1;
     }
 
-    /* Анимация покачивания в режиме редактирования */
     .edit-mode .desktop-tile, .edit-mode .desktop-widget {
       animation: jiggle 0.28s infinite alternate ease-in-out;
     }
-    .edit-mode .desktop-item-wrapper:nth-child(even) .desktop-tile,
-    .edit-mode .desktop-item-wrapper:nth-child(even) .desktop-widget {
-      animation-delay: -0.14s;
-    }
-
     @keyframes jiggle {
       0% { transform: rotate(-1.5deg) scale(0.98); }
       100% { transform: rotate(1.5deg) scale(1.01); }
@@ -381,35 +288,9 @@
       justify-content: center;
       cursor: pointer;
       z-index: 10;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     }
     .edit-mode .item-delete-btn { display: flex; }
 
-    .item-move-controls {
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: none;
-      gap: 3px;
-      z-index: 10;
-      background: rgba(12, 10, 16, 0.95);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 1px 4px;
-    }
-    .edit-mode .item-move-controls { display: flex; }
-
-    .move-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 11px;
-      padding: 2px 4px;
-      cursor: pointer;
-    }
-
-    /* Настройка ширины колонок для виджетов */
     .desktop-widget {
       background: linear-gradient(135deg, rgba(30, 22, 42, 0.9) 0%, rgba(15, 11, 22, 0.95) 100%);
       border: 1px solid rgba(230, 57, 86, 0.35);
@@ -417,15 +298,11 @@
       padding: 10px 12px;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
       cursor: pointer;
-      transition: transform 0.15s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 82px;
     }
-    .desktop-widget:active { transform: scale(0.96); }
-
-    /* Растягивание на 2 или 4 колонки */
     .widget-span-2 { grid-column: span 2; }
     .widget-span-4 { grid-column: span 4; }
 
@@ -437,23 +314,26 @@
       font-weight: 800;
       color: var(--accent-color);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
-    .widget-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.2;
-    }
-    .widget-sub {
-      font-size: 9px;
-      color: var(--text-muted);
-      margin-top: 2px;
+    .widget-title { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.2; }
+    .widget-sub { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+
+    /* 4. КАРТОЧКИ И ЭКРАНЫ */
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
     }
 
-    /* ============================================================ */
-    /* 5. ОБЩИЕ ЭЛЕМЕНТЫ: ШАПКИ, СПИСКИ И КНОПКИ НАЗАД              */
-    /* ============================================================ */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
     .sub-screen-header {
       display: flex;
       align-items: center;
@@ -472,14 +352,6 @@
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.15s ease;
-    }
-    .back-action-btn:active {
-      transform: scale(0.92);
-      background: rgba(230, 57, 86, 0.3);
     }
 
     .small-btn {
@@ -491,14 +363,7 @@
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      box-shadow: 0 4px 12px rgba(230, 57, 86, 0.35);
-      transition: transform 0.1s ease;
     }
-    .small-btn:active { transform: scale(0.95); opacity: 0.9; }
 
     .contract-list { display: flex; flex-direction: column; gap: 8px; }
     .contract-item {
@@ -511,13 +376,10 @@
       align-items: center;
       gap: 8px;
     }
-    .contract-info { flex: 1; }
     .contract-info .name { font-size: 11px; font-weight: 600; color: #fff; }
     .contract-info .reward { font-size: 9px; color: var(--accent-color); margin-top: 2px; font-weight: 600; }
 
-    /* ============================================================ */
-    /* 6. МОДУЛЬ ЖЕНСКОГО КАЛЕНДАРЯ                                */
-    /* ============================================================ */
+    /* Женский календарь */
     .cycle-two-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .cycle-big-box {
       background: rgba(10, 8, 16, 0.65);
@@ -528,35 +390,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
-    .cycle-big-box .box-lbl {
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 2px;
-    }
-    .cycle-big-box .box-val {
-      font-size: 16px;
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 0 12px rgba(230, 57, 86, 0.6);
-      line-height: 1.1;
-    }
-    .cycle-big-box .box-sub { font-size: 8px; color: var(--text-muted); margin-top: 3px; }
+    .cycle-big-box .box-lbl { font-size: 8px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+    .cycle-big-box .box-val { font-size: 16px; font-weight: 900; color: #fff; margin: 3px 0; }
+    .cycle-big-box .box-sub { font-size: 8px; color: var(--text-muted); }
 
-    .cycle-settings-panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, opacity 0.3s ease;
-      opacity: 0;
-    }
+    .cycle-settings-panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
     .cycle-settings-panel.open { max-height: 220px; opacity: 1; margin-bottom: 10px; }
-
     .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; text-align: center; margin-top: 4px; }
-    .calendar-weekday { font-size: 8px; color: var(--text-muted); font-weight: 600; padding-bottom: 1px; }
+    .calendar-weekday { font-size: 8px; color: var(--text-muted); font-weight: 600; }
     .cal-day {
       aspect-ratio: 1;
       display: flex;
@@ -568,16 +410,13 @@
       border: 1px solid var(--border-color);
       color: #ccc;
     }
-    .cal-day.today { border-color: #fff; font-weight: 800; color: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, 0.5); }
+    .cal-day.today { border-color: #fff; font-weight: 800; color: #fff; }
     .cal-day.period { background: var(--accent-gradient); color: #fff; border: none; }
     .cal-day.ovulation { background: var(--ovulation-color); color: #16121E; font-weight: bold; border: none; }
-    .cal-day.empty { background: transparent; border: none; }
 
-    /* ============================================================ */
-    /* 7. ФОРМЫ, ПОЛЯ ВВОДА И КАТАЛОГИ ТОВАРОВ                      */
-    /* ============================================================ */
+    /* Формы и каталоги */
     .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-    .form-group label { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group label { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
     .form-control {
       background: rgba(10, 8, 16, 0.7);
       border: 1px solid var(--border-color);
@@ -588,8 +427,6 @@
       outline: none;
       width: 100%;
     }
-    .form-control:focus { border-color: var(--accent-color); }
-
     .add-input-box {
       background: rgba(15, 11, 22, 0.9);
       border: 1px dashed var(--card-border);
@@ -598,16 +435,7 @@
       margin-bottom: 12px;
     }
 
-    .category-chips {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      scrollbar-width: none;
-    }
-    .category-chips::-webkit-scrollbar { display: none; }
-
+    .category-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; scrollbar-width: none; }
     .chip-btn {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-color);
@@ -618,21 +446,10 @@
       font-weight: 700;
       white-space: nowrap;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
-    .chip-btn.active {
-      background: rgba(230, 57, 86, 0.2);
-      border-color: var(--accent-color);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(230, 57, 86, 0.3);
-    }
+    .chip-btn.active { background: rgba(230, 57, 86, 0.2); border-color: var(--accent-color); color: #fff; }
 
-    .products-grid-view {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
+    .products-grid-view { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .product-card {
       background: rgba(15, 11, 22, 0.85);
       border: 1px solid var(--card-border);
@@ -643,123 +460,41 @@
       flex-direction: column;
       gap: 6px;
     }
-    .product-main-img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background: #000;
-    }
+    .product-main-img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; }
     .product-title { font-size: 11px; font-weight: 700; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .product-category-lbl { font-size: 9px; color: var(--accent-color); font-weight: 600; }
     .product-price-lbl { font-size: 11px; font-weight: 800; color: var(--ovulation-color); margin-top: auto; }
 
-    /* ============================================================ */
-    /* 8. МЕССЕНДЖЕР, ПРОФИЛЬ И МОДАЛЬНЫЕ ОКНА                      */
-    /* ============================================================ */
-    .messenger-item {
-      background: rgba(10, 8, 16, 0.6);
-      border: 1px solid var(--border-color);
-      padding: 10px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .messenger-avatar { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--accent-color); object-fit: cover; }
-    .messenger-info { flex: 1; }
-    .messenger-info .name { font-size: 11px; font-weight: 600; color: #fff; }
-    .messenger-info .preview { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+    /* Чат и профиль */
+    .chat-box { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; margin-bottom: 10px; }
+    .chat-msg { padding: 8px 12px; border-radius: 12px; font-size: 10px; max-width: 80%; line-height: 1.35; }
+    .chat-msg.bot { background: rgba(30, 24, 42, 0.8); border: 1px solid rgba(230, 57, 86, 0.25); color: #fff; align-self: flex-start; }
+    .chat-msg.user { background: var(--accent-gradient); color: #fff; align-self: flex-end; }
 
-    .chat-box {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding-right: 4px;
-      margin-bottom: 10px;
-    }
-    .chat-msg {
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 10px;
-      max-width: 80%;
-      line-height: 1.35;
-    }
-    .chat-msg.bot {
-      background: rgba(30, 24, 42, 0.8);
-      border: 1px solid rgba(230, 57, 86, 0.25);
-      color: #fff;
-      align-self: flex-start;
-      border-bottom-left-radius: 2px;
-    }
-    .chat-msg.user {
-      background: var(--accent-gradient);
-      color: #fff;
-      align-self: flex-end;
-      border-bottom-right-radius: 2px;
-    }
-
-    /* Профиль пользователя */
     .profile-card-header { text-align: center; padding: 10px 0; }
-    .profile-avatar-container {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 8px auto;
-    }
-    .profile-avatar-img {
-      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
-      border: 2px solid var(--accent-color); box-shadow: 0 0 16px rgba(230, 57, 86, 0.6);
-    }
-    .profile-name { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 2px; }
-    .profile-badge { font-size: 10px; color: var(--accent-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-    .profile-stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 15px 0;
-    }
-    .stat-box {
-      background: rgba(10, 8, 16, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-    }
+    .profile-avatar-container { position: relative; width: 70px; height: 70px; margin: 0 auto 8px auto; }
+    .profile-avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); }
+    .profile-name { font-size: 16px; font-weight: 800; color: #fff; }
+    .profile-badge { font-size: 10px; color: var(--accent-color); font-weight: 700; text-transform: uppercase; }
+    .profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+    .stat-box { background: rgba(10, 8, 16, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; text-align: center; }
     .stat-box .val { font-size: 16px; font-weight: 900; color: #fff; }
-    .stat-box .lbl { font-size: 9px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; }
+    .stat-box .lbl { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
 
+    /* 5. МОДАЛЬНЫЕ ОКНА */
     .modal-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
       z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: calc(env(safe-area-inset-top, 0px) + 50px) 14px 20px 14px;
+      padding: 20px 14px;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    .modal-card {
-      background: rgba(22, 18, 30, 0.98);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px;
-      width: 100%;
-      max-width: calc(100% - 28px);
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
     }
     .modal-overlay.active { opacity: 1; visibility: visible; }
 
@@ -774,74 +509,74 @@
       overflow-y: auto;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
     .modal-close-btn { font-size: 18px; color: var(--text-muted); cursor: pointer; }
 
-    .modal-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-      background: rgba(0,0,0,0.3);
-      padding: 4px;
+    .wallpaper-presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .wallpaper-thumb {
+      height: 75px;
       border-radius: 12px;
-    }
-    .modal-tab-btn {
-      flex: 1;
-      padding: 6px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-end;
+      padding: 8px;
       cursor: pointer;
-      font-weight: 700;
       font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      transition: transform 0.15s ease, border-color 0.2s;
     }
-    .modal-tab-btn.active { background: var(--accent-color); color: #fff; }
+    .wallpaper-thumb:active { transform: scale(0.95); }
+    .wallpaper-thumb.selected { border-color: var(--accent-color); }
 
-    .photo-inputs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .gallery-preview-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
+    .widget-catalog-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .widget-catalog-card {
+      background: rgba(12, 10, 16, 0.6);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
-      margin-bottom: 8px;
-      border: 1px solid var(--border-color);
-    }
-    .gallery-thumbs-row {
+      padding: 10px;
       display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      margin-bottom: 10px;
-      padding-bottom: 4px;
-    }
-    .gallery-thumb-item {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid var(--border-color);
+      align-items: center;
+      gap: 10px;
       cursor: pointer;
-      opacity: 0.6;
-      flex-shrink: 0;
     }
-    .gallery-thumb-item.active { opacity: 1; border-color: var(--accent-color); }
+    .widget-catalog-card .cat-icon { font-size: 22px; }
+    .widget-catalog-card .cat-info { flex: 1; }
+    .widget-catalog-card .title { font-size: 11px; font-weight: 700; color: #fff; }
+    .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); }
 
-    /* ============================================================ */
-    /* 9. НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (BOTTOM DOCK)                    */
-    /* ============================================================ */
+    /* 6. НАВИГАЦИОННАЯ ПАНЕЛЬ И ВСПЛЫВАЮЩАЯ КНОПКА */
+    .dock-wallpaper-btn {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+      left: 50%;
+      transform: translateX(-50%) translateY(16px) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 24px;
+      background: rgba(20, 16, 28, 0.94);
+      border: 1px solid rgba(230, 57, 86, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(16px);
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 1001;
+      transition: transform 0.28s ease, opacity 0.24s ease;
+    }
+    .dock-wallpaper-btn.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
     .nav-bar {
       position: fixed;
       bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
@@ -852,9 +587,8 @@
       border-radius: 26px;
       background: rgba(20, 16, 28, 0.88);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(230, 57, 86, 0.32);
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 16px rgba(230, 57, 86, 0.15);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       align-items: center;
@@ -869,10 +603,8 @@
       height: 100%;
       color: rgba(255, 255, 255, 0.45);
       cursor: pointer;
-      transition: color 0.2s ease, transform 0.15s ease;
       position: relative;
     }
-    .nav-item:active { transform: scale(0.88); }
     .nav-item.active { color: var(--accent-color); }
     .nav-item.active::after {
       content: '';
@@ -882,166 +614,17 @@
       height: 4px;
       border-radius: 50%;
       background: var(--accent-color);
-      box-shadow: 0 0 6px var(--accent-color);
     }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
     .nav-label { font-size: 9px; font-weight: 700; }
- 
-    /* ПЛАВАЮЩАЯ КНОПКА СМЕНЫ ОБОЕВ НАД ПАНЕЛЬЮ NAV-BAR */
-.dock-wallpaper-btn {
-  position: fixed;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
-  left: 50%;
-  transform: translateX(-50%) translateY(16px) scale(0.9);
-  opacity: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 24px;
-  background: rgba(20, 16, 28, 0.94);
-  border: 1px solid rgba(230, 57, 86, 0.45);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(230, 57, 86, 0.25);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  z-index: 1001;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease;
-  white-space: nowrap;
-}
-
-/* Состояние при активном режиме «⚙️ Настроить» */
-.dock-wallpaper-btn.active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0) scale(1);
-}
-
-.dock-wallpaper-btn:active {
-  transform: translateX(-50%) translateY(0) scale(0.94);
-  background: rgba(45, 15, 25, 0.96);
-}
-    
-    /* ФОНОВЫЕ ОБОИ РАБОЧЕГО СТОЛА */
-    .desktop-wrapper {
-  position: relative;
-  width: 100%;
-  min-height: calc(100vh - 220px);
-  padding: 0;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-    /* ПАНЕЛЬ НАСТРОЙКИ РАБОЧЕГО СТОЛА */
-    .desktop-edit-toolbar {
-      display: none;
-      gap: 8px;
-      margin-bottom: 12px;
-      background: rgba(22, 18, 30, 0.95);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 8px;
-      animation: fadeIn 0.2s ease;
-    }
-    .desktop-edit-toolbar.active { display: flex; }
-    .toolbar-btn {
-      flex: 1;
-      padding: 8px 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .toolbar-btn.done {
-      background: var(--accent-gradient);
-      border-color: var(--accent-color);
-    }
-
-    /* СЕНСОРНЫЙ DRAG & DROP ПО СЕТКЕ */
-    .desktop-item-wrapper {
-      touch-action: pan-y;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-    .edit-mode .desktop-item-wrapper {
-      touch-action: none; /* Запрещает скролл экрана при перетаскивании плитки */
-    }
-    .desktop-item-wrapper.is-dragging {
-      opacity: 0.45;
-      transform: scale(0.92);
-      z-index: 100;
-    }
-    .desktop-item-wrapper.drag-over {
-      transform: scale(1.08);
-      outline: 2px dashed var(--accent-color);
-      outline-offset: 4px;
-      border-radius: 16px;
-    }
-
-    /* ПРЕСЕТЫ ОБОЕВ */
-    .wallpaper-presets-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .wallpaper-thumb {
-      height: 75px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: flex-end;
-      padding: 8px;
-      cursor: pointer;
-      font-size: 10px;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
-    }
-
-    /* КАТАЛОГ ВИДЖЕТОВ */
-    .widget-catalog-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .widget-catalog-card {
-      background: rgba(12, 10, 16, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .widget-catalog-card .cat-icon { font-size: 22px; }
-    .widget-catalog-card .cat-info { flex: 1; }
-    .widget-catalog-card .title { font-size: 11px; font-weight: 700; color: #fff; }
-    .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
-  
-  
   </style>
 </head>
 <body>
 
-  <!-- Фоновое свечение -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <!-- ============================================================ -->
-  <!-- 10. ЭКРАН ЗАСТАВКИ (SPLASH SCREEN)                          -->
-  <!-- ============================================================ -->
-  <!-- Добавлен onclick: при зависании любой тап закрывает заставку -->
+  <!-- ЗАСТАВКА -->
   <div id="splash-screen" onclick="hideSplash()">
     <div class="splash-bg"></div>
     <div class="splash-bottom-fade"></div>
@@ -1054,9 +637,7 @@
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 11. ЭКРАН 1: РАБОЧИЙ СТОЛ (HOME DESKTOP)                     -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 1: РАБОЧИЙ СТОЛ -->
   <div id="tab-home" class="tab-content active">
     <div class="desktop-wrapper">
       <div class="desktop-header-bar">
@@ -1067,15 +648,11 @@
           ⚙️ Настроить
         </button>
       </div>
-
-      <!-- Контейнер сетки, куда рендерятся иконки и виджеты -->
       <div id="desktop-grid-container" class="desktop-grid"></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 12. ЭКРАН 2: МУЖСКАЯ СЕССИЯ ♂                                -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 2: МУЖСКАЯ СЕССИЯ -->
   <div id="tab-male-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1083,12 +660,12 @@
         <div style="font-weight: 700; color: #4A90E2; font-size: 11px;">Мужская Сессия ♂</div>
       </div>
       <div class="add-input-box">
-        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Добавить ритуал / задание</div>
+        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Добавить задание</div>
         <div class="form-group">
           <input type="text" id="input-male-title" class="form-control" placeholder="Название ритуала...">
         </div>
         <div style="display: flex; gap: 6px;">
-          <input type="number" id="input-male-points" class="form-control" placeholder="Очки заботы (напр. 150)" style="flex: 1;">
+          <input type="number" id="input-male-points" class="form-control" placeholder="Очки (напр. 150)" style="flex: 1;">
           <button class="small-btn" onclick="addCustomTask('male')">Добавить</button>
         </div>
       </div>
@@ -1096,9 +673,7 @@
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 13. ЭКРАН 3: ЖЕНСКАЯ СЕССИЯ ♀                                -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 3: ЖЕНСКАЯ СЕССИЯ -->
   <div id="tab-female-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1106,12 +681,12 @@
         <div style="font-weight: 700; color: var(--accent-color); font-size: 11px;">Женская Сессия ♀</div>
       </div>
       <div class="add-input-box">
-        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Добавить ритуал / задание</div>
+        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Добавить задание</div>
         <div class="form-group">
           <input type="text" id="input-female-title" class="form-control" placeholder="Название ритуала...">
         </div>
         <div style="display: flex; gap: 6px;">
-          <input type="number" id="input-female-points" class="form-control" placeholder="Очки страсти (напр. 200)" style="flex: 1;">
+          <input type="number" id="input-female-points" class="form-control" placeholder="Очки (напр. 200)" style="flex: 1;">
           <button class="small-btn" onclick="addCustomTask('female')">Добавить</button>
         </div>
       </div>
@@ -1119,9 +694,7 @@
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 14. ЭКРАН 4: ЖЕНСКИЙ КАЛЕНДАРЬ                               -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 4: КАЛЕНДАРЬ -->
   <div id="tab-cycle" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1129,7 +702,6 @@
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Женский Календарь</div>
         <button class="small-btn" onclick="toggleCycleSettings()">⚙️ Опции</button>
       </div>
-
       <div class="cycle-two-boxes" style="margin-bottom: 10px;">
         <div class="cycle-big-box">
           <div class="box-lbl">До месячных</div>
@@ -1142,11 +714,9 @@
           <div id="box-ovulation-sub" class="box-sub">...</div>
         </div>
       </div>
-
       <div class="cycle-settings-panel" id="cycle-settings">
-        <div style="font-weight: 700; margin-bottom: 6px; font-size: 11px; color: #fff;">Параметры цикла</div>
         <div class="form-group">
-          <label>Дата начала последних месячных:</label>
+          <label>Начало последних месячных:</label>
           <input type="date" id="cycle-start-input" class="form-control" onchange="updateCycleSettings()">
         </div>
         <div class="form-group">
@@ -1154,15 +724,11 @@
           <input type="number" id="cycle-length-input" class="form-control" value="28" min="20" max="45" onchange="updateCycleSettings()">
         </div>
       </div>
-
-      <div id="cal-month-year" style="font-weight: 700; color: #fff; font-size: 11px; margin-bottom: 4px;">Календарь</div>
       <div class="calendar-grid" id="calendar-grid"></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 15. ЭКРАН 5: КОНТРАКТ И ОБЕТЫ                                -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 5: КОНТРАКТ -->
   <div id="tab-contract" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1170,21 +736,16 @@
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Контракт и Обеты</div>
       </div>
       <div class="add-input-box">
-        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Внести новый пункт контракта</div>
         <div class="form-group">
-          <input type="text" id="input-contract-clause" class="form-control" placeholder="Текст соглашения / правила...">
+          <input type="text" id="input-contract-clause" class="form-control" placeholder="Новый пункт контракта...">
         </div>
-        <button class="small-btn" style="width: 100%; justify-content: center;" onclick="addContractClause()">
-          Зафиксировать пункт ✍️
-        </button>
+        <button class="small-btn" style="width: 100%;" onclick="addContractClause()">Зафиксировать пункт ✍️</button>
       </div>
       <div id="contract-clauses-list" class="contract-list"></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 16. ЭКРАН 6: БУТИК ИСКУШЕНИЯ                                -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 6: БУТИК -->
   <div id="tab-shop" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1192,23 +753,16 @@
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Бутик Искушения</div>
         <button class="small-btn" onclick="openAddProductModal('boutique')">+ Добавить</button>
       </div>
-
       <div class="category-chips">
         <button class="chip-btn active" onclick="setShopCategory('all', this)">Все</button>
-        <button class="chip-btn" onclick="setShopCategory('Нижнее белье', this)">👙 Белье</button>
         <button class="chip-btn" onclick="setShopCategory('Комплект', this)">🎀 Комплект</button>
-        <button class="chip-btn" onclick="setShopCategory('Пижамы', this)">🌙 Пижама</button>
-        <button class="chip-btn" onclick="setShopCategory('Пеньюары', this)">✨ Пеньюар</button>
-        <button class="chip-btn" onclick="setShopCategory('Ночная одежда', this)">🖤 Ночной комплект</button>
+        <button class="chip-btn" onclick="setShopCategory('Нижнее белье', this)">👙 Белье</button>
       </div>
-
       <div id="shop-products-list" class="products-grid-view"></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 17. ЭКРАН 7: СЕКС-ШОП АТРИБУТОВ                             -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 7: СЕКС-ШОП -->
   <div id="tab-sexshop" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1216,22 +770,16 @@
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Секс-шоп Атрибутов</div>
         <button class="small-btn" onclick="openAddProductModal('sexshop')">+ Добавить</button>
       </div>
-
       <div class="category-chips">
         <button class="chip-btn active" onclick="setSexshopCategory('all', this)">Все</button>
-        <button class="chip-btn" onclick="setSexshopCategory('Игрушки', this)">🧸 Игрушки</button>
         <button class="chip-btn" onclick="setSexshopCategory('Бондаж', this)">⛓ Бондаж</button>
-        <button class="chip-btn" onclick="setSexshopCategory('Косметика & Уход', this)">💧 Масла & Уход</button>
-        <button class="chip-btn" onclick="setSexshopCategory('Аксессуары', this)">🎭 Аксессуары</button>
+        <button class="chip-btn" onclick="setSexshopCategory('Игрушки', this)">🧸 Игрушки</button>
       </div>
-
       <div id="custom-products-sexshop" class="products-grid-view"></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 18. ЭКРАН 8: ПОДАРКИ И ЖЕЛАНИЯ                              -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 8: ЖЕЛАНИЯ -->
   <div id="tab-gifts" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1239,21 +787,16 @@
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Подарки & Просьбы</div>
       </div>
       <div class="add-input-box">
-        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Загадать желание / просьбу</div>
         <div class="form-group">
-          <input type="text" id="input-gift-title" class="form-control" placeholder="Что бы вам хотелось получить?">
+          <input type="text" id="input-gift-title" class="form-control" placeholder="Загадать желание...">
         </div>
-        <button class="small-btn" style="width: 100%; justify-content: center;" onclick="addGiftWish()">
-          Загадать Желание ✨
-        </button>
+        <button class="small-btn" style="width: 100%;" onclick="addGiftWish()">Загадать Желание ✨</button>
       </div>
       <div id="gifts-list-container" class="contract-list"></div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 19. ЭКРАН 9: МЕССЕНДЖЕР И ЧАТЫ                              -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 9: МЕССЕНДЖЕР -->
   <div id="tab-messenger" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1261,18 +804,18 @@
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Сообщения</div>
       </div>
       <div class="contract-list">
-        <div class="messenger-item" onclick="openSubScreen('tab-chat-1')">
-          <img class="messenger-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
-          <div class="messenger-info">
+        <div class="contract-item" onclick="openSubScreen('tab-chat-1')" style="cursor: pointer;">
+          <div class="contract-info">
             <div class="name">Pact Bot</div>
-            <div class="preview" id="chat-last-preview">Готовы ли вы принять условия соглашения...</div>
+            <div class="reward" style="color: var(--text-muted);">Нажмите, чтобы открыть диалог</div>
           </div>
+          <span>💬</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Экран диалога с ботом -->
+  <!-- ЧАТ -->
   <div id="tab-chat-1" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1281,135 +824,49 @@
       </div>
       <div id="chat-messages" class="chat-box"></div>
       <div style="display: flex; gap: 6px;">
-        <input type="text" id="chat-input" class="form-control" placeholder="Написать ответ..." onkeypress="handleChatKeyPress(event)">
+        <input type="text" id="chat-input" class="form-control" placeholder="Написать ответ...">
         <button class="small-btn" onclick="sendChatMessage()">Отправить</button>
       </div>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 20. ЭКРАН 10: ЛИЧНЫЙ ПРОФИЛЬ                                -->
-  <!-- ============================================================ -->
+  <!-- ЭКРАН 10: ПРОФИЛЬ -->
   <div id="tab-profile" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
         <div style="font-weight: 700; color: #fff; font-size: 11px;">Личный Профиль</div>
       </div>
-
       <div class="profile-card-header">
         <div class="profile-avatar-container">
           <img class="profile-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
         </div>
-        <div class="profile-name" id="profile-name-display">Alex & Mia</div>
+        <div class="profile-name">Alex & Mia</div>
         <div class="profile-badge" id="profile-role-badge">ВЕРХНИЙ СТАТУС 😈</div>
       </div>
-
       <div class="profile-stats-grid">
         <div class="stat-box">
-          <div class="val" id="profile-pts-val">2,450</div>
-          <div class="lbl">Очки Заботы</div>
+          <div class="val" id="profile-pts-val">3,450 PTS</div>
+          <div class="lbl">Очки Баланса</div>
         </div>
         <div class="stat-box">
-          <div class="val" id="profile-tasks-val">14</div>
+          <div class="val">14</div>
           <div class="lbl">Выполнено Обет</div>
         </div>
       </div>
-
-      <button class="role-toggle-btn" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="toggleRole()">
+      <button class="role-toggle-btn" style="width: 100%; justify-content: center;" onclick="toggleRole()">
         Сменить Роль
       </button>
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 21. МОДАЛ: ДОБАВЛЕНИЕ ТОВАРА (С 5 СЛОТАМИ ФОТО)              -->
-  <!-- ============================================================ -->
-  <div class="modal-overlay" id="add-product-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Добавить Товар</h3>
-        <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
-      </div>
+  <!-- ВСПЛЫВАЮЩАЯ КНОПКА ОБОЕВ ПРИ РЕДАКТИРОВАНИИ -->
+  <button id="dock-wallpaper-btn" class="dock-wallpaper-btn" onclick="openWallpaperModal()">
+    <span>🖼️</span>
+    <span>Сменить обои</span>
+  </button>
 
-      <div class="modal-tabs">
-        <button class="modal-tab-btn active" id="modal-tab-boutique" onclick="switchModalShopTab('boutique')">🛍️ Бутик</button>
-        <button class="modal-tab-btn" id="modal-tab-sexshop" onclick="switchModalShopTab('sexshop')">🔮 Секс-шоп</button>
-      </div>
-
-      <form id="add-product-form" onsubmit="handleProductSubmit(event)">
-        <input type="hidden" id="target-modal-shop" value="boutique">
-        <div class="form-group">
-          <label>Название товара</label>
-          <input type="text" id="prod-title" class="form-control" required placeholder="Название...">
-        </div>
-        <div class="form-group">
-          <label>Категория</label>
-          <select id="prod-category" class="form-control" required></select>
-        </div>
-        <div class="form-group">
-          <label>Описание</label>
-          <input type="text" id="prod-description" class="form-control" placeholder="Размер, ткань...">
-        </div>
-        <div class="form-group">
-          <label>Главное фото URL</label>
-          <input type="url" id="prod-main-img" class="form-control" required placeholder="https://...">
-        </div>
-        <div class="form-group">
-          <label>Дополнительные фото (до 4 шт.)</label>
-          <div class="photo-inputs-grid">
-            <input type="url" id="prod-sub-1" class="form-control" placeholder="Фото 1 URL">
-            <input type="url" id="prod-sub-2" class="form-control" placeholder="Фото 2 URL">
-            <input type="url" id="prod-sub-3" class="form-control" placeholder="Фото 3 URL">
-            <input type="url" id="prod-sub-4" class="form-control" placeholder="Фото 4 URL">
-          </div>
-        </div>
-        <div class="form-group" id="prod-rub-group">
-          <label>Цена (в Рублях ₽)</label>
-          <input type="number" id="prod-price-rub" class="form-control" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label>Цена (в Очках PTS)</label>
-          <input type="number" id="prod-price-pts" class="form-control" placeholder="0">
-        </div>
-        <button type="submit" class="small-btn" style="width: 100%; padding: 10px; margin-top: 6px;">Сохранить Товар</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- 22. МОДАЛ: ГАЛЕРЕЯ ТОВАРА С МИНИАТЮРАМИ                     -->
-  <!-- ============================================================ -->
-  <div class="modal-overlay" id="gallery-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="gallery-title">Детали Товара</h3>
-        <span class="modal-close-btn" onclick="closeGalleryModal()">✕</span>
-      </div>
-      <img id="gallery-main-view" class="gallery-preview-img" src="" alt="View">
-      <div id="gallery-thumbs-box" class="gallery-thumbs-row"></div>
-      <div id="gallery-category-badge" style="font-size: 10px; color: var(--accent-color); font-weight: 700; margin-bottom: 4px;"></div>
-      <p id="gallery-description-text" style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;"></p>
-      <div id="gallery-price-text" style="font-size: 13px; font-weight: 800; color: var(--ovulation-color); margin-bottom: 12px;"></div>
-      <button id="btn-delete-active-product" class="back-action-btn" style="width: 100%; justify-content: center; color: #ff4d4d; border-color: #ff4d4d;">Удалить товар</button>
-    </div>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- 23. ФИКСИРОВАННЫЙ НИЖНИЙ DOCK НАВИГАЦИИ                     -->
-  <!-- ============================================================ -->
-  <!-- Кнопка всплывает над .nav-bar в режиме настройки -->
-</nav>
-<!-- Проверьте наличие этого блока в HTML -->
-<div id="dock-wallpaper-btn" class="dock-wallpaper-btn" onclick="openWallpaperModal()">
-  <span>🖼️</span>
-  <span>Сменить обои</span>
-</div>
-
-<nav class="nav-bar">
-  <!-- кнопки навигации -->
-</nav>
-  
+  <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ -->
   <nav class="nav-bar">
     <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
       <span class="nav-icon">👤</span>
@@ -1427,8 +884,9 @@
       <span class="nav-icon">💬</span>
       <span class="nav-label">Чат</span>
     </div>
+  </nav>
 
-  <!-- МОДАЛКА: СМЕНА ОБОЕВ РАБОЧЕГО СТОЛА -->
+  <!-- МОДАЛКА: СМЕНА ОБОЕВ -->
   <div class="modal-overlay" id="wallpaper-modal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1436,21 +894,27 @@
         <span class="modal-close-btn" onclick="closeWallpaperModal()">✕</span>
       </div>
       <div class="wallpaper-presets-grid">
-        <div class="wallpaper-thumb" onclick="applyWallpaper('default')" style="background: #0C0A10;">
-          <span>Темный Бархат</span>
+        <div class="wallpaper-thumb" data-wp="ruby_opal" onclick="setWallpaper('ruby_opal')" style="background: radial-gradient(at 15% 15%, #5E0D20 0%, #0C0A10 100%);">
+          <span>Рубиновый Опал</span>
         </div>
-        <div class="wallpaper-thumb" onclick="applyWallpaper('ruby')" style="background: linear-gradient(180deg, #3A0B16 0%, #0C0A10 100%);">
-          <span>Рубиновый</span>
+        <div class="wallpaper-thumb" data-wp="neon_velvet" onclick="setWallpaper('neon_velvet')" style="background: radial-gradient(at 20% 20%, #6E0F48 0%, #0C0A10 100%);">
+          <span>Неоновый Бархат</span>
         </div>
-        <div class="wallpaper-thumb" onclick="applyWallpaper('art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
+        <div class="wallpaper-thumb" data-wp="wine_sunset" onclick="setWallpaper('wine_sunset')" style="background: radial-gradient(at 80% 15%, #6B172B 0%, #0C0A10 100%);">
+          <span>Винный Закат</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="amethyst_haze" onclick="setWallpaper('amethyst_haze')" style="background: radial-gradient(at 25% 15%, #42145C 0%, #0C0A10 100%);">
+          <span>Аметистовая Дымка</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="emerald_silk" onclick="setWallpaper('emerald_silk')" style="background: radial-gradient(at 20% 20%, #0F3D2A 0%, #0C0A10 100%);">
+          <span>Изумрудный Шелк</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="prismatic_art" onclick="setWallpaper('prismatic_art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
           <span>Арт Заставки</span>
         </div>
-        <div class="wallpaper-thumb" onclick="applyWallpaper('plum')" style="background: linear-gradient(180deg, #24102C 0%, #0C0A10 100%);">
-          <span>Слива</span>
-        </div>
       </div>
-      <div class="form-group" style="margin-top: 10px;">
-        <label>Или своя ссылка на картинку (URL):</label>
+      <div class="form-group" style="margin-top: 12px;">
+        <label>Своя картинка (URL):</label>
         <div style="display: flex; gap: 6px;">
           <input type="url" id="custom-wallpaper-input" class="form-control" placeholder="https://...">
           <button class="small-btn" onclick="applyCustomWallpaper()">ОК</button>
@@ -1459,7 +923,7 @@
     </div>
   </div>
 
-  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ВИДЖЕТОВ И ПЛИТОК -->
+  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ПЛИТОК -->
   <div class="modal-overlay" id="add-widget-modal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1467,12 +931,11 @@
         <span class="modal-close-btn" onclick="closeAddWidgetModal()">✕</span>
       </div>
       <div class="widget-catalog-list">
-        <!-- Виджеты -->
         <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-balance', 2)">
           <div class="cat-icon">🔥</div>
           <div class="cat-info">
             <div class="title">Баланс Очков (2 колонки)</div>
-            <div class="sub">Текущий счет и статистика заботы</div>
+            <div class="sub">Текущий счет и статистика</div>
           </div>
           <button class="small-btn">+</button>
         </div>
@@ -1480,69 +943,55 @@
           <div class="cat-icon">📜</div>
           <div class="cat-info">
             <div class="title">Обет Дня (Вся строка)</div>
-            <div class="sub">Действующее правило соглашения</div>
+            <div class="sub">Действующее правило</div>
           </div>
           <button class="small-btn">+</button>
         </div>
-        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-note', 2)">
-          <div class="cat-icon">💌</div>
-          <div class="cat-info">
-            <div class="title">Записка Страсти (2 колонки)</div>
-            <div class="sub">Быстрое послание партнеру</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-        <!-- Быстрые плитки -->
         <div class="widget-catalog-card" onclick="createTileOnDesktop('Календарь', '🌸', 'tab-cycle')">
           <div class="cat-icon">🌸</div>
           <div class="cat-info">
             <div class="title">Плитка Календаря (1 слот)</div>
-            <div class="sub">Быстрый переход к циклу</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Бутик', '🛍️', 'tab-shop')">
-          <div class="cat-icon">🛍️</div>
-          <div class="cat-info">
-            <div class="title">Плитка Бутика (1 слот)</div>
-            <div class="sub">Белье и подарки</div>
+            <div class="sub">Женский цикл</div>
           </div>
           <button class="small-btn">+</button>
         </div>
       </div>
     </div>
   </div>
-  </nav>
 
-  <!-- ============================================================ -->
-  <!-- 24. JAVASCRIPT ЛОГИКА ПРИЛОЖЕНИЯ                             -->
-  <!-- ============================================================ -->
+  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ТОВАРА -->
+  <div class="modal-overlay" id="add-product-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Добавить Товар</h3>
+        <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
+      </div>
+      <form id="add-product-form" onsubmit="handleProductSubmit(event)">
+        <input type="hidden" id="target-modal-shop" value="boutique">
+        <div class="form-group">
+          <label>Название</label>
+          <input type="text" id="prod-title" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Категория</label>
+          <input type="text" id="prod-category" class="form-control" placeholder="Комплект, Игрушки..." required>
+        </div>
+        <div class="form-group">
+          <label>URL Фото</label>
+          <input type="url" id="prod-main-img" class="form-control" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Цена (в PTS)</label>
+          <input type="number" id="prod-price-pts" class="form-control" placeholder="500">
+        </div>
+        <button type="submit" class="small-btn" style="width: 100%; margin-top: 6px;">Сохранить Товар</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ДВИЖОК -->
   <script>
-     function toggleDesktopEditMode() {
-      isDesktopEditMode = !isDesktopEditMode;
-      
-      const btn = document.getElementById('btn-edit-desktop');
-      const wallpaperBtn = document.getElementById('dock-wallpaper-btn');
-      const grid = document.getElementById('desktop-grid-container');
-
-      if (isDesktopEditMode) {
-        btn?.classList.add('active');
-        if (btn) btn.innerHTML = '✓ Готово';
-        wallpaperBtn?.classList.add('active'); // Кнопка плавно всплывает
-        grid?.classList.add('edit-mode');
-        tg?.HapticFeedback?.selectionChanged?.();
-      } else {
-        btn?.classList.remove('active');
-        if (btn) btn.innerHTML = '⚙️ Настроить';
-        wallpaperBtn?.classList.remove('active'); // Кнопка плавно растворяется
-        grid?.classList.remove('edit-mode');
-      }
-      renderDesktop();
-    }
-    
-    // -------------------------------------------------------------
-    // А) Инициализация Telegram WebApp
-    // -------------------------------------------------------------
+    // Инициализация Telegram WebApp
     const tg = window.Telegram?.WebApp;
     if (tg) {
       try {
@@ -1551,28 +1000,23 @@
         if (tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) tg.requestFullscreen?.();
         if (tg.isVersionAtLeast && tg.isVersionAtLeast('7.7')) tg.disableVerticalSwipes?.();
       } catch (e) {
-        console.warn('Ошибка инициализации Telegram SDK:', e);
+        console.warn('Ошибка Telegram WebApp:', e);
       }
     }
 
-    // -------------------------------------------------------------
-    // Б) Гарантированное скрытие заставки (Splash Screen)
-    // -------------------------------------------------------------
+    // Автономное и надежное скрытие заставки
     function hideSplash() {
       const splash = document.getElementById('splash-screen');
-      if (splash) {
+      if (splash && !splash.classList.contains('hidden')) {
         splash.classList.add('hidden');
-        setTimeout(() => { splash.style.display = 'none'; }, 800);
+        setTimeout(() => { splash.style.display = 'none'; }, 700);
       }
     }
-    // Автоматическое скрытие через 2 секунды, даже если сеть медленная
-    setTimeout(hideSplash, 2000);
+    // Комфортное удержание заставки на 1.6 секунды
+    setTimeout(hideSplash, 1600);
 
-    // -------------------------------------------------------------
-    // В) Навигация по экранам (Внутренний стек страниц)
-    // -------------------------------------------------------------
+    // Навигация
     let navStack = ['tab-home'];
-
     function openSubScreen(tabId) {
       if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
       renderActiveTab(tabId);
@@ -1599,11 +1043,8 @@
       else if (tabId === 'tab-messenger' || tabId === 'tab-chat-1') document.getElementById('nav-chat')?.classList.add('active');
     }
 
-    // -------------------------------------------------------------
-    // Г) Ролевая модель (Верхний 😈 / Нижня 😇)
-    // -------------------------------------------------------------
+    // Роли
     let currentRole = localStorage.getItem('pact_role') || 'top';
-
     function updateRoleUI() {
       const btnRole = document.getElementById('role-toggle-main');
       const badgeRole = document.getElementById('profile-role-badge');
@@ -1627,9 +1068,7 @@
       renderDesktop();
     }
 
-   // -------------------------------------------------------------
-    // Д) Сетка, сенсорный Drag-and-Drop и кастомизация
-    // -------------------------------------------------------------
+    // Рабочий стол и сенсорный Drag-and-Drop
     let isDesktopEditMode = false;
     let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
       { id: 'tile-male', type: 'tile', title: 'Мужская ♂', icon: '⚡', target: 'tab-male-session' },
@@ -1651,25 +1090,25 @@
     function toggleDesktopEditMode() {
       isDesktopEditMode = !isDesktopEditMode;
       const btn = document.getElementById('btn-edit-desktop');
-      const toolbar = document.getElementById('desktop-edit-toolbar');
+      const wallpaperBtn = document.getElementById('dock-wallpaper-btn');
       const grid = document.getElementById('desktop-grid-container');
 
       if (isDesktopEditMode) {
         btn?.classList.add('active');
-        toolbar?.classList.add('active');
+        if (btn) btn.innerHTML = '✓ Готово';
+        wallpaperBtn?.classList.add('active');
         grid?.classList.add('edit-mode');
         tg?.HapticFeedback?.selectionChanged?.();
       } else {
         btn?.classList.remove('active');
-        toolbar?.classList.remove('active');
+        if (btn) btn.innerHTML = '⚙️ Настроить';
+        wallpaperBtn?.classList.remove('active');
         grid?.classList.remove('edit-mode');
       }
       renderDesktop();
     }
 
-    // СЕНСОРНЫЙ ДВИЖОК ПЕРЕМЕЩЕНИЯ (TOUCH DRAG & DROP)
     let touchStartIndex = null;
-
     function attachTouchEvents(wrapEl, index) {
       wrapEl.addEventListener('touchstart', (e) => {
         if (!isDesktopEditMode || e.target.closest('.item-delete-btn')) return;
@@ -1690,19 +1129,15 @@
         }
       }, { passive: true });
 
-      wrapEl.addEventListener('touchend', (e) => {
+      wrapEl.addEventListener('touchend', () => {
         if (touchStartIndex === null) return;
         wrapEl.classList.remove('is-dragging');
-        const touch = e.changedTouches[0];
-        const underElement = document.elementFromPoint(touch.clientX, touch.clientY);
-        const targetWrap = underElement?.closest('.desktop-item-wrapper');
-
+        const draggedTarget = document.querySelector('.desktop-item-wrapper.drag-over');
         document.querySelectorAll('.desktop-item-wrapper').forEach(w => w.classList.remove('drag-over'));
 
-        if (targetWrap) {
-          const targetIndex = parseInt(targetWrap.dataset.index);
+        if (draggedTarget) {
+          const targetIndex = parseInt(draggedTarget.dataset.index);
           if (!isNaN(targetIndex) && targetIndex !== touchStartIndex) {
-            // Перемещаем элемент на новое место в массиве
             const itemToMove = desktopItems.splice(touchStartIndex, 1)[0];
             desktopItems.splice(targetIndex, 0, itemToMove);
             saveDesktopItems();
@@ -1745,15 +1180,8 @@
           inner += `
             <div class="desktop-widget" onclick="if(!isDesktopEditMode) openSubScreen('tab-contract')">
               <div class="widget-header"><span>Обет Дня</span><span>📜</span></div>
-              <div class="widget-title">"Взаимное согласие и правила вечера"</div>
-              <div class="widget-sub">Статус: Все условия активированы</div>
-            </div>`;
-        } else if (item.type === 'widget-note') {
-          inner += `
-            <div class="desktop-widget" style="border-color: rgba(232, 160, 191, 0.4);">
-              <div class="widget-header"><span style="color:var(--ovulation-color);">Послание</span><span>💌</span></div>
-              <div class="widget-title" style="font-size: 11px;">"Жду вечера... Сюрприз готов"</div>
-              <div class="widget-sub">Закреплено</div>
+              <div class="widget-title">"Согласие и правила вечера"</div>
+              <div class="widget-sub">Статус: Активно</div>
             </div>`;
         }
 
@@ -1770,85 +1198,77 @@
       tg?.HapticFeedback?.notificationOccurred?.('warning');
     }
 
-    // ДОБАВЛЕНИЕ НОВЫХ ВИДЖЕТОВ И ПЛИТОК
+    function createWidgetOnDesktop(type, span) {
+      desktopItems.push({ id: 'w-' + Date.now(), type, span });
+      saveDesktopItems();
+      closeAddWidgetModal();
+      renderDesktop();
+    }
+
+    function createTileOnDesktop(title, icon, target) {
+      desktopItems.push({ id: 't-' + Date.now(), type: 'tile', title, icon, target });
+      saveDesktopItems();
+      closeAddWidgetModal();
+      renderDesktop();
+    }
+
+    // Модальные окна обоев и виджетов
+    function openWallpaperModal() {
+      document.getElementById('wallpaper-modal')?.classList.add('active');
+    }
+    function closeWallpaperModal() {
+      document.getElementById('wallpaper-modal')?.classList.remove('active');
+    }
     function openAddWidgetModal() {
       document.getElementById('add-widget-modal')?.classList.add('active');
     }
     function closeAddWidgetModal() {
       document.getElementById('add-widget-modal')?.classList.remove('active');
     }
-    function createWidgetOnDesktop(type, span) {
-      desktopItems.push({ id: 'w-' + Date.now(), type, span });
-      saveDesktopItems();
-      closeAddWidgetModal();
-      renderDesktop();
-      tg?.HapticFeedback?.notificationOccurred?.('success');
-    }
-    function createTileOnDesktop(title, icon, target) {
-      desktopItems.push({ id: 't-' + Date.now(), type: 'tile', title, icon, target });
-      saveDesktopItems();
-      closeAddWidgetModal();
-      renderDesktop();
-      tg?.HapticFeedback?.notificationOccurred?.('success');
-    }
 
-    // ==========================================
-    // УПРАВЛЕНИЕ 10 ПЕРЕЛИВАЮЩИМИСЯ ОБОЯМИ
-    // ==========================================
+    // Управление фонами
     const WALLPAPER_PRESETS = {
       ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), radial-gradient(at 85% 25%, #7D1C3E 0%, transparent 50%), radial-gradient(at 50% 85%, #26050C 0%, transparent 65%), #0C0A10',
       neon_velvet: 'radial-gradient(at 20% 20%, #6E0F48 0%, transparent 50%), radial-gradient(at 80% 25%, #351059 0%, transparent 55%), radial-gradient(at 50% 75%, #1F072C 0%, transparent 60%), #0C0A10',
       wine_sunset: 'radial-gradient(at 80% 15%, #6B172B 0%, transparent 50%), radial-gradient(at 20% 45%, #420F1C 0%, transparent 55%), radial-gradient(at 65% 85%, #26060F 0%, transparent 60%), #0C0A10',
       amethyst_haze: 'radial-gradient(at 25% 15%, #42145C 0%, transparent 55%), radial-gradient(at 85% 35%, #220B38 0%, transparent 50%), radial-gradient(at 40% 80%, #140521 0%, transparent 60%), #0C0A10',
       emerald_silk: 'radial-gradient(at 20% 20%, #0F3D2A 0%, transparent 50%), radial-gradient(at 80% 30%, #082621 0%, transparent 55%), radial-gradient(at 50% 85%, #051410 0%, transparent 60%), #0C0A10',
-      rose_mist: 'radial-gradient(at 20% 25%, #541F33 0%, transparent 50%), radial-gradient(at 80% 20%, #3B1527 0%, transparent 50%), radial-gradient(at 50% 75%, #210A15 0%, transparent 60%), #0C0A10',
-      passion_aurora: 'radial-gradient(at 15% 15%, #590F24 0%, transparent 50%), radial-gradient(at 85% 20%, #1A184F 0%, transparent 55%), radial-gradient(at 50% 85%, #260A2B 0%, transparent 60%), #0C0A10',
-      midnight_sapphire: 'radial-gradient(at 25% 20%, #152454 0%, transparent 55%), radial-gradient(at 85% 30%, #30103E 0%, transparent 50%), radial-gradient(at 50% 80%, #0A0E21 0%, transparent 65%), #0C0A10',
-      obsidian_ember: 'radial-gradient(at 50% 12%, #540815 0%, transparent 60%), radial-gradient(at 15% 75%, #29040A 0%, transparent 50%), radial-gradient(at 85% 70%, #1C0307 0%, transparent 50%), #0C0A10',
       prismatic_art: "linear-gradient(180deg, rgba(74, 13, 30, 0.62) 0%, rgba(12, 10, 16, 0.88) 55%, #0C0A10 100%), url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center top / cover no-repeat"
     };
 
-    function openWallpaperModal() {
-      document.getElementById('wallpaper-modal')?.classList.add('active');
-    }
-
-    function closeWallpaperModal() {
-      document.getElementById('wallpaper-modal')?.classList.remove('active');
-    }
-
     function setWallpaper(key) {
       const bg = WALLPAPER_PRESETS[key] || WALLPAPER_PRESETS.ruby_opal;
-      const layer = document.getElementById('desktop-bg-layer');
+      document.body.style.background = bg;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center top';
+      document.body.style.backgroundAttachment = 'fixed';
 
-      if (layer) {
-        layer.style.background = bg;
-        layer.style.backgroundSize = 'cover';
-        layer.style.backgroundPosition = 'center top';
-      } else {
-        document.body.style.background = bg;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundPosition = 'center top';
-        document.body.style.backgroundAttachment = 'fixed';
-      }
-
-      // Подсветка выбранной иконки
-      document.querySelectorAll('.wp-card').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.wallpaper-thumb').forEach(c => c.classList.remove('selected'));
       document.querySelector(`[data-wp="${key}"]`)?.classList.add('selected');
 
       localStorage.setItem('pact_wallpaper_key', key);
       tg?.HapticFeedback?.selectionChanged?.();
     }
 
-    function loadSavedWallpaper() {
-      const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
-      setWallpaper(savedKey);
+    function applyCustomWallpaper() {
+      const url = document.getElementById('custom-wallpaper-input')?.value.trim();
+      if (!url) return;
+      document.body.style.background = `linear-gradient(rgba(12,10,16,0.6), rgba(12,10,16,0.8)), url('${url}') center/cover fixed no-repeat`;
+      localStorage.setItem('pact_wallpaper_key', 'custom:' + url);
+      closeWallpaperModal();
     }
 
-    // Запуск сохраненного фона при старте
-    loadSavedWallpaper();
-    // -------------------------------------------------------------
-    // Е) Календарь цикла и расчет овуляции
-    // -------------------------------------------------------------
+    function loadSavedWallpaper() {
+      const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
+      if (savedKey.startsWith('custom:')) {
+        const url = savedKey.replace('custom:', '');
+        document.body.style.background = `linear-gradient(rgba(12,10,16,0.6), rgba(12,10,16,0.8)), url('${url}') center/cover fixed no-repeat`;
+      } else {
+        setWallpaper(savedKey);
+      }
+    }
+
+    // Календарь
     let cycleStartDate = localStorage.getItem('cycle_start_date') || new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0];
     let cycleDuration = parseInt(localStorage.getItem('cycle_duration') || '28');
 
@@ -1868,8 +1288,10 @@
     }
 
     function renderCycleInfo() {
-      document.getElementById('cycle-start-input').value = cycleStartDate;
-      document.getElementById('cycle-length-input').value = cycleDuration;
+      const startEl = document.getElementById('cycle-start-input');
+      const lenEl = document.getElementById('cycle-length-input');
+      if (startEl) startEl.value = cycleStartDate;
+      if (lenEl) lenEl.value = cycleDuration;
 
       const start = new Date(cycleStartDate);
       const now = new Date();
@@ -1879,12 +1301,18 @@
       let daysToOvulation = ovulationDay - diffDays;
       if (daysToOvulation < 0) daysToOvulation += cycleDuration;
 
-      document.getElementById('box-period-val').innerText = `${daysToPeriod} дн.`;
-      document.getElementById('box-period-sub').innerText = 'Следующий цикл';
-      document.getElementById('box-ovulation-val').innerText = daysToOvulation === 0 ? 'Сегодня' : `${daysToOvulation} дн.`;
-      document.getElementById('box-ovulation-sub').innerText = 'Фертильная фаза';
+      const pVal = document.getElementById('box-period-val');
+      const pSub = document.getElementById('box-period-sub');
+      const oVal = document.getElementById('box-ovulation-val');
+      const oSub = document.getElementById('box-ovulation-sub');
+
+      if (pVal) pVal.innerText = `${daysToPeriod} дн.`;
+      if (pSub) pSub.innerText = 'Следующий цикл';
+      if (oVal) oVal.innerText = daysToOvulation === 0 ? 'Сегодня' : `${daysToOvulation} дн.`;
+      if (oSub) oSub.innerText = 'Фертильная фаза';
 
       const calGrid = document.getElementById('calendar-grid');
+      if (!calGrid) return;
       calGrid.innerHTML = '';
       const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
       daysOfWeek.forEach(d => { calGrid.innerHTML += `<div class="calendar-weekday">${d}</div>`; });
@@ -1898,9 +1326,7 @@
       }
     }
 
-    // -------------------------------------------------------------
-    // Ж) Ритуалы (Сессии)
-    // -------------------------------------------------------------
+    // Задания
     let maleTasks = JSON.parse(localStorage.getItem('male_tasks')) || [
       { id: 1, title: 'Утренний кофейный обряд', points: 150 },
       { id: 2, title: 'Выбор вечернего гардероба', points: 200 }
@@ -1914,25 +1340,29 @@
       const mCont = document.getElementById('male-tasks-container');
       const fCont = document.getElementById('female-tasks-container');
 
-      mCont.innerHTML = maleTasks.map((t, idx) => `
-        <div class="contract-item">
-          <div class="contract-info">
-            <div class="name">${t.title}</div>
-            <div class="reward">+${t.points} PTS</div>
+      if (mCont) {
+        mCont.innerHTML = maleTasks.map((t, idx) => `
+          <div class="contract-item">
+            <div class="contract-info">
+              <div class="name">${t.title}</div>
+              <div class="reward">+${t.points} PTS</div>
+            </div>
+            <button class="back-action-btn" onclick="deleteTask('male', ${idx})">✕</button>
           </div>
-          <button class="back-action-btn" onclick="deleteTask('male', ${idx})">✕</button>
-        </div>
-      `).join('') || '<div style="color:var(--text-muted); font-size:10px;">Заданий пока нет</div>';
+        `).join('') || '<div style="color:var(--text-muted); font-size:10px;">Заданий пока нет</div>';
+      }
 
-      fCont.innerHTML = femaleTasks.map((t, idx) => `
-        <div class="contract-item">
-          <div class="contract-info">
-            <div class="name">${t.title}</div>
-            <div class="reward">+${t.points} PTS</div>
+      if (fCont) {
+        fCont.innerHTML = femaleTasks.map((t, idx) => `
+          <div class="contract-item">
+            <div class="contract-info">
+              <div class="name">${t.title}</div>
+              <div class="reward">+${t.points} PTS</div>
+            </div>
+            <button class="back-action-btn" onclick="deleteTask('female', ${idx})">✕</button>
           </div>
-          <button class="back-action-btn" onclick="deleteTask('female', ${idx})">✕</button>
-        </div>
-      `).join('') || '<div style="color:var(--text-muted); font-size:10px;">Заданий пока нет</div>';
+        `).join('') || '<div style="color:var(--text-muted); font-size:10px;">Заданий пока нет</div>';
+      }
     }
 
     function addCustomTask(gender) {
@@ -1965,9 +1395,7 @@
       renderTasks();
     }
 
-    // -------------------------------------------------------------
-    // З) Контракт и Желания
-    // -------------------------------------------------------------
+    // Контракт
     let contractClauses = JSON.parse(localStorage.getItem('contract_clauses')) || [
       'Полное доверие и открытость в диалоге',
       'Обязательное соблюдение установленных стоп-слов',
@@ -1980,20 +1408,24 @@
 
     function renderContractAndGifts() {
       const cCont = document.getElementById('contract-clauses-list');
-      cCont.innerHTML = contractClauses.map((c, i) => `
-        <div class="contract-item">
-          <div class="contract-info"><div class="name">§ ${i + 1}. ${c}</div></div>
-          <button class="back-action-btn" onclick="deleteContractClause(${i})">✕</button>
-        </div>
-      `).join('');
+      if (cCont) {
+        cCont.innerHTML = contractClauses.map((c, i) => `
+          <div class="contract-item">
+            <div class="contract-info"><div class="name">§ ${i + 1}. ${c}</div></div>
+            <button class="back-action-btn" onclick="deleteContractClause(${i})">✕</button>
+          </div>
+        `).join('');
+      }
 
       const gCont = document.getElementById('gifts-list-container');
-      gCont.innerHTML = giftWishes.map((w, i) => `
-        <div class="contract-item">
-          <div class="contract-info"><div class="name">🎁 ${w}</div></div>
-          <button class="back-action-btn" onclick="deleteGiftWish(${i})">✕</button>
-        </div>
-      `).join('');
+      if (gCont) {
+        gCont.innerHTML = giftWishes.map((w, i) => `
+          <div class="contract-item">
+            <div class="contract-info"><div class="name">🎁 ${w}</div></div>
+            <button class="back-action-btn" onclick="deleteGiftWish(${i})">✕</button>
+          </div>
+        `).join('');
+      }
     }
 
     function addContractClause() {
@@ -2026,165 +1458,57 @@
       renderContractAndGifts();
     }
 
-    // -------------------------------------------------------------
-    // И) Магазины (Бутик и Секс-шоп)
-    // -------------------------------------------------------------
-    const boutiqueCategories = ["Нижнее белье", "Комплект", "Пижамы", "Пеньюары", "Ночная одежда"];
-    const sexshopCategories = ["Игрушки", "Бондаж", "Косметика & Уход", "Аксессуары"];
-
+    // Каталог товаров
     let boutiqueItems = JSON.parse(localStorage.getItem('boutique_items')) || [
-      {
-        id: 101,
-        title: 'Кружевной Комплект Velour',
-        category: 'Комплект',
-        desc: 'Нежное рубиновое кружево и мягкая посадка',
-        mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400',
-        subImgs: [],
-        priceRub: 4500,
-        pricePts: 450
-      }
+      { id: 101, title: 'Кружевной Комплект Velour', category: 'Комплект', mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400', pricePts: 450 }
     ];
-
     let sexshopItems = JSON.parse(localStorage.getItem('sexshop_items')) || [
-      {
-        id: 201,
-        title: 'Кожаный Бондажный Набор',
-        category: 'Бондаж',
-        desc: 'Натуральная кожа, мягкая внутренняя подкладка',
-        mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400',
-        subImgs: [],
-        priceRub: 0,
-        pricePts: 850
-      }
+      { id: 201, title: 'Кожаный Бондажный Набор', category: 'Бондаж', mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400', pricePts: 850 }
     ];
-
-    let currentBoutiqueFilter = 'all';
-    let currentSexshopFilter = 'all';
-
-    function setShopCategory(cat, el) {
-      currentBoutiqueFilter = cat;
-      document.querySelectorAll('#tab-shop .chip-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      renderProducts();
-    }
-
-    function setSexshopCategory(cat, el) {
-      currentSexshopFilter = cat;
-      document.querySelectorAll('#tab-sexshop .chip-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      renderProducts();
-    }
 
     function renderProducts() {
       const bCont = document.getElementById('shop-products-list');
       const sCont = document.getElementById('custom-products-sexshop');
 
-      const filteredB = currentBoutiqueFilter === 'all' ? boutiqueItems : boutiqueItems.filter(p => p.category === currentBoutiqueFilter);
-      bCont.innerHTML = filteredB.map(p => `
-        <div class="product-card" onclick="openProductGallery('boutique', ${p.id})">
-          <img class="product-main-img" src="${p.mainImg}" alt="${p.title}">
-          <div class="product-title">${p.title}</div>
-          <div class="product-category-lbl">${p.category}</div>
-          <div class="product-price-lbl">${p.priceRub ? p.priceRub + ' ₽ / ' : ''}🔥 ${p.pricePts} PTS</div>
-        </div>
-      `).join('') || '<div style="color:var(--text-muted); font-size:10px; grid-column:span 2;">Товаров нет</div>';
-
-      const filteredS = currentSexshopFilter === 'all' ? sexshopItems : sexshopItems.filter(p => p.category === currentSexshopFilter);
-      sCont.innerHTML = filteredS.map(p => `
-        <div class="product-card" onclick="openProductGallery('sexshop', ${p.id})">
-          <img class="product-main-img" src="${p.mainImg}" alt="${p.title}">
-          <div class="product-title">${p.title}</div>
-          <div class="product-category-lbl">${p.category}</div>
-          <div class="product-price-lbl">🔥 ${p.pricePts} PTS</div>
-        </div>
-      `).join('') || '<div style="color:var(--text-muted); font-size:10px; grid-column:span 2;">Товаров нет</div>';
-    }
-
-   
-    // Открытие шторки обоев
-function openWallpaperModal() {
-  document.getElementById('wallpaper-modal')?.classList.add('active');
-  tg?.HapticFeedback?.impactOccurred?.('light');
-}
-
-function closeWallpaperModal() {
-  document.getElementById('wallpaper-modal')?.classList.remove('active');
-}
-
-// Режим перемещения карточек стола
-function toggleDesktopEditMode() {
-  isDesktopEditMode = !isDesktopEditMode;
-
-  const btn = document.getElementById('btn-edit-desktop');
-  const grid = document.getElementById('desktop-grid-container');
-
-  if (isDesktopEditMode) {
-    btn?.classList.add('active');
-    if (btn) btn.innerHTML = '✓ Готово';
-    grid?.classList.add('edit-mode');
-    tg?.HapticFeedback?.selectionChanged?.();
-  } else {
-    btn?.classList.remove('active');
-    if (btn) btn.innerHTML = '⚙️ Настроить';
-    grid?.classList.remove('edit-mode');
-  }
-
-  if (typeof renderDesktop === 'function') {
-    renderDesktop();
-  }
-}
-    
-    // -------------------------------------------------------------
-    // К) Модальные окна добавления товаров и галереи
-    // -------------------------------------------------------------
-    function openAddProductModal(shop) {
-      document.getElementById('add-product-modal').classList.add('active');
-      switchModalShopTab(shop);
-    }
-
-    function closeAddProductModal() {
-      document.getElementById('add-product-modal').classList.remove('active');
-    }
-
-    function switchModalShopTab(shop) {
-      document.getElementById('target-modal-shop').value = shop;
-      const bTab = document.getElementById('modal-tab-boutique');
-      const sTab = document.getElementById('modal-tab-sexshop');
-      const catSelect = document.getElementById('prod-category');
-      const rubGroup = document.getElementById('prod-rub-group');
-
-      catSelect.innerHTML = '';
-      if (shop === 'boutique') {
-        bTab.classList.add('active');
-        sTab.classList.remove('active');
-        rubGroup.style.display = 'flex';
-        boutiqueCategories.forEach(c => catSelect.innerHTML += `<option value="${c}">${c}</option>`);
-      } else {
-        sTab.classList.add('active');
-        bTab.classList.remove('active');
-        rubGroup.style.display = 'none';
-        sexshopCategories.forEach(c => catSelect.innerHTML += `<option value="${c}">${c}</option>`);
+      if (bCont) {
+        bCont.innerHTML = boutiqueItems.map(p => `
+          <div class="product-card">
+            <img class="product-main-img" src="${p.mainImg}" alt="${p.title}">
+            <div class="product-title">${p.title}</div>
+            <div class="product-category-lbl">${p.category}</div>
+            <div class="product-price-lbl">🔥 ${p.pricePts} PTS</div>
+          </div>
+        `).join('');
       }
+
+      if (sCont) {
+        sCont.innerHTML = sexshopItems.map(p => `
+          <div class="product-card">
+            <img class="product-main-img" src="${p.mainImg}" alt="${p.title}">
+            <div class="product-title">${p.title}</div>
+            <div class="product-category-lbl">${p.category}</div>
+            <div class="product-price-lbl">🔥 ${p.pricePts} PTS</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openAddProductModal(shop) {
+      document.getElementById('target-modal-shop').value = shop;
+      document.getElementById('add-product-modal')?.classList.add('active');
+    }
+    function closeAddProductModal() {
+      document.getElementById('add-product-modal')?.classList.remove('active');
     }
 
     function handleProductSubmit(e) {
       e.preventDefault();
       const shop = document.getElementById('target-modal-shop').value;
-      const subPhotos = [
-        document.getElementById('prod-sub-1').value.trim(),
-        document.getElementById('prod-sub-2').value.trim(),
-        document.getElementById('prod-sub-3').value.trim(),
-        document.getElementById('prod-sub-4').value.trim()
-      ].filter(Boolean);
-
       const newProd = {
         id: Date.now(),
         title: document.getElementById('prod-title').value.trim(),
-        category: document.getElementById('prod-category').value,
-        desc: document.getElementById('prod-description').value.trim(),
+        category: document.getElementById('prod-category').value.trim(),
         mainImg: document.getElementById('prod-main-img').value.trim(),
-        subImgs: subPhotos,
-        priceRub: parseInt(document.getElementById('prod-price-rub').value || '0'),
         pricePts: parseInt(document.getElementById('prod-price-pts').value || '0')
       };
 
@@ -2201,62 +1525,13 @@ function toggleDesktopEditMode() {
       renderProducts();
     }
 
-    function openProductGallery(shop, id) {
-      const list = shop === 'boutique' ? boutiqueItems : sexshopItems;
-      const prod = list.find(x => x.id === id);
-      if (!prod) return;
-
-      document.getElementById('gallery-title').innerText = prod.title;
-      document.getElementById('gallery-category-badge').innerText = prod.category;
-      document.getElementById('gallery-description-text').innerText = prod.desc || 'Описание отсутствует.';
-      document.getElementById('gallery-price-text').innerText = `${prod.priceRub ? prod.priceRub + ' ₽ / ' : ''}🔥 ${prod.pricePts} PTS`;
-
-      const allImgs = [prod.mainImg, ...(prod.subImgs || [])];
-      const mainView = document.getElementById('gallery-main-view');
-      const thumbsBox = document.getElementById('gallery-thumbs-box');
-      mainView.src = allImgs[0];
-      thumbsBox.innerHTML = '';
-
-      allImgs.forEach((imgUrl, idx) => {
-        const thumb = document.createElement('img');
-        thumb.className = `gallery-thumb-item ${idx === 0 ? 'active' : ''}`;
-        thumb.src = imgUrl;
-        thumb.onclick = () => {
-          mainView.src = imgUrl;
-          document.querySelectorAll('.gallery-thumb-item').forEach(t => t.classList.remove('active'));
-          thumb.classList.add('active');
-        };
-        thumbsBox.appendChild(thumb);
-      });
-
-      document.getElementById('btn-delete-active-product').onclick = () => {
-        if (shop === 'boutique') {
-          boutiqueItems = boutiqueItems.filter(p => p.id !== id);
-          localStorage.setItem('boutique_items', JSON.stringify(boutiqueItems));
-        } else {
-          sexshopItems = sexshopItems.filter(p => p.id !== id);
-          localStorage.setItem('sexshop_items', JSON.stringify(sexshopItems));
-        }
-        closeGalleryModal();
-        renderProducts();
-      };
-
-      document.getElementById('gallery-modal').classList.add('active');
-    }
-
-    function closeGalleryModal() {
-      document.getElementById('gallery-modal').classList.remove('active');
-    }
-
-    // -------------------------------------------------------------
-    // Л) Демонстрационный Чат
-    // -------------------------------------------------------------
+    // Чат
     let chatHistory = [
       { sender: 'bot', text: 'Приветствую в личном пространстве Pact & Passion. Готовы ли вы закрепить новые правила вечера?' }
     ];
-
     function renderChat() {
       const box = document.getElementById('chat-messages');
+      if (!box) return;
       box.innerHTML = chatHistory.map(m => `
         <div class="chat-msg ${m.sender}">${m.text}</div>
       `).join('');
@@ -2278,34 +1553,21 @@ function toggleDesktopEditMode() {
       }, 700);
     }
 
-    function handleChatKeyPress(e) {
-      if (e.key === 'Enter') sendChatMessage();
-    }
-
-    // -------------------------------------------------------------
-    // М) Безопасный первый запуск компонентов
-    // -------------------------------------------------------------
-    try {
-      updateRoleUI();
-      renderDesktop();
-      renderCycleInfo();
-      renderTasks();
-      renderContractAndGifts();
-      renderProducts();
-      renderChat();
-    } catch (err) {
-      console.error('Ошибка инициализации модулей:', err);
-      hideSplash();
-    }
+    // Запуск приложения
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        loadSavedWallpaper();
+        updateRoleUI();
+        renderDesktop();
+        renderCycleInfo();
+        renderTasks();
+        renderContractAndGifts();
+        renderProducts();
+        renderChat();
+      } catch (err) {
+        console.error('Ошибка инициализации:', err);
+      }
+    });
   </script>
-
-<!-- ПРОВЕРОЧНАЯ КНОПКА С ПРЯМЫМИ СТИЛЯМИ (ВСТАВИТЬ ПЕРЕД </body>) -->
-  <!-- КНОПКА СМЕНЫ ОБОЕВ (ВСПЛЫВАЕТ ТОЛЬКО В РЕЖИМЕ НАСТРОЙКИ) -->
-  <button id="dock-wallpaper-btn" 
-          class="dock-wallpaper-btn"
-          onclick="openWallpaperModal()">
-    <span style="font-size: 15px;">🖼️</span>
-    <span>Сменить обои</span>
-  </button>
 </body>
 </html>
