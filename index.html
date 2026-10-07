@@ -14,7 +14,88 @@
 
   <style>
     
-   /* СЕТКА И ШАПКА РАБОЧЕГО СТОЛА */
+/* КАРТОЧКИ ВЫБОРА ОБОЕВ */
+.wp-card {
+  background: rgba(26, 20, 36, 0.7);
+  border: 1px solid rgba(232, 160, 191, 0.2);
+  border-radius: 16px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.wp-card:active {
+  transform: scale(0.96);
+}
+
+.wp-card.active {
+  border-color: #E63956;
+  box-shadow: 0 0 12px rgba(230, 57, 86, 0.45);
+}
+
+.wp-preview {
+  width: 100%;
+  height: 64px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wp-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: #F5EBE6;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 10 ПРЕСЕТОВ ФОНА ДЛЯ ПРИЛОЖЕНИЯ */
+body.wp-velvet, .wp-bg-velvet {
+  background: radial-gradient(circle at 50% 25%, #1F1528 0%, #0C0A10 100%) !important;
+}
+
+body.wp-ruby, .wp-bg-ruby {
+  background: radial-gradient(circle at 50% 15%, #4A0E1C 0%, #16070B 60%, #080305 100%) !important;
+}
+
+body.wp-rosegold, .wp-bg-rosegold {
+  background: radial-gradient(circle at 60% 20%, #3B1C28 0%, #1E1019 55%, #0B0609 100%) !important;
+}
+
+body.wp-bordeaux, .wp-bg-bordeaux {
+  background: radial-gradient(circle at 50% 30%, #360B18 0%, #14050A 70%, #070204 100%) !important;
+}
+
+body.wp-passion, .wp-bg-passion {
+  background: radial-gradient(circle at 20% 20%, #3D0D26 0%, #1C0A1F 50%, #09040D 100%) !important;
+}
+
+body.wp-graphite, .wp-bg-graphite {
+  background: radial-gradient(circle at 50% 20%, #201E24 0%, #111014 65%, #08080A 100%) !important;
+}
+
+body.wp-violet, .wp-bg-violet {
+  background: radial-gradient(circle at 50% 20%, #291438 0%, #130B1C 60%, #08040B 100%) !important;
+}
+
+body.wp-crimson, .wp-bg-crimson {
+  background: radial-gradient(circle at 50% 10%, #52131F 0%, #240A10 55%, #0C0305 100%) !important;
+}
+
+body.wp-cyber, .wp-bg-cyber {
+  background: radial-gradient(circle at 80% 20%, #401036 0%, #170A24 50%, #08030C 100%) !important;
+}
+
+body.wp-espresso, .wp-bg-espresso {
+  background: radial-gradient(circle at 50% 20%, #2B1817 0%, #170C0D 60%, #0A0505 100%) !important;
+}
+    
+    
+    /* СЕТКА И ШАПКА РАБОЧЕГО СТОЛА */
 /* ========================================== */
 /* РАБОЧИЙ СТОЛ С ПОЛНОЙ РАМКОЙ И ОТСТУПАМИ   */
 /* ========================================== */
@@ -1521,35 +1602,68 @@
     </div>
 
   <!-- МОДАЛКА: СМЕНА ОБОЕВ РАБОЧЕГО СТОЛА -->
-  <div class="modal-overlay" id="wallpaper-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Обои Рабочего Стола</h3>
-        <span class="modal-close-btn" onclick="closeWallpaperModal()">✕</span>
-      </div>
-      <div class="wallpaper-presets-grid">
-        <div class="wallpaper-thumb" onclick="applyWallpaper('default')" style="background: #0C0A10;">
-          <span>Темный Бархат</span>
-        </div>
-        <div class="wallpaper-thumb" onclick="applyWallpaper('ruby')" style="background: linear-gradient(180deg, #3A0B16 0%, #0C0A10 100%);">
-          <span>Рубиновый</span>
-        </div>
-        <div class="wallpaper-thumb" onclick="applyWallpaper('art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
-          <span>Арт Заставки</span>
-        </div>
-        <div class="wallpaper-thumb" onclick="applyWallpaper('plum')" style="background: linear-gradient(180deg, #24102C 0%, #0C0A10 100%);">
-          <span>Слива</span>
-        </div>
-      </div>
-      <div class="form-group" style="margin-top: 10px;">
-        <label>Или своя ссылка на картинку (URL):</label>
-        <div style="display: flex; gap: 6px;">
-          <input type="url" id="custom-wallpaper-input" class="form-control" placeholder="https://...">
-          <button class="small-btn" onclick="applyCustomWallpaper()">ОК</button>
-        </div>
-      </div>
+  <div class="modal-overlay" id="wallpaper-modal" onclick="if(event.target === this) closeWallpaperModal()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Обои Рабочего Стола</h3>
+      <div class="modal-close-btn" onclick="closeWallpaperModal()">✕</div>
+    </div>
+      <!-- карточки пресетов (Темный Бархат, Рубиновый и т.д.) -->
+  <div class="wallpaper-grid-10">
+  <div class="wp-card wp-p1" onclick="setAppWallpaper('wp-velvet')">
+    <div class="wp-preview wp-bg-velvet"></div>
+    <span class="wp-title">Тёмный Бархат</span>
+  </div>
+
+  <div class="wp-card wp-p2" onclick="setAppWallpaper('wp-ruby')">
+    <div class="wp-preview wp-bg-ruby"></div>
+    <span class="wp-title">Рубиновый</span>
+  </div>
+
+  <div class="wp-card wp-p3" onclick="setAppWallpaper('wp-rosegold')">
+    <div class="wp-preview wp-bg-rosegold"></div>
+    <span class="wp-title">Розовое Золото</span>
+  </div>
+
+  <div class="wp-card wp-p4" onclick="setAppWallpaper('wp-bordeaux')">
+    <div class="wp-preview wp-bg-bordeaux"></div>
+    <span class="wp-title">Бордовый Шёлк</span>
+  </div>
+
+  <div class="wp-card wp-p5" onclick="setAppWallpaper('wp-passion')">
+    <div class="wp-preview wp-bg-passion"></div>
+    <span class="wp-title">Ночная Страсть</span>
+  </div>
+
+  <div class="wp-card wp-p6" onclick="setAppWallpaper('wp-graphite')">
+    <div class="wp-preview wp-bg-graphite"></div>
+    <span class="wp-title">Графитовый Нуар</span>
+  </div>
+
+  <div class="wp-card wp-p7" onclick="setAppWallpaper('wp-violet')">
+    <div class="wp-preview wp-bg-violet"></div>
+    <span class="wp-title">Глубокая Слива</span>
+  </div>
+
+  <div class="wp-card wp-p8" onclick="setAppWallpaper('wp-crimson')">
+    <div class="wp-preview wp-bg-crimson"></div>
+    <span class="wp-title">Багряный Закат</span>
+  </div>
+
+  <div class="wp-card wp-p9" onclick="setAppWallpaper('wp-cyber')">
+    <div class="wp-preview wp-bg-cyber"></div>
+    <span class="wp-title">Неоновый Интим</span>
+  </div>
+
+  <div class="wp-card wp-p10" onclick="setAppWallpaper('wp-espresso')">
+    <div class="wp-preview wp-bg-espresso"></div>
+    <span class="wp-title">Горький Шоколад</span>
+  </div>
+    
     </div>
   </div>
+</div>
+ 
 
   <!-- МОДАЛКА: ДОБАВЛЕНИЕ ВИДЖЕТОВ И ПЛИТОК -->
   <div class="modal-overlay" id="add-widget-modal">
@@ -2340,6 +2454,39 @@ function toggleDesktopEditMode() {
       document.getElementById('gallery-modal').classList.remove('active');
     }
 
+    const WALLPAPER_CLASSES = [
+  'wp-velvet', 'wp-ruby', 'wp-rosegold', 'wp-bordeaux', 'wp-passion',
+  'wp-graphite', 'wp-violet', 'wp-crimson', 'wp-cyber', 'wp-espresso'
+];
+
+function setAppWallpaper(wpKey) {
+  // 1. Убираем старый класс с body и вешаем новый
+  document.body.classList.remove(...WALLPAPER_CLASSES);
+  document.body.classList.add(wpKey);
+
+  // 2. Сохраняем в память телефона
+  localStorage.setItem('pact_wallpaper_key', wpKey);[cite: 1]
+
+  // 3. Подсвечиваем выбранную карточку в шторке
+  document.querySelectorAll('.wp-card').forEach(card => {
+    const isTarget = card.getAttribute('onclick')?.includes(wpKey);
+    card.classList.toggle('active', !!isTarget);
+  });
+
+  // 4. Вибрация нажатия Telegram
+  tg?.HapticFeedback?.selectionChanged?.();[cite: 1]
+}
+
+// 5. Восстановление сохранённых обоев при открытии
+function loadSavedWallpaper() {
+  const saved = localStorage.getItem('pact_wallpaper_key') || 'wp-velvet';[cite: 1]
+  setAppWallpaper(saved);
+}
+
+// Вызываем загрузку при старте
+loadSavedWallpaper();
+    
+    
     // -------------------------------------------------------------
     // Л) Демонстрационный Чат
     // -------------------------------------------------------------
