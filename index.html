@@ -775,19 +775,62 @@
   display: flex !important;
 }
 
-/* САМА ШТОРКА С ОБОЯМИ */
+/* ========================================== */
+/* ОКНО ОБОЕВ: ОТ МЕРТВОЙ ЗОНЫ ДО НИЖНЕГО МЕНЮ */
+/* ========================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 3, 8, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  /* Слой ниже nav-bar (2000), поэтому нижнее меню никогда не перекрывается */
+  z-index: 1500;
+  
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  /* ТОЧНЫЕ ГРАНИЦЫ: */
+  /* Сверху: сразу под верхней мертвой зоной Telegram */
+  /* Снизу: ровно над нижним доком навигации */
+  padding-top: calc(env(safe-area-inset-top, 20px) + 65px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+  padding-left: 14px;
+  padding-right: 14px;
+  box-sizing: border-box;
+}
+
+/* Мгновенное открытие */
+.modal-overlay.active {
+  display: flex !important;
+}
+
+/* САМА КАРТОЧКА С ПОЛНОЙ РАМКОЙ СО ВСЕХ СТОРОН */
 .modal-card {
   width: 100%;
-  max-width: 480px;
-  height: 70vh; /* Занимает ровно 70% экрана вверх */
-  background: #16121E;
-  border: 1px solid rgba(232, 160, 191, 0.25);
-  border-bottom: none;
-  border-radius: 24px 24px 0 0;
-  padding: 18px 16px calc(env(safe-area-inset-bottom, 0px) + 20px) 16px;
+  max-width: 440px;
+  height: 100%; /* Заполняет всю высоту между мертвой зоной и меню */
+  
+  background: rgba(20, 15, 28, 0.96);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  /* ПОЛНАЯ РАМКА ROSE GOLD СО ВСЕХ 4 СТОРОН */
+  border: 1px solid rgba(232, 160, 191, 0.32);
+  border-radius: 24px;
+
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(230, 57, 86, 0.18);
+
+  padding: 16px 14px;
   box-sizing: border-box;
-  overflow-y: auto; /* Если иконок много — они прокручиваются внутри */
-  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ШАПКА ОКНА */
@@ -795,7 +838,41 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(232, 160, 191, 0.12);
+  margin-bottom: 12px;
+}
+
+.modal-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #F5EBE6;
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(232, 160, 191, 0.2);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #A098AC;
+  cursor: pointer;
+}
+
+/* СЕТКА С 10 ОБОЯМИ (СКРОЛЛИТСЯ ВНУТРИ РАМКИ) */
+.wallpaper-grid-10 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 2px;
 }
     .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
     .modal-close-btn { font-size: 18px; color: var(--text-muted); cursor: pointer; }
