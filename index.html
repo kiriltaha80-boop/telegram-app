@@ -2474,32 +2474,38 @@ window.addEventListener('DOMContentLoaded', () => {
   'wp-graphite', 'wp-violet', 'wp-crimson', 'wp-cyber', 'wp-espresso'
 ];
 
+// Автономная функция обоев (не зависит от внешних переменных)
 function setAppWallpaper(wpKey) {
-  // 1. Убираем старый класс с body и вешаем новый
-  document.body.classList.remove(...WALLPAPER_CLASSES);
-  document.body.classList.add(wpKey);
+  const wallpaperClasses = [
+    'wp-velvet', 'wp-ruby', 'wp-rosegold', 'wp-bordeaux', 'wp-passion',
+    'wp-graphite', 'wp-violet', 'wp-crimson', 'wp-cyber', 'wp-espresso'
+  ];
 
-  // 2. Сохраняем в память телефона
-  localStorage.setItem('pact_wallpaper_key', wpKey);
+  document.body.classList.remove(...wallpaperClasses);
+  if (wpKey) {
+    document.body.classList.add(wpKey);
+  }
 
-  // 3. Подсвечиваем выбранную карточку в шторке
+  try {
+    localStorage.setItem('pact_wallpaper_key', wpKey);
+  } catch (e) {}
+
+  // Подсветка активной плитки в модалке
   document.querySelectorAll('.wp-card').forEach(card => {
     const isTarget = card.getAttribute('onclick')?.includes(wpKey);
     card.classList.toggle('active', !!isTarget);
   });
 
-  // 4. Вибрация нажатия Telegram
-  tg?.HapticFeedback?.selectionChanged?.();
+  // Безопасный вызов вибрации (не спамит ошибками в старых версиях)
+  if (window.Telegram?.WebApp?.isVersionAtLeast?.('6.1')) {
+    window.Telegram.WebApp.HapticFeedback?.selectionChanged?.();
+  }
 }
 
-// 5. Восстановление сохранённых обоев при открытии
 function loadSavedWallpaper() {
   const saved = localStorage.getItem('pact_wallpaper_key') || 'wp-velvet';
   setAppWallpaper(saved);
 }
-
-// Вызываем загрузку при старте
-loadSavedWallpaper();
     
     
     // -------------------------------------------------------------
