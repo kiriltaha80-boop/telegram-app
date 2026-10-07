@@ -35,7 +35,7 @@
             flex-direction: column;
         }
 
-        /* Top Area (Reserved) */
+        /* Top Area */
         .top-reserved-area {
             height: var(--top-space-height);
             background: linear-gradient(180deg, rgba(255, 42, 109, 0.15) 0%, rgba(13, 15, 18, 0) 100%);
@@ -77,7 +77,6 @@
         .desktop-tile.widget-span-2 { grid-column: span 2; }
         .desktop-tile.widget-span-4 { grid-column: span 4; }
 
-        /* Jiggle animation for edit mode */
         .edit-mode .desktop-tile {
             animation: jiggle 0.25s infinite alternate ease-in-out;
         }
@@ -99,7 +98,7 @@
             font-weight: 500;
         }
 
-        /* Control Overlays in Edit Mode */
+        /* Control Overlays */
         .tile-controls {
             display: none;
             position: absolute;
@@ -177,14 +176,8 @@
             cursor: pointer;
         }
 
-        .nav-item.active {
-            color: var(--accent-pink);
-        }
-
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 2px;
-        }
+        .nav-item.active { color: var(--accent-pink); }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
 
         /* Modals */
         .modal-overlay {
@@ -197,9 +190,7 @@
             z-index: 200;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-card {
             background: var(--card-bg);
@@ -239,22 +230,10 @@
             font-weight: 600;
         }
 
-        .tab-btn.active {
-            background: var(--accent-pink);
-            color: white;
-        }
+        .tab-btn.active { background: var(--accent-pink); color: white; }
 
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
         .form-control {
             width: 100%;
             padding: 10px;
@@ -263,12 +242,7 @@
             border-radius: 8px;
             color: white;
         }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 60px;
-        }
-
+        textarea.form-control { resize: vertical; min-height: 60px; }
         .btn-primary {
             width: 100%;
             padding: 12px;
@@ -290,7 +264,6 @@
 </head>
 <body>
 
-    <!-- Top Reserved Space -->
     <div class="top-reserved-area">
         <div>
             <span style="font-size: 12px; color: var(--text-muted);">Статус Роли</span>
@@ -299,21 +272,15 @@
         <button id="toggle-edit-btn" onclick="toggleEditMode()" style="background: rgba(255,255,255,0.1); border:none; color:white; padding: 8px 12px; border-radius: 12px; font-size: 12px;">⚙️ Настроить</button>
     </div>
 
-    <!-- Main Workspace / Desktop Grid -->
     <div class="app-container">
-        <!-- Shop / Sub View Container (Hidden by default) -->
         <div id="sub-screen-container" style="display: none; margin-bottom: 15px;">
-            <button onclick="closeSubScreen()" style="background:none; border:none; color: var(--accent-pink); margin-bottom: 10px; cursor:pointer;">◄ Назад на Главную</button>
+            <button onclick="closeSubScreen()" style="background:none; border:none; color: var(--accent-pink); margin-bottom: 10px; cursor:pointer; font-weight:bold;">◄ Назад</button>
             <div id="sub-screen-content"></div>
         </div>
 
-        <!-- Desktop Screen Grid -->
-        <div class="desktop-grid" id="desktop-grid">
-            <!-- Dynamic Items Render Here -->
-        </div>
+        <div class="desktop-grid" id="desktop-grid"></div>
     </div>
 
-    <!-- Unified Add Product Modal -->
     <div class="modal-overlay" id="add-product-modal">
         <div class="modal-card">
             <div class="modal-header">
@@ -321,7 +288,6 @@
                 <span onclick="closeAddProductModal()" style="cursor:pointer; font-size: 18px;">✕</span>
             </div>
 
-            <!-- Shop Target Selector Tabs -->
             <div class="modal-tabs">
                 <button class="tab-btn active" id="tab-boutique" onclick="switchShopTab('boutique')">🛍️ Бутик</button>
                 <button class="tab-btn" id="tab-sexshop" onclick="switchShopTab('sexshop')">🔮 Секс-шоп</button>
@@ -332,23 +298,21 @@
 
                 <div class="form-group">
                     <label>Название товара</label>
-                    <input type="text" id="prod-title" class="form-control" required placeholder="Введите название...">
+                    <input type="text" id="prod-title" class="form-control" required placeholder="Название...">
                 </div>
 
                 <div class="form-group">
                     <label>Категория</label>
-                    <select id="prod-category" class="form-control" required>
-                        <!-- Options populate dynamically based on tab -->
-                    </select>
+                    <select id="prod-category" class="form-control" required></select>
                 </div>
 
                 <div class="form-group">
                     <label>Описание товара</label>
-                    <textarea id="prod-description" class="form-control" placeholder="Подробности, особенности, размер..."></textarea>
+                    <textarea id="prod-description" class="form-control" placeholder="Особенности, размер..."></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Главное фото (Обложка URL)</label>
+                    <label>Главное фото (URL)</label>
                     <input type="url" id="prod-main-img" class="form-control" placeholder="https://...">
                 </div>
 
@@ -368,7 +332,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Цена (в Баллах / Очках 🔥)</label>
+                    <label>Цена (в Баллах 🔥)</label>
                     <input type="number" id="prod-price-pts" class="form-control" placeholder="0">
                 </div>
 
@@ -377,7 +341,6 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <div class="nav-item" onclick="openProfile()">
             <div class="nav-icon">👤</div>
@@ -394,7 +357,6 @@
     </div>
 
     <script>
-        // Store & State
         let isEditMode = false;
         
         const categoriesBoutique = ["Нижнее белье", "Комплект", "Пижамы", "Пеньюары", "Ночная одежда"];
@@ -410,12 +372,10 @@
         let boutiqueProducts = JSON.parse(localStorage.getItem('boutique_prods')) || [];
         let sexShopProducts = JSON.parse(localStorage.getItem('sexshop_prods')) || [];
 
-        // Save State
         function saveDesktopState() {
             localStorage.setItem('desktop_tiles_v1', JSON.stringify(desktopTiles));
         }
 
-        // Render Desktop
         function renderDesktop() {
             const grid = document.getElementById('desktop-grid');
             grid.innerHTML = '';
@@ -429,14 +389,14 @@
                         <button class="btn-tile-delete" onclick="deleteTile(${index})">✕</button>
                     </div>
                     <div class="move-controls">
-                        <button class="btn-move" onclick="moveTile(${index}, -1)">▲ / ◄</button>
-                        <button class="btn-move" onclick="moveTile(${index}, 1)">▼ / ►</button>
+                        <button class="btn-move" onclick="moveTile(${index}, -1)">◄</button>
+                        <button class="btn-move" onclick="moveTile(${index}, 1)">►</button>
                     </div>
                 `;
 
                 if (tile.type === 'icon') {
                     innerHTML += `
-                        <div onclick="executeAction('${tile.action}')" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+                        <div onclick="if(!isEditMode) executeAction('${tile.action}')" style="display:flex; flex-direction:column; align-items:center; width:100%; cursor:pointer;">
                             <div class="tile-icon">${tile.icon}</div>
                             <div class="tile-title">${tile.title}</div>
                         </div>
@@ -462,7 +422,6 @@
             });
         }
 
-        // Move Tiles
         function moveTile(index, direction) {
             const newIndex = index + direction;
             if (newIndex >= 0 && newIndex < desktopTiles.length) {
@@ -474,14 +433,12 @@
             }
         }
 
-        // Delete Tile
         function deleteTile(index) {
             desktopTiles.splice(index, 1);
             saveDesktopState();
             renderDesktop();
         }
 
-        // Toggle Edit Mode
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const container = document.querySelector('.app-container');
@@ -498,7 +455,6 @@
             }
         }
 
-        // Modal Logic & Shop Tabs
         function openAddProductModal(defaultShop = 'boutique') {
             document.getElementById('add-product-modal').classList.add('active');
             switchShopTab(defaultShop);
@@ -521,18 +477,12 @@
                 tabBoutique.classList.add('active');
                 tabSexShop.classList.remove('active');
                 priceRubGroup.style.display = 'block';
-
-                categoriesBoutique.forEach(cat => {
-                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-                });
+                categoriesBoutique.forEach(cat => categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`);
             } else {
                 tabSexShop.classList.add('active');
                 tabBoutique.classList.remove('active');
                 priceRubGroup.style.display = 'none';
-
-                categoriesSexShop.forEach(cat => {
-                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-                });
+                categoriesSexShop.forEach(cat => categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`);
             }
         }
 
@@ -570,7 +520,6 @@
             closeAddProductModal();
         }
 
-        // Sub Screen Navigation & Section Handlers
         function executeAction(actionName) {
             if (actionName === 'openBoutique') openBoutique();
             if (actionName === 'openSexShop') openSexShop();
@@ -594,7 +543,7 @@
             container.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <h2>🛍️ Бутик</h2>
-                    <button onclick="openAddProductModal('boutique')" style="background:var(--accent-pink); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить Товар</button>
+                    <button onclick="openAddProductModal('boutique')" style="background:var(--accent-pink); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить</button>
                 </div>
                 ${itemsHtml || '<p style="color:var(--text-muted);">Товаров пока нет</p>'}
             `;
@@ -618,7 +567,7 @@
             container.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <h2>🔮 Секс-шоп</h2>
-                    <button onclick="openAddProductModal('sexshop')" style="background:var(--accent-purple); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить Товар</button>
+                    <button onclick="openAddProductModal('sexshop')" style="background:var(--accent-purple); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить</button>
                 </div>
                 ${itemsHtml || '<p style="color:var(--text-muted);">Товаров пока нет</p>'}
             `;
@@ -632,7 +581,6 @@
         function openProfile() { alert('Раздел Профиль'); }
         function openMessenger() { alert('Раздел Чаты'); }
 
-        // Initial Initialization
         renderDesktop();
     </script>
 </body>
