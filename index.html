@@ -6,15 +6,17 @@
     <title>PWA Desktop Interface</title>
     <style>
         :root {
-            --top-space-height: 150px;
+            --top-space-height: 140px;
             --bottom-nav-height: 65px;
             --bg-color: #0d0f12;
             --card-bg: #1a1d24;
+            --card-hover: #242832;
             --accent-pink: #ff2a6d;
             --accent-purple: #9b51e0;
             --accent-gold: #ffb703;
             --text-main: #f0f0f0;
             --text-muted: #8a8d9b;
+            --border-color: rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -35,60 +37,76 @@
             flex-direction: column;
         }
 
-        /* Top Area */
+        /* Top Area (Role & Control) */
         .top-reserved-area {
             height: var(--top-space-height);
             background: linear-gradient(180deg, rgba(255, 42, 109, 0.15) 0%, rgba(13, 15, 18, 0) 100%);
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            border-bottom: 1px dashed var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 15px 20px;
+            flex-shrink: 0;
         }
 
-        /* Main Workspace */
+        .role-badge {
+            cursor: pointer;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .role-badge:active { background: rgba(255, 255, 255, 0.15); }
+
+        /* Main Workspace Container */
         .app-container {
             flex: 1;
             overflow-y: auto;
             padding: 15px;
-            padding-bottom: calc(var(--bottom-nav-height) + 20px);
+            padding-bottom: calc(var(--bottom-nav-height) + 25px);
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Grid System */
         .desktop-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         .desktop-tile {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            min-height: 85px;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .desktop-tile.widget-span-2 { grid-column: span 2; }
         .desktop-tile.widget-span-4 { grid-column: span 4; }
 
+        /* Edit Mode Jiggle Animation */
         .edit-mode .desktop-tile {
-            animation: jiggle 0.25s infinite alternate ease-in-out;
+            animation: jiggle 0.24s infinite alternate ease-in-out;
         }
 
         @keyframes jiggle {
-            0% { transform: rotate(-1.5deg); }
-            100% { transform: rotate(1.5deg); }
+            0% { transform: rotate(-1.5deg) scale(0.98); }
+            100% { transform: rotate(1.5deg) scale(1.01); }
         }
 
         .tile-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
+            font-size: 30px;
+            margin-bottom: 4px;
         }
 
         .tile-title {
@@ -98,56 +116,98 @@
             font-weight: 500;
         }
 
-        /* Control Overlays */
+        /* Tile Controls Overlay in Edit Mode */
         .tile-controls {
             display: none;
             position: absolute;
             top: -6px;
             right: -6px;
-            gap: 4px;
             z-index: 10;
         }
 
-        .edit-mode .tile-controls {
-            display: flex;
-        }
+        .edit-mode .tile-controls { display: flex; }
 
         .btn-tile-delete {
             background: #ff4d4d;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
 
         .move-controls {
             display: none;
             position: absolute;
             bottom: 4px;
-            width: 100%;
+            width: 90%;
             justify-content: space-between;
-            padding: 0 6px;
+            z-index: 10;
         }
 
-        .edit-mode .move-controls {
-            display: flex;
-        }
+        .edit-mode .move-controls { display: flex; }
 
         .btn-move {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             border: none;
             color: white;
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-size: 10px;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 11px;
             cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Sub-screen Shop Catalog */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .product-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-category {
+            font-size: 10px;
+            color: var(--accent-pink);
+            margin-bottom: 6px;
+        }
+
+        .product-price {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-top: auto;
         }
 
         /* Bottom Nav */
@@ -157,12 +217,13 @@
             left: 0;
             right: 0;
             height: var(--bottom-nav-height);
-            background: rgba(26, 29, 36, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(26, 29, 36, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--border-color);
             z-index: 100;
         }
 
@@ -172,22 +233,24 @@
             align-items: center;
             color: var(--text-muted);
             font-size: 10px;
-            text-decoration: none;
             cursor: pointer;
+            transition: color 0.2s;
         }
 
         .nav-item.active { color: var(--accent-pink); }
         .nav-icon { font-size: 20px; margin-bottom: 2px; }
 
-        /* Modals */
+        /* Modals Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 200;
+            padding: 15px;
         }
 
         .modal-overlay.active { display: flex; }
@@ -195,12 +258,13 @@
         .modal-card {
             background: var(--card-bg);
             border-radius: 20px;
-            width: 90%;
-            max-width: 420px;
+            width: 100%;
+            max-width: 440px;
             max-height: 85vh;
             overflow-y: auto;
             padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
         .modal-header {
@@ -212,11 +276,11 @@
 
         .modal-tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 15px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.25);
             padding: 4px;
-            border-radius: 10px;
+            border-radius: 12px;
         }
 
         .tab-btn {
@@ -228,21 +292,35 @@
             color: var(--text-muted);
             cursor: pointer;
             font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s;
         }
 
-        .tab-btn.active { background: var(--accent-pink); color: white; }
-
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
+        .tab-btn.active {
+            background: var(--accent-pink);
             color: white;
         }
-        textarea.form-control { resize: vertical; min-height: 60px; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-pink);
+        }
+
+        textarea.form-control { resize: vertical; min-height: 55px; }
+
         .btn-primary {
             width: 100%;
             padding: 12px;
@@ -251,6 +329,7 @@
             border-radius: 10px;
             color: white;
             font-weight: bold;
+            font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
         }
@@ -260,34 +339,75 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
         }
+
+        /* Product Detail Gallery Modal */
+        .gallery-main-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            padding-bottom: 4px;
+        }
+
+        .gallery-thumb {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            flex-shrink: 0;
+        }
+
+        .gallery-thumb.active {
+            border-color: var(--accent-pink);
+        }
     </style>
 </head>
 <body>
 
+    <!-- Top Reserved Space (Role & Controls) -->
     <div class="top-reserved-area">
         <div>
-            <span style="font-size: 12px; color: var(--text-muted);">Статус Роли</span>
-            <h3 id="role-display">ВЕРХНИЙ 😈</h3>
+            <div class="role-badge" onclick="toggleRole()">
+                <span style="font-size: 11px; color: var(--text-muted);">Текущая роль:</span>
+                <h3 id="role-display" style="color: var(--accent-pink); font-size: 15px;">ВЕРХНИЙ 😈</h3>
+            </div>
         </div>
-        <button id="toggle-edit-btn" onclick="toggleEditMode()" style="background: rgba(255,255,255,0.1); border:none; color:white; padding: 8px 12px; border-radius: 12px; font-size: 12px;">⚙️ Настроить</button>
+        <button id="toggle-edit-btn" onclick="toggleEditMode()" style="background: rgba(255,255,255,0.08); border:1px solid var(--border-color); color:white; padding: 8px 14px; border-radius: 12px; font-size: 12px; cursor:pointer;">⚙️ Настроить</button>
     </div>
 
+    <!-- Main Workspace Container -->
     <div class="app-container">
-        <div id="sub-screen-container" style="display: none; margin-bottom: 15px;">
-            <button onclick="closeSubScreen()" style="background:none; border:none; color: var(--accent-pink); margin-bottom: 10px; cursor:pointer; font-weight:bold;">◄ Назад</button>
+        <!-- Sub-Screen Container (Catalog / Store View) -->
+        <div id="sub-screen-container" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <button onclick="closeSubScreen()" style="background:none; border:none; color: var(--accent-pink); cursor:pointer; font-weight:bold; font-size: 13px;">◄ Назад на Главную</button>
+            </div>
             <div id="sub-screen-content"></div>
         </div>
 
+        <!-- Desktop Grid Screen -->
         <div class="desktop-grid" id="desktop-grid"></div>
     </div>
 
+    <!-- Unified Add Product Modal -->
     <div class="modal-overlay" id="add-product-modal">
         <div class="modal-card">
             <div class="modal-header">
                 <h3>Добавить Товар</h3>
-                <span onclick="closeAddProductModal()" style="cursor:pointer; font-size: 18px;">✕</span>
+                <span onclick="closeAddProductModal()" style="cursor:pointer; font-size: 20px; color: var(--text-muted);">✕</span>
             </div>
 
+            <!-- Modal Shop Tabs -->
             <div class="modal-tabs">
                 <button class="tab-btn active" id="tab-boutique" onclick="switchShopTab('boutique')">🛍️ Бутик</button>
                 <button class="tab-btn" id="tab-sexshop" onclick="switchShopTab('sexshop')">🔮 Секс-шоп</button>
@@ -298,7 +418,7 @@
 
                 <div class="form-group">
                     <label>Название товара</label>
-                    <input type="text" id="prod-title" class="form-control" required placeholder="Название...">
+                    <input type="text" id="prod-title" class="form-control" required placeholder="Введите название...">
                 </div>
 
                 <div class="form-group">
@@ -308,21 +428,21 @@
 
                 <div class="form-group">
                     <label>Описание товара</label>
-                    <textarea id="prod-description" class="form-control" placeholder="Особенности, размер..."></textarea>
+                    <textarea id="prod-description" class="form-control" placeholder="Укажите особенности, размер, материал..."></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Главное фото (URL)</label>
+                    <label>Обложка (Главное фото URL)</label>
                     <input type="url" id="prod-main-img" class="form-control" placeholder="https://...">
                 </div>
 
                 <div class="form-group">
-                    <label>Дополнительные фото (до 4 шт.)</label>
+                    <label>Дополнительные фото (до 4 слотов)</label>
                     <div class="photo-slots">
-                        <input type="url" id="prod-sub-img-1" class="form-control" placeholder="Фото 1">
-                        <input type="url" id="prod-sub-img-2" class="form-control" placeholder="Фото 2">
-                        <input type="url" id="prod-sub-img-3" class="form-control" placeholder="Фото 3">
-                        <input type="url" id="prod-sub-img-4" class="form-control" placeholder="Фото 4">
+                        <input type="url" id="prod-sub-img-1" class="form-control" placeholder="Фото 1 URL">
+                        <input type="url" id="prod-sub-img-2" class="form-control" placeholder="Фото 2 URL">
+                        <input type="url" id="prod-sub-img-3" class="form-control" placeholder="Фото 3 URL">
+                        <input type="url" id="prod-sub-img-4" class="form-control" placeholder="Фото 4 URL">
                     </div>
                 </div>
 
@@ -332,7 +452,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Цена (в Баллах 🔥)</label>
+                    <label>Цена (в Баллах 🔥 PTS)</label>
                     <input type="number" id="prod-price-pts" class="form-control" placeholder="0">
                 </div>
 
@@ -341,6 +461,26 @@
         </div>
     </div>
 
+    <!-- Product Details & Gallery Modal -->
+    <div class="modal-overlay" id="product-detail-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="detail-title">Детали Товара</h3>
+                <span onclick="closeProductDetailModal()" style="cursor:pointer; font-size: 20px; color: var(--text-muted);">✕</span>
+            </div>
+            
+            <img id="detail-main-img" class="gallery-main-img" src="" alt="Product Image">
+            <div id="detail-thumbs" class="gallery-thumbs"></div>
+
+            <div id="detail-category" style="font-size: 11px; color: var(--accent-pink); font-weight: 600; margin-bottom: 6px;"></div>
+            <p id="detail-description" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;"></p>
+            <div id="detail-price" style="font-size: 16px; font-weight: bold; color: var(--accent-gold); margin-bottom: 15px;"></div>
+
+            <button id="btn-delete-product" style="width:100%; padding: 10px; background: rgba(255, 77, 77, 0.15); border: 1px solid #ff4d4d; color: #ff4d4d; border-radius: 8px; cursor:pointer; font-weight:600;">Удалить товар</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <div class="nav-item" onclick="openProfile()">
             <div class="nav-icon">👤</div>
@@ -357,18 +497,24 @@
     </div>
 
     <script>
+        // State Management
         let isEditMode = false;
+        let currentRole = localStorage.getItem('user_role') || 'top'; // 'top' or 'bottom'
         
         const categoriesBoutique = ["Нижнее белье", "Комплект", "Пижамы", "Пеньюары", "Ночная одежда"];
         const categoriesSexShop = ["Игрушки", "Бондаж", "Косметика & Уход", "Аксессуары"];
 
+        // Desktop Grid State Persistence
         let desktopTiles = JSON.parse(localStorage.getItem('desktop_tiles_v1')) || [
             { id: 'tile-boutique', type: 'icon', title: 'Бутик', icon: '🛍️', action: 'openBoutique', span: 1 },
             { id: 'tile-sexshop', type: 'icon', title: 'Секс-шоп', icon: '🔮', action: 'openSexShop', span: 1 },
+            { id: 'tile-roulette', type: 'icon', title: 'Задания', icon: '🎲', action: 'openTasks', span: 1 },
+            { id: 'tile-chat', type: 'icon', title: 'Чаты', icon: '💬', action: 'openMessenger', span: 1 },
             { id: 'widget-stats', type: 'widget-stats', title: 'Баланс Очков', span: 2 },
             { id: 'widget-quote', type: 'widget-quote', title: 'Обет / Договор', span: 4 }
         ];
 
+        // Products Persistence
         let boutiqueProducts = JSON.parse(localStorage.getItem('boutique_prods')) || [];
         let sexShopProducts = JSON.parse(localStorage.getItem('sexshop_prods')) || [];
 
@@ -376,6 +522,25 @@
             localStorage.setItem('desktop_tiles_v1', JSON.stringify(desktopTiles));
         }
 
+        // Role Switcher
+        function updateRoleUI() {
+            const roleDisplay = document.getElementById('role-display');
+            if (currentRole === 'top') {
+                roleDisplay.innerHTML = 'ВЕРХНИЙ 😈';
+                roleDisplay.style.color = 'var(--accent-pink)';
+            } else {
+                roleDisplay.innerHTML = 'НИЖНИЙ 😇';
+                roleDisplay.style.color = 'var(--accent-purple)';
+            }
+        }
+
+        function toggleRole() {
+            currentRole = currentRole === 'top' ? 'bottom' : 'top';
+            localStorage.setItem('user_role', currentRole);
+            updateRoleUI();
+        }
+
+        // Desktop Grid Rendering
         function renderDesktop() {
             const grid = document.getElementById('desktop-grid');
             grid.innerHTML = '';
@@ -410,9 +575,9 @@
                     `;
                 } else if (tile.type === 'widget-quote') {
                     innerHTML += `
-                        <div style="width:100%; text-align:center; padding: 4px;">
+                        <div style="width:100%; text-align:center; padding: 2px;">
                             <div style="font-size:10px; color:var(--accent-pink); font-weight:bold;">📜 Дневное Соглашение</div>
-                            <div style="font-size:12px; margin-top:4px; font-style:italic;">"Полное подчинение правилам вечера"</div>
+                            <div style="font-size:12px; margin-top:4px; font-style:italic; color:var(--text-main);">"Правила и задачи на сегодняшний вечер активны"</div>
                         </div>
                     `;
                 }
@@ -422,6 +587,7 @@
             });
         }
 
+        // Move Tiles inside Grid Array
         function moveTile(index, direction) {
             const newIndex = index + direction;
             if (newIndex >= 0 && newIndex < desktopTiles.length) {
@@ -433,12 +599,14 @@
             }
         }
 
+        // Delete Tile from Grid
         function deleteTile(index) {
             desktopTiles.splice(index, 1);
             saveDesktopState();
             renderDesktop();
         }
 
+        // Toggle Edit Mode
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const container = document.querySelector('.app-container');
@@ -451,10 +619,11 @@
             } else {
                 container.classList.remove('edit-mode');
                 btn.innerText = '⚙️ Настроить';
-                btn.style.background = 'rgba(255,255,255,0.1)';
+                btn.style.background = 'rgba(255,255,255,0.08)';
             }
         }
 
+        // Add Product Modal & Shop Tabs
         function openAddProductModal(defaultShop = 'boutique') {
             document.getElementById('add-product-modal').classList.add('active');
             switchShopTab(defaultShop);
@@ -477,12 +646,18 @@
                 tabBoutique.classList.add('active');
                 tabSexShop.classList.remove('active');
                 priceRubGroup.style.display = 'block';
-                categoriesBoutique.forEach(cat => categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`);
+
+                categoriesBoutique.forEach(cat => {
+                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
             } else {
                 tabSexShop.classList.add('active');
                 tabBoutique.classList.remove('active');
                 priceRubGroup.style.display = 'none';
-                categoriesSexShop.forEach(cat => categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`);
+
+                categoriesSexShop.forEach(cat => {
+                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
             }
         }
 
@@ -495,7 +670,7 @@
                 title: document.getElementById('prod-title').value,
                 category: document.getElementById('prod-category').value,
                 description: document.getElementById('prod-description').value,
-                mainImg: document.getElementById('prod-main-img').value || 'https://via.placeholder.com/150',
+                mainImg: document.getElementById('prod-main-img').value || 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400',
                 subImages: [
                     document.getElementById('prod-sub-img-1').value,
                     document.getElementById('prod-sub-img-2').value,
@@ -520,9 +695,73 @@
             closeAddProductModal();
         }
 
+        // Product Details Modal & Interactive Photo Gallery
+        function openProductDetails(shop, productId) {
+            const list = shop === 'boutique' ? boutiqueProducts : sexShopProducts;
+            const product = list.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('detail-title').innerText = product.title;
+            document.getElementById('detail-category').innerText = product.category;
+            document.getElementById('detail-description').innerText = product.description || 'Описание не указано.';
+            
+            if (shop === 'boutique') {
+                document.getElementById('detail-price').innerText = `${product.priceRub} ₽ / 🔥 ${product.pricePts} PTS`;
+            } else {
+                document.getElementById('detail-price').innerText = `🔥 ${product.pricePts} PTS`;
+            }
+
+            // Photo Gallery Setup
+            const allPhotos = [product.mainImg, ...(product.subImages || [])];
+            const mainImgEl = document.getElementById('detail-main-img');
+            const thumbsEl = document.getElementById('detail-thumbs');
+            
+            mainImgEl.src = allPhotos[0];
+            thumbsEl.innerHTML = '';
+
+            allPhotos.forEach((src, idx) => {
+                const img = document.createElement('img');
+                img.className = `gallery-thumb ${idx === 0 ? 'active' : ''}`;
+                img.src = src;
+                img.onclick = () => {
+                    mainImgEl.src = src;
+                    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+                    img.classList.add('active');
+                };
+                thumbsEl.appendChild(img);
+            });
+
+            // Delete Product Action Button
+            document.getElementById('btn-delete-product').onclick = () => {
+                deleteProduct(shop, productId);
+                closeProductDetailModal();
+            };
+
+            document.getElementById('product-detail-modal').classList.add('active');
+        }
+
+        function closeProductDetailModal() {
+            document.getElementById('product-detail-modal').classList.remove('active');
+        }
+
+        function deleteProduct(shop, id) {
+            if (shop === 'boutique') {
+                boutiqueProducts = boutiqueProducts.filter(p => p.id !== id);
+                localStorage.setItem('boutique_prods', JSON.stringify(boutiqueProducts));
+                openBoutique();
+            } else {
+                sexShopProducts = sexShopProducts.filter(p => p.id !== id);
+                localStorage.setItem('sexshop_prods', JSON.stringify(sexShopProducts));
+                openSexShop();
+            }
+        }
+
+        // Sub Screen Navigation Handlers
         function executeAction(actionName) {
             if (actionName === 'openBoutique') openBoutique();
             if (actionName === 'openSexShop') openSexShop();
+            if (actionName === 'openTasks') alert('Раздел Заданий');
+            if (actionName === 'openMessenger') openMessenger();
         }
 
         function openBoutique() {
@@ -531,21 +770,22 @@
             document.getElementById('desktop-grid').style.display = 'none';
 
             let itemsHtml = boutiqueProducts.map(p => `
-                <div style="background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:10px;">
-                    <img src="${p.mainImg}" style="width:100%; height:140px; object-fit:cover; border-radius:8px;">
-                    <h4 style="margin-top:8px;">${p.title}</h4>
-                    <div style="font-size:11px; color:var(--accent-pink);">${p.category}</div>
-                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">${p.description}</p>
-                    <div style="font-weight:bold; font-size:13px;">${p.priceRub} ₽ / ${p.pricePts} PTS</div>
+                <div class="product-card" onclick="openProductDetails('boutique', ${p.id})">
+                    <img src="${p.mainImg}" alt="${p.title}">
+                    <div class="product-title">${p.title}</div>
+                    <div class="product-category">${p.category}</div>
+                    <div class="product-price">${p.priceRub} ₽ / 🔥 ${p.pricePts}</div>
                 </div>
             `).join('');
 
             container.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h2>🛍️ Бутик</h2>
-                    <button onclick="openAddProductModal('boutique')" style="background:var(--accent-pink); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить</button>
+                    <button onclick="openAddProductModal('boutique')" style="background:var(--accent-pink); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:600; font-size:12px; cursor:pointer;">+ Добавить</button>
                 </div>
-                ${itemsHtml || '<p style="color:var(--text-muted);">Товаров пока нет</p>'}
+                <div class="products-grid">
+                    ${itemsHtml || '<p style="color:var(--text-muted); grid-column:span 2;">Товаров в бутике пока нет</p>'}
+                </div>
             `;
         }
 
@@ -555,21 +795,22 @@
             document.getElementById('desktop-grid').style.display = 'none';
 
             let itemsHtml = sexShopProducts.map(p => `
-                <div style="background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:10px;">
-                    <img src="${p.mainImg}" style="width:100%; height:140px; object-fit:cover; border-radius:8px;">
-                    <h4 style="margin-top:8px;">${p.title}</h4>
-                    <div style="font-size:11px; color:var(--accent-purple);">${p.category}</div>
-                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">${p.description}</p>
-                    <div style="font-weight:bold; font-size:13px; color:var(--accent-gold);">${p.pricePts} PTS</div>
+                <div class="product-card" onclick="openProductDetails('sexshop', ${p.id})">
+                    <img src="${p.mainImg}" alt="${p.title}">
+                    <div class="product-title">${p.title}</div>
+                    <div class="product-category" style="color:var(--accent-purple);">${p.category}</div>
+                    <div class="product-price">🔥 ${p.pricePts} PTS</div>
                 </div>
             `).join('');
 
             container.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h2>🔮 Секс-шоп</h2>
-                    <button onclick="openAddProductModal('sexshop')" style="background:var(--accent-purple); border:none; color:white; padding:8px 12px; border-radius:8px;">+ Добавить</button>
+                    <button onclick="openAddProductModal('sexshop')" style="background:var(--accent-purple); border:none; color:white; padding:8px 12px; border-radius:10px; font-weight:600; font-size:12px; cursor:pointer;">+ Добавить</button>
                 </div>
-                ${itemsHtml || '<p style="color:var(--text-muted);">Товаров пока нет</p>'}
+                <div class="products-grid">
+                    ${itemsHtml || '<p style="color:var(--text-muted); grid-column:span 2;">Товаров в секс-шопе пока нет</p>'}
+                </div>
             `;
         }
 
@@ -581,6 +822,8 @@
         function openProfile() { alert('Раздел Профиль'); }
         function openMessenger() { alert('Раздел Чаты'); }
 
+        // Initial Load
+        updateRoleUI();
         renderDesktop();
     </script>
 </body>
