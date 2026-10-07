@@ -197,13 +197,24 @@
       width: 100%;
     }
 
-    .desktop-header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      padding: 0 4px;
-    }
+    <!-- ШАПКА РАБОЧЕГО СТОЛА С ПАНЕЛЬЮ НАСТРОЙКИ -->
+      <div class="desktop-header-bar">
+        <button id="role-toggle-main" class="role-toggle-btn" onclick="toggleRole()">
+          😈 Верхний
+        </button>
+        <div class="desktop-actions-group">
+          <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
+            ⚙️ Настроить
+          </button>
+        </div>
+      </div>
+
+      <!-- ВСПЛЫВАЮЩАЯ ПАНЕЛЬ ДЕЙСТВИЙ РЕЖИМА НАСТРОЙКИ -->
+      <div id="desktop-edit-toolbar" class="desktop-edit-toolbar">
+        <button class="toolbar-btn" onclick="openAddWidgetModal()">➕ Добавить</button>
+        <button class="toolbar-btn" onclick="openWallpaperModal()">🖼️ Обои</button>
+        <button class="toolbar-btn done" onclick="toggleDesktopEditMode()">✓ Готово</button>
+      </div>
 
     /* Кнопка смены роли (Верхний / Нижня) */
     .role-toggle-btn {
@@ -827,6 +838,109 @@
     }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
     .nav-label { font-size: 9px; font-weight: 700; }
+ /* ФОНОВЫЕ ОБОИ РАБОЧЕГО СТОЛА */
+    .desktop-wrapper {
+      position: relative;
+      border-radius: 20px;
+      padding: 10px 8px;
+      transition: background 0.4s ease;
+      background-size: cover !important;
+      background-position: center !important;
+      min-height: calc(100vh - 220px);
+    }
+
+    /* ПАНЕЛЬ НАСТРОЙКИ РАБОЧЕГО СТОЛА */
+    .desktop-edit-toolbar {
+      display: none;
+      gap: 8px;
+      margin-bottom: 12px;
+      background: rgba(22, 18, 30, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 8px;
+      animation: fadeIn 0.2s ease;
+    }
+    .desktop-edit-toolbar.active { display: flex; }
+    .toolbar-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .toolbar-btn.done {
+      background: var(--accent-gradient);
+      border-color: var(--accent-color);
+    }
+
+    /* СЕНСОРНЫЙ DRAG & DROP ПО СЕТКЕ */
+    .desktop-item-wrapper {
+      touch-action: pan-y;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .edit-mode .desktop-item-wrapper {
+      touch-action: none; /* Запрещает скролл экрана при перетаскивании плитки */
+    }
+    .desktop-item-wrapper.is-dragging {
+      opacity: 0.45;
+      transform: scale(0.92);
+      z-index: 100;
+    }
+    .desktop-item-wrapper.drag-over {
+      transform: scale(1.08);
+      outline: 2px dashed var(--accent-color);
+      outline-offset: 4px;
+      border-radius: 16px;
+    }
+
+    /* ПРЕСЕТЫ ОБОЕВ */
+    .wallpaper-presets-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .wallpaper-thumb {
+      height: 75px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-end;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    }
+
+    /* КАТАЛОГ ВИДЖЕТОВ */
+    .widget-catalog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .widget-catalog-card {
+      background: rgba(12, 10, 16, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .widget-catalog-card .cat-icon { font-size: 22px; }
+    .widget-catalog-card .cat-info { flex: 1; }
+    .widget-catalog-card .title { font-size: 11px; font-weight: 700; color: #fff; }
+    .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+  
+  
   </style>
 </head>
 <body>
@@ -1212,6 +1326,91 @@
       <span class="nav-icon">💬</span>
       <span class="nav-label">Чат</span>
     </div>
+
+  <!-- МОДАЛКА: СМЕНА ОБОЕВ РАБОЧЕГО СТОЛА -->
+  <div class="modal-overlay" id="wallpaper-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Обои Рабочего Стола</h3>
+        <span class="modal-close-btn" onclick="closeWallpaperModal()">✕</span>
+      </div>
+      <div class="wallpaper-presets-grid">
+        <div class="wallpaper-thumb" onclick="applyWallpaper('default')" style="background: #0C0A10;">
+          <span>Темный Бархат</span>
+        </div>
+        <div class="wallpaper-thumb" onclick="applyWallpaper('ruby')" style="background: linear-gradient(180deg, #3A0B16 0%, #0C0A10 100%);">
+          <span>Рубиновый</span>
+        </div>
+        <div class="wallpaper-thumb" onclick="applyWallpaper('art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
+          <span>Арт Заставки</span>
+        </div>
+        <div class="wallpaper-thumb" onclick="applyWallpaper('plum')" style="background: linear-gradient(180deg, #24102C 0%, #0C0A10 100%);">
+          <span>Слива</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 10px;">
+        <label>Или своя ссылка на картинку (URL):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="url" id="custom-wallpaper-input" class="form-control" placeholder="https://...">
+          <button class="small-btn" onclick="applyCustomWallpaper()">ОК</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ВИДЖЕТОВ И ПЛИТОК -->
+  <div class="modal-overlay" id="add-widget-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Добавить на стол</h3>
+        <span class="modal-close-btn" onclick="closeAddWidgetModal()">✕</span>
+      </div>
+      <div class="widget-catalog-list">
+        <!-- Виджеты -->
+        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-balance', 2)">
+          <div class="cat-icon">🔥</div>
+          <div class="cat-info">
+            <div class="title">Баланс Очков (2 колонки)</div>
+            <div class="sub">Текущий счет и статистика заботы</div>
+          </div>
+          <button class="small-btn">+</button>
+        </div>
+        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-contract', 4)">
+          <div class="cat-icon">📜</div>
+          <div class="cat-info">
+            <div class="title">Обет Дня (Вся строка)</div>
+            <div class="sub">Действующее правило соглашения</div>
+          </div>
+          <button class="small-btn">+</button>
+        </div>
+        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-note', 2)">
+          <div class="cat-icon">💌</div>
+          <div class="cat-info">
+            <div class="title">Записка Страсти (2 колонки)</div>
+            <div class="sub">Быстрое послание партнеру</div>
+          </div>
+          <button class="small-btn">+</button>
+        </div>
+        <!-- Быстрые плитки -->
+        <div class="widget-catalog-card" onclick="createTileOnDesktop('Календарь', '🌸', 'tab-cycle')">
+          <div class="cat-icon">🌸</div>
+          <div class="cat-info">
+            <div class="title">Плитка Календаря (1 слот)</div>
+            <div class="sub">Быстрый переход к циклу</div>
+          </div>
+          <button class="small-btn">+</button>
+        </div>
+        <div class="widget-catalog-card" onclick="createTileOnDesktop('Бутик', '🛍️', 'tab-shop')">
+          <div class="cat-icon">🛍️</div>
+          <div class="cat-info">
+            <div class="title">Плитка Бутика (1 слот)</div>
+            <div class="sub">Белье и подарки</div>
+          </div>
+          <button class="small-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </nav>
 
   <!-- ============================================================ -->
@@ -1305,8 +1504,8 @@
       renderDesktop();
     }
 
-    // -------------------------------------------------------------
-    // Д) Сетка рабочего стола и управление плитками
+   // -------------------------------------------------------------
+    // Д) Сетка, сенсорный Drag-and-Drop и кастомизация
     // -------------------------------------------------------------
     let isDesktopEditMode = false;
     let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
@@ -1329,16 +1528,67 @@
     function toggleDesktopEditMode() {
       isDesktopEditMode = !isDesktopEditMode;
       const btn = document.getElementById('btn-edit-desktop');
+      const toolbar = document.getElementById('desktop-edit-toolbar');
       const grid = document.getElementById('desktop-grid-container');
+
       if (isDesktopEditMode) {
-        btn.classList.add('active');
-        btn.innerText = '✓ Готово';
-        grid.classList.add('edit-mode');
+        btn?.classList.add('active');
+        toolbar?.classList.add('active');
+        grid?.classList.add('edit-mode');
+        tg?.HapticFeedback?.selectionChanged?.();
       } else {
-        btn.classList.remove('active');
-        btn.innerText = '⚙️ Настроить';
-        grid.classList.remove('edit-mode');
+        btn?.classList.remove('active');
+        toolbar?.classList.remove('active');
+        grid?.classList.remove('edit-mode');
       }
+      renderDesktop();
+    }
+
+    // СЕНСОРНЫЙ ДВИЖОК ПЕРЕМЕЩЕНИЯ (TOUCH DRAG & DROP)
+    let touchStartIndex = null;
+
+    function attachTouchEvents(wrapEl, index) {
+      wrapEl.addEventListener('touchstart', (e) => {
+        if (!isDesktopEditMode || e.target.closest('.item-delete-btn')) return;
+        touchStartIndex = index;
+        wrapEl.classList.add('is-dragging');
+        tg?.HapticFeedback?.impactOccurred?.('light');
+      }, { passive: true });
+
+      wrapEl.addEventListener('touchmove', (e) => {
+        if (touchStartIndex === null) return;
+        const touch = e.touches[0];
+        const underElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        const targetWrap = underElement?.closest('.desktop-item-wrapper');
+
+        document.querySelectorAll('.desktop-item-wrapper').forEach(w => w.classList.remove('drag-over'));
+        if (targetWrap && targetWrap !== wrapEl) {
+          targetWrap.classList.add('drag-over');
+        }
+      }, { passive: true });
+
+      wrapEl.addEventListener('touchend', (e) => {
+        if (touchStartIndex === null) return;
+        wrapEl.classList.remove('is-dragging');
+        const touch = e.changedTouches[0];
+        const underElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        const targetWrap = underElement?.closest('.desktop-item-wrapper');
+
+        document.querySelectorAll('.desktop-item-wrapper').forEach(w => w.classList.remove('drag-over'));
+
+        if (targetWrap) {
+          const targetIndex = parseInt(targetWrap.dataset.index);
+          if (!isNaN(targetIndex) && targetIndex !== touchStartIndex) {
+            // Перемещаем элемент на новое место в массиве
+            const itemToMove = desktopItems.splice(touchStartIndex, 1)[0];
+            desktopItems.splice(targetIndex, 0, itemToMove);
+            saveDesktopItems();
+            renderDesktop();
+            tg?.HapticFeedback?.impactOccurred?.('medium');
+          }
+        }
+        touchStartIndex = null;
+      });
     }
 
     function renderDesktop() {
@@ -1349,22 +1599,16 @@
       desktopItems.forEach((item, index) => {
         const wrap = document.createElement('div');
         wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
+        wrap.dataset.index = index;
 
-        let inner = `
-          <button class="item-delete-btn" onclick="deleteDesktopItem(${index})">✕</button>
-          <div class="item-move-controls">
-            <button class="move-btn" onclick="moveDesktopItem(${index}, -1)">◄</button>
-            <button class="move-btn" onclick="moveDesktopItem(${index}, 1)">►</button>
-          </div>
-        `;
+        let inner = `<button class="item-delete-btn" onclick="deleteDesktopItem(${index})">✕</button>`;
 
         if (item.type === 'tile') {
           inner += `
             <div class="desktop-tile" onclick="if(!isDesktopEditMode) openSubScreen('${item.target}')">
               <div class="tile-icon">${item.icon}</div>
               <div class="tile-label">${item.title}</div>
-            </div>
-          `;
+            </div>`;
         } else if (item.type === 'widget-balance') {
           const balanceTitle = currentRole === 'top' ? 'Баланс Заботы' : 'Очки Трат';
           const balanceValue = currentRole === 'top' ? '3,450 PTS' : '1,250 PTS';
@@ -1373,39 +1617,95 @@
               <div class="widget-header"><span>${balanceTitle}</span><span>🔥</span></div>
               <div class="widget-title">${balanceValue}</div>
               <div class="widget-sub">Нажмите для статистики</div>
-            </div>
-          `;
+            </div>`;
         } else if (item.type === 'widget-contract') {
           inner += `
             <div class="desktop-widget" onclick="if(!isDesktopEditMode) openSubScreen('tab-contract')">
               <div class="widget-header"><span>Обет Дня</span><span>📜</span></div>
               <div class="widget-title">"Взаимное согласие и правила вечера"</div>
               <div class="widget-sub">Статус: Все условия активированы</div>
-            </div>
-          `;
+            </div>`;
+        } else if (item.type === 'widget-note') {
+          inner += `
+            <div class="desktop-widget" style="border-color: rgba(232, 160, 191, 0.4);">
+              <div class="widget-header"><span style="color:var(--ovulation-color);">Послание</span><span>💌</span></div>
+              <div class="widget-title" style="font-size: 11px;">"Жду вечера... Сюрприз готов"</div>
+              <div class="widget-sub">Закреплено</div>
+            </div>`;
         }
 
         wrap.innerHTML = inner;
+        attachTouchEvents(wrap, index);
         container.appendChild(wrap);
       });
-    }
-
-    function moveDesktopItem(index, dir) {
-      const target = index + dir;
-      if (target >= 0 && target < desktopItems.length) {
-        const temp = desktopItems[index];
-        desktopItems[index] = desktopItems[target];
-        desktopItems[target] = temp;
-        saveDesktopItems();
-        renderDesktop();
-      }
     }
 
     function deleteDesktopItem(index) {
       desktopItems.splice(index, 1);
       saveDesktopItems();
       renderDesktop();
+      tg?.HapticFeedback?.notificationOccurred?.('warning');
     }
+
+    // ДОБАВЛЕНИЕ НОВЫХ ВИДЖЕТОВ И ПЛИТОК
+    function openAddWidgetModal() {
+      document.getElementById('add-widget-modal')?.classList.add('active');
+    }
+    function closeAddWidgetModal() {
+      document.getElementById('add-widget-modal')?.classList.remove('active');
+    }
+    function createWidgetOnDesktop(type, span) {
+      desktopItems.push({ id: 'w-' + Date.now(), type, span });
+      saveDesktopItems();
+      closeAddWidgetModal();
+      renderDesktop();
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+    }
+    function createTileOnDesktop(title, icon, target) {
+      desktopItems.push({ id: 't-' + Date.now(), type: 'tile', title, icon, target });
+      saveDesktopItems();
+      closeAddWidgetModal();
+      renderDesktop();
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+    }
+
+    // УПРАВЛЕНИЕ ОБОЯМИ
+    function openWallpaperModal() {
+      document.getElementById('wallpaper-modal')?.classList.add('active');
+    }
+    function closeWallpaperModal() {
+      document.getElementById('wallpaper-modal')?.classList.remove('active');
+    }
+    function applyWallpaper(type) {
+      const el = document.querySelector('.desktop-wrapper');
+      let val = '';
+      if (type === 'ruby') val = 'linear-gradient(180deg, #3A0B16 0%, #0C0A10 100%)';
+      else if (type === 'art') val = "url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png')";
+      else if (type === 'plum') val = 'linear-gradient(180deg, #24102C 0%, #0C0A10 100%)';
+      else val = 'transparent';
+
+      localStorage.setItem('pact_wallpaper', val);
+      if (el) el.style.background = val;
+      closeWallpaperModal();
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+    }
+    function applyCustomWallpaper() {
+      const url = document.getElementById('custom-wallpaper-input')?.value.trim();
+      if (!url) return;
+      const val = `url('${url}')`;
+      localStorage.setItem('pact_wallpaper', val);
+      const el = document.querySelector('.desktop-wrapper');
+      if (el) el.style.background = val;
+      closeWallpaperModal();
+    }
+    function loadSavedWallpaper() {
+      const saved = localStorage.getItem('pact_wallpaper');
+      const el = document.querySelector('.desktop-wrapper');
+      if (saved && el) el.style.background = saved;
+    }
+
+    // Вызовите в блоке инициализации:
+    loadSavedWallpaper();
 
     // -------------------------------------------------------------
     // Е) Календарь цикла и расчет овуляции
