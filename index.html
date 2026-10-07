@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <!-- ============================================================ -->
+  <!-- 1. МЕТАДАННЫЕ И СИСТЕМНЫЕ НАСТРОЙКИ TELEGRAM                 -->
+  <!-- ============================================================ -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Pact & Passion</title>
+  
+  <!-- Подключение Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
+    /* ============================================================ */
+    /* 2. ЦВЕТОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ ТЕМЫ (CSS ROOT)            */
+    /* ============================================================ */
     :root {
       --bg-color: #0C0A10;
       --card-bg: rgba(22, 18, 30, 0.92);
@@ -41,7 +50,7 @@
       margin-right: auto;
     }
 
-    /* AMBIENT LIGHTS */
+    /* Фоновые неоновые круги (Ambient Glow) */
     .ambient-glow {
       position: fixed;
       width: 280px;
@@ -55,7 +64,9 @@
     .glow-1 { top: -50px; left: -50px; background: #E63956; }
     .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
 
-    /* SPLASH SCREEN */
+    /* ============================================================ */
+    /* 3. СТИЛИ ЭКРАНА ЗАСТАВКИ (SPLASH SCREEN)                    */
+    /* ============================================================ */
     #splash-screen {
       position: fixed;
       inset: 0;
@@ -68,6 +79,7 @@
       transition: opacity 0.8s ease, visibility 0.8s;
       background-color: #5d0309;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .splash-bg {
@@ -149,6 +161,7 @@
       pointer-events: none;
     }
 
+    /* Базовая карточка экрана */
     .card {
       position: relative;
       z-index: 2;
@@ -165,7 +178,9 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* DESKTOP HEADER & GRID */
+    /* ============================================================ */
+    /* 4. СЕТКА РАБОЧЕГО СТОЛА И КОЛОНКИ (DESKTOP GRID)            */
+    /* ============================================================ */
     .desktop-wrapper {
       margin-top: 10px;
       width: 100%;
@@ -179,6 +194,7 @@
       padding: 0 4px;
     }
 
+    /* Кнопка смены роли (Верхний / Нижня) */
     .role-toggle-btn {
       background: rgba(230, 57, 86, 0.18);
       border: 1px solid rgba(230, 57, 86, 0.5);
@@ -198,6 +214,7 @@
     }
     .role-toggle-btn:active { transform: scale(0.94); }
 
+    /* Кнопка режима настройки сетки */
     .edit-desktop-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-color);
@@ -218,6 +235,7 @@
       box-shadow: 0 0 12px rgba(230, 57, 86, 0.4);
     }
 
+    /* Главная сетка: 4 равные колонки */
     .desktop-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -262,7 +280,7 @@
       line-height: 1.1;
     }
 
-    /* EDIT MODE / JIGGLE */
+    /* Анимация покачивания в режиме редактирования */
     .edit-mode .desktop-tile, .edit-mode .desktop-widget {
       animation: jiggle 0.28s infinite alternate ease-in-out;
     }
@@ -321,7 +339,7 @@
       cursor: pointer;
     }
 
-    /* WIDGETS */
+    /* Настройка ширины колонок для виджетов */
     .desktop-widget {
       background: linear-gradient(135deg, rgba(30, 22, 42, 0.9) 0%, rgba(15, 11, 22, 0.95) 100%);
       border: 1px solid rgba(230, 57, 86, 0.35);
@@ -336,6 +354,8 @@
       height: 82px;
     }
     .desktop-widget:active { transform: scale(0.96); }
+
+    /* Растягивание на 2 или 4 колонки */
     .widget-span-2 { grid-column: span 2; }
     .widget-span-4 { grid-column: span 4; }
 
@@ -361,7 +381,9 @@
       margin-top: 2px;
     }
 
-    /* SUB-SCREEN HEADERS & BUTTONS */
+    /* ============================================================ */
+    /* 5. ОБЩИЕ ЭЛЕМЕНТЫ: ШАПКИ, СПИСКИ И КНОПКИ НАЗАД              */
+    /* ============================================================ */
     .sub-screen-header {
       display: flex;
       align-items: center;
@@ -423,7 +445,9 @@
     .contract-info .name { font-size: 11px; font-weight: 600; color: #fff; }
     .contract-info .reward { font-size: 9px; color: var(--accent-color); margin-top: 2px; font-weight: 600; }
 
-    /* CALENDAR MODULE */
+    /* ============================================================ */
+    /* 6. МОДУЛЬ ЖЕНСКОГО КАЛЕНДАРЯ                                */
+    /* ============================================================ */
     .cycle-two-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .cycle-big-box {
       background: rgba(10, 8, 16, 0.65);
@@ -479,7 +503,9 @@
     .cal-day.ovulation { background: var(--ovulation-color); color: #16121E; font-weight: bold; border: none; }
     .cal-day.empty { background: transparent; border: none; }
 
-    /* FORMS & INPUTS */
+    /* ============================================================ */
+    /* 7. ФОРМЫ, ПОЛЯ ВВОДА И КАТАЛОГИ ТОВАРОВ                      */
+    /* ============================================================ */
     .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
     .form-group label { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .form-control {
@@ -502,7 +528,6 @@
       margin-bottom: 12px;
     }
 
-    /* SHOPS & PRODUCTS */
     .category-chips {
       display: flex;
       gap: 6px;
@@ -560,7 +585,9 @@
     .product-category-lbl { font-size: 9px; color: var(--accent-color); font-weight: 600; }
     .product-price-lbl { font-size: 11px; font-weight: 800; color: var(--ovulation-color); margin-top: auto; }
 
-    /* MESSENGER & CHAT */
+    /* ============================================================ */
+    /* 8. МЕССЕНДЖЕР, ПРОФИЛЬ И МОДАЛЬНЫЕ ОКНА                      */
+    /* ============================================================ */
     .messenger-item {
       background: rgba(10, 8, 16, 0.6);
       border: 1px solid var(--border-color);
@@ -606,11 +633,8 @@
       border-bottom-right-radius: 2px;
     }
 
-    /* PROFILE VIEW */
-    .profile-card-header {
-      text-align: center;
-      padding: 10px 0;
-    }
+    /* Профиль пользователя */
+    .profile-card-header { text-align: center; padding: 10px 0; }
     .profile-avatar-container {
       position: relative;
       width: 70px;
@@ -640,7 +664,7 @@
     .stat-box .val { font-size: 16px; font-weight: 900; color: #fff; }
     .stat-box .lbl { font-size: 9px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; }
 
-    /* MODALS */
+    /* Всплывающие модальные окна */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -707,7 +731,6 @@
       margin-bottom: 8px;
     }
 
-    /* GALLERY DETAILS VIEW */
     .gallery-preview-img {
       width: 100%;
       height: 200px;
@@ -735,7 +758,9 @@
     }
     .gallery-thumb-item.active { opacity: 1; border-color: var(--accent-color); }
 
-    /* BOTTOM NAV BAR */
+    /* ============================================================ */
+    /* 9. НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (BOTTOM DOCK)                    */
+    /* ============================================================ */
     .nav-bar {
       position: fixed;
       bottom: 0;
@@ -783,12 +808,15 @@
 </head>
 <body>
 
-  <!-- AMBIENT GLOWS -->
+  <!-- Фоновое свечение -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <!-- SPLASH SCREEN -->
-  <div id="splash-screen">
+  <!-- ============================================================ -->
+  <!-- 10. ЭКРАН ЗАСТАВКИ (SPLASH SCREEN)                          -->
+  <!-- ============================================================ -->
+  <!-- Добавлен onclick: при зависании любой тап закрывает заставку -->
+  <div id="splash-screen" onclick="hideSplash()">
     <div class="splash-bg"></div>
     <div class="splash-bottom-fade"></div>
     <div class="contract-stage">
@@ -800,7 +828,9 @@
     </div>
   </div>
 
-  <!-- 1. TAB: HOME DESKTOP -->
+  <!-- ============================================================ -->
+  <!-- 11. ЭКРАН 1: РАБОЧИЙ СТОЛ (HOME DESKTOP)                     -->
+  <!-- ============================================================ -->
   <div id="tab-home" class="tab-content active">
     <div class="desktop-wrapper">
       <div class="desktop-header-bar">
@@ -812,11 +842,14 @@
         </button>
       </div>
 
+      <!-- Контейнер сетки, куда рендерятся иконки и виджеты -->
       <div id="desktop-grid-container" class="desktop-grid"></div>
     </div>
   </div>
 
-  <!-- 2. TAB: МУЖСКАЯ СЕССИЯ ♂ -->
+  <!-- ============================================================ -->
+  <!-- 12. ЭКРАН 2: МУЖСКАЯ СЕССИЯ ♂                                -->
+  <!-- ============================================================ -->
   <div id="tab-male-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -837,7 +870,9 @@
     </div>
   </div>
 
-  <!-- 3. TAB: ЖЕНСКАЯ СЕССИЯ ♀ -->
+  <!-- ============================================================ -->
+  <!-- 13. ЭКРАН 3: ЖЕНСКАЯ СЕССИЯ ♀                                -->
+  <!-- ============================================================ -->
   <div id="tab-female-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -858,7 +893,9 @@
     </div>
   </div>
 
-  <!-- 4. TAB: КАЛЕНДАРЬ -->
+  <!-- ============================================================ -->
+  <!-- 14. ЭКРАН 4: ЖЕНСКИЙ КАЛЕНДАРЬ                               -->
+  <!-- ============================================================ -->
   <div id="tab-cycle" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -897,7 +934,9 @@
     </div>
   </div>
 
-  <!-- 5. TAB: КОНТРАКТ & ОБЕТЫ -->
+  <!-- ============================================================ -->
+  <!-- 15. ЭКРАН 5: КОНТРАКТ И ОБЕТЫ                                -->
+  <!-- ============================================================ -->
   <div id="tab-contract" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -917,7 +956,9 @@
     </div>
   </div>
 
-  <!-- 6. TAB: БУТИК -->
+  <!-- ============================================================ -->
+  <!-- 16. ЭКРАН 6: БУТИК ИСКУШЕНИЯ                                -->
+  <!-- ============================================================ -->
   <div id="tab-shop" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -939,7 +980,9 @@
     </div>
   </div>
 
-  <!-- 7. TAB: СЕКС-ШОП -->
+  <!-- ============================================================ -->
+  <!-- 17. ЭКРАН 7: СЕКС-ШОП АТРИБУТОВ                             -->
+  <!-- ============================================================ -->
   <div id="tab-sexshop" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -960,7 +1003,9 @@
     </div>
   </div>
 
-  <!-- 8. TAB: ПОДАРКИ И ЖЕЛАНИЯ -->
+  <!-- ============================================================ -->
+  <!-- 18. ЭКРАН 8: ПОДАРКИ И ЖЕЛАНИЯ                              -->
+  <!-- ============================================================ -->
   <div id="tab-gifts" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -980,7 +1025,9 @@
     </div>
   </div>
 
-  <!-- 9. TAB: МЕССЕНДЖЕР -->
+  <!-- ============================================================ -->
+  <!-- 19. ЭКРАН 9: МЕССЕНДЖЕР И ЧАТЫ                              -->
+  <!-- ============================================================ -->
   <div id="tab-messenger" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -999,7 +1046,7 @@
     </div>
   </div>
 
-  <!-- 10. SUB-SCREEN: LIVE CHAT DEMO -->
+  <!-- Экран диалога с ботом -->
   <div id="tab-chat-1" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1014,7 +1061,9 @@
     </div>
   </div>
 
-  <!-- 11. TAB: ПРОФИЛЬ -->
+  <!-- ============================================================ -->
+  <!-- 20. ЭКРАН 10: ЛИЧНЫЙ ПРОФИЛЬ                                -->
+  <!-- ============================================================ -->
   <div id="tab-profile" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1047,7 +1096,9 @@
     </div>
   </div>
 
-  <!-- MODAL: ДОБАВИТЬ ТОВАР (5 СЛОТОВ ФОТО) -->
+  <!-- ============================================================ -->
+  <!-- 21. МОДАЛ: ДОБАВЛЕНИЕ ТОВАРА (С 5 СЛОТАМИ ФОТО)              -->
+  <!-- ============================================================ -->
   <div class="modal-overlay" id="add-product-modal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1100,7 +1151,9 @@
     </div>
   </div>
 
-  <!-- MODAL: ДЕТАЛИ И ГАЛЕРЕЯ ТОВАРА -->
+  <!-- ============================================================ -->
+  <!-- 22. МОДАЛ: ГАЛЕРЕЯ ТОВАРА С МИНИАТЮРАМИ                     -->
+  <!-- ============================================================ -->
   <div class="modal-overlay" id="gallery-modal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1116,7 +1169,9 @@
     </div>
   </div>
 
-  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <!-- ============================================================ -->
+  <!-- 23. ФИКСИРОВАННЫЙ НИЖНИЙ DOCK НАВИГАЦИИ                     -->
+  <!-- ============================================================ -->
   <nav class="nav-bar">
     <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
       <span class="nav-icon">👤</span>
@@ -1136,47 +1191,52 @@
     </div>
   </nav>
 
+  <!-- ============================================================ -->
+  <!-- 24. JAVASCRIPT ЛОГИКА ПРИЛОЖЕНИЯ                             -->
+  <!-- ============================================================ -->
   <script>
-    // 1. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP
+    // -------------------------------------------------------------
+    // А) Инициализация Telegram WebApp
+    // -------------------------------------------------------------
     const tg = window.Telegram?.WebApp;
     if (tg) {
       try {
         tg.ready();
         tg.expand();
-        if (tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) {
-          tg.requestFullscreen?.();
-        }
-        if (tg.isVersionAtLeast && tg.isVersionAtLeast('7.7')) {
-          tg.disableVerticalSwipes?.();
-        }
+        if (tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) tg.requestFullscreen?.();
+        if (tg.isVersionAtLeast && tg.isVersionAtLeast('7.7')) tg.disableVerticalSwipes?.();
       } catch (e) {
-        console.warn('Telegram WebApp Init Error:', e);
+        console.warn('Ошибка инициализации Telegram SDK:', e);
       }
     }
 
-    // 2. ЗАКРЫТИЕ ЗАСТАВКИ
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) splash.classList.add('hidden');
-      }, 2200);
-    });
+    // -------------------------------------------------------------
+    // Б) Гарантированное скрытие заставки (Splash Screen)
+    // -------------------------------------------------------------
+    function hideSplash() {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.classList.add('hidden');
+        setTimeout(() => { splash.style.display = 'none'; }, 800);
+      }
+    }
+    // Автоматическое скрытие через 2 секунды, даже если сеть медленная
+    setTimeout(hideSplash, 2000);
 
-    // 3. НАВИГАЦИЯ И ВНУТРЕННИЙ СТЕК
+    // -------------------------------------------------------------
+    // В) Навигация по экранам (Внутренний стек страниц)
+    // -------------------------------------------------------------
     let navStack = ['tab-home'];
 
     function openSubScreen(tabId) {
-      if (navStack[navStack.length - 1] !== tabId) {
-        navStack.push(tabId);
-      }
+      if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
       renderActiveTab(tabId);
     }
 
     function handleBackAction() {
       if (navStack.length > 1) {
         navStack.pop();
-        const prevTab = navStack[navStack.length - 1];
-        renderActiveTab(prevTab);
+        renderActiveTab(navStack[navStack.length - 1]);
       } else {
         renderActiveTab('tab-home');
       }
@@ -1194,7 +1254,9 @@
       else if (tabId === 'tab-messenger' || tabId === 'tab-chat-1') document.getElementById('nav-chat')?.classList.add('active');
     }
 
-    // 4. РОЛЕВАЯ МОДЕЛЬ (ВЕРХНИЙ / НИЖНЯЯ)
+    // -------------------------------------------------------------
+    // Г) Ролевая модель (Верхний 😈 / Нижня 😇)
+    // -------------------------------------------------------------
     let currentRole = localStorage.getItem('pact_role') || 'top';
 
     function updateRoleUI() {
@@ -1220,7 +1282,9 @@
       renderDesktop();
     }
 
-    // 5. РАБОЧИЙ СТОЛ И СЕТКА
+    // -------------------------------------------------------------
+    // Д) Сетка рабочего стола и управление плитками
+    // -------------------------------------------------------------
     let isDesktopEditMode = false;
     let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
       { id: 'tile-male', type: 'tile', title: 'Мужская ♂', icon: '⚡', target: 'tab-male-session' },
@@ -1320,13 +1384,14 @@
       renderDesktop();
     }
 
-    // 6. ЖЕНСКИЙ КАЛЕНДАРЬ И ЦИКЛ
+    // -------------------------------------------------------------
+    // Е) Календарь цикла и расчет овуляции
+    // -------------------------------------------------------------
     let cycleStartDate = localStorage.getItem('cycle_start_date') || new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0];
     let cycleDuration = parseInt(localStorage.getItem('cycle_duration') || '28');
 
     function toggleCycleSettings() {
-      const panel = document.getElementById('cycle-settings');
-      panel.classList.toggle('open');
+      document.getElementById('cycle-settings').classList.toggle('open');
     }
 
     function updateCycleSettings() {
@@ -1360,9 +1425,7 @@
       const calGrid = document.getElementById('calendar-grid');
       calGrid.innerHTML = '';
       const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-      daysOfWeek.forEach(d => {
-        calGrid.innerHTML += `<div class="calendar-weekday">${d}</div>`;
-      });
+      daysOfWeek.forEach(d => { calGrid.innerHTML += `<div class="calendar-weekday">${d}</div>`; });
 
       for (let i = 1; i <= cycleDuration; i++) {
         let cls = 'cal-day';
@@ -1373,7 +1436,9 @@
       }
     }
 
-    // 7. СЕССИИ (РИТУАЛЫ)
+    // -------------------------------------------------------------
+    // Ж) Ритуалы (Сессии)
+    // -------------------------------------------------------------
     let maleTasks = JSON.parse(localStorage.getItem('male_tasks')) || [
       { id: 1, title: 'Утренний кофейный обряд', points: 150 },
       { id: 2, title: 'Выбор вечернего гардероба', points: 200 }
@@ -1438,7 +1503,9 @@
       renderTasks();
     }
 
-    // 8. КОНТРАКТ & ПОДАРКИ
+    // -------------------------------------------------------------
+    // З) Контракт и Желания
+    // -------------------------------------------------------------
     let contractClauses = JSON.parse(localStorage.getItem('contract_clauses')) || [
       'Полное доверие и открытость в диалоге',
       'Обязательное соблюдение установленных стоп-слов',
@@ -1497,7 +1564,9 @@
       renderContractAndGifts();
     }
 
-    // 9. БУТИК & СЕКС-ШОП
+    // -------------------------------------------------------------
+    // И) Магазины (Бутик и Секс-шоп)
+    // -------------------------------------------------------------
     const boutiqueCategories = ["Нижнее белье", "Комплект", "Пижамы", "Пеньюары", "Ночная одежда"];
     const sexshopCategories = ["Игрушки", "Бондаж", "Косметика & Уход", "Аксессуары"];
 
@@ -1569,7 +1638,9 @@
       `).join('') || '<div style="color:var(--text-muted); font-size:10px; grid-column:span 2;">Товаров нет</div>';
     }
 
-    // 10. МОДАЛ ДОБАВЛЕНИЯ ТОВАРОВ
+    // -------------------------------------------------------------
+    // К) Модальные окна добавления товаров и галереи
+    // -------------------------------------------------------------
     function openAddProductModal(shop) {
       document.getElementById('add-product-modal').classList.add('active');
       switchModalShopTab(shop);
@@ -1634,7 +1705,6 @@
       renderProducts();
     }
 
-    // 11. МОДАЛ ГАЛЕРЕИ ТОВАРА
     function openProductGallery(shop, id) {
       const list = shop === 'boutique' ? boutiqueItems : sexshopItems;
       const prod = list.find(x => x.id === id);
@@ -1682,7 +1752,9 @@
       document.getElementById('gallery-modal').classList.remove('active');
     }
 
-    // 12. ДЕМО ЧАТ
+    // -------------------------------------------------------------
+    // Л) Демонстрационный Чат
+    // -------------------------------------------------------------
     let chatHistory = [
       { sender: 'bot', text: 'Приветствую в личном пространстве Pact & Passion. Готовы ли вы закрепить новые правила вечера?' }
     ];
@@ -1714,14 +1786,21 @@
       if (e.key === 'Enter') sendChatMessage();
     }
 
-    // СТАРТОВАЯ ИНИЦИАЛИЗАЦИЯ
-    updateRoleUI();
-    renderDesktop();
-    renderCycleInfo();
-    renderTasks();
-    renderContractAndGifts();
-    renderProducts();
-    renderChat();
+    // -------------------------------------------------------------
+    // М) Безопасный первый запуск компонентов
+    // -------------------------------------------------------------
+    try {
+      updateRoleUI();
+      renderDesktop();
+      renderCycleInfo();
+      renderTasks();
+      renderContractAndGifts();
+      renderProducts();
+      renderChat();
+    } catch (err) {
+      console.error('Ошибка инициализации модулей:', err);
+      hideSplash();
+    }
   </script>
 </body>
 </html>
