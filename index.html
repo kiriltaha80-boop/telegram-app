@@ -13,6 +13,47 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    
+    /* ИЗЯЩНАЯ КНОПКА НАД НАВИГАЦИЕЙ */
+    .dock-wallpaper-btn {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+      left: 50%;
+      transform: translateX(-50%) translateY(14px) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 22px;
+      background: rgba(22, 18, 30, 0.9);
+      border: 1px solid rgba(230, 57, 86, 0.4);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 12px rgba(230, 57, 86, 0.2);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #F5EBE6;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      z-index: 1000; /* Находится над столом, но строго под любым модальным окном */
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    /* Мягкое появление при включении режима редактирования */
+    .dock-wallpaper-btn.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    .dock-wallpaper-btn:active {
+      transform: translateX(-50%) translateY(0) scale(0.95);
+      background: rgba(35, 12, 22, 0.95);
+    }
+    
     /* ============================================================ */
     /* 2. ЦВЕТОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ ТЕМЫ (CSS ROOT)            */
     /* ============================================================ */
@@ -2210,28 +2251,12 @@
   </script>
 
 <!-- ПРОВЕРОЧНАЯ КНОПКА С ПРЯМЫМИ СТИЛЯМИ (ВСТАВИТЬ ПЕРЕД </body>) -->
+  <!-- КНОПКА СМЕНЫ ОБОЕВ (ВСПЛЫВАЕТ ТОЛЬКО В РЕЖИМЕ НАСТРОЙКИ) -->
   <button id="dock-wallpaper-btn" 
-          onclick="openWallpaperModal()" 
-          style="position: fixed !important; 
-                 bottom: 95px !important; 
-                 left: 50% !important; 
-                 transform: translateX(-50%) !important; 
-                 z-index: 99999 !important; 
-                 display: flex !important; 
-                 align-items: center !important; 
-                 gap: 8px !important; 
-                 background: #E63956 !important; 
-                 color: #FFFFFF !important; 
-                 border: none !important; 
-                 padding: 10px 22px !important; 
-                 border-radius: 24px !important; 
-                 font-size: 13px !important; 
-                 font-weight: 700 !important; 
-                 box-shadow: 0 4px 20px rgba(230, 57, 86, 0.6) !important; 
-                 cursor: pointer !important;">
-    <span>🖼️</span>
+          class="dock-wallpaper-btn"
+          onclick="openWallpaperModal()">
+    <span style="font-size: 15px;">🖼️</span>
     <span>Сменить обои</span>
   </button>
-</body>
 </body>
 </html>
