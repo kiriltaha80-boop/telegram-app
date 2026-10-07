@@ -14,45 +14,61 @@
 
   <style>
     
-    /* ИЗЯЩНАЯ КНОПКА НАД НАВИГАЦИЕЙ */
-    .dock-wallpaper-btn {
-      position: fixed;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
-      left: 50%;
-      transform: translateX(-50%) translateY(14px) scale(0.9);
-      opacity: 0;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 20px;
-      border-radius: 22px;
-      background: rgba(22, 18, 30, 0.9);
-      border: 1px solid rgba(230, 57, 86, 0.4);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 12px rgba(230, 57, 86, 0.2);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      color: #F5EBE6;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      z-index: 1000; /* Находится над столом, но строго под любым модальным окном */
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-      white-space: nowrap;
-    }
+   /* СЕТКА И ШАПКА РАБОЧЕГО СТОЛА */
+.desktop-wrapper {
+  margin-top: 10px;
+  width: 100%;
+}
 
-    /* Мягкое появление при включении режима редактирования */
-    .dock-wallpaper-btn.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(-50%) translateY(0) scale(1);
-    }
-        
-    .dock-wallpaper-btn:active {
-      transform: translateX(-50%) translateY(0) scale(0.95);
-      background: rgba(35, 12, 22, 0.95);
-    }
+.desktop-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.desktop-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Кнопка смены роли */
+.role-toggle-btn {
+  background: rgba(230, 57, 86, 0.18);
+  border: 1px solid rgba(230, 57, 86, 0.5);
+  border-radius: 16px;
+  padding: 6px 12px;
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Кнопки «Обои» и «Настроить» */
+.edit-desktop-btn {
+  background: rgba(22, 18, 30, 0.85);
+  border: 1px solid rgba(232, 160, 191, 0.25);
+  border-radius: 16px;
+  padding: 6px 12px;
+  color: #F5EBE6;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-desktop-btn:active {
+  transform: scale(0.94);
+  border-color: #E63956;
+}
+
+.edit-desktop-btn.active {
+  background: #E63956;
+  border-color: #E63956;
+  color: #FFF;
+}
     
     /* ============================================================ */
     /* 2. ЦВЕТОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ ТЕМЫ (CSS ROOT)            */
@@ -2084,6 +2100,40 @@
       `).join('') || '<div style="color:var(--text-muted); font-size:10px; grid-column:span 2;">Товаров нет</div>';
     }
 
+   
+    // Открытие шторки обоев
+function openWallpaperModal() {
+  document.getElementById('wallpaper-modal')?.classList.add('active');
+  tg?.HapticFeedback?.impactOccurred?.('light');
+}
+
+function closeWallpaperModal() {
+  document.getElementById('wallpaper-modal')?.classList.remove('active');
+}
+
+// Режим перемещения карточек стола
+function toggleDesktopEditMode() {
+  isDesktopEditMode = !isDesktopEditMode;
+
+  const btn = document.getElementById('btn-edit-desktop');
+  const grid = document.getElementById('desktop-grid-container');
+
+  if (isDesktopEditMode) {
+    btn?.classList.add('active');
+    if (btn) btn.innerHTML = '✓ Готово';
+    grid?.classList.add('edit-mode');
+    tg?.HapticFeedback?.selectionChanged?.();
+  } else {
+    btn?.classList.remove('active');
+    if (btn) btn.innerHTML = '⚙️ Настроить';
+    grid?.classList.remove('edit-mode');
+  }
+
+  if (typeof renderDesktop === 'function') {
+    renderDesktop();
+  }
+}
+    
     // -------------------------------------------------------------
     // К) Модальные окна добавления товаров и галереи
     // -------------------------------------------------------------
