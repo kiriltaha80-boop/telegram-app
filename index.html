@@ -16,7 +16,17 @@
     /* ============================================================ */
     /* 2. ЦВЕТОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ ТЕМЫ (CSS ROOT)            */
     /* ============================================================ */
-    <style>
+  <style>
+    /* ЖЕСТКИЙ СБРОС: ФОН НИКОГДА НЕ БУДЕТ БЕЛЫМ */
+    html, body {
+      background-color: #0C0A10 !important;
+      color: #F5F3F7;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100%;
+    }
+
     :root {
       --bg-color: #0C0A10;
       --card-bg: rgba(22, 18, 30, 0.92);
@@ -39,19 +49,10 @@
     }
 
     body {
-      /* Верх: 90px + Dynamic Island / челка. Бока: строго 14px. Низ: запас под пузырь Dock */
       padding: calc(env(safe-area-inset-top, 0px) + 90px) 14px calc(env(safe-area-inset-bottom, 0px) + 95px) 14px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
       overflow-x: hidden;
       position: relative;
-      min-height: 100vh;
-      
-      /* Полная ширина под любой экран без черных полос по бокам */
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
     }
 
     /* Фоновые неоновые круги */
@@ -67,37 +68,6 @@
     }
     .glow-1 { top: -50px; left: -50px; background: #E63956; }
     .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
-.modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* Отступ сверху не дает модалке залезть под системные кнопки Telegram */
-      padding: var(--tg-top-deadzone) 16px 20px 16px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    
-    /* Фоновые неоновые круги (Ambient Glow) */
-    .ambient-glow {
-      position: fixed;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      filter: blur(100px);
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.25;
-    }
-    .glow-1 { top: -50px; left: -50px; background: #E63956; }
-    .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
-
     /* ============================================================ */
     /* 3. СТИЛИ ЭКРАНА ЗАСТАВКИ (SPLASH SCREEN)                    */
     /* ============================================================ */
