@@ -838,16 +838,57 @@
     }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
     .nav-label { font-size: 9px; font-weight: 700; }
- /* ФОНОВЫЕ ОБОИ РАБОЧЕГО СТОЛА */
+ 
+    /* ПЛАВАЮЩАЯ КНОПКА СМЕНЫ ОБОЕВ НАД ПАНЕЛЬЮ NAV-BAR */
+.dock-wallpaper-btn {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+  left: 50%;
+  transform: translateX(-50%) translateY(16px) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 24px;
+  background: rgba(20, 16, 28, 0.94);
+  border: 1px solid rgba(230, 57, 86, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(230, 57, 86, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 1001;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease;
+  white-space: nowrap;
+}
+
+/* Состояние при активном режиме «⚙️ Настроить» */
+.dock-wallpaper-btn.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.dock-wallpaper-btn:active {
+  transform: translateX(-50%) translateY(0) scale(0.94);
+  background: rgba(45, 15, 25, 0.96);
+}
+    
+    /* ФОНОВЫЕ ОБОИ РАБОЧЕГО СТОЛА */
     .desktop-wrapper {
-      position: relative;
-      border-radius: 20px;
-      padding: 10px 8px;
-      transition: background 0.4s ease;
-      background-size: cover !important;
-      background-position: center !important;
-      min-height: calc(100vh - 220px);
-    }
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 220px);
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
 
     /* ПАНЕЛЬ НАСТРОЙКИ РАБОЧЕГО СТОЛА */
     .desktop-edit-toolbar {
