@@ -9,6 +9,42 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+  
+   /* Миниатюра аватарки в навигации */
+.nav-avatar-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px; /* Аккуратный скругленный квадратик */
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 2px;
+  transition: all 0.2s ease;
+  background: #16121E;
+}
+
+.nav-item.active .nav-avatar-thumb {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 8px rgba(230, 57, 86, 0.6);
+  transform: scale(1.05);
+}
+
+/* Выравнивание векторных иконок */
+.nav-icon-svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 2px;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-icon-svg {
+  filter: drop-shadow(0 0 6px rgba(230, 57, 86, 0.5));
+}
+    
     /* 1. БАЗОВЫЕ НАСТРОЙКИ И ПЕРЕМЕННЫЕ */
     html, body {
       background-color: #0C0A10 !important;
@@ -867,54 +903,41 @@
   </button>
 
   <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ -->
-  <nav class="nav-bar">
-    <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
-      <span class="nav-icon">👤</span>
-      <span class="nav-label">Профиль</span>
-    </div>
-    <div class="nav-item active" id="nav-home" onclick="openSubScreen('tab-home')">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-label">Домой</span>
-    </div>
-<div class="nav-item" id="nav-back" onclick="handleBackAction()">
-  <span class="nav-icon" style="font-size: 28px; font-weight: 300; line-height: 0.8; color: #9A91A5; display: block;">‹</span>
-  <span class="nav-label" style="color: #9A91A5;">Назад</span>
-</div>
-    <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
-      <span class="nav-icon">💬</span>
-      <span class="nav-label">Чат</span>
-    </div>
-  </nav>
+  
 
   <!-- МОДАЛКА: СМЕНА ОБОЕВ -->
-  <div class="modal-overlay" id="wallpaper-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Обои Рабочего Стола</h3>
-        <span class="modal-close-btn" onclick="closeWallpaperModal()">✕</span>
-      </div>
-      <div class="wallpaper-presets-grid">
-        <div class="wallpaper-thumb" data-wp="ruby_opal" onclick="setWallpaper('ruby_opal')" style="background: radial-gradient(at 15% 15%, #5E0D20 0%, #0C0A10 100%);">
-          <span>Рубиновый Опал</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="neon_velvet" onclick="setWallpaper('neon_velvet')" style="background: radial-gradient(at 20% 20%, #6E0F48 0%, #0C0A10 100%);">
-          <span>Неоновый Бархат</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="wine_sunset" onclick="setWallpaper('wine_sunset')" style="background: radial-gradient(at 80% 15%, #6B172B 0%, #0C0A10 100%);">
-          <span>Винный Закат</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="amethyst_haze" onclick="setWallpaper('amethyst_haze')" style="background: radial-gradient(at 25% 15%, #42145C 0%, #0C0A10 100%);">
-          <span>Аметистовая Дымка</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="emerald_silk" onclick="setWallpaper('emerald_silk')" style="background: radial-gradient(at 20% 20%, #0F3D2A 0%, #0C0A10 100%);">
-          <span>Изумрудный Шелк</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="prismatic_art" onclick="setWallpaper('prismatic_art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
-          <span>Арт Заставки</span>
-        </div>
-      </div>
-    </div>
+ 
+  <nav class="nav-bar">
+  <!-- 1. Профиль с миниатюрой аватарки -->
+  <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
+    <img id="nav-bar-avatar" class="nav-avatar-thumb" 
+         src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+         alt="Аватар">
+    <span class="nav-label">Профиль</span>
   </div>
+
+  <!-- 2. Домой (минималистичный строгий домик) -->
+  <div class="nav-item active" id="nav-home" onclick="openSubScreen('tab-home')">
+    <svg class="nav-icon-svg" viewBox="0 0 24 24">
+      <path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 20v-4h-2v4a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 3 20v-9.5z"/>
+    </svg>
+    <span class="nav-label">Домой</span>
+  </div>
+
+  <!-- 3. Назад (серый строгий шеврон) -->
+  <div class="nav-item" id="nav-back" onclick="handleBackAction()">
+    <span class="nav-icon" style="font-size: 26px; font-weight: 300; line-height: 0.8; color: #9A91A5; display: block;">‹</span>
+    <span class="nav-label" style="color: #9A91A5;">Назад</span>
+  </div>
+
+  <!-- 4. Чат (минималистичное облачко диалога) -->
+  <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
+    <svg class="nav-icon-svg" viewBox="0 0 24 24">
+      <path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+    </svg>
+    <span class="nav-label">Чат</span>
+  </div>
+</nav>
 
   <!-- МОДАЛКА: ДОБАВЛЕНИЕ ПЛИТОК -->
   <div class="modal-overlay" id="add-widget-modal">
