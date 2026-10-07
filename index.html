@@ -1511,19 +1511,28 @@
   <!-- 24. JAVASCRIPT ЛОГИКА ПРИЛОЖЕНИЯ                             -->
   <!-- ============================================================ -->
   <script>
-   
+ 
     function toggleDesktopEditMode() {
-  isDesktopEditMode = !isDesktopEditMode;
-  
-  // Находим кнопку обоев по ID
-  const wallpaperBtn = document.getElementById('dock-wallpaper-btn');
-  
-  if (isDesktopEditMode) {
-    wallpaperBtn?.classList.add('active'); // Показать
-  } else {
-    wallpaperBtn?.classList.remove('active'); // Скрыть
-  }
-}
+      isDesktopEditMode = !isDesktopEditMode;
+      
+      const btn = document.getElementById('btn-edit-desktop');
+      const wallpaperBtn = document.getElementById('dock-wallpaper-btn');
+      const grid = document.getElementById('desktop-grid-container');
+
+      if (isDesktopEditMode) {
+        btn?.classList.add('active');
+        if (btn) btn.innerHTML = '✓ Готово';
+        wallpaperBtn?.classList.add('active'); // Кнопка плавно всплывает
+        grid?.classList.add('edit-mode');
+        tg?.HapticFeedback?.selectionChanged?.();
+      } else {
+        btn?.classList.remove('active');
+        if (btn) btn.innerHTML = '⚙️ Настроить';
+        wallpaperBtn?.classList.remove('active'); // Кнопка плавно растворяется
+        grid?.classList.remove('edit-mode');
+      }
+      renderDesktop();
+    }
     
     // -------------------------------------------------------------
     // А) Инициализация Telegram WebApp
