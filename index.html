@@ -238,24 +238,15 @@
       width: 100%;
     }
 
-    <!-- ШАПКА РАБОЧЕГО СТОЛА С ПАНЕЛЬЮ НАСТРОЙКИ -->
-      <div class="desktop-header-bar">
-        <button id="role-toggle-main" class="role-toggle-btn" onclick="toggleRole()">
-          😈 Верхний
-        </button>
-        <div class="desktop-actions-group">
-          <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
-            ⚙️ Настроить
-          </button>
-        </div>
-      </div>
-
-      <!-- ВСПЛЫВАЮЩАЯ ПАНЕЛЬ ДЕЙСТВИЙ РЕЖИМА НАСТРОЙКИ -->
-      <div id="desktop-edit-toolbar" class="desktop-edit-toolbar">
-        <button class="toolbar-btn" onclick="openAddWidgetModal()">➕ Добавить</button>
-        <button class="toolbar-btn" onclick="openWallpaperModal()">🖼️ Обои</button>
-        <button class="toolbar-btn done" onclick="toggleDesktopEditMode()">✓ Готово</button>
-      </div>
+   <div class="desktop-actions-group">
+    <button id="btn-wallpaper" class="edit-desktop-btn" onclick="openWallpaperModal()">
+      🖼️ Обои
+    </button>
+    <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
+      ⚙️ Настроить
+    </button>
+  </div>
+</div>
 
     /* Кнопка смены роли (Верхний / Нижня) */
     .role-toggle-btn {
