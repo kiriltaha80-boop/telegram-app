@@ -1242,6 +1242,14 @@
       document.getElementById('add-widget-modal')?.classList.remove('active');
     }
 
+   
+    function updateNavAvatar(url) {
+  const navAvatar = document.getElementById('nav-bar-avatar');
+  if (navAvatar && url) {
+    navAvatar.src = url;
+  }
+}
+    
     // Управление фонами
     const WALLPAPER_PRESETS = {
       ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), radial-gradient(at 85% 25%, #7D1C3E 0%, transparent 50%), radial-gradient(at 50% 85%, #26050C 0%, transparent 65%), #0C0A10',
