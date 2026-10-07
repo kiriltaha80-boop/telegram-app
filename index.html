@@ -2340,6 +2340,21 @@ function toggleDesktopEditMode() {
   }
 }
     
+ // Запуск отрисовки рабочего стола и интерфейса
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (typeof renderDesktop === 'function') {
+      renderDesktop();
+    }
+    if (typeof updateRoleUI === 'function') {
+      updateRoleUI();
+    }
+  } catch (err) {
+    console.error('Ошибка отрисовки стола:', err);
+  }
+});
+    
+    
     // -------------------------------------------------------------
     // К) Модальные окна добавления товаров и галереи
     // -------------------------------------------------------------
