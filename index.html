@@ -1057,16 +1057,15 @@
   <!-- ============================================================ -->
   <!-- 11. ЭКРАН 1: РАБОЧИЙ СТОЛ (HOME DESKTOP)                     -->
   <!-- ============================================================ -->
-  <div id="tab-home" class="tab-content active">
-    <div class="desktop-wrapper">
-      <div class="desktop-header-bar">
-        <button id="role-toggle-main" class="role-toggle-btn" onclick="toggleRole()">
-          😈 Верхний
-        </button>
-        <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
-          ⚙️ Настроить
-        </button>
-      </div>
+  <!-- ШАПКА СТОЛА: ТОЛЬКО 2 КНОПКИ -->
+<div class="desktop-header-bar">
+  <button id="btn-wallpaper" class="desktop-action-btn" onclick="openWallpaperModal()">
+    🖼️ Обои
+  </button>
+  <button id="btn-edit-desktop" class="desktop-action-btn" onclick="toggleDesktopEditMode()">
+    ⚙️ Настроить
+  </button>
+</div>
 
       <!-- Контейнер сетки, куда рендерятся иконки и виджеты -->
       <div id="desktop-grid-container" class="desktop-grid"></div>
