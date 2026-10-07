@@ -2300,19 +2300,48 @@ function toggleDesktopEditMode() {
     // -------------------------------------------------------------
     // М) Безопасный первый запуск компонентов
     // -------------------------------------------------------------
-    try {
-      updateRoleUI();
-      renderDesktop();
-      renderCycleInfo();
-      renderTasks();
-      renderContractAndGifts();
-      renderProducts();
-      renderChat();
-    } catch (err) {
-      console.error('Ошибка инициализации модулей:', err);
-      hideSplash();
+    // БЕЗОПАСНЫЙ ЗАПУСК ВСЕХ МОДУЛЕЙ
+    // 1. ФУНКЦИЯ СКРЫТИЯ ЗАСТАВКИ (объявляем первой)
+  function hideSplash() {
+    const splash = document.getElementById('splash-screen');
+    if (splash) {
+      splash.style.transition = 'opacity 0.4s ease';
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        splash.style.display = 'none';
+      }, 400);
     }
-  </script>
+  }
+
+  // 2. ЗАПУСК ВСЕХ МОДУЛЕЙ
+  function initAppModules() {
+    const modules = [
+      { name: 'Роли', fn: updateRoleUI },
+      { name: 'Рабочий стол', fn: renderDesktop },
+      { name: 'Календарь', fn: renderCycleInfo },
+      { name: 'Задачи', fn: renderTasks },
+      { name: 'Контракты', fn: renderContractAndGifts },
+      { name: 'Товары', fn: renderProducts },
+      { name: 'Чат', fn: renderChat }
+    ];
+
+    modules.forEach(mod => {
+      try {
+        if (typeof mod.fn === 'function') {
+          mod.fn();
+        }
+      } catch (err) {
+        console.warn(`[Модуль ${mod.name}] Ошибка:`, err);
+      }
+    });
+
+    // Теперь вызов сработает гарантированно
+    hideSplash();
+  }
+
+  // Запуск при старте
+  initAppModules();
+</script>
 
 <!-- ПРОВЕРОЧНАЯ КНОПКА С ПРЯМЫМИ СТИЛЯМИ (ВСТАВИТЬ ПЕРЕД </body>) -->
   <!-- КНОПКА СМЕНЫ ОБОЕВ (ВСПЛЫВАЕТ ТОЛЬКО В РЕЖИМЕ НАСТРОЙКИ) -->
