@@ -9,42 +9,6 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-  
-   /* Миниатюра аватарки в навигации */
-.nav-avatar-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px; /* Аккуратный скругленный квадратик */
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 2px;
-  transition: all 0.2s ease;
-  background: #16121E;
-}
-
-.nav-item.active .nav-avatar-thumb {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 8px rgba(230, 57, 86, 0.6);
-  transform: scale(1.05);
-}
-
-/* Выравнивание векторных иконок */
-.nav-icon-svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  margin-bottom: 2px;
-  transition: all 0.2s ease;
-}
-
-.nav-item.active .nav-icon-svg {
-  filter: drop-shadow(0 0 6px rgba(230, 57, 86, 0.5));
-}
-    
     /* 1. БАЗОВЫЕ НАСТРОЙКИ И ПЕРЕМЕННЫЕ */
     html, body {
       background-color: #0C0A10 !important;
@@ -77,7 +41,7 @@
     }
 
     body {
-      padding: calc(env(safe-area-inset-top, 0px) + 90px) 14px calc(env(safe-area-inset-bottom, 0px) + 95px) 14px;
+      padding: calc(env(safe-area-inset-top, 0px) + 90px) 14px calc(env(safe-area-inset-bottom, 0px) + 110px) 14px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow-x: hidden;
       position: relative;
@@ -583,10 +547,10 @@
     .widget-catalog-card .title { font-size: 11px; font-weight: 700; color: #fff; }
     .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); }
 
-    /* 6. НАВИГАЦИОННАЯ ПАНЕЛЬ И ВСПЛЫВАЮЩАЯ КНОПКА */
+    /* 6. МАССИВНЫЙ NATIVE DOCK В СТИЛЕ IOS И ПЛАВАЮЩАЯ КНОПКА */
     .dock-wallpaper-btn {
       position: fixed;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 98px);
       left: 50%;
       transform: translateX(-50%) translateY(16px) scale(0.9);
       opacity: 0;
@@ -615,44 +579,91 @@
 
     .nav-bar {
       position: fixed;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
-      left: 14px;
-      right: 14px;
-      width: calc(100% - 28px);
-      height: 62px;
-      border-radius: 26px;
-      background: rgba(20, 16, 28, 0.88);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(230, 57, 86, 0.32);
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+      left: 16px;
+      right: 16px;
+      width: calc(100% - 32px);
+      height: 72px; /* Массивный бар */
+      border-radius: 34px;
+      background: rgba(18, 14, 25, 0.82);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        0 20px 48px rgba(0, 0, 0, 0.8),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2),
+        0 0 24px rgba(230, 57, 86, 0.18);
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       align-items: center;
       z-index: 999;
-      padding: 0 6px;
+      padding: 0 8px;
     }
+
     .nav-item {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100%;
-      color: rgba(255, 255, 255, 0.45);
+      color: #8A8197;
       cursor: pointer;
       position: relative;
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
     }
+    .nav-item:active { transform: scale(0.85); }
     .nav-item.active { color: var(--accent-color); }
     .nav-item.active::after {
       content: '';
       position: absolute;
-      bottom: 4px;
-      width: 4px;
-      height: 4px;
+      bottom: 8px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--accent-color);
+      box-shadow: 0 0 8px var(--accent-color);
     }
-    .nav-icon { font-size: 18px; margin-bottom: 2px; }
-    .nav-label { font-size: 9px; font-weight: 700; }
+
+    .nav-avatar-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      background: #140F1E;
+      transition: all 0.25s ease;
+    }
+    .nav-item.active .nav-avatar-thumb {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 14px rgba(230, 57, 86, 0.65);
+      transform: scale(1.06);
+    }
+
+    .nav-icon-svg {
+      width: 26px;
+      height: 26px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.2s ease;
+    }
+    .nav-item.active .nav-icon-svg {
+      filter: drop-shadow(0 0 8px rgba(230, 57, 86, 0.6));
+    }
+
+    .nav-back-chevron {
+      font-size: 34px;
+      font-weight: 300;
+      line-height: 1;
+      color: #8A8197;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-2px);
+      transition: color 0.2s ease;
+    }
+    .nav-item:active .nav-back-chevron { color: #fff; }
   </style>
 </head>
 <body>
@@ -680,9 +691,14 @@
         <button id="role-toggle-main" class="role-toggle-btn" onclick="toggleRole()">
           😈 Верхний
         </button>
-        <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
-          ⚙️ Настроить
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="edit-desktop-btn" onclick="openWallpaperModal()">
+            🖼️ Обои
+          </button>
+          <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
+            ⚙️ Настроить
+          </button>
+        </div>
       </div>
       <div id="desktop-grid-container" class="desktop-grid"></div>
     </div>
@@ -902,42 +918,60 @@
     <span>Сменить обои</span>
   </button>
 
-  <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ -->
-  
+  <!-- МОДАЛКА: СМЕНА ОБОЕВ РАБОЧЕГО СТОЛА -->
+  <div class="modal-overlay" id="wallpaper-modal" onclick="if(event.target === this) closeWallpaperModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Обои Рабочего Стола</h3>
+        <span class="modal-close-btn" onclick="closeWallpaperModal()">✕</span>
+      </div>
+      <div class="wallpaper-presets-grid">
+        <div class="wallpaper-thumb" data-wp="ruby_opal" onclick="setWallpaper('ruby_opal')" style="background: radial-gradient(at 15% 15%, #5E0D20 0%, #0C0A10 100%);">
+          <span>Рубиновый Опал</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="neon_velvet" onclick="setWallpaper('neon_velvet')" style="background: radial-gradient(at 20% 20%, #6E0F48 0%, #0C0A10 100%);">
+          <span>Неоновый Бархат</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="wine_sunset" onclick="setWallpaper('wine_sunset')" style="background: radial-gradient(at 80% 15%, #6B172B 0%, #0C0A10 100%);">
+          <span>Винный Закат</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="amethyst_haze" onclick="setWallpaper('amethyst_haze')" style="background: radial-gradient(at 25% 15%, #42145C 0%, #0C0A10 100%);">
+          <span>Аметистовая Дымка</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="emerald_silk" onclick="setWallpaper('emerald_silk')" style="background: radial-gradient(at 20% 20%, #0F3D2A 0%, #0C0A10 100%);">
+          <span>Изумрудный Шелк</span>
+        </div>
+        <div class="wallpaper-thumb" data-wp="prismatic_art" onclick="setWallpaper('prismatic_art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
+          <span>Арт Заставки</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- МОДАЛКА: СМЕНА ОБОЕВ -->
- 
+  <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ В СТИЛЕ IOS -->
   <nav class="nav-bar">
-  <!-- 1. Профиль с миниатюрой аватарки -->
-  <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
-    <img id="nav-bar-avatar" class="nav-avatar-thumb" 
-         src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
-         alt="Аватар">
-    <span class="nav-label"></span>
-  </div>
+    <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
+      <img id="nav-bar-avatar" class="nav-avatar-thumb" 
+           src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+           alt="Профиль">
+    </div>
 
-  <!-- 2. Домой (минималистичный строгий домик) -->
-  <div class="nav-item active" id="nav-home" onclick="openSubScreen('tab-home')">
-    <svg class="nav-icon-svg" viewBox="0 0 24 24">
-      <path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 20v-4h-2v4a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 3 20v-9.5z"/>
-    </svg>
-    <span class="nav-label"></span>
-  </div>
+    <div class="nav-item active" id="nav-home" onclick="openSubScreen('tab-home')">
+      <svg class="nav-icon-svg" viewBox="0 0 24 24">
+        <path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 20v-4h-2v4a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 3 20v-9.5z"/>
+      </svg>
+    </div>
 
-  <!-- 3. Назад (серый строгий шеврон) -->
-  <div class="nav-item" id="nav-back" onclick="handleBackAction()">
-    <span class="nav-icon" style="font-size: 26px; font-weight: 300; line-height: 0.8; color: #9A91A5; display: block;">‹</span>
-    <span class="nav-label" style="color: #9A91A5;"</span>
-  </div>
+    <div class="nav-item" id="nav-back" onclick="handleBackAction()">
+      <span class="nav-back-chevron">‹</span>
+    </div>
 
-  <!-- 4. Чат (минималистичное облачко диалога) -->
-  <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
-    <svg class="nav-icon-svg" viewBox="0 0 24 24">
-      <path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-    </svg>
-    <span class="nav-label"</span>
-  </div>
-</nav>
+    <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
+      <svg class="nav-icon-svg" viewBox="0 0 24 24">
+        <path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+      </svg>
+    </div>
+  </nav>
 
   <!-- МОДАЛКА: ДОБАВЛЕНИЕ ПЛИТОК -->
   <div class="modal-overlay" id="add-widget-modal">
@@ -1020,7 +1054,7 @@
       }
     }
 
-    // Автономное и надежное скрытие заставки
+    // Автономное скрытие заставки
     function hideSplash() {
       const splash = document.getElementById('splash-screen');
       if (splash && !splash.classList.contains('hidden')) {
@@ -1028,7 +1062,6 @@
         setTimeout(() => { splash.style.display = 'none'; }, 700);
       }
     }
-    // Комфортное удержание заставки на 1.6 секунды
     setTimeout(hideSplash, 1600);
 
     // Навигация
@@ -1039,6 +1072,7 @@
     }
 
     function handleBackAction() {
+      tg?.HapticFeedback?.impactOccurred?.('light');
       if (navStack.length > 1) {
         navStack.pop();
         renderActiveTab(navStack[navStack.length - 1]);
@@ -1055,7 +1089,6 @@
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       if (tabId === 'tab-home') document.getElementById('nav-home')?.classList.add('active');
       else if (tabId === 'tab-profile') document.getElementById('nav-profile')?.classList.add('active');
-      else if (tabId === 'tab-cycle') document.getElementById('nav-cycle')?.classList.add('active');
       else if (tabId === 'tab-messenger' || tabId === 'tab-chat-1') document.getElementById('nav-chat')?.classList.add('active');
     }
 
@@ -1231,6 +1264,7 @@
     // Модальные окна обоев и виджетов
     function openWallpaperModal() {
       document.getElementById('wallpaper-modal')?.classList.add('active');
+      tg?.HapticFeedback?.impactOccurred?.('light');
     }
     function closeWallpaperModal() {
       document.getElementById('wallpaper-modal')?.classList.remove('active');
@@ -1242,14 +1276,13 @@
       document.getElementById('add-widget-modal')?.classList.remove('active');
     }
 
-   
     function updateNavAvatar(url) {
-  const navAvatar = document.getElementById('nav-bar-avatar');
-  if (navAvatar && url) {
-    navAvatar.src = url;
-  }
-}
-    
+      const navAvatar = document.getElementById('nav-bar-avatar');
+      if (navAvatar && url) {
+        navAvatar.src = url;
+      }
+    }
+
     // Управление фонами
     const WALLPAPER_PRESETS = {
       ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), radial-gradient(at 85% 25%, #7D1C3E 0%, transparent 50%), radial-gradient(at 50% 85%, #26050C 0%, transparent 65%), #0C0A10',
@@ -1274,22 +1307,9 @@
       tg?.HapticFeedback?.selectionChanged?.();
     }
 
-    function applyCustomWallpaper() {
-      const url = document.getElementById('custom-wallpaper-input')?.value.trim();
-      if (!url) return;
-      document.body.style.background = `linear-gradient(rgba(12,10,16,0.6), rgba(12,10,16,0.8)), url('${url}') center/cover fixed no-repeat`;
-      localStorage.setItem('pact_wallpaper_key', 'custom:' + url);
-      closeWallpaperModal();
-    }
-
     function loadSavedWallpaper() {
       const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
-      if (savedKey.startsWith('custom:')) {
-        const url = savedKey.replace('custom:', '');
-        document.body.style.background = `linear-gradient(rgba(12,10,16,0.6), rgba(12,10,16,0.8)), url('${url}') center/cover fixed no-repeat`;
-      } else {
-        setWallpaper(savedKey);
-      }
+      setWallpaper(savedKey);
     }
 
     // Календарь
