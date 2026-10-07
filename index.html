@@ -664,6 +664,57 @@
       transition: color 0.2s ease;
     }
     .nav-item:active .nav-back-chevron { color: #fff; }
+
+    /* === НАЧАЛО ВСТАВКИ: ЛОГОТИП В МЕРТВОЙ ЗОНЕ === */
+    .dead-zone-brand {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 38px);
+      left: 0;
+      width: 100%;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      pointer-events: none; /* Не блокирует клики по экрану */
+    }
+
+    .brand-shimmer-title {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin: 0;
+      background: linear-gradient(
+        110deg,
+        #E63956 0%,
+        #FF8FA3 20%,
+        #FFFFFF 45%,
+        #FFB3C6 60%,
+        #B82342 85%,
+        #E63956 100%
+      );
+      background-size: 240% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: brandShimmerWave 3.8s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.45));
+    }
+
+    @keyframes brandShimmerWave {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+    /* === КОНЕЦ ВСТАВКИ === */
+
+    
   </style>
 </head>
 <body>
