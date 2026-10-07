@@ -2486,42 +2486,6 @@ function loadSavedWallpaper() {
 // Вызываем загрузку при старте
 loadSavedWallpaper();
     
-
-// ЧИСТЫЙ БЛОК ПЕРЕКЛЮЧЕНИЯ ОБОЕВ
-function setAppWallpaper(wpKey) {
-  const wallpaperList = [
-    'wp-velvet', 'wp-ruby', 'wp-rosegold', 'wp-bordeaux', 'wp-passion',
-    'wp-graphite', 'wp-violet', 'wp-crimson', 'wp-cyber', 'wp-espresso'
-  ];
-
-  // Удаляем старые обои и ставим выбранные
-  document.body.classList.remove(...wallpaperList);
-  document.body.classList.add(wpKey);
-
-  // Сохраняем в память
-  try {
-    localStorage.setItem('pact_wallpaper_key', wpKey);
-  } catch (e) {
-    console.warn('Ошибка сохранения в localStorage:', e);
-  }
-
-  // Подсвечиваем выбранную карточку
-  document.querySelectorAll('.wp-card').forEach(card => {
-    const isTarget = card.getAttribute('onclick')?.includes(wpKey);
-    card.classList.toggle('active', !!isTarget);
-  });
-
-  // Отклик Telegram
-  window.Telegram?.WebApp?.HapticFeedback?.selectionChanged?.();
-}
-
-function loadSavedWallpaper() {
-  const saved = localStorage.getItem('pact_wallpaper_key') || 'wp-velvet';
-  setAppWallpaper(saved);
-}
-
-// Запуск при старте
-loadSavedWallpaper();
     
     // -------------------------------------------------------------
     // Л) Демонстрационный Чат
