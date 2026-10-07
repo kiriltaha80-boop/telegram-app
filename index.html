@@ -858,27 +858,25 @@
     /* ============================================================ */
     /* 9. НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (BOTTOM DOCK)                    */
     /* ============================================================ */
-   .nav-bar {
-  position: fixed;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);[cite: 1]
-  left: 14px;[cite: 1]
-  right: 14px;[cite: 1]
-  width: calc(100% - 28px);[cite: 1]
-  height: 62px;[cite: 1]
-  border-radius: 26px;[cite: 1]
-  background: rgba(20, 16, 28, 0.92); /* Чуть плотнее фон, чтобы текст под ним не рябил */
-  backdrop-filter: blur(20px);[cite: 1]
-  -webkit-backdrop-filter: blur(20px);[cite: 1]
-  border: 1px solid rgba(230, 57, 86, 0.32);[cite: 1]
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 16px rgba(230, 57, 86, 0.15);[cite: 1]
-  display: grid;[cite: 1]
-  grid-template-columns: repeat(4, 1fr);[cite: 1]
-  align-items: center;[cite: 1]
-  padding: 0 6px;[cite: 1]
-
-  /* ЖЕСТКИЙ ПРИОРИТЕТ: панель невозможно перекрыть обычным контентом */
-  z-index: 2000 !important;
-}
+    .nav-bar {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      left: 14px;
+      right: 14px;
+      width: calc(100% - 28px);
+      height: 62px;
+      border-radius: 26px;
+      background: rgba(20, 16, 28, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(230, 57, 86, 0.32);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 16px rgba(230, 57, 86, 0.15);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      z-index: 999;
+      padding: 0 6px;
+    }
     .nav-item {
       display: flex;
       flex-direction: column;
