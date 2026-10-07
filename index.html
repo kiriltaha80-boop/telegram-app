@@ -15,9 +15,32 @@
   <style>
     
    /* СЕТКА И ШАПКА РАБОЧЕГО СТОЛА */
+/* ========================================== */
+/* РАБОЧИЙ СТОЛ С ПОЛНОЙ РАМКОЙ И ОТСТУПАМИ   */
+/* ========================================== */
 .desktop-wrapper {
-  margin-top: 10px;
-  width: 100%;
+  position: relative;
+  width: calc(100% - 24px); /* Ровные зазоры по 12px слева и справа */
+  margin: 10px auto calc(env(safe-area-inset-bottom, 0px) + 95px) auto; /* 95px снизу: стол физически заканчивается над панелью */
+  padding: 16px 14px;
+  box-sizing: border-box;
+
+  /* ПОЛНАЯ РАМКА СО ВСЕХ СТОРОН В СТИЛЕ ROSE GOLD */
+  border: 1px solid rgba(232, 160, 191, 0.28);
+  border-radius: 26px;
+
+  /* Полупрозрачное матовое стекло (обои красиво просвечивают) */
+  background: rgba(20, 16, 28, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  /* Мягкие объёмные тени */
+  box-shadow: 
+    0 12px 36px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(230, 57, 86, 0.12);
+
+  z-index: 1; /* Стол всегда на нижнем слое */
 }
 
 .desktop-header-bar {
