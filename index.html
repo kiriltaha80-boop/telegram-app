@@ -1669,44 +1669,60 @@
       tg?.HapticFeedback?.notificationOccurred?.('success');
     }
 
-    // УПРАВЛЕНИЕ ОБОЯМИ
+    // ==========================================
+    // УПРАВЛЕНИЕ 10 ПЕРЕЛИВАЮЩИМИСЯ ОБОЯМИ
+    // ==========================================
+    const WALLPAPER_PRESETS = {
+      ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), radial-gradient(at 85% 25%, #7D1C3E 0%, transparent 50%), radial-gradient(at 50% 85%, #26050C 0%, transparent 65%), #0C0A10',
+      neon_velvet: 'radial-gradient(at 20% 20%, #6E0F48 0%, transparent 50%), radial-gradient(at 80% 25%, #351059 0%, transparent 55%), radial-gradient(at 50% 75%, #1F072C 0%, transparent 60%), #0C0A10',
+      wine_sunset: 'radial-gradient(at 80% 15%, #6B172B 0%, transparent 50%), radial-gradient(at 20% 45%, #420F1C 0%, transparent 55%), radial-gradient(at 65% 85%, #26060F 0%, transparent 60%), #0C0A10',
+      amethyst_haze: 'radial-gradient(at 25% 15%, #42145C 0%, transparent 55%), radial-gradient(at 85% 35%, #220B38 0%, transparent 50%), radial-gradient(at 40% 80%, #140521 0%, transparent 60%), #0C0A10',
+      emerald_silk: 'radial-gradient(at 20% 20%, #0F3D2A 0%, transparent 50%), radial-gradient(at 80% 30%, #082621 0%, transparent 55%), radial-gradient(at 50% 85%, #051410 0%, transparent 60%), #0C0A10',
+      rose_mist: 'radial-gradient(at 20% 25%, #541F33 0%, transparent 50%), radial-gradient(at 80% 20%, #3B1527 0%, transparent 50%), radial-gradient(at 50% 75%, #210A15 0%, transparent 60%), #0C0A10',
+      passion_aurora: 'radial-gradient(at 15% 15%, #590F24 0%, transparent 50%), radial-gradient(at 85% 20%, #1A184F 0%, transparent 55%), radial-gradient(at 50% 85%, #260A2B 0%, transparent 60%), #0C0A10',
+      midnight_sapphire: 'radial-gradient(at 25% 20%, #152454 0%, transparent 55%), radial-gradient(at 85% 30%, #30103E 0%, transparent 50%), radial-gradient(at 50% 80%, #0A0E21 0%, transparent 65%), #0C0A10',
+      obsidian_ember: 'radial-gradient(at 50% 12%, #540815 0%, transparent 60%), radial-gradient(at 15% 75%, #29040A 0%, transparent 50%), radial-gradient(at 85% 70%, #1C0307 0%, transparent 50%), #0C0A10',
+      prismatic_art: "linear-gradient(180deg, rgba(74, 13, 30, 0.62) 0%, rgba(12, 10, 16, 0.88) 55%, #0C0A10 100%), url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center top / cover no-repeat"
+    };
+
     function openWallpaperModal() {
       document.getElementById('wallpaper-modal')?.classList.add('active');
     }
+
     function closeWallpaperModal() {
       document.getElementById('wallpaper-modal')?.classList.remove('active');
     }
-    function applyWallpaper(type) {
-      const el = document.querySelector('.desktop-wrapper');
-      let val = '';
-      if (type === 'ruby') val = 'linear-gradient(180deg, #3A0B16 0%, #0C0A10 100%)';
-      else if (type === 'art') val = "url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png')";
-      else if (type === 'plum') val = 'linear-gradient(180deg, #24102C 0%, #0C0A10 100%)';
-      else val = 'transparent';
 
-      localStorage.setItem('pact_wallpaper', val);
-      if (el) el.style.background = val;
-      closeWallpaperModal();
-      tg?.HapticFeedback?.notificationOccurred?.('success');
+    function setWallpaper(key) {
+      const bg = WALLPAPER_PRESETS[key] || WALLPAPER_PRESETS.ruby_opal;
+      const layer = document.getElementById('desktop-bg-layer');
+
+      if (layer) {
+        layer.style.background = bg;
+        layer.style.backgroundSize = 'cover';
+        layer.style.backgroundPosition = 'center top';
+      } else {
+        document.body.style.background = bg;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center top';
+        document.body.style.backgroundAttachment = 'fixed';
+      }
+
+      // Подсветка выбранной иконки
+      document.querySelectorAll('.wp-card').forEach(c => c.classList.remove('selected'));
+      document.querySelector(`[data-wp="${key}"]`)?.classList.add('selected');
+
+      localStorage.setItem('pact_wallpaper_key', key);
+      tg?.HapticFeedback?.selectionChanged?.();
     }
-    function applyCustomWallpaper() {
-      const url = document.getElementById('custom-wallpaper-input')?.value.trim();
-      if (!url) return;
-      const val = `url('${url}')`;
-      localStorage.setItem('pact_wallpaper', val);
-      const el = document.querySelector('.desktop-wrapper');
-      if (el) el.style.background = val;
-      closeWallpaperModal();
-    }
+
     function loadSavedWallpaper() {
-      const saved = localStorage.getItem('pact_wallpaper');
-      const el = document.querySelector('.desktop-wrapper');
-      if (saved && el) el.style.background = saved;
+      const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
+      setWallpaper(savedKey);
     }
 
-    // Вызовите в блоке инициализации:
+    // Запуск сохраненного фона при старте
     loadSavedWallpaper();
-
     // -------------------------------------------------------------
     // Е) Календарь цикла и расчет овуляции
     // -------------------------------------------------------------
