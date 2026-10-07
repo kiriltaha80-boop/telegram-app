@@ -687,18 +687,10 @@
   <!-- ЭКРАН 1: РАБОЧИЙ СТОЛ -->
   <div id="tab-home" class="tab-content active">
     <div class="desktop-wrapper">
-      <div class="desktop-header-bar">
-        <button id="role-toggle-main" class="role-toggle-btn" onclick="toggleRole()">
-          😈 Верхний
+     <div class="desktop-header-bar">
+        <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
+          ⚙️ Настроить
         </button>
-        <div style="display: flex; gap: 8px;">
-          <button class="edit-desktop-btn" onclick="openWallpaperModal()">
-            🖼️ Обои
-          </button>
-          <button id="btn-edit-desktop" class="edit-desktop-btn" onclick="toggleDesktopEditMode()">
-            ⚙️ Настроить
-          </button>
-        </div>
       </div>
       <div id="desktop-grid-container" class="desktop-grid"></div>
     </div>
