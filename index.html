@@ -48,7 +48,7 @@
       pointer-events: auto;
       transform: translateX(-50%) translateY(0) scale(1);
     }
-
+        
     .dock-wallpaper-btn:active {
       transform: translateX(-50%) translateY(0) scale(0.95);
       background: rgba(35, 12, 22, 0.95);
@@ -1511,8 +1511,7 @@
   <!-- 24. JAVASCRIPT ЛОГИКА ПРИЛОЖЕНИЯ                             -->
   <!-- ============================================================ -->
   <script>
- let isDesktopEditMode = false;
-    function toggleDesktopEditMode() {
+     function toggleDesktopEditMode() {
       isDesktopEditMode = !isDesktopEditMode;
       
       const btn = document.getElementById('btn-edit-desktop');
