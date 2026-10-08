@@ -44,7 +44,79 @@
   display: block !important;
 }
     
-.avatar-presets-grid {
+/* ========================================================
+   ИМЯ ПРОФИЛЯ
+   ======================================================== */
+.profile-name-clickable {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 6px 0 2px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.profile-name-clickable:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+.profile-name-clickable::after {
+  content: '✎';
+  font-size: 13px;
+  color: #E63956;
+  opacity: 0.85;
+}
+
+.name-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.name-text-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #FFFFFF;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.name-text-input:focus {
+  border-color: #E63956;
+  box-shadow: 0 0 10px rgba(230, 57, 86, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.name-save-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #E63956 0%, #a01035 100%);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(230, 57, 86, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.name-save-btn:active {
+  transform: scale(0.97);
+}
+    
+    .avatar-presets-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
