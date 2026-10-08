@@ -2192,7 +2192,51 @@
     ];
     let currentAvatarRole = 'female';
 
-   function openAvatarModal(role) {
+  
+    // ========================================================
+    // КЛИКАБЕЛЬНЫЙ СМАЙЛИК СМЕНЫ РОЛИ (ВЕРХНИЙ / НИЖНЯЯ)
+    // ========================================================
+    function toggleRoleByEmoji() {
+      // Переключаем роль: если был male -> станет female, и наоборот
+      currentAvatarRole = (currentAvatarRole === 'male') ? 'female' : 'male';
+      localStorage.setItem('pact_current_role', currentAvatarRole);
+
+      // Меняем смайлик на экране
+      updateRoleEmojiUI();
+
+      // Подтягиваем сохраненный аватар для новой роли
+      const savedAvatar = localStorage.getItem('pact_avatar_' + currentAvatarRole);
+      if (savedAvatar) {
+        applyAvatarToUI(currentAvatarRole, savedAvatar);
+      } else {
+        const defaultList = (currentAvatarRole === 'male') ? MALE_CARTOON_AVATARS : FEMALE_CARTOON_AVATARS;
+        applyAvatarToUI(currentAvatarRole, defaultList[0]);
+      }
+
+      // Виброотклик Telegram
+      window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
+    }
+
+    function updateRoleEmojiUI() {
+      const emojiElem = document.getElementById('role-toggle-emoji');
+      if (emojiElem) {
+        emojiElem.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
+      }
+    }
+
+    function loadSavedRole() {
+      currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
+      updateRoleEmojiUI();
+    }
+
+    // Запуск при открытии страницы
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSavedRole);
+    } else {
+      loadSavedRole();
+    }
+    
+    function openAvatarModal(role) {
       currentAvatarRole = role || 'female';
       const modal = document.getElementById('avatar-modal');
       
