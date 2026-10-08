@@ -666,54 +666,55 @@
     .nav-item:active .nav-back-chevron { color: #fff; }
 
     /* === НАЧАЛО ВСТАВКИ: ЛОГОТИП В МЕРТВОЙ ЗОНЕ === */
+    /* === НАЧАЛО ВСТАВКИ: МАССИВНЫЙ ЛОГОТИП === */
     .dead-zone-brand {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 0px) + 38px);
+      top: calc(env(safe-area-inset-top, 0px) + 34px);
       left: 0;
       width: 100%;
-      height: 42px;
+      height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 90;
-      pointer-events: none; /* Не блокирует клики по экрану */
+      pointer-events: none;
     }
 
     .brand-shimmer-title {
-      font-size: 14px;
+      font-size: 22px; /* Намного крупнее и массивнее */
       font-weight: 900;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       text-transform: uppercase;
       margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      /* Добавляем плотную окантовку для монолитности */
+      -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4);
       background: linear-gradient(
         110deg,
-        #E63956 0%,
-        #FF8FA3 20%,
-        #FFFFFF 45%,
-        #FFB3C6 60%,
-        #B82342 85%,
-        #E63956 100%
+        #B82342 0%,
+        #E63956 18%,
+        #FFA3B5 35%,
+        #FFFFFF 50%,
+        #FFA3B5 65%,
+        #E63956 82%,
+        #B82342 100%
       );
-      background-size: 240% auto;
+      background-size: 250% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: brandShimmerWave 3.8s ease-in-out infinite;
-      filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.45));
+      animation: brandShimmerWave 3.2s ease-in-out infinite;
+      /* Двойная тень: глубокий объем + мощный рубиновый ореол */
+      filter: 
+        drop-shadow(0 8px 18px rgba(0, 0, 0, 0.95))
+        drop-shadow(0 0 22px rgba(230, 57, 86, 0.75));
     }
 
     @keyframes brandShimmerWave {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     /* === КОНЕЦ ВСТАВКИ === */
-
     
   </style>
 </head>
