@@ -668,46 +668,56 @@
     /* === НАЧАЛО ВСТАВКИ: ЛОГОТИП В МЕРТВОЙ ЗОНЕ === */
     /* === НАЧАЛО ВСТАВКИ: МАССИВНЫЙ ЛОГОТИП === */
 /* === НАЧАЛО ВСТАВКИ: МАССИВНЫЙ ЛОГОТИП С ОБВОДКОЙ === */
+    /* СТЕКЛЯННАЯ КАПСУЛА (FROSTED ISLAND) */
+   /* СТЕКЛЯННАЯ КАПСУЛА (FROSTED ISLAND) */
     .dead-zone-brand {
       position: fixed;
-      top: calc(env(safe-area-inset-top, 0px) + 34px);
-      left: 0;
-      width: 100%;
-      height: 50px;
+      top: calc(env(safe-area-inset-top, 0px) + 36px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      height: 44px;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 90;
       pointer-events: none;
+      
+      /* Матовое дымчатое стекло iOS */
+      background: rgba(18, 14, 25, 0.72);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: 22px;
+      border: 1px solid rgba(230, 57, 86, 0.35);
+      box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.75),
+        inset 0 1px 1.5px rgba(255, 255, 255, 0.22),
+        0 0 18px rgba(230, 57, 86, 0.2);
     }
 
     .brand-shimmer-title {
-      font-size: 22px;
+      font-size: 16px;
       font-weight: 900;
-      letter-spacing: 3.5px;
+      letter-spacing: 3px;
       text-transform: uppercase;
       margin: 0;
+      white-space: nowrap;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      
-      /* Обводка: 2.5px тёмного контура, вынесенного ПОД заливку */
-      -webkit-text-stroke: 2.5px #0C0A10;
-      paint-order: stroke fill;
-      
       background: linear-gradient(
         110deg,
         #B82342 0%,
-        #E63956 18%,
-        #FFA3B5 35%,
+        #E63956 22%,
         #FFFFFF 50%,
-        #FFA3B5 65%,
-        #E63956 82%,
+        #FFA3B5 68%,
         #B82342 100%
       );
-      background-size: 250% auto;
+      background-size: 240% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: brandShimmerWave 3.2s ease-in-out infinite;
-      
+      animation: brandShimmerWave 3.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.6));
+    }
       /* Трёхслойная глубина: контрастная резкая тень + неоновое рубиновое свечение */
       filter: 
         drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9))
