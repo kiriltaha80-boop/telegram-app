@@ -191,24 +191,39 @@
     }
     .role-toggle-btn:active { transform: scale(0.94); }
 
+    /* ЧЁРНАЯ КНОПКА-ШЕСТЕРЁНКА СПРАВА */
     .edit-desktop-btn {
-      background: rgba(22, 18, 30, 0.85);
-      border: 1px solid rgba(232, 160, 191, 0.25);
-      border-radius: 16px;
-      padding: 8px 14px;
-      color: #F5EBE6;
-      font-size: 11px;
-      font-weight: 700;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #F5F3F7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
+      margin-left: auto; /* Прижимает кнопку к правому краю */
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+      transition: all 0.22s ease;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .edit-desktop-btn:active {
+      transform: scale(0.88);
+      background: #14101A;
     }
     .edit-desktop-btn.active {
       background: var(--accent-gradient);
       border-color: var(--accent-color);
       color: #fff;
-      box-shadow: 0 0 12px rgba(230, 57, 86, 0.4);
+      box-shadow: 0 0 14px rgba(230, 57, 86, 0.55);
     }
-
+    .gear-svg-icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
     .desktop-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
