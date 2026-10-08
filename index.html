@@ -2019,32 +2019,33 @@
     // СИСТЕМА АВАТАРОК: ВЕРХНИЙ (10 ПАРНЕЙ) / НИЖНЯЯ (10 ДЕВУШЕК)
     // ========================================================
 
+    // 10 мультяшных парней для Верхнего
     const MALE_CARTOON_AVATARS = [
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Leo&accessoriesType=blank&facialHairType=beardMedium',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&topType=shortCurly',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&topType=shortFlat',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Max&accessoriesType=round',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Liam&topType=shortDreads',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Noah&topType=theCaesar',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Ethan&facialHairType=moustacheFancy',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&topType=shortWaved',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas&accessoriesType=sunglasses',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Sam&topType=shaggy'
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Leo&top=shortFlat&clothing=hoodie',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&top=shortCurly&facialHair=beardLight',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&top=theCaesar&clothing=graphicShirt',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Max&top=shortWaved&accessories=round',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Liam&top=dreads01&clothing=blazerAndShirt',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Noah&top=shortRound&facialHair=beardMedium',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Ethan&top=shaggy&clothing=collarAndSweater',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&top=sides&accessories=sunglasses',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas&top=theCaesarAndSidePart&clothing=hoodie',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&top=frizzle&facialHair=moustacheFancy'
     ];
 
+    // 10 мультяшных девушек для Нижней (без бороды, разные прически и образы)
     const FEMALE_CARTOON_AVATARS = [
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&topType=longStraight&hairColor=black',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe&topType=longBob&hairColor=auburn',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Chloe&topType=straight02&hairColor=blonde',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia&topType=curly&hairColor=brown',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lily&topType=bigHair&hairColor=pastelPink',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie&topType=bun&hairColor=red',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&topType=froBand&hairColor=black',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aria&topType=straight01&hairColor=silverGray',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Bella&accessoriesType=round&topType=longStraight',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&topType=shavedSides&hairColor=blonde'
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&top=straight02&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe&top=bob&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Chloe&top=bun&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia&top=curly&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lily&top=bigHair&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie&top=curvy&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&top=froBand&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aria&top=longButNotTooLong&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Bella&top=straight01&accessories=round&facialHairProbability=0',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&top=miaWallace&facialHairProbability=0'
     ];
-
     let currentAvatarRole = 'female';
 
    function openAvatarModal(role) {
