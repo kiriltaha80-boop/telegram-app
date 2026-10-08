@@ -998,12 +998,17 @@
     </div>
   </div>
 
-  <!-- ВСПЛЫВАЮЩАЯ КНОПКА ОБОЕВ ПРИ РЕДАКТИРОВАНИИ -->
-  <button id="dock-wallpaper-btn" class="dock-wallpaper-btn" onclick="openWallpaperModal()">
-    <span>🖼️</span>
-    <span>Сменить обои</span>
-  </button>
-
+  <!-- ПАНЕЛЬ КНОПОК НАСТРОЙКИ (НАД DOCK) -->
+  <div id="desktop-edit-panel" class="desktop-edit-panel">
+    <button class="dock-action-btn" onclick="installHomeScreenShortcut()">
+      <span>📲</span>
+      <span>Добавить на рабочий стол</span>
+    </button>
+    <button class="dock-action-btn" onclick="openWallpaperModal()">
+      <span>🖼️</span>
+      <span>Сменить обои</span>
+    </button>
+  </div>
   <!-- МОДАЛКА: СМЕНА ОБОЕВ РАБОЧЕГО СТОЛА -->
   <div class="modal-overlay" id="wallpaper-modal" onclick="if(event.target === this) closeWallpaperModal()">
     <div class="modal-card">
