@@ -13,6 +13,37 @@
 /* ========================================================
    СЕТКА И КАРТОЧКИ ВЫБОРА АВАТАРОК
    ======================================================== */
+
+    /* Фиксированный круглый контейнер аватарки в профиле */
+.profile-avatar-container {
+  width: 84px !important;
+  height: 84px !important;
+  min-width: 84px !important;
+  min-height: 84px !important;
+  margin: 0 auto 12px auto;
+  border-radius: 50% !important;
+  border: 2px solid #E63956;
+  box-shadow: 0 0 18px rgba(230, 57, 86, 0.45);
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-avatar-container:active {
+  transform: scale(0.95);
+}
+
+.profile-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+    
 .avatar-presets-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
