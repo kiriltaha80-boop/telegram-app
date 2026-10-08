@@ -2333,6 +2333,68 @@ if (document.readyState === 'loading') {
       renderContractAndGifts();
     }
 
+  // ========================================================
+    // СМЕНА ИМЕНИ ПРОФИЛЯ
+    // ========================================================
+    function openNameModal() {
+      const modal = document.getElementById('name-modal');
+      if (!modal) return;
+
+      const input = document.getElementById('input-profile-name');
+      if (input) {
+        input.value = localStorage.getItem('pact_user_name') || '';
+      }
+
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      tg?.HapticFeedback?.impactOccurred?.('light');
+    }
+
+    function closeNameModal() {
+      const modal = document.getElementById('name-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+    }
+
+    function saveProfileName() {
+      const input = document.getElementById('input-profile-name');
+      const newName = (input?.value || '').trim();
+
+      if (!newName) {
+        alert('Пожалуйста, введите имя.');
+        return;
+      }
+
+      localStorage.setItem('pact_user_name', newName);
+
+      const nameDisplay = document.getElementById('profile-user-name');
+      if (nameDisplay) {
+        nameDisplay.innerText = newName;
+      }
+
+      closeNameModal();
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+    }
+
+    function loadSavedProfileName() {
+      const savedName = localStorage.getItem('pact_user_name');
+      if (savedName) {
+        const nameDisplay = document.getElementById('profile-user-name');
+        if (nameDisplay) {
+          nameDisplay.innerText = savedName;
+        }
+      }
+    }
+
+    // Загрузка сохранённого имени при старте
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSavedProfileName);
+    } else {
+      loadSavedProfileName();
+    }
+    
     function deleteGiftWish(i) {
       giftWishes.splice(i, 1);
       localStorage.setItem('gift_wishes', JSON.stringify(giftWishes));
