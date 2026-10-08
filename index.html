@@ -1659,6 +1659,18 @@
       renderProducts();
     }
 
+  // Полный перехват свайпа на всем экране, когда включен режим рабочего стола
+        document.addEventListener('touchmove', (e) => {
+          if (document.body.classList.contains('lock-scroll')) {
+            // Разрешаем скроллить только внутри открытых модальных окон (обои, виджеты)
+            if (!e.target.closest('.modal-card') && !e.target.closest('.modal-overlay')) {
+              e.preventDefault();
+            }
+          }
+        }, { passive: false });
+
+        // Сразу блокируем движение при первом запуске
+        document.body.classList.add('lock-scroll');
     // Чат
     let chatHistory = [
       { sender: 'bot', text: 'Приветствую в личном пространстве Pact & Passion. Готовы ли вы закрепить новые правила вечера?' }
