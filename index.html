@@ -1979,33 +1979,134 @@
       { id: 2, title: 'Принятие расслабляющей ванны', points: 180 }
     ];
 
-    function renderTasks() {
-      const mCont = document.getElementById('male-tasks-container');
-      const fCont = document.getElementById('female-tasks-container');
+   function loadSavedWallpaper() {
+      const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
+      setWallpaper(savedKey);
+    }
 
-      if (mCont) {
-        mCont.innerHTML = maleTasks.map((t, idx) => `
-          <div class="contract-item">
-            <div class="contract-info">
-              <div class="name">${t.title}</div>
-              <div class="reward">+${t.points} PTS</div>
-            </div>
-            <button class="back-action-btn" onclick="deleteTask('male', ${idx})">✕</button>
-          </div>
-        `).join('') || '<div style="color:var(--text-muted); font-size:10px;">Заданий пока нет</div>';
-      }
+    // ========================================================
+    // СИСТЕМА АВАТАРОК: ВЕРХНИЙ (10 ПАРНЕЙ) / НИЖНЯЯ (10 ДЕВУШЕК)
+    // ========================================================
 
-      if (fCont) {
-        fCont.innerHTML = femaleTasks.map((t, idx) => `
-          <div class="contract-item">
-            <div class="contract-info">
-              <div class="name">${t.title}</div>
-              <div class="reward">+${t.points} PTS</div>
-            </div>
-            <button class="back-action-btn" onclick="deleteTask('female', ${idx})">✕</button>
-          </div>
-        `).join('') || '<div style="color:var(--text-muted); font-size:10px;">Заданий пока нет</div>';
+    const MALE_CARTOON_AVATARS = [
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Leo&accessoriesType=blank&facialHairType=beardMedium',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&topType=shortCurly',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Jack&topType=shortFlat',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Max&accessoriesType=round',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Liam&topType=shortDreads',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Noah&topType=theCaesar',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Ethan&facialHairType=moustacheFancy',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&topType=shortWaved',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas&accessoriesType=sunglasses',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Sam&topType=shaggy'
+    ];
+
+    const FEMALE_CARTOON_AVATARS = [
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&topType=longStraight&hairColor=black',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe&topType=longBob&hairColor=auburn',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Chloe&topType=straight02&hairColor=blonde',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia&topType=curly&hairColor=brown',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lily&topType=bigHair&hairColor=pastelPink',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie&topType=bun&hairColor=red',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&topType=froBand&hairColor=black',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aria&topType=straight01&hairColor=silverGray',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Bella&accessoriesType=round&topType=longStraight',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace&topType=shavedSides&hairColor=blonde'
+    ];
+
+    let currentAvatarRole = 'female';
+
+    function openAvatarModal(role = 'female') {
+      currentAvatarRole = role;
+      const modal = document.getElementById('avatar-modal');
+      const title = document.getElementById('avatar-modal-title');
+      if (title) {
+        title.innerText = (role === 'male') ? 'Аватарка: Верхний' : 'Аватарка: Нижняя';
       }
+      renderAvatarGrid();
+      if (modal) modal.style.display = 'flex';
+      tg?.HapticFeedback?.impactOccurred?.('light');
+    }
+
+    function closeAvatarModal() {
+      const modal = document.getElementById('avatar-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function renderAvatarGrid() {
+      const grid = document.getElementById('avatar-presets-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const list = (currentAvatarRole === 'male') ? MALE_CARTOON_AVATARS : FEMALE_CARTOON_AVATARS;
+      const storageKey = 'pact_avatar_' + currentAvatarRole;
+      const currentSaved = localStorage.getItem(storageKey) || list[0];
+
+      // Карточка добавления своего фото
+      const uploadCard = document.createElement('div');
+      uploadCard.className = 'avatar-thumb-card upload-card';
+      uploadCard.onclick = () => document.getElementById('custom-avatar-file-input').click();
+      uploadCard.innerHTML = `
+        <span class="avatar-upload-icon">+</span>
+        <span class="avatar-upload-label">Своё фото</span>
+      `;
+      grid.appendChild(uploadCard);
+
+      // Карточки 10 персонажей
+      list.forEach((url, idx) => {
+        const card = document.createElement('div');
+        card.className = 'avatar-thumb-card' + (currentSaved === url ? ' selected' : '');
+        card.onclick = () => selectAvatar(url);
+        card.innerHTML = `<img src="${url}" alt="Avatar ${idx + 1}" loading="lazy">`;
+        grid.appendChild(card);
+      });
+    }
+
+    function selectAvatar(url) {
+      const storageKey = 'pact_avatar_' + currentAvatarRole;
+      localStorage.setItem(storageKey, url);
+      tg?.HapticFeedback?.selectionChanged?.();
+
+      applyAvatarToUI(currentAvatarRole, url);
+      renderAvatarGrid();
+    }
+
+    function handleCustomAvatarUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Url = e.target.result;
+        const storageKey = 'pact_avatar_' + currentAvatarRole;
+        localStorage.setItem(storageKey, base64Url);
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+
+        applyAvatarToUI(currentAvatarRole, base64Url);
+        renderAvatarGrid();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyAvatarToUI(role, src) {
+      const targetImg = document.getElementById(`avatar-img-${role}`) || document.querySelector(`.profile-avatar-${role}`);
+      if (targetImg) {
+        targetImg.src = src;
+      }
+    }
+
+    function loadSavedAvatars() {
+      const maleSaved = localStorage.getItem('pact_avatar_male') || MALE_CARTOON_AVATARS[0];
+      const femaleSaved = localStorage.getItem('pact_avatar_female') || FEMALE_CARTOON_AVATARS[0];
+
+      applyAvatarToUI('male', maleSaved);
+      applyAvatarToUI('female', femaleSaved);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSavedAvatars);
+    } else {
+      loadSavedAvatars();
     }
 
     function addCustomTask(gender) {
