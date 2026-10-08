@@ -1623,10 +1623,8 @@
 
     // Управление фонами
     // ========================================================
-    // УПРАВЛЕНИЕ ОБОЯМИ (12 ТЕМ: 6 СТАТИЧНЫХ + 6 ЖИВЫХ)
-    // ========================================================
-    const WALLPAPER_PRESETS = {
-      // Оригинальные темы
+  const WALLPAPER_PRESETS = {
+      // 6 базовых статичных тем
       ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), radial-gradient(at 85% 25%, #7D1C3E 0%, transparent 50%), radial-gradient(at 50% 85%, #26050C 0%, transparent 65%), #0C0A10',
       neon_velvet: 'radial-gradient(at 20% 20%, #6E0F48 0%, transparent 50%), radial-gradient(at 80% 25%, #351059 0%, transparent 55%), radial-gradient(at 50% 75%, #1F072C 0%, transparent 60%), #0C0A10',
       wine_sunset: 'radial-gradient(at 80% 15%, #6B172B 0%, transparent 50%), radial-gradient(at 20% 45%, #420F1C 0%, transparent 55%), radial-gradient(at 65% 85%, #26060F 0%, transparent 60%), #0C0A10',
@@ -1634,23 +1632,63 @@
       emerald_silk: 'radial-gradient(at 20% 20%, #0F3D2A 0%, transparent 50%), radial-gradient(at 80% 30%, #082621 0%, transparent 55%), radial-gradient(at 50% 85%, #051410 0%, transparent 60%), #0C0A10',
       prismatic_art: "linear-gradient(180deg, rgba(74, 13, 30, 0.62) 0%, rgba(12, 10, 16, 0.88) 55%, #0C0A10 100%), url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center top / cover no-repeat",
 
-      // 6 новых тем
-      flirt: 'radial-gradient(circle at 50% 30%, #3e0a3e 0%, #200523 55%, #0d020f 100%)',
-      gender: 'radial-gradient(circle at 50% 35%, #23113d 0%, #130824 60%, #080312 100%)',
-      ruby: 'radial-gradient(circle at 50% 25%, #420817 0%, #22030a 55%, #0d0104 100%)',
-      neon: 'radial-gradient(circle at 50% 40%, #520959 0%, #25032b 60%, #0d0110 100%)',
-      amethyst: 'radial-gradient(circle at 50% 30%, #2b114d 0%, #150629 60%, #090214 100%)',
-      gold: 'radial-gradient(circle at 50% 35%, #3b2010 0%, #1c0e06 60%, #0a0402 100%)'
+      // 6 обновленных выразительных живых тем
+      flirt: 'radial-gradient(circle at 50% 25%, #4a0d4a 0%, #220326 55%, #0b010d 100%)',
+      gender: 'radial-gradient(circle at 50% 25%, #181145 0%, #0d0829 55%, #04020f 100%)',
+      ruby: 'radial-gradient(circle at 50% 25%, #520617 0%, #260209 55%, #0a0103 100%)',
+      cyber: 'radial-gradient(circle at 50% 25%, #2a0845 0%, #12032b 55%, #050112 100%)',
+      gold: 'radial-gradient(circle at 50% 25%, #382407 0%, #1c1102 55%, #080500 100%)',
+      lavender: 'radial-gradient(circle at 50% 25%, #351a54 0%, #190c2b 55%, #07020d 100%)'
     };
 
-    // Конфигурация летающих частиц для динамических тем
+    // Конфигурация стилей и цветов частиц
     const PARTICLE_THEMES = {
-      flirt: { type: 'hearts', colors: ['#e63956', '#d81b60', '#ff4081', '#ad1457'] },
-      gender: { type: 'gender_symbols' },
-      ruby: { type: 'hearts', colors: ['#b71c1c', '#e53935', '#880e4f', '#ff1744'] },
-      neon: { type: 'hearts', colors: ['#ff007f', '#e040fb', '#d500f9', '#aa00ff'] },
-      amethyst: { type: 'hearts', colors: ['#7c4dff', '#651fff', '#b388ff', '#9c27b0'] },
-      gold: { type: 'hearts', colors: ['#ffb300', '#ffa000', '#ff8f00', '#d84315'] }
+      flirt: {
+        type: 'hearts_xoxo',
+        glow: 'rgba(230, 57, 86, 0.45)',
+        palettes: [
+          { top: '#ff6b95', mid: '#e62458', base: '#6b0821', highlight: '#ffffff' }, // Кораллово-розовый
+          { top: '#d946ef', mid: '#a21caf', base: '#4a044e', highlight: '#ffffff' }, // Пурпурный
+          { top: '#be123c', mid: '#881337', base: '#3b0313', highlight: '#ffccd5' }  // Темный бархат
+        ]
+      },
+      gender: {
+        type: 'gender_svg',
+        glowMale: '#00d2ff',
+        glowFemale: '#ff2a85'
+      },
+      ruby: {
+        type: 'hearts_puffy',
+        glow: 'rgba(255, 26, 68, 0.5)',
+        palettes: [
+          { top: '#ff3366', mid: '#cc0033', base: '#5c0017', highlight: '#ffffff' },
+          { top: '#e60049', mid: '#99002e', base: '#400013', highlight: '#ffb3c6' }
+        ]
+      },
+      cyber: {
+        type: 'hearts_puffy',
+        glow: 'rgba(0, 240, 255, 0.4)',
+        palettes: [
+          { top: '#00f0ff', mid: '#0072ff', base: '#001b5e', highlight: '#ffffff' },
+          { top: '#ff007f', mid: '#b0005d', base: '#4d0028', highlight: '#ffffff' }
+        ]
+      },
+      gold: {
+        type: 'hearts_puffy',
+        glow: 'rgba(255, 193, 7, 0.45)',
+        palettes: [
+          { top: '#ffe082', mid: '#ffb300', base: '#6d4c00', highlight: '#ffffff' },
+          { top: '#ffca28', mid: '#f57c00', base: '#5d2b00', highlight: '#fff8e1' }
+        ]
+      },
+      lavender: {
+        type: 'hearts_puffy',
+        glow: 'rgba(179, 136, 255, 0.4)',
+        palettes: [
+          { top: '#d1c4e9', mid: '#9575cd', base: '#311b92', highlight: '#ffffff' },
+          { top: '#b39ddb', mid: '#7e57c2', base: '#260e69', highlight: '#ede7f6' }
+        ]
+      }
     };
 
     function setWallpaper(key) {
@@ -1660,7 +1698,6 @@
       document.body.style.backgroundPosition = 'center top';
       document.body.style.backgroundAttachment = 'fixed';
 
-      // Делаем рабочий стол прозрачным, чтобы просвечивал фон
       const tabHome = document.getElementById('tab-home');
       if (tabHome) tabHome.style.background = 'transparent';
 
@@ -1670,68 +1707,116 @@
       localStorage.setItem('pact_wallpaper_key', key);
       tg?.HapticFeedback?.selectionChanged?.();
 
-      // Управление частицами
       manageWallpaperParticles(key);
     }
 
     function manageWallpaperParticles(key) {
       let container = document.getElementById('wallpaper-particles');
 
-      // Создаем контейнер в разметке, если его ещё нет
       if (!container) {
         container = document.createElement('div');
         container.id = 'wallpaper-particles';
         document.body.prepend(container);
       }
 
-      // Если выбрана статичная тема — убираем частицы
       if (!PARTICLE_THEMES[key]) {
         container.innerHTML = '';
         return;
       }
 
-      // Если выбрана живая тема — генерируем полёт элементов
       container.innerHTML = '';
       const theme = PARTICLE_THEMES[key];
-      const count = 14;
+      const count = 15;
 
       for (let i = 0; i < count; i++) {
         const el = document.createElement('div');
         el.className = 'floating-wp-item';
 
         const leftPos = Math.random() * 92 + 4;
-        const duration = Math.random() * 7 + 9;
-        const delay = Math.random() * 10;
-        const driftX = (Math.random() - 0.5) * 80;
-        const targetRot = (Math.random() - 0.5) * 40;
-        const targetOpacity = (Math.random() * 0.45 + 0.35).toFixed(2);
-        const size = Math.floor(Math.random() * 26 + 24);
+        const duration = Math.random() * 8 + 10;
+        const delay = Math.random() * 12;
+        const driftX = (Math.random() - 0.5) * 70;
+        const targetRot = (Math.random() - 0.5) * 36;
+        const tiltAngle = (Math.random() - 0.5) * 24;
+        const targetOpacity = (Math.random() * 0.35 + 0.45).toFixed(2);
+        const size = Math.floor(Math.random() * 26 + 32); // 32px – 58px
 
         el.style.left = `${leftPos}%`;
         el.style.animationDuration = `${duration}s`;
         el.style.animationDelay = `-${delay}s`;
         el.style.setProperty('--drift-x', `${driftX}px`);
         el.style.setProperty('--target-rot', `${targetRot}deg`);
+        el.style.setProperty('--tilt-angle', `${tiltAngle}deg`);
         el.style.setProperty('--target-opacity', targetOpacity);
         el.style.setProperty('--size', `${size}px`);
 
-        if (theme.type === 'gender_symbols') {
+        if (theme.type === 'gender_svg') {
+          // Векторные знаки Марса (голубой неон) и Венеры (рубиновая фуксия)
           const isMale = Math.random() > 0.5;
-          el.innerHTML = isMale 
-            ? `<span class="wp-gender-symbol wp-gender-male">♂</span>` 
-            : `<span class="wp-gender-symbol wp-gender-female">♀</span>`;
+          const glow = isMale ? theme.glowMale : theme.glowFemale;
+          el.style.setProperty('--symbol-glow', glow);
+
+          if (isMale) {
+            el.innerHTML = `
+              <svg class="wp-gender-svg" viewBox="0 0 40 40">
+                <defs>
+                  <linearGradient id="maleG-${i}" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#0055ff"/>
+                    <stop offset="60%" stop-color="#00d2ff"/>
+                    <stop offset="100%" stop-color="#ffffff"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="16" cy="24" r="9" fill="none" stroke="url(#maleG-${i})" stroke-width="3.5"/>
+                <line x1="23" y1="17" x2="34" y2="6" stroke="url(#maleG-${i})" stroke-width="3.5" stroke-linecap="round"/>
+                <polyline points="26,6 34,6 34,14" fill="none" stroke="url(#maleG-${i})" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            `;
+          } else {
+            el.innerHTML = `
+              <svg class="wp-gender-svg" viewBox="0 0 40 40">
+                <defs>
+                  <linearGradient id="femG-${i}" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="40%" stop-color="#ff2a85"/>
+                    <stop offset="100%" stop-color="#99003d"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="20" cy="15" r="9" fill="none" stroke="url(#femG-${i})" stroke-width="3.5"/>
+                <line x1="20" y1="24" x2="20" y2="36" stroke="url(#femG-${i})" stroke-width="3.5" stroke-linecap="round"/>
+                <line x1="14" y1="30" x2="26" y2="30" stroke="url(#femG-${i})" stroke-width="3.5" stroke-linecap="round"/>
+              </svg>
+            `;
+          }
         } else {
-          const color = theme.colors[Math.floor(Math.random() * theme.colors.length)];
+          // Объемные пухлые сердца с градиентным свечением и бликом
+          const pal = theme.palettes[Math.floor(Math.random() * theme.palettes.length)];
+          el.style.setProperty('--glow-color', theme.glow);
+
+          // Для темы Flirt на некоторых крупных сердцах выводим гравировку «xoxo»
+          const hasXoxo = (theme.type === 'hearts_xoxo') && (size > 38) && (Math.random() > 0.45);
+
           el.innerHTML = `
-            <svg class="wp-heart-3d" viewBox="0 0 32 32">
+            <svg class="wp-puffy-heart" viewBox="0 0 48 48">
               <defs>
-                <radialGradient id="hGrad-${i}" cx="35%" cy="30%" r="65%">
-                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
-                  <stop offset="35%" stop-color="${color}"/>
-                  <stop offset="100%" stop-color="#120107"/>
+                <!-- Объемное тело подушечки -->
+                <radialGradient id="bodyG-${i}" cx="35%" cy="30%" r="65%">
+                  <stop offset="0%" stop-color="${pal.top}"/>
+                  <stop offset="45%" stop-color="${pal.mid}"/>
+                  <stop offset="100%" stop-color="${pal.base}"/>
+                </radialGradient>
+                <!-- Верхний мягкий блик света -->
+                <radialGradient id="highG-${i}" cx="35%" cy="25%" r="45%">
+                  <stop offset="0%" stop-color="${pal.highlight}" stop-opacity="0.8"/>
+                  <stop offset="60%" stop-color="${pal.highlight}" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="${pal.highlight}" stop-opacity="0"/>
                 </radialGradient>
               </defs>
-              <path fill="url(#hGrad-${i})" d="M16 28.5S2 19.5 2 9.5a7.5 7.5 0 0 1 13-4.8A7.5 7.5 0 0 1 28 9.5c0 10-12 19-12 19z"/>
+              <path fill="url(#bodyG-${i})" d="M24 43S3 30 3 15C3 8 8.5 3 15 3c4.5 0 7.8 2.6 9 5.5C25.2 5.6 28.5 3 33 3c6.5 0 12 5 12 12 0 15-21 28-21 28z"/>
+              <!-- Отражение света по краю -->
+              <path fill="url(#highG-${i})" d="M24 43S3 30 3 15C3 8 8.5 3 15 3c4.5 0 7.8 2.6 9 5.5C25.2 5.6 28.5 3 33 3c6.5 0 12 5 12 12 0 15-21 28-21 28z"/>
+              ${hasXoxo ? `
+                <text x="24" y="27" text-anchor="middle" font-family="'Brush Script MT', 'Dancing Script', cursive, sans-serif" font-weight="900" font-size="10.5" fill="rgba(255,255,255,0.78)" letter-spacing="1.5" transform="rotate(-12 24 25)">xoxo</text>
+              ` : ''}
             </svg>
           `;
         }
@@ -1740,6 +1825,10 @@
       }
     }
 
+    function loadSavedWallpaper() {
+      const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
+      setWallpaper(savedKey);
+    }
     function loadSavedWallpaper() {
       const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
       setWallpaper(savedKey);
