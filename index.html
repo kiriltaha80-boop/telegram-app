@@ -1264,6 +1264,22 @@
           <span>Лаванда</span>
         </div>
       </div>
+   <!-- МОДАЛКА: СМЕНА АВАТАРКИ -->
+  <div class="modal-overlay" id="avatar-modal" onclick="if(event.target === this) closeAvatarModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="avatar-modal-title">Выбор аватарки</h3>
+        <span class="modal-close-btn" onclick="closeAvatarModal()">×</span>
+      </div>
+
+      <!-- Скрытый инпут для выбора фото из галереи -->
+      <input type="file" id="custom-avatar-file-input" accept="image/*" style="display:none" onchange="handleCustomAvatarUpload(event)">
+
+      <!-- Сетка с 10 персонажами и кнопкой добавления своего фото -->
+      <div class="avatar-presets-grid" id="avatar-presets-grid"></div>
+    </div>
+  </div>
+    
     </div>
   </div>
 
