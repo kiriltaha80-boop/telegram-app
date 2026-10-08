@@ -1167,7 +1167,7 @@
       }
     }
 
-    function renderActiveTab(tabId) {
+   function renderActiveTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       const activeEl = document.getElementById(tabId);
       if (activeEl) activeEl.classList.add('active');
@@ -1176,6 +1176,12 @@
       if (tabId === 'tab-home') document.getElementById('nav-home')?.classList.add('active');
       else if (tabId === 'tab-profile') document.getElementById('nav-profile')?.classList.add('active');
       else if (tabId === 'tab-messenger' || tabId === 'tab-chat-1') document.getElementById('nav-chat')?.classList.add('active');
+
+      // Шестеренка видна только на главном рабочем столе
+      const editBtn = document.getElementById('btn-edit-desktop');
+      if (editBtn) {
+        editBtn.style.display = (tabId === 'tab-home') ? 'flex' : 'none';
+      }
     }
 
     // Роли
