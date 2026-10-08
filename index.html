@@ -2047,21 +2047,34 @@
 
     let currentAvatarRole = 'female';
 
-    function openAvatarModal(role = 'female') {
-      currentAvatarRole = role;
+   function openAvatarModal(role) {
+      currentAvatarRole = role || 'female';
       const modal = document.getElementById('avatar-modal');
+      
+      if (!modal) {
+        alert('Ошибка: блок <div id="avatar-modal"> не найден в HTML!');
+        return;
+      }
+
       const title = document.getElementById('avatar-modal-title');
       if (title) {
-        title.innerText = (role === 'male') ? 'Аватарка: Верхний' : 'Аватарка: Нижняя';
+        title.innerText = (currentAvatarRole === 'male') ? 'Аватарка: Верхний' : 'Аватарка: Нижняя';
       }
+
       renderAvatarGrid();
-      if (modal) modal.style.display = 'flex';
+
+      // Открываем обоими способами (стилем и классом active)
+      modal.style.display = 'flex';
+      modal.classList.add('active');
       tg?.HapticFeedback?.impactOccurred?.('light');
     }
 
     function closeAvatarModal() {
       const modal = document.getElementById('avatar-modal');
-      if (modal) modal.style.display = 'none';
+      if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+      }
     }
 
     function renderAvatarGrid() {
