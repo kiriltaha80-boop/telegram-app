@@ -437,12 +437,12 @@
   z-index: 1;
 }
 
-/* Все экраны-подразделы: парящие окна от 110px до нижнего дока */
+/* Все экраны-подразделы: парящие окна с обновленными отступами */
 .tab-content:not(#tab-home) {
   display: none;
   position: fixed;
-  top: 110px; /* 110px от верхнего края */
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 86px); /* Чуть выше нижнего бара */
+  top: 135px; /* Опустили сверху еще на 25px */
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 101px); /* Подняли от низа еще на 15px */
   left: 12px;
   right: 12px;
   z-index: 950;
