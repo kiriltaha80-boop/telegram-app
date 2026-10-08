@@ -1349,7 +1349,16 @@
           <img id="avatar-img-female" class="profile-avatar-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&topType=longStraight&hairColor=black" alt="Avatar">
         </div>
         <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Alex & Mia</div>
-        <div class="profile-badge" id="profile-role-badge">ВЕРХНИЙ СТАТУС 😈</div>
+        <!-- 1. Увеличенный аватар -->
+        <div class="profile-avatar-container" onclick="openAvatarModal(currentAvatarRole)">
+          <img id="avatar-img-female" class="profile-avatar-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&top=straight02&facialHairProbability=0" alt="Avatar">
+        </div>
+
+        <!-- 2. Смайлик-кнопка прямо перед именем (статус удален полностью) -->
+        <div class="profile-name-row">
+          <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😈</span>
+          <span id="profile-user-name">Alex & Mia</span>
+        </div>
       </div>
       <div class="profile-stats-grid">
         <div class="stat-box">
