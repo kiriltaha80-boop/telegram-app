@@ -1564,13 +1564,35 @@
     }
 
     // Управление фонами
+    // ========================================================
+    // УПРАВЛЕНИЕ ОБОЯМИ (12 ТЕМ: 6 СТАТИЧНЫХ + 6 ЖИВЫХ)
+    // ========================================================
     const WALLPAPER_PRESETS = {
+      // Оригинальные темы
       ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), radial-gradient(at 85% 25%, #7D1C3E 0%, transparent 50%), radial-gradient(at 50% 85%, #26050C 0%, transparent 65%), #0C0A10',
       neon_velvet: 'radial-gradient(at 20% 20%, #6E0F48 0%, transparent 50%), radial-gradient(at 80% 25%, #351059 0%, transparent 55%), radial-gradient(at 50% 75%, #1F072C 0%, transparent 60%), #0C0A10',
       wine_sunset: 'radial-gradient(at 80% 15%, #6B172B 0%, transparent 50%), radial-gradient(at 20% 45%, #420F1C 0%, transparent 55%), radial-gradient(at 65% 85%, #26060F 0%, transparent 60%), #0C0A10',
       amethyst_haze: 'radial-gradient(at 25% 15%, #42145C 0%, transparent 55%), radial-gradient(at 85% 35%, #220B38 0%, transparent 50%), radial-gradient(at 40% 80%, #140521 0%, transparent 60%), #0C0A10',
       emerald_silk: 'radial-gradient(at 20% 20%, #0F3D2A 0%, transparent 50%), radial-gradient(at 80% 30%, #082621 0%, transparent 55%), radial-gradient(at 50% 85%, #051410 0%, transparent 60%), #0C0A10',
-      prismatic_art: "linear-gradient(180deg, rgba(74, 13, 30, 0.62) 0%, rgba(12, 10, 16, 0.88) 55%, #0C0A10 100%), url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center top / cover no-repeat"
+      prismatic_art: "linear-gradient(180deg, rgba(74, 13, 30, 0.62) 0%, rgba(12, 10, 16, 0.88) 55%, #0C0A10 100%), url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center top / cover no-repeat",
+
+      // 6 новых тем
+      flirt: 'radial-gradient(circle at 50% 30%, #3e0a3e 0%, #200523 55%, #0d020f 100%)',
+      gender: 'radial-gradient(circle at 50% 35%, #23113d 0%, #130824 60%, #080312 100%)',
+      ruby: 'radial-gradient(circle at 50% 25%, #420817 0%, #22030a 55%, #0d0104 100%)',
+      neon: 'radial-gradient(circle at 50% 40%, #520959 0%, #25032b 60%, #0d0110 100%)',
+      amethyst: 'radial-gradient(circle at 50% 30%, #2b114d 0%, #150629 60%, #090214 100%)',
+      gold: 'radial-gradient(circle at 50% 35%, #3b2010 0%, #1c0e06 60%, #0a0402 100%)'
+    };
+
+    // Конфигурация летающих частиц для динамических тем
+    const PARTICLE_THEMES = {
+      flirt: { type: 'hearts', colors: ['#e63956', '#d81b60', '#ff4081', '#ad1457'] },
+      gender: { type: 'gender_symbols' },
+      ruby: { type: 'hearts', colors: ['#b71c1c', '#e53935', '#880e4f', '#ff1744'] },
+      neon: { type: 'hearts', colors: ['#ff007f', '#e040fb', '#d500f9', '#aa00ff'] },
+      amethyst: { type: 'hearts', colors: ['#7c4dff', '#651fff', '#b388ff', '#9c27b0'] },
+      gold: { type: 'hearts', colors: ['#ffb300', '#ffa000', '#ff8f00', '#d84315'] }
     };
 
     function setWallpaper(key) {
@@ -1580,18 +1602,90 @@
       document.body.style.backgroundPosition = 'center top';
       document.body.style.backgroundAttachment = 'fixed';
 
+      // Делаем рабочий стол прозрачным, чтобы просвечивал фон
+      const tabHome = document.getElementById('tab-home');
+      if (tabHome) tabHome.style.background = 'transparent';
+
       document.querySelectorAll('.wallpaper-thumb').forEach(c => c.classList.remove('selected'));
       document.querySelector(`[data-wp="${key}"]`)?.classList.add('selected');
 
       localStorage.setItem('pact_wallpaper_key', key);
       tg?.HapticFeedback?.selectionChanged?.();
+
+      // Управление частицами
+      manageWallpaperParticles(key);
+    }
+
+    function manageWallpaperParticles(key) {
+      let container = document.getElementById('wallpaper-particles');
+
+      // Создаем контейнер в разметке, если его ещё нет
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'wallpaper-particles';
+        document.body.prepend(container);
+      }
+
+      // Если выбрана статичная тема — убираем частицы
+      if (!PARTICLE_THEMES[key]) {
+        container.innerHTML = '';
+        return;
+      }
+
+      // Если выбрана живая тема — генерируем полёт элементов
+      container.innerHTML = '';
+      const theme = PARTICLE_THEMES[key];
+      const count = 14;
+
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-wp-item';
+
+        const leftPos = Math.random() * 92 + 4;
+        const duration = Math.random() * 7 + 9;
+        const delay = Math.random() * 10;
+        const driftX = (Math.random() - 0.5) * 80;
+        const targetRot = (Math.random() - 0.5) * 40;
+        const targetOpacity = (Math.random() * 0.45 + 0.35).toFixed(2);
+        const size = Math.floor(Math.random() * 26 + 24);
+
+        el.style.left = `${leftPos}%`;
+        el.style.animationDuration = `${duration}s`;
+        el.style.animationDelay = `-${delay}s`;
+        el.style.setProperty('--drift-x', `${driftX}px`);
+        el.style.setProperty('--target-rot', `${targetRot}deg`);
+        el.style.setProperty('--target-opacity', targetOpacity);
+        el.style.setProperty('--size', `${size}px`);
+
+        if (theme.type === 'gender_symbols') {
+          const isMale = Math.random() > 0.5;
+          el.innerHTML = isMale 
+            ? `<span class="wp-gender-symbol wp-gender-male">♂</span>` 
+            : `<span class="wp-gender-symbol wp-gender-female">♀</span>`;
+        } else {
+          const color = theme.colors[Math.floor(Math.random() * theme.colors.length)];
+          el.innerHTML = `
+            <svg class="wp-heart-3d" viewBox="0 0 32 32">
+              <defs>
+                <radialGradient id="hGrad-${i}" cx="35%" cy="30%" r="65%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+                  <stop offset="35%" stop-color="${color}"/>
+                  <stop offset="100%" stop-color="#120107"/>
+                </radialGradient>
+              </defs>
+              <path fill="url(#hGrad-${i})" d="M16 28.5S2 19.5 2 9.5a7.5 7.5 0 0 1 13-4.8A7.5 7.5 0 0 1 28 9.5c0 10-12 19-12 19z"/>
+            </svg>
+          `;
+        }
+
+        container.appendChild(el);
+      }
     }
 
     function loadSavedWallpaper() {
       const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
       setWallpaper(savedKey);
     }
-
     // Календарь
     let cycleStartDate = localStorage.getItem('cycle_start_date') || new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0];
     let cycleDuration = parseInt(localStorage.getItem('cycle_duration') || '28');
