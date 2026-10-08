@@ -1904,6 +1904,127 @@
         console.error('Ошибка инициализации:', err);
       }
     });
+  /* ========================================================
+   СИСТЕМА ДИНАМИЧЕСКИХ ОБОЕВ С ЧАСТИЦАМИ
+   ======================================================== */
+
+// Объект с настройками всех 6 тем
+const WP_THEMES = {
+  flirt: {
+    className: 'wallpaper-theme-flirt',
+    type: 'hearts',
+    colors: ['#e63956', '#d81b60', '#ff4081', '#ad1457']
+  },
+  gender: {
+    className: 'wallpaper-theme-gender',
+    type: 'gender_symbols' // Летающие ♂ и ♀
+  },
+  ruby: {
+    className: 'wallpaper-theme-ruby',
+    type: 'hearts',
+    colors: ['#b71c1c', '#e53935', '#880e4f', '#ff1744']
+  },
+  neon: {
+    className: 'wallpaper-theme-neon',
+    type: 'hearts',
+    colors: ['#ff007f', '#e040fb', '#d500f9', '#aa00ff']
+  },
+  amethyst: {
+    className: 'wallpaper-theme-amethyst',
+    type: 'hearts',
+    colors: ['#7c4dff', '#651fff', '#b388ff', '#9c27b0']
+  },
+  gold: {
+    className: 'wallpaper-theme-gold',
+    type: 'hearts',
+    colors: ['#ffb300', '#ffa000', '#ff8f00', '#d84315']
+  }
+};
+
+let currentWpTheme = 'flirt';
+
+// Функция переключения и сохранения темы
+function setWallpaperTheme(themeKey) {
+  if (!WP_THEMES[themeKey]) themeKey = 'flirt';
+  currentWpTheme = themeKey;
+  localStorage.setItem('user_wallpaper_theme', themeKey);
+  tg?.HapticFeedback?.impactOccurred?.('light');
+
+  const layer = document.getElementById('wallpaper-layer');
+  if (layer) {
+    layer.className = WP_THEMES[themeKey].className;
+  }
+
+  // Подсветка активной карточки в меню
+  document.querySelectorAll('.wallpaper-card-item').forEach(card => card.classList.remove('active'));
+  document.querySelector(`.wallpaper-card-item[onclick*="${themeKey}"]`)?.classList.add('active');
+
+  // Генерация частиц
+  renderParticles(themeKey);
+}
+
+// Загрузка темы при старте
+function loadSavedWallpaper() {
+  const saved = localStorage.getItem('user_wallpaper_theme') || 'flirt';
+  setWallpaperTheme(saved);
+}
+
+// Генерация парящих элементов на фоне
+function renderParticles(themeKey) {
+  const container = document.getElementById('wallpaper-particles');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const theme = WP_THEMES[themeKey];
+  const count = 14;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-wp-item';
+
+    const leftPos = Math.random() * 92 + 4;
+    const duration = Math.random() * 7 + 9;
+    const delay = Math.random() * 10;
+    const driftX = (Math.random() - 0.5) * 80;
+    const targetRot = (Math.random() - 0.5) * 40;
+    const targetOpacity = (Math.random() * 0.45 + 0.35).toFixed(2);
+    const size = Math.floor(Math.random() * 26 + 24);
+
+    el.style.left = `${leftPos}%`;
+    el.style.animationDuration = `${duration}s`;
+    el.style.animationDelay = `-${delay}s`;
+    el.style.setProperty('--drift-x', `${driftX}px`);
+    el.style.setProperty('--target-rot', `${targetRot}deg`);
+    el.style.setProperty('--target-opacity', targetOpacity);
+    el.style.setProperty('--size', `${size}px`);
+
+    if (theme.type === 'gender_symbols') {
+      const isMale = Math.random() > 0.5;
+      el.innerHTML = isMale 
+        ? `<span class="wp-gender-symbol wp-gender-male">♂</span>` 
+        : `<span class="wp-gender-symbol wp-gender-female">♀</span>`;
+    } else {
+      const color = theme.colors[Math.floor(Math.random() * theme.colors.length)];
+      el.innerHTML = `
+        <svg class="wp-heart-3d" viewBox="0 0 32 32">
+          <defs>
+            <radialGradient id="hGrad-${i}" cx="35%" cy="30%" r="65%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+              <stop offset="35%" stop-color="${color}"/>
+              <stop offset="100%" stop-color="#120107"/>
+            </radialGradient>
+          </defs>
+          <path fill="url(#hGrad-${i})" d="M16 28.5S2 19.5 2 9.5a7.5 7.5 0 0 1 13-4.8A7.5 7.5 0 0 1 28 9.5c0 10-12 19-12 19z"/>
+        </svg>
+      `;
+    }
+
+    container.appendChild(el);
+  }
+}
+
+// Запуск при инициализации страницы
+loadSavedWallpaper();
   </script>
 </body>
 </html>
