@@ -1189,6 +1189,17 @@
       }
     }
 
+    
+    // Вызов добавления иконки на домашний экран телефона
+    function installHomeScreenShortcut() {
+      tg?.HapticFeedback?.impactOccurred?.('medium');
+      if (window.Telegram?.WebApp?.addToHomeScreen) {
+        window.Telegram.WebApp.addToHomeScreen();
+      } else {
+        alert('Функция доступна в мобильном приложении Telegram');
+      }
+    }
+    
     // Роли
     let currentRole = localStorage.getItem('pact_role') || 'top';
     function updateRoleUI() {
