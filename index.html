@@ -666,40 +666,49 @@
     .nav-item:active .nav-back-chevron { color: #fff; }
 
     /* === НАЧАЛО ВСТАВКИ: ЛОГОТИП В МЕРТВОЙ ЗОНЕ === */
-    /* === НАЧАЛО ВСТАВКИ: МАССИВНЫЙ ЛОГОТИП === */
-/* === НАЧАЛО ВСТАВКИ: МАССИВНЫЙ ЛОГОТИП С ОБВОДКОЙ === */
-    /* СТЕКЛЯННАЯ КАПСУЛА (FROSTED ISLAND) */
-   /* СТЕКЛЯННАЯ КАПСУЛА (FROSTED ISLAND) */
+   /* 3D СТЕКЛЯННЫЙ ОСТРОВОК С ВЫПУКЛОЙ ГЛУБИНОЙ */
     .dead-zone-brand {
       position: fixed;
       top: calc(env(safe-area-inset-top, 0px) + 36px);
       left: 50%;
       transform: translateX(-50%);
       width: auto;
-      height: 44px;
-      padding: 0 24px;
+      height: 46px;
+      padding: 0 26px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 90;
       pointer-events: none;
       
-      /* Матовое дымчатое стекло iOS */
-      background: rgba(18, 14, 25, 0.72);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border-radius: 22px;
-      border: 1px solid rgba(230, 57, 86, 0.35);
+      /* 1. Выпуклый объем: градиент от светлого верха к темному низу */
+      background: linear-gradient(
+        180deg, 
+        rgba(36, 26, 52, 0.85) 0%, 
+        rgba(16, 12, 24, 0.88) 60%, 
+        rgba(8, 6, 13, 0.95) 100%
+      );
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border-radius: 24px;
+      
+      /* 2. Тонкая фаска по канту */
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-bottom-color: rgba(230, 57, 86, 0.45);
+      
+      /* 3. Многослойная 3D-тень: блик сверху + темная канавка снизу + парящая глубина */
       box-shadow: 
-        0 12px 32px rgba(0, 0, 0, 0.75),
-        inset 0 1px 1.5px rgba(255, 255, 255, 0.22),
-        0 0 18px rgba(230, 57, 86, 0.2);
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.4),      /* яркий световой блик по верхней кромке */
+        inset 0 -2.5px 4px rgba(0, 0, 0, 0.85),           /* темная фаска снизу (дает толщину стекла) */
+        0 4px 8px rgba(0, 0, 0, 0.5),                     /* контактная плотная тень */
+        0 14px 35px rgba(0, 0, 0, 0.85),                  /* глубокая мягкая тень парения */
+        0 0 24px rgba(230, 57, 86, 0.28);                 /* рубиновое неоновое свечение */
     }
 
     .brand-shimmer-title {
       font-size: 16px;
       font-weight: 900;
-      letter-spacing: 3px;
+      letter-spacing: 3.2px;
       text-transform: uppercase;
       margin: 0;
       white-space: nowrap;
@@ -713,10 +722,16 @@
         #B82342 100%
       );
       background-size: 240% auto;
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: brandShimmerWave 3.4s ease-in-out infinite;
-      filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.6));
+      
+      /* 4. Чеканный 3D-рельеф букв (срез ступенькой + рассеянная глубина) */
+      filter: 
+        drop-shadow(0 1.5px 0px rgba(0, 0, 0, 0.95))      /* жесткая ступенька среза букв */
+        drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8))         /* тень падения текста внутрь стекла */
+        drop-shadow(0 0 12px rgba(230, 57, 86, 0.7));     /* мягкий неоновый ореол */
     }
     @keyframes brandShimmerWave {
       0% { background-position: 0% 50%; }
