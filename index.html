@@ -2118,27 +2118,31 @@
       };
       reader.readAsDataURL(file);
     }
+function applyAvatarToUI(role, src) {
+  // Ищем аватарку всеми способами: по ID, по селектору роли или по прямому классу картинки
+  const targetImg = document.getElementById('avatar-img-' + role)
+                 || document.getElementById('avatar-img-female')
+                 || document.getElementById('avatar-img-male')
+                 || document.querySelector('.profile-avatar-img');
+  if (targetImg) {
+    targetImg.src = src;
+  }
+}
 
-    function applyAvatarToUI(role, src) {
-      const targetImg = document.getElementById(`avatar-img-${role}`) || document.querySelector(`.profile-avatar-${role}`);
-      if (targetImg) {
-        targetImg.src = src;
-      }
-    }
+function loadSavedAvatars() {
+  const maleSaved = localStorage.getItem('pact_avatar_male') || MALE_CARTOON_AVATARS[0];
+  const femaleSaved = localStorage.getItem('pact_avatar_female') || FEMALE_CARTOON_AVATARS[0];
 
-    function loadSavedAvatars() {
-      const maleSaved = localStorage.getItem('pact_avatar_male') || MALE_CARTOON_AVATARS[0];
-      const femaleSaved = localStorage.getItem('pact_avatar_female') || FEMALE_CARTOON_AVATARS[0];
+  applyAvatarToUI('male', maleSaved);
+  applyAvatarToUI('female', femaleSaved);
+}
 
-      applyAvatarToUI('male', maleSaved);
-      applyAvatarToUI('female', femaleSaved);
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadSavedAvatars);
-    } else {
-      loadSavedAvatars();
-    }
+// Корректный запуск без синтаксических ошибок
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadSavedAvatars);
+} else {
+  loadSavedAvatars();
+}
 
     function addCustomTask(gender) {
       if (gender === 'male') {
