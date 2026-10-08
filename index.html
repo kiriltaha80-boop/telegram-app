@@ -1215,6 +1215,7 @@
 
     // Навигация
     let navStack = ['tab-home'];
+
     function openSubScreen(tabId) {
       if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
       renderActiveTab(tabId);
@@ -1226,15 +1227,37 @@
         navStack.pop();
         renderActiveTab(navStack[navStack.length - 1]);
       } else {
+        navStack = ['tab-home'];
         renderActiveTab('tab-home');
       }
     }
 
     function renderActiveTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      const activeEl = document.getElementById(tabId);
-      if (activeEl) activeEl.classList.add('active');
+      // 1. Закрываем все всплывающие окна поверх стола
+      document.querySelectorAll('.tab-content:not(#tab-home)').forEach(tab => tab.classList.remove('active'));
 
+      const homeEl = document.getElementById('tab-home');
+      const activeEl = document.getElementById(tabId);
+      const editBtn = document.getElementById('btn-edit-desktop');
+      const editPanel = document.getElementById('desktop-edit-panel');
+
+      // 2. Управление экраном стола и открытыми окнами
+      if (tabId === 'tab-home') {
+        // Мы на главном столе: чистый фон и шестерёнка на месте
+        if (homeEl) homeEl.style.filter = 'none';
+        if (editBtn) editBtn.style.display = 'flex';
+      } else {
+        // Открыто окно: показываем карточку, сбрасываем скролл, блюрим стол и прячем шестерёнку
+        if (activeEl) {
+          activeEl.classList.add('active');
+          activeEl.scrollTop = 0;
+        }
+        if (homeEl) homeEl.style.filter = 'blur(6px) brightness(0.65)';
+        if (editBtn) editBtn.style.display = 'none';
+        if (editPanel) editPanel.classList.remove('active');
+      }
+
+      // 3. Подсветка активной вкладки в нижнем доке
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       if (tabId === 'tab-home') document.getElementById('nav-home')?.classList.add('active');
       else if (tabId === 'tab-profile') document.getElementById('nav-profile')?.classList.add('active');
