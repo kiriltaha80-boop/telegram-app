@@ -1372,20 +1372,9 @@
     <input type="file" id="custom-avatar-file-input" accept="image/*" style="display:none" onchange="handleCustomAvatarUpload(event)">
 
     <!-- Сетка с 10 персонажами и кнопкой добавления своего фото -->
-   <!-- МОДАЛКА: СМЕНА ИМЕНИ -->
-  <div class="modal-overlay" id="name-modal" onclick="if(event.target === this) closeNameModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Ваше имя</h3>
-        <span class="modal-close-btn" onclick="closeNameModal()">×</span>
-      </div>
-
-      <div class="name-edit-form">
-        <input type="text" id="input-profile-name" class="name-text-input" placeholder="Введите имя..." maxlength="20">
-        <button type="button" class="name-save-btn" onclick="saveProfileName()">Сохранить</button>
-      </div>
-    </div>
+    <div class="avatar-presets-grid" id="avatar-presets-grid"></div>
   </div>
+</div>
 
   <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ В СТИЛЕ IOS -->
   <nav class="nav-bar">
