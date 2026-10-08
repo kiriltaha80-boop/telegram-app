@@ -148,40 +148,71 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* КНОПКА ШЕСТЕРЕНКИ СПРАВА В ШАПКЕ */
-    .edit-desktop-btn {
-      position: absolute;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #F5F3F7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
-      transition: all 0.2s ease;
-      padding: 0;
-      z-index: 20;
-    }
-    .edit-desktop-btn:active {
-      transform: scale(0.88);
-      background: #14101A;
-    }
-    .edit-desktop-btn.active {
-      background: var(--accent-gradient);
-      border-color: var(--accent-color);
-      color: #fff;
-      box-shadow: 0 0 14px rgba(230, 57, 86, 0.55);
-    }
-    .gear-svg-icon {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-    }
+   /* КНОПКА ШЕСТЕРЕНКИ СПРАВА В ШАПКЕ В СТИЛЕ КОЛБЫ */
+.edit-desktop-btn {
+  position: relative; /* Находится внутри flex-шапки на одной горизонтальной оси с колбой */
+  width: 40px;
+  height: 40px;
+  border-radius: 999px; /* Обтекаемая форма капсулы */
+  padding: 0;
+  margin: 0;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Эффект матового обсидианового стекла */
+  background: rgba(28, 20, 36, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  /* Двухсоставная рамка: стеклянный блик сверху, рубин снизу */
+  border: 1px solid rgba(230, 57, 86, 0.45);
+  border-top-color: rgba(255, 255, 255, 0.35);
+
+  /* Глубокий 3D-объем и рубиновый ореол как у колбы */
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 0 14px rgba(230, 57, 86, 0.25),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
+}
+
+/* Нажатие на кнопку */
+.edit-desktop-btn:active {
+  transform: scale(0.92);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 0 18px rgba(230, 57, 86, 0.5);
+}
+
+/* Активное состояние (когда включен режим редактирования) */
+.edit-desktop-btn.active {
+  background: linear-gradient(135deg, rgba(230, 57, 86, 0.85), rgba(130, 16, 38, 0.9));
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    0 0 20px rgba(230, 57, 86, 0.65),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6);
+}
+
+/* Иконка шестеренки */
+.gear-svg-icon {
+  width: 20px;
+  height: 20px;
+  fill: #F5F3F7;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.edit-desktop-btn.active .gear-svg-icon {
+  transform: rotate(90deg);
+  fill: #FFFFFF;
+}
 
     /* 2. ЭКРАН ЗАСТАВКИ (SPLASH SCREEN) */
     #splash-screen {
