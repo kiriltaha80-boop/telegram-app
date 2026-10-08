@@ -1327,54 +1327,54 @@
         <div class="wallpaper-thumb" data-wp="prismatic_art" onclick="setWallpaper('prismatic_art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
           <span>Арт Заставки</span>
         </div>
-<!-- 1. Флирт XOXO (бархатный сливовый как в Instagram) -->
-        <div class="wallpaper-thumb" data-wp="flirt" onclick="setWallpaper('flirt')" style="background: radial-gradient(circle at 50% 25%, #4a0d4a 0%, #220326 55%, #0b010d 100%);">
-          <span>Флирт XOXO</span>
-        </div>
-
-        <!-- 2. Марс & Венера (неоновый ночной ультрамарин) -->
-        <div class="wallpaper-thumb" data-wp="gender" onclick="setWallpaper('gender')" style="background: radial-gradient(circle at 50% 25%, #181145 0%, #0d0829 55%, #04020f 100%);">
-          <span>Марс & Венера</span>
-        </div>
-
-        <!-- 3. Рубиновый Шелк (глубокий винно-кровавый) -->
-        <div class="wallpaper-thumb" data-wp="ruby" onclick="setWallpaper('ruby')" style="background: radial-gradient(circle at 50% 25%, #520617 0%, #260209 55%, #0a0103 100%);">
-          <span>Рубиновый Шелк</span>
-        </div>
-
-        <!-- 4. Киберпанк Неон (электрический дуэт фуксии и циана) -->
-        <div class="wallpaper-thumb" data-wp="cyber" onclick="setWallpaper('cyber')" style="background: radial-gradient(circle at 50% 25%, #2a0845 0%, #12032b 55%, #050112 100%);">
-          <span>Кибер Неон</span>
-        </div>
-
-        <!-- 5. Черное Золото (премиальный оникс и жидкое золото) -->
-        <div class="wallpaper-thumb" data-wp="gold" onclick="setWallpaper('gold')" style="background: radial-gradient(circle at 50% 25%, #382407 0%, #1c1102 55%, #080500 100%);">
-          <span>Black Gold</span>
-        </div>
-
-        <!-- 6. Лавандовый Дым (холодный мистический аметист) -->
-        <div class="wallpaper-thumb" data-wp="lavender" onclick="setWallpaper('lavender')" style="background: radial-gradient(circle at 50% 25%, #351a54 0%, #190c2b 55%, #07020d 100%);">
-          <span>Лаванда</span>
-        </div>
-      </div>
-   <!-- МОДАЛКА: СМЕНА АВАТАРКИ -->
-  <div class="modal-overlay" id="avatar-modal" onclick="if(event.target === this) closeAvatarModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="avatar-modal-title">Выбор аватарки</h3>
-        <span class="modal-close-btn" onclick="closeAvatarModal()">×</span>
-      </div>
-
-      <!-- Скрытый инпут для выбора фото из галереи -->
-      <input type="file" id="custom-avatar-file-input" accept="image/*" style="display:none" onchange="handleCustomAvatarUpload(event)">
-
-      <!-- Сетка с 10 персонажами и кнопкой добавления своего фото -->
-      <div class="avatar-presets-grid" id="avatar-presets-grid"></div>
+<!-- 1. Флирт ХОХО -->
+    <div class="wallpaper-thumb" data-wp="flirt" onclick="setWallpaper('flirt')" style="background: radial-gradient(circle at 50% 25%, #4a0d4a 0%, #220326 55%, #0b010d 100%);">
+      <span>Флирт XOXO</span>
     </div>
-  </div>
-    
+
+    <!-- 2. Марс & Венера -->
+    <div class="wallpaper-thumb" data-wp="gender" onclick="setWallpaper('gender')" style="background: radial-gradient(circle at 50% 25%, #181145 0%, #0d0829 55%, #04020f 100%);">
+      <span>Марс & Венера</span>
     </div>
+
+    <!-- 3. Рубиновый Шелк -->
+    <div class="wallpaper-thumb" data-wp="ruby" onclick="setWallpaper('ruby')" style="background: radial-gradient(circle at 50% 25%, #520617 0%, #260209 55%, #0a0103 100%);">
+      <span>Рубиновый Шелк</span>
+    </div>
+
+    <!-- 4. Кибер Неон -->
+    <div class="wallpaper-thumb" data-wp="cyber" onclick="setWallpaper('cyber')" style="background: radial-gradient(circle at 50% 25%, #2a0845 0%, #12032b 55%, #050112 100%);">
+      <span>Кибер Неон</span>
+    </div>
+
+    <!-- 5. Black Gold -->
+    <div class="wallpaper-thumb" data-wp="gold" onclick="setWallpaper('gold')" style="background: radial-gradient(circle at 50% 25%, #382407 0%, #1c1102 55%, #080500 100%);">
+      <span>Black Gold</span>
+    </div>
+
+    <!-- 6. Лаванда -->
+    <div class="wallpaper-thumb" data-wp="lavender" onclick="setWallpaper('lavender')" style="background: radial-gradient(circle at 50% 25%, #351a54 0%, #190c2b 55%, #07020d 100%);">
+      <span>Лаванда</span>
+    </div>
+  </div> <!-- Закрыли wallpaper-presets-grid -->
+</div> <!-- Закрыли modal-card обоев -->
+</div> <!-- Закрыли #wallpaper-modal -->
+
+<!-- МОДАЛКА: СМЕНА АВАТАРКИ -->
+<div class="modal-overlay" id="avatar-modal" onclick="if(event.target === this) closeAvatarModal()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="avatar-modal-title">Выбор аватарки</h3>
+      <span class="modal-close-btn" onclick="closeAvatarModal()">×</span>
+    </div>
+
+    <!-- Скрытый инпут для выбора фото из галереи -->
+    <input type="file" id="custom-avatar-file-input" accept="image/*" style="display:none" onchange="handleCustomAvatarUpload(event)">
+
+    <!-- Сетка с 10 персонажами и кнопкой добавления своего фото -->
+    <div class="avatar-presets-grid" id="avatar-presets-grid"></div>
   </div>
+</div>
 
   <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ В СТИЛЕ IOS -->
   <nav class="nav-bar">
