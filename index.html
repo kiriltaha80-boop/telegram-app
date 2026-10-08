@@ -47,7 +47,60 @@
 /* ========================================================
    ИМЯ ПРОФИЛЯ
    ======================================================== */
-.profile-name-clickable {
+
+    /* Увеличенная аватарка (112px) */
+.profile-avatar-container {
+  width: 112px !important;
+  height: 112px !important;
+  min-width: 112px !important;
+  min-height: 112px !important;
+  margin: 0 auto 12px auto;
+  border-radius: 50% !important;
+  border: 3px solid #E63956;
+  box-shadow: 0 0 24px rgba(230, 57, 86, 0.55);
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-avatar-container:active {
+  transform: scale(0.96);
+}
+
+.profile-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* Строка со смайликом и именем в одну линию */
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 4px auto 14px auto;
+}
+
+/* Кликабельный смайлик роли */
+.role-toggle-emoji {
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  filter: drop-shadow(0 0 8px rgba(230, 57, 86, 0.5));
+  transition: transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.role-toggle-emoji:active {
+  transform: scale(1.3) rotate(-10deg);
+}
+    .profile-name-clickable {
   font-size: 20px;
   font-weight: 700;
   color: #FFFFFF;
