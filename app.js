@@ -1147,7 +1147,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTasks();
     renderGifts();
     renderProducts();
-    renderChat();
+   renderWardrobe();
+     renderChat();
   } catch (err) {
     console.error('Ошибка инициализации приложения:', err);
   }
