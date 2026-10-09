@@ -1549,11 +1549,26 @@
       });
     }
 
+    let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
+    let pendingContractAction = null;
+
     function renderDesktop() {
       const container = document.getElementById('desktop-grid-container');
       if (!container) return;
       container.innerHTML = '';
 
+      // ЕСЛИ НЕ ПОДПИСАН: показываем ТОЛЬКО одну большую плитку контракта
+      if (!isContractSigned) {
+        container.innerHTML = `
+          <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')">
+            <div class="hero-contract-icon">📜</div>
+            <div class="hero-contract-label">Контракт D/S</div>
+          </div>
+        `;
+        return;
+      }
+
+      // ЕСЛИ ПОДПИСАН: отрисовываем полный рабочий стол
       desktopItems.forEach((item, index) => {
         const wrap = document.createElement('div');
         wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
@@ -1585,6 +1600,72 @@
             </div>`;
         }
 
+        wrap.innerHTML = inner;
+        attachTouchEvents(wrap, index);
+        container.appendChild(wrap);
+      });
+    }
+
+    // Обновление состояния кнопки в окне контракта
+    function updateContractButtonUI() {
+      const btn = document.getElementById('btn-contract-action');
+      if (!btn) return;
+
+      if (isContractSigned) {
+        btn.className = 'btn-contract-terminate';
+        btn.innerText = 'Расторгнуть';
+      } else {
+        btn.className = 'btn-contract-sign';
+        btn.innerText = 'Подписать';
+      }
+    }
+
+    // Нажатие на кнопку в окне контракта: открытие окна с вопросом
+    function handleContractButtonClick() {
+      const modal = document.getElementById('contract-confirm-modal');
+      const textElem = document.getElementById('contract-confirm-text');
+      if (!modal || !textElem) return;
+
+      if (!isContractSigned) {
+        pendingContractAction = 'sign';
+        textElem.innerText = 'Вы точно готовы исполнять все требования прописанные в контракте?';
+      } else {
+        pendingContractAction = 'terminate';
+        textElem.innerText = 'Вы точно хотите все прекратить и расторгнуть данный договор?';
+      }
+
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
+    }
+
+    // Закрытие окна вопроса
+    function closeContractConfirmModal() {
+      const modal = document.getElementById('contract-confirm-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+      pendingContractAction = null;
+    }
+
+    // Подтверждение действия при нажатии "Да"
+    function confirmContractAction() {
+      if (pendingContractAction === 'sign') {
+        isContractSigned = true;
+        localStorage.setItem('pact_contract_signed', 'true');
+        window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('success');
+      } else if (pendingContractAction === 'terminate') {
+        isContractSigned = false;
+        localStorage.setItem('pact_contract_signed', 'false');
+        window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('warning');
+      }
+
+      updateContractButtonUI();
+      renderDesktop();
+      closeContractConfirmModal();
+      handleBackAction(); // Возвращает на рабочий стол, чтобы сразу увидеть изменения
+    }
         wrap.innerHTML = inner;
         attachTouchEvents(wrap, index);
         container.appendChild(wrap);
