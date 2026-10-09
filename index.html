@@ -80,7 +80,7 @@
       text-shadow: 0 0 10px rgba(230, 57, 86, 0.6);
     }
 
-    /* Переключатель режимов: Монетка / Числа */
+    /* Переключатель режимов */
     .mode-switch-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -112,7 +112,6 @@
       box-shadow: 0 4px 14px rgba(230, 57, 86, 0.4);
     }
 
-    /* Контейнеры секций */
     .tab-section {
       display: none;
       flex-direction: column;
@@ -124,7 +123,7 @@
     }
 
     /* ========================================================
-       РЕЖИМ 1: РЕАЛИСТИЧНАЯ 3D-МОНЕТА И ПОЛЁТ ВВЕРХ
+       РЕЖИМ 1: КУВЫРОК ВВЕРХ-ВНИЗ (ПО ОСИ X)
        ======================================================== */
     .coin-stage {
       flex: 1;
@@ -138,7 +137,7 @@
       min-height: 330px;
     }
 
-    /* Физическая тень под монетой */
+    /* Тень под монетой */
     .coin-shadow {
       width: 110px;
       height: 18px;
@@ -151,7 +150,7 @@
       pointer-events: none;
     }
 
-    /* Сцена полёта вверх-вниз */
+    /* Взлёт всей конструкции вверх-вниз */
     .coin-trajectory-box {
       position: relative;
       width: 135px;
@@ -161,7 +160,7 @@
       will-change: transform;
     }
 
-    /* 3D-вращение самой монеты */
+    /* 3D-вращение через ребро (верх-низ) */
     .coin-3d {
       width: 100%;
       height: 100%;
@@ -182,11 +181,12 @@
     }
 
     .coin-front {
-      transform: rotateY(0deg);
+      transform: rotateX(0deg);
     }
 
+    /* Вторая сторона ориентирована по оси X */
     .coin-back {
-      transform: rotateY(180deg);
+      transform: rotateX(180deg);
     }
 
     .coin-svg {
@@ -195,7 +195,7 @@
       display: block;
     }
 
-    /* Анимация траектории подбрасывания вверх и падения */
+    /* Траектория полёта */
     .toss-flying .coin-trajectory-box {
       animation: coinFlyTrajectory 1.35s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
     }
@@ -205,20 +205,19 @@
         transform: translateY(0) scale(1);
       }
       42% {
-        transform: translateY(-210px) scale(1.15); /* Высокий взлёт к верху экрана */
+        transform: translateY(-210px) scale(1.15); /* Высокая точка взлёта */
       }
       85% {
-        transform: translateY(0) scale(1); /* Падение обратно */
+        transform: translateY(0) scale(1);
       }
       93% {
-        transform: translateY(-12px) scale(1.02); /* Отскок от удара о поверхность */
+        transform: translateY(-12px) scale(1.02); /* Отскок */
       }
       100% {
         transform: translateY(0) scale(1);
       }
     }
 
-    /* Динамика тени при взлёте монеты */
     .toss-flying .coin-shadow {
       animation: coinShadowFlight 1.35s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
     }
@@ -230,7 +229,7 @@
         filter: blur(3px);
       }
       42% {
-        transform: scale(0.35); /* Тень уменьшается и размывается на пике высоты */
+        transform: scale(0.35);
         opacity: 0.2;
         filter: blur(8px);
       }
@@ -246,7 +245,7 @@
     }
 
     /* ========================================================
-       РЕЖИМ 2: РАНДОМАЙЗЕР ЧИСЕЛ (1 ДО N)
+       РЕЖИМ 2: РАНДОМАЙЗЕР ЧИСЕЛ
        ======================================================== */
     .number-stage {
       display: flex;
@@ -371,7 +370,6 @@
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <!-- ОКНО ПРИЛОЖЕНИЯ -->
   <div class="random-app-card">
     
     <div class="sub-screen-header">
@@ -385,14 +383,14 @@
       <button class="mode-tab-btn" id="tab-btn-dice" onclick="switchMode('dice')">🎲 Число (1-N)</button>
     </div>
 
-    <!-- 1. ЭКРАН МОНЕТЫ -->
+    <!-- 1. МОНЕТКА -->
     <div class="tab-section active" id="section-coin">
       <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
         
         <div class="coin-trajectory-box">
           <div class="coin-3d" id="coin-3d">
             
-            <!-- СТОРОНА 1: ОРЁЛ (Точная детализация геральдического орла) -->
+            <!-- СТОРОНА 1: ОРЁЛ -->
             <div class="coin-side coin-front">
               <svg class="coin-svg" viewBox="0 0 200 200">
                 <defs>
@@ -408,31 +406,21 @@
                     <stop offset="100%" stop-color="#ffdc80"/>
                   </linearGradient>
                 </defs>
-                <!-- Основа монеты -->
                 <circle cx="100" cy="100" r="98" fill="url(#goldPlate)" stroke="url(#goldEdge)" stroke-width="4"/>
-                <!-- Рифлёный гурт / чеканный кант -->
                 <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
                 <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
                 
-                <!-- ГЕРАЛЬДИЧЕСКИЙ ОРЁЛ С РАСПРАВЛЕННЫМИ КРЫЛЬЯМИ -->
                 <g fill="#422900" stroke="#fce69a" stroke-width="0.8">
-                  <!-- Тело и шея -->
                   <path d="M 97,64 C 94,56 97,46 103,46 C 107,46 111,54 107,64 C 112,68 114,80 114,94 L 86,94 C 86,80 88,68 97,64 Z"/>
-                  <!-- Голова орла в профиль с острым клювом -->
                   <path d="M 103,46 C 101,42 97,42 94,45 L 88,48 L 94,52 C 94,56 99,57 103,55 Z"/>
-                  <!-- Щит на груди -->
                   <path d="M 90,80 L 110,80 L 110,98 C 110,110 100,118 100,118 C 100,118 90,110 90,98 Z" fill="#edd072" stroke="#422900" stroke-width="1.8"/>
                   <path d="M 94,80 L 94,106 M 98,80 L 98,112 M 102,80 L 102,112 M 106,80 L 106,106" stroke="#422900" stroke-width="1.2"/>
-                  <!-- Левое мощное крыло -->
                   <path d="M 88,68 C 76,55 58,48 38,45 C 38,55 48,68 56,76 C 45,72 34,70 26,73 C 32,82 46,92 58,96 C 46,95 38,97 34,103 C 44,110 60,112 70,110 C 62,113 56,118 56,124 C 66,125 78,118 88,110 Z"/>
-                  <!-- Правое мощное крыло -->
                   <path d="M 112,68 C 124,55 142,48 162,45 C 162,55 152,68 144,76 C 155,72 166,70 174,73 C 168,82 154,92 142,96 C 154,95 162,97 166,103 C 156,110 140,112 130,110 C 138,113 144,118 144,124 C 134,125 122,118 112,110 Z"/>
-                  <!-- Хвост и стрелы в когтях -->
                   <path d="M 92,118 L 108,118 L 114,142 L 86,142 Z"/>
                   <line x1="72" y1="134" x2="128" y2="126" stroke="#2b1a00" stroke-width="2.5" stroke-linecap="round"/>
                   <line x1="74" y1="126" x2="126" y2="134" stroke="#2b1a00" stroke-width="2.5" stroke-linecap="round"/>
                 </g>
-                <!-- Звезды по кругу -->
                 <g fill="#fce69a">
                   <circle cx="50" cy="150" r="3"/><circle cx="65" cy="162" r="3"/>
                   <circle cx="100" cy="172" r="3.5"/><circle cx="135" cy="162" r="3"/>
@@ -441,22 +429,19 @@
               </svg>
             </div>
 
-            <!-- СТОРОНА 2: РЕШКА / НОМИНАЛ И ВЕНОК -->
+            <!-- СТОРОНА 2: РЕШКА -->
             <div class="coin-side coin-back">
               <svg class="coin-svg" viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="98" fill="url(#goldPlate)" stroke="url(#goldEdge)" stroke-width="4"/>
                 <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
                 <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
                 
-                <!-- Рельефная цифра 1 -->
                 <text x="100" y="112" font-family="'Times New Roman', Georgia, serif" font-size="78" font-weight="bold" text-anchor="middle" fill="#382100" stroke="#ffeb99" stroke-width="1.8" filter="drop-shadow(0 2px 2px rgba(255,255,255,0.4))">1</text>
                 
-                <!-- Классический лавровый венок -->
                 <g fill="none" stroke="#4a2e00" stroke-width="2.2" stroke-linecap="round">
                   <path d="M 46,128 C 36,92 48,58 72,42"/>
                   <path d="M 154,128 C 164,92 152,58 128,42"/>
                 </g>
-                <!-- Листья венка -->
                 <g fill="#edd072" stroke="#4a2e00" stroke-width="1.2">
                   <ellipse cx="44" cy="115" rx="7" ry="4" transform="rotate(-30 44 115)"/>
                   <ellipse cx="40" cy="95" rx="7" ry="4" transform="rotate(-15 40 95)"/>
@@ -468,7 +453,6 @@
                   <ellipse cx="155" cy="75" rx="7" ry="4" transform="rotate(-10 155 75)"/>
                   <ellipse cx="142" cy="58" rx="7" ry="4" transform="rotate(-35 142 58)"/>
                 </g>
-                <!-- Корона над номиналом -->
                 <path d="M 85,46 L 90,38 L 100,43 L 110,38 L 115,46 Z" fill="#edd072" stroke="#4a2e00" stroke-width="1.5"/>
               </svg>
             </div>
@@ -480,7 +464,7 @@
       </div>
     </div>
 
-    <!-- 2. ЭКРАН РАНДОМАЙЗЕРА ЧИСЕЛ -->
+    <!-- 2. РАНДОМАЙЗЕР ЧИСЕЛ -->
     <div class="tab-section" id="section-dice">
       <div class="number-stage">
         
@@ -528,7 +512,6 @@
       }
     }
 
-    // Переключение вкладок (Монетка / Числа)
     function switchMode(mode) {
       triggerHaptic('light');
       document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
@@ -544,10 +527,10 @@
     }
 
     // ==========================================
-    // ЛОГИКА ПОДБРАСЫВАНИЯ МОНЕТЫ
+    // ЛОГИКА: КУВЫРОК ВВЕРХ-ВНИЗ (rotateX)
     // ==========================================
     let isTossing = false;
-    let currentRotationY = 0;
+    let currentRotationX = 0;
 
     function tossCoin() {
       if (isTossing) return;
@@ -557,23 +540,20 @@
       const coin3D = document.getElementById('coin-3d');
       const isHeads = Math.random() < 0.5; // true = Орёл, false = Решка
 
-      // Запуск полёта вверх
       stage.classList.add('toss-flying');
       triggerHaptic('medium');
 
-      // Делаем 5 полных оборотов в воздухе + нужная сторона
-      const fullSpins = 360 * 5;
-      currentRotationY += fullSpins + (isHeads ? 0 : 180) - (currentRotationY % 360);
+      // 6 полных кувырков через ребро (верх-низ) + доворот до нужной стороны
+      const fullSpins = 360 * 6;
+      currentRotationX += fullSpins + (isHeads ? 0 : 180) - (currentRotationX % 360);
 
-      // Плавное вращение кувырком во время полёта
+      // Вращение по оси X
       coin3D.style.transition = 'transform 1.35s cubic-bezier(0.2, 0.85, 0.25, 1)';
-      coin3D.style.transform = `rotateY(${currentRotationY}deg)`;
+      coin3D.style.transform = `rotateX(${currentRotationX}deg)`;
 
-      // Тактильные щелчки рассекания воздуха
       setTimeout(() => triggerHaptic('light'), 300);
       setTimeout(() => triggerHaptic('light'), 650);
 
-      // Момент падения на ладонь / поверхность
       setTimeout(() => {
         triggerHaptic('heavy');
         stage.classList.remove('toss-flying');
