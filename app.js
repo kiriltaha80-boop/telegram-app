@@ -92,7 +92,7 @@ let pendingContractAction = null;
 let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
   { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
   { id: 'tile-female', type: 'tile', title: 'Нижняя ♀', icon: '🌹', target: 'tab-female-session' },
-  { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '👗', target: 'tab-wardrobe' }, // <-- ДОБАВЛЕНО
+  { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🪞', target: 'tab-wardrobe' }, // <-- ДОБАВЛЕНО
   { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' },
   { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop' },
   { id: 'tile-sexshop', type: 'tile', title: 'Секс-шоп', icon: '🔮', target: 'tab-sexshop' },
