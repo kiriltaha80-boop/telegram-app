@@ -1549,7 +1549,7 @@
       });
     }
 
-    let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
+ let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
     let pendingContractAction = null;
 
     function renderDesktop() {
@@ -1557,7 +1557,7 @@
       if (!container) return;
       container.innerHTML = '';
 
-      // ЕСЛИ НЕ ПОДПИСАН: показываем ТОЛЬКО одну большую плитку контракта
+      // Если контракт НЕ подписан — показываем только одну большую плитку
       if (!isContractSigned) {
         container.innerHTML = `
           <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')">
@@ -1568,7 +1568,7 @@
         return;
       }
 
-      // ЕСЛИ ПОДПИСАН: отрисовываем полный рабочий стол
+      // Если контракт подписан — отображаем весь рабочий стол
       desktopItems.forEach((item, index) => {
         const wrap = document.createElement('div');
         wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
