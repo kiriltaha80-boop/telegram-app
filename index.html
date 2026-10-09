@@ -222,6 +222,146 @@
     </div>
   </div>
 
+<!-- ЭКРАН: СУДЬБА & ЖРЕБИЙ -->
+  <div id="tab-randomizer" class="tab-content">
+    <div class="card random-app-card" id="random-app-card">
+      
+      <!-- Холст салюта, конфетти и серпантина -->
+      <canvas id="burst-canvas"></canvas>
+
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 800; color: #FFFFFF; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;">Судьба & Жребий</div>
+      </div>
+
+      <!-- Переключатель: Монетка / Число -->
+      <div class="mode-switch-tabs">
+        <button class="mode-tab-btn active" id="tab-btn-coin" onclick="switchRandomMode('coin')">🪙 Монетка</button>
+        <button class="mode-tab-btn" id="tab-btn-dice" onclick="switchRandomMode('dice')">🎲 Число (1-N)</button>
+      </div>
+
+      <!-- 1. СЕКЦИЯ МОНЕТКИ -->
+      <div class="tab-section active" id="section-coin">
+        <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
+          
+          <div class="coin-trajectory-box">
+            <div class="coin-3d" id="coin-3d">
+              
+              <!-- СТОРОНА 1: МАРС ♂ -->
+              <div class="coin-side coin-front">
+                <svg class="coin-svg" viewBox="0 0 200 200">
+                  <defs>
+                    <radialGradient id="goldPlateM" cx="35%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#fff4b8"/>
+                      <stop offset="25%" stop-color="#e8be56"/>
+                      <stop offset="65%" stop-color="#ab7717"/>
+                      <stop offset="100%" stop-color="#543700"/>
+                    </radialGradient>
+                    <linearGradient id="goldEdgeM" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#ffe699"/>
+                      <stop offset="50%" stop-color="#805400"/>
+                      <stop offset="100%" stop-color="#ffdc80"/>
+                    </linearGradient>
+                    <linearGradient id="marsShine" gradientUnits="userSpaceOnUse" x1="50" y1="150" x2="150" y2="50">
+                      <stop offset="0%" stop-color="#3d2600"/>
+                      <stop offset="40%" stop-color="#6e4600"/>
+                      <stop offset="70%" stop-color="#ffea9f"/>
+                      <stop offset="100%" stop-color="#ffffff"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="100" cy="100" r="98" fill="url(#goldPlateM)" stroke="url(#goldEdgeM)" stroke-width="4"/>
+                  <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
+                  <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
+                  
+                  <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.65))">
+                    <circle cx="88" cy="112" r="38" fill="none" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round"/>
+                    <line x1="115" y1="85" x2="148" y2="52" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round"/>
+                    <polyline points="120,52 148,52 148,80" fill="none" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                  <g fill="#fce69a" opacity="0.8">
+                    <circle cx="38" cy="72" r="2.8"/><circle cx="48" cy="48" r="2.8"/>
+                    <circle cx="72" cy="36" r="2.8"/><circle cx="152" cy="152" r="2.8"/>
+                    <circle cx="164" cy="128" r="2.8"/><circle cx="128" cy="164" r="2.8"/>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- СТОРОНА 2: ВЕНЕРА ♀ -->
+              <div class="coin-side coin-back">
+                <svg class="coin-svg" viewBox="0 0 200 200">
+                  <defs>
+                    <radialGradient id="goldPlateF" cx="35%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#fff4b8"/>
+                      <stop offset="25%" stop-color="#e8be56"/>
+                      <stop offset="65%" stop-color="#ab7717"/>
+                      <stop offset="100%" stop-color="#543700"/>
+                    </radialGradient>
+                    <linearGradient id="goldEdgeF" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#ffe699"/>
+                      <stop offset="50%" stop-color="#805400"/>
+                      <stop offset="100%" stop-color="#ffdc80"/>
+                    </linearGradient>
+                    <linearGradient id="venusShine" gradientUnits="userSpaceOnUse" x1="100" y1="35" x2="100" y2="165">
+                      <stop offset="0%" stop-color="#ffffff"/>
+                      <stop offset="35%" stop-color="#ffea9f"/>
+                      <stop offset="70%" stop-color="#6e4600"/>
+                      <stop offset="100%" stop-color="#3d2600"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="100" cy="100" r="98" fill="url(#goldPlateF)" stroke="url(#goldEdgeF)" stroke-width="4"/>
+                  <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
+                  <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
+                  
+                  <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.65))">
+                    <path d="M 100,40 A 34,34 0 1,1 99.9,40 M 100,108 L 100,158 M 74,133 L 126,133"
+                          fill="none"
+                          stroke="url(#venusShine)"
+                          stroke-width="13"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                  </g>
+                  <g fill="#fce69a" opacity="0.8">
+                    <circle cx="44" cy="120" r="2.8"/><circle cx="36" cy="94" r="2.8"/>
+                    <circle cx="44" cy="68" r="2.8"/><circle cx="156" cy="120" r="2.8"/>
+                    <circle cx="164" cy="94" r="2.8"/><circle cx="156" cy="68" r="2.8"/>
+                  </g>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="coin-shadow" id="coin-shadow"></div>
+        </div>
+      </div>
+
+      <!-- 2. СЕКЦИЯ РАНДОМАЙЗЕРА ЧИСЕЛ -->
+      <div class="tab-section" id="section-dice">
+        <div class="number-stage">
+          
+          <div class="range-selector-row">
+            <span class="range-label">Диапазон: от 1 до</span>
+            <input type="number" id="dice-max-input" class="range-input" value="10" min="2" max="9999" onchange="syncPresetChips(this.value)">
+          </div>
+
+          <div class="quick-chips-row">
+            <button class="chip-btn" onclick="setDiceMax(6, this)">до 6</button>
+            <button class="chip-btn active" onclick="setDiceMax(10, this)">до 10</button>
+            <button class="chip-btn" onclick="setDiceMax(20, this)">до 20</button>
+            <button class="chip-btn" onclick="setDiceMax(50, this)">до 50</button>
+            <button class="chip-btn" onclick="setDiceMax(100, this)">до 100</button>
+          </div>
+
+          <div class="dice-display-box" id="dice-display-num">?</div>
+          <div class="result-status-lbl" id="dice-status-lbl">Задайте предел и испытайте жребий</div>
+
+          <button class="action-roll-btn" onclick="rollRandomNumber()">Испытать судьбу</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
   <!-- 11. ЛИЧНЫЙ ПРОФИЛЬ -->
   <div id="tab-profile" class="tab-content">
     <div class="card">
