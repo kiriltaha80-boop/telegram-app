@@ -137,12 +137,11 @@
 
     .ceremony-container {
       position: relative;
-      width: 310px;
-      height: 420px;
+      width: 320px;
+      height: 440px;
       perspective: 1100px;
     }
 
-    /* Фаза нарастающего напряжения перед разрывом */
     .ceremony-container.anim-rumble {
       animation: paperRumble 0.3s ease-in-out infinite;
     }
@@ -154,7 +153,6 @@
       75% { transform: translate(-2px, -2px) rotate(-0.4deg); }
     }
 
-    /* Две совмещённые половинки листа */
     .ceremony-half {
       position: absolute;
       inset: 0;
@@ -164,7 +162,7 @@
       will-change: transform, opacity, filter;
     }
 
-    /* Фигурный рваный контур по центру */
+    /* Рваный контур по центру */
     .half-left {
       clip-path: polygon(0% 0%, 53% 0%, 47% 20%, 54% 42%, 46% 62%, 53% 82%, 48% 100%, 0% 100%);
     }
@@ -172,7 +170,6 @@
       clip-path: polygon(53% 0%, 100% 0%, 100% 100%, 48% 100%, 53% 82%, 46% 62%, 54% 42%, 47% 20%);
     }
 
-    /* Сам лист договора */
     .ceremony-parchment {
       width: 100%;
       height: 100%;
@@ -221,16 +218,16 @@
       text-align: center;
       position: relative;
       border-bottom: 1px dashed rgba(230, 57, 86, 0.45);
-      padding-bottom: 6px;
-      min-height: 85px;
+      padding-bottom: 4px;
+      min-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .ceremony-sig-svg {
-      width: 230px;
-      height: 75px;
+      width: 250px;
+      height: 105px;
       overflow: visible;
       filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.85)) drop-shadow(0 0 18px rgba(255, 107, 149, 0.45));
     }
@@ -241,16 +238,32 @@
       stroke-width: 3.2;
       stroke-linecap: round;
       stroke-linejoin: round;
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
     }
 
-    /* Анимация письма пером: ровно 3.2 секунды слева направо */
-    .ceremony-container.anim-signing .ceremony-sig-svg path {
-      animation: drawCeremonySig 3.2s cubic-bezier(0.38, 0.05, 0.22, 1) forwards;
+    /* 1-й этап: написание слова Anastasia */
+    .sig-path-word {
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+    }
+    .ceremony-container.anim-signing .sig-path-word {
+      animation: drawWordAnim 2.2s cubic-bezier(0.35, 0.1, 0.25, 1) forwards;
     }
 
-    @keyframes drawCeremonySig {
+    @keyframes drawWordAnim {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* 2-й этап: резкий диагональный росчерк пера */
+    .sig-path-slash {
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      stroke-width: 3.6 !important;
+    }
+    .ceremony-container.anim-signing .sig-path-slash {
+      animation: drawSlashAnim 0.45s cubic-bezier(0.1, 0.85, 0.25, 1) 2.2s forwards;
+    }
+
+    @keyframes drawSlashAnim {
       to { stroke-dashoffset: 0; }
     }
 
@@ -272,7 +285,7 @@
       transform: scale(1.05);
     }
 
-    /* Огненная вспышка-трещина по центру шва */
+    /* Огненная линия разлома */
     .tear-spark-line {
       position: absolute;
       top: 0;
@@ -297,7 +310,6 @@
       100% { transform: translateX(-50%) scaleY(1); opacity: 0; }
     }
 
-    /* Разлёт и падение разорванных половин */
     .ceremony-container.anim-tearing .half-left {
       animation: ripLeft 1.6s cubic-bezier(0.18, 0.8, 0.25, 1) 0.35s forwards;
     }
@@ -324,7 +336,6 @@
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <!-- Панель проверки -->
   <div class="demo-dashboard">
     <div class="demo-title">Контракт D/S</div>
     <div class="demo-status" id="demo-status-lbl">Статус: <span id="status-text">Не подписан</span></div>
@@ -337,7 +348,6 @@
   <div class="ceremony-overlay" id="ceremony-overlay">
     <div class="ceremony-container" id="ceremony-container">
       
-      <!-- Линия огненной вспышки по центру шва -->
       <div class="tear-spark-line" id="tear-spark-line"></div>
 
       <!-- ЛЕВАЯ ПОЛОВИНА СВИТКА -->
@@ -351,16 +361,18 @@
             «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
           </div>
           <div class="ceremony-sig-wrap">
-            <svg class="ceremony-sig-svg" viewBox="0 0 260 85">
-              <!-- Компактная подпись с элегантной заглавной А и нижним штрихом -->
-              <path pathLength="1000" d="M 40,64 C 22,44 42,14 62,18 C 78,22 56,66 48,66 C 58,52 75,46 84,58 C 90,48 102,48 108,56 C 114,46 128,46 134,56 C 142,32 158,22 163,36 C 168,54 145,66 158,64 C 182,62 212,50 230,44 C 238,42 222,66 175,71 C 125,76 65,74 35,69" />
+            <svg class="ceremony-sig-svg" viewBox="0 0 280 150">
+              <!-- Имя Anastasia по образцу с фото -->
+              <path class="sig-path-word" pathLength="1200" d="M 68,102 C 46,90 32,62 38,44 C 44,28 62,32 68,52 C 74,72 68,110 60,122 C 64,102 78,44 84,28 L 80,116 C 83,98 90,84 96,82 C 100,80 104,92 105,102 C 108,88 116,78 122,80 C 126,82 126,94 125,98 C 129,88 136,78 143,76 C 139,74 133,80 134,88 C 135,96 142,98 146,92 L 147,82 C 150,76 154,72 156,70 C 158,68 153,82 158,84 C 160,84 163,68 165,34 L 163,82 C 166,74 172,66 178,64 C 174,62 168,68 169,74 C 170,80 177,82 181,76 L 182,68 C 185,64 188,58 190,56 C 192,54 188,68 193,70 C 195,64 197,54 198,52 L 199,66 C 202,60 208,50 213,48 C 210,46 204,52 205,58 C 206,64 213,66 217,60 L 218,54 C 220,54 225,48 229,46" />
+              <!-- Фирменный диагональный росчерк снизу вверх -->
+              <path class="sig-path-slash" pathLength="400" d="M 52,138 C 95,116 160,80 252,42" />
             </svg>
           </div>
           <div class="ceremony-wax-seal">PAIRED</div>
         </div>
       </div>
 
-      <!-- ПРАВАЯ ПОЛОВИНА СВИТКА (ЗЕРКАЛЬНО СОВПАДАЕТ) -->
+      <!-- ПРАВАЯ ПОЛОВИНА СВИТКА (ИДЕНТИЧНО ДЛЯ СТЫКА) -->
       <div class="ceremony-half half-right">
         <div class="ceremony-parchment">
           <div class="ceremony-header">
@@ -371,9 +383,9 @@
             «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
           </div>
           <div class="ceremony-sig-wrap">
-            <svg class="ceremony-sig-svg" viewBox="0 0 260 85">
-              <!-- Идентичная линия для бесшовного раскола -->
-              <path pathLength="1000" d="M 40,64 C 22,44 42,14 62,18 C 78,22 56,66 48,66 C 58,52 75,46 84,58 C 90,48 102,48 108,56 C 114,46 128,46 134,56 C 142,32 158,22 163,36 C 168,54 145,66 158,64 C 182,62 212,50 230,44 C 238,42 222,66 175,71 C 125,76 65,74 35,69" />
+            <svg class="ceremony-sig-svg" viewBox="0 0 280 150">
+              <path class="sig-path-word" pathLength="1200" d="M 68,102 C 46,90 32,62 38,44 C 44,28 62,32 68,52 C 74,72 68,110 60,122 C 64,102 78,44 84,28 L 80,116 C 83,98 90,84 96,82 C 100,80 104,92 105,102 C 108,88 116,78 122,80 C 126,82 126,94 125,98 C 129,88 136,78 143,76 C 139,74 133,80 134,88 C 135,96 142,98 146,92 L 147,82 C 150,76 154,72 156,70 C 158,68 153,82 158,84 C 160,84 163,68 165,34 L 163,82 C 166,74 172,66 178,64 C 174,62 168,68 169,74 C 170,80 177,82 181,76 L 182,68 C 185,64 188,58 190,56 C 192,54 188,68 193,70 C 195,64 197,54 198,52 L 199,66 C 202,60 208,50 213,48 C 210,46 204,52 205,58 C 206,64 213,66 217,60 L 218,54 C 220,54 225,48 229,46" />
+              <path class="sig-path-slash" pathLength="400" d="M 52,138 C 95,116 160,80 252,42" />
             </svg>
           </div>
           <div class="ceremony-wax-seal">PAIRED</div>
@@ -414,23 +426,24 @@
     function startSigningDemo() {
       container.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
 
-      // Скрываем штрих перед стартом
-      container.querySelectorAll('.ceremony-sig-svg path').forEach(p => {
-        p.style.strokeDashoffset = '1000';
-      });
+      // Сбрасываем линии (чистый свиток)
+      container.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '1200');
+      container.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '400');
 
       overlay.classList.add('active');
 
-      // ПАУЗА 2.2 СЕКУНДЫ: даём спокойно прочитать текст договора
+      // Пауза 2 секунды для прочтения
       setTimeout(() => {
         container.classList.add('anim-signing');
 
-        // Тактильный ритм движения пера
-        triggerHaptic('medium'); // Заглавная петля
-        setTimeout(() => triggerHaptic('light'), 800);
-        setTimeout(() => triggerHaptic('light'), 1600);
-        setTimeout(() => triggerHaptic('medium'), 2400);
-        setTimeout(() => triggerHaptic('heavy'), 2900); // Финальный нижний росчерк
+        // Тактильный ритм: сначала выводится имя
+        triggerHaptic('medium');
+        setTimeout(() => triggerHaptic('light'), 600);
+        setTimeout(() => triggerHaptic('medium'), 1200); // на букве 't'
+        setTimeout(() => triggerHaptic('light'), 1800);
+
+        // В момент резкого нижнего росчерка — четкий акцент
+        setTimeout(() => triggerHaptic('heavy'), 2200);
 
         // Завершение церемонии
         setTimeout(() => {
@@ -440,27 +453,26 @@
 
           statusText.className = '';
           statusText.innerText = 'Подписан';
-        }, 3600);
-      }, 2200);
+        }, 3200);
+      }, 2000);
     }
 
-    // 2. АНИМАЦИЯ РАЗРЫВА ДОГОВОРА
+    // 2. АНИМАЦИЯ РАЗРЫВА
     function startTearingDemo() {
       container.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
 
-      // Показываем лист с уже готовой подписью
-      container.querySelectorAll('.ceremony-sig-svg path').forEach(p => {
-        p.style.strokeDashoffset = '0';
-      });
+      // Свиток показывается с уже готовой подписью
+      container.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '0');
+      container.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '0');
 
       overlay.classList.add('active');
 
-      // Фаза 1: Пауза перед разрывом + дрожание свитка
+      // Дрожание перед разрывом
       setTimeout(() => {
         container.classList.add('anim-rumble');
         triggerHaptic('medium');
 
-        // Фаза 2: Огненный раскол по шву и разлёт половин
+        // Разрыв и разлёт
         setTimeout(() => {
           container.classList.remove('anim-rumble');
           container.classList.add('anim-tearing');
@@ -468,7 +480,6 @@
 
           setTimeout(() => triggerHaptic('warning'), 400);
 
-          // Фаза 3: Завершение церемонии (1.7 сек)
           setTimeout(() => {
             overlay.classList.remove('active');
             container.classList.remove('anim-tearing');
