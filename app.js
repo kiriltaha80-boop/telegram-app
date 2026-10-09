@@ -1154,6 +1154,46 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ========================================================
+   ГАРДЕРОБ: БЕЛЬЕ & ИГРУШКИ
+   ======================================================== */
+let wardrobeItems = JSON.parse(localStorage.getItem('wardrobe_items')) || [
+  { id: 1, title: 'Шелковый комплект Crimson', category: 'Белье', mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400' },
+  { id: 2, title: 'Атласные ленты & Повязка', category: 'Игрушки', mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' }
+];
+
+let wardrobeFilterCat = 'all';
+
+function setWardrobeCategory(cat, btn) {
+  wardrobeFilterCat = cat;
+  document.querySelectorAll('#tab-wardrobe .chip-btn').forEach(b => b.classList.remove('active'));
+  btn?.classList.add('active');
+  tg?.HapticFeedback?.selectionChanged?.();
+  renderWardrobe();
+}
+
+function renderWardrobe() {
+  const container = document.getElementById('wardrobe-items-list');
+  if (!container) return;
+
+  const filtered = (wardrobeFilterCat === 'all')
+    ? wardrobeItems
+    : wardrobeItems.filter(item => item.category === wardrobeFilterCat);
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="grid-column: span 2; text-align: center; color: var(--text-muted); font-size: 11px; padding: 30px 0;">В этой категории пока пусто</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(item => `
+    <div class="product-card">
+      <img class="product-main-img" src="${item.mainImg}" alt="${item.title}">
+      <div class="product-title">${item.title}</div>
+      <div class="product-category-lbl">${item.category}</div>
+    </div>
+  `).join('');
+}
+
+/* ========================================================
    13. ЛОГИКА ИГРЫ «СУДЬБА & ЖРЕБИЙ» (МОНЕТКА + ЧИСЛА + ЭФФЕКТЫ)
    ======================================================== */
 function switchRandomMode(mode) {
