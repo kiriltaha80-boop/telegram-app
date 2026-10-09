@@ -13,7 +13,7 @@ if (tg) {
   }
 }
 
-// Роль объявляем в самом начале, чтобы она была доступна везде
+// Роль объявляется один раз в самом верху
 let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
 
 /* ========================================================
@@ -31,7 +31,7 @@ setTimeout(hideSplash, 1600);
 let navStack = ['tab-home'];
 
 function openSubScreen(tabId) {
-  // Умная защита: Верхний не может открыть Нижнюю, Нижняя — Верхнего
+  // Умная защита: Верхний не зайдёт к Нижней, Нижняя — к Верхнему
   if (tabId === 'tab-male-session' && currentAvatarRole !== 'male') {
     tg?.HapticFeedback?.notificationOccurred?.('warning');
     return;
@@ -55,6 +55,10 @@ function handleBackAction() {
     renderActiveTab('tab-home');
   }
 }
+
+function renderActiveTab(tabId) {
+  document.querySelectorAll('.tab-content:not(#tab-home)').forEach(tab => tab.classList.remove('active'));
+
   const homeEl = document.getElementById('tab-home');
   const activeEl = document.getElementById(tabId);
   const capsuleBtn = document.getElementById('brand-capsule-btn');
@@ -82,6 +86,9 @@ function handleBackAction() {
    3. РАБОЧИЙ СТОЛ, ВИДЖЕТЫ & DRAG-AND-DROP
    ======================================================== */
 let isDesktopEditMode = false;
+let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
+let pendingContractAction = null;
+
 let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
   { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
   { id: 'tile-female', type: 'tile', title: 'Нижняя ♀', icon: '🌹', target: 'tab-female-session' },
@@ -96,11 +103,11 @@ let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
   { id: 'w-contract', type: 'widget-contract', span: 4 }
 ];
 
-// Принудительно вставляем плитку «Жребий», если в старой памяти её нет:
 if (!desktopItems.some(item => item.id === 'tile-random')) {
   desktopItems.splice(2, 0, { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' });
   localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
 }
+
 function saveDesktopItems() {
   localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
 }
@@ -174,7 +181,6 @@ function renderDesktop() {
   if (!container) return;
   container.innerHTML = '';
 
-  // Если контракт НЕ подписан — показываем только иконку контракта
   if (!isContractSigned) {
     container.innerHTML = `
       <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')">
@@ -185,50 +191,11 @@ function renderDesktop() {
     return;
   }
 
-  // Отображение плиток с умной фильтрацией сессий
+  // Фильтрация плиток по текущей роли
   desktopItems.forEach((item, index) => {
-    // Верхний видит только свою сессию ♂, Нижняя — только свою ♀
     if (item.target === 'tab-male-session' && currentAvatarRole !== 'male') return;
     if (item.target === 'tab-female-session' && currentAvatarRole !== 'female') return;
 
-    const wrap = document.createElement('div');
-    wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
-    wrap.dataset.index = index;
-
-    let inner = `<button class="item-delete-btn" onclick="deleteDesktopItem(${index})">✕</button>`;
-
-    if (item.type === 'tile') {
-      inner += `
-        <div class="desktop-tile" onclick="if(!isDesktopEditMode) openSubScreen('${item.target}')">
-          <div class="tile-icon">${item.icon}</div>
-          <div class="tile-label">${item.title}</div>
-        </div>`;
-    } else if (item.type === 'widget-balance') {
-      const balanceTitle = currentAvatarRole === 'male' ? 'Баланс Заботы' : 'Очки Трат';
-      const balanceValue = currentAvatarRole === 'male' ? '3,450 PTS' : '1,250 PTS';
-      inner += `
-        <div class="desktop-widget" onclick="if(!isDesktopEditMode) openSubScreen('tab-profile')">
-          <div class="widget-header"><span>${balanceTitle}</span><span>🔥</span></div>
-          <div class="widget-title">${balanceValue}</div>
-          <div class="widget-sub">Нажмите для статистики</div>
-        </div>`;
-    } else if (item.type === 'widget-contract') {
-      inner += `
-        <div class="desktop-widget" onclick="if(!isDesktopEditMode) openSubScreen('tab-contract')">
-          <div class="widget-header"><span>Обет Дня</span><span>📜</span></div>
-          <div class="widget-title">"Согласие и правила вечера"</div>
-          <div class="widget-sub">Статус: Активно</div>
-        </div>`;
-    }
-
-    wrap.innerHTML = inner;
-    attachTouchEvents(wrap, index);
-    container.appendChild(wrap);
-  });
-}
-
-  // Если контракт подписан — отображаем весь рабочий стол
-  desktopItems.forEach((item, index) => {
     const wrap = document.createElement('div');
     wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
     wrap.dataset.index = index;
@@ -296,9 +263,6 @@ function closeAddWidgetModal() {
 /* ========================================================
    4. КОНТРАКТ D/S & ЦЕРЕМОНИИ (ПОДПИСЬ И РАЗРЫВ)
    ======================================================== */
-let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
-let pendingContractAction = null;
-
 function updateContractButtonUI() {
   const btn = document.getElementById('btn-contract-action');
   if (!btn) return;
@@ -355,21 +319,17 @@ function confirmContractAction() {
   pendingContractAction = null;
 }
 
-// 1. Церемония подписания (роспись Anastasia + 2 сек пауза)
 function runSigningCeremony() {
   const modal = document.getElementById('contract-ceremony-modal');
   const box = document.getElementById('ceremony-container');
   if (!modal || !box) return;
 
   box.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
-
-  // Сброс контуров подписи
   box.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '1200');
   box.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '400');
 
   modal.classList.add('active');
 
-  // Пауза 2 секунды перед подписью
   setTimeout(() => {
     box.classList.add('anim-signing');
 
@@ -393,7 +353,6 @@ function runSigningCeremony() {
   }, 2000);
 }
 
-// 2. Церемония расторжения (дрожание свитка + огненный разрыв)
 function runTearingCeremony() {
   const modal = document.getElementById('contract-ceremony-modal');
   const box = document.getElementById('ceremony-container');
@@ -642,8 +601,6 @@ function closeWallpaperModal() {
 /* ========================================================
    6. ПРОФИЛЬ, ИМЯ & АВАТАРКИ
    ======================================================== */
-let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
-
 function updateRoleUI() {
   const statLbl = document.getElementById('profile-pts-val');
   const isMale = (currentAvatarRole === 'male');
@@ -693,6 +650,7 @@ function toggleRoleByEmoji() {
     applyAvatarToUI(currentAvatarRole, defaultList[0]);
   }
 
+  // Мгновенная перерисовка стола со скрытием/показом нужной сессии
   renderDesktop();
   window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
 }
@@ -1192,6 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Ошибка инициализации приложения:', err);
   }
 });
+
 /* ========================================================
    13. ЛОГИКА ИГРЫ «СУДЬБА & ЖРЕБИЙ» (МОНЕТКА + ЧИСЛА + ЭФФЕКТЫ)
    ======================================================== */
@@ -1238,7 +1197,6 @@ function launchCelebration(x, y) {
     '#00E676', '#FF5722'
   ];
 
-  // 1. Искры салюта
   for (let i = 0; i < 45; i++) {
     const angle = Math.random() * Math.PI * 2;
     const speed = Math.random() * 8.5 + 4;
@@ -1256,7 +1214,6 @@ function launchCelebration(x, y) {
     });
   }
 
-  // 2. Порхающее конфетти
   for (let i = 0; i < 48; i++) {
     const angle = Math.random() * Math.PI * 2;
     const speed = Math.random() * 6.5 + 3;
@@ -1277,7 +1234,6 @@ function launchCelebration(x, y) {
     });
   }
 
-  // 3. Серпантин — длинные извивающиеся спиральные ленты
   for (let i = 0; i < 24; i++) {
     const angle = Math.random() * Math.PI * 2;
     const speed = Math.random() * 5.5 + 2.5;
@@ -1380,7 +1336,7 @@ function tossCoin() {
 
   const stage = document.getElementById('coin-stage');
   const coin3D = document.getElementById('coin-3d');
-  const isMale = Math.random() < 0.5; // true = ♂, false = ♀
+  const isMale = Math.random() < 0.5;
 
   stage?.classList.add('toss-flying');
   tg?.HapticFeedback?.impactOccurred?.('medium');
