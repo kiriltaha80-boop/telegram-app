@@ -13,7 +13,7 @@ if (tg) {
   }
 }
 
-// Роль объявляется один раз в самом верху
+// Роль объявлена один раз в самом верху
 let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
 
 /* ========================================================
@@ -650,7 +650,7 @@ function toggleRoleByEmoji() {
     applyAvatarToUI(currentAvatarRole, defaultList[0]);
   }
 
-  // Мгновенная перерисовка стола со скрытием/показом нужной сессии
+  // Мгновенная перерисовка стола с заменой сессии
   renderDesktop();
   window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
 }
@@ -785,8 +785,8 @@ function openNameModal() {
 function closeNameModal() {
   const modal = document.getElementById('name-modal');
   if (modal) {
-    modal.classList.remove('active');
     modal.style.display = 'none';
+    modal.classList.remove('active');
   }
 }
 
