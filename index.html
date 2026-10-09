@@ -50,7 +50,7 @@
       z-index: 10;
       width: 100%;
       max-width: 360px;
-      min-height: 480px;
+      min-height: 490px;
       background: rgba(20, 16, 28, 0.94);
       border: 1px solid rgba(230, 57, 86, 0.35);
       border-radius: 26px;
@@ -60,6 +60,7 @@
       padding: 18px 16px;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .sub-screen-header {
@@ -134,7 +135,17 @@
       position: relative;
       perspective: 1200px;
       cursor: pointer;
-      min-height: 330px;
+      min-height: 340px;
+    }
+
+    /* Холст эффектов (салют и конфетти) */
+    #burst-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 40;
     }
 
     /* Тень под монетой */
@@ -144,10 +155,11 @@
       background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 70%);
       border-radius: 50%;
       position: absolute;
-      bottom: 45px;
+      bottom: 50px;
       transition: transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
       filter: blur(3px);
       pointer-events: none;
+      z-index: 1;
     }
 
     /* Взлёт всей конструкции вверх-вниз */
@@ -158,6 +170,7 @@
       transform-style: preserve-3d;
       margin-bottom: 25px;
       will-change: transform;
+      z-index: 10;
     }
 
     /* 3D-вращение через ребро (верх-низ) */
@@ -184,7 +197,6 @@
       transform: rotateX(0deg);
     }
 
-    /* Вторая сторона ориентирована по оси X */
     .coin-back {
       transform: rotateX(180deg);
     }
@@ -205,13 +217,13 @@
         transform: translateY(0) scale(1);
       }
       42% {
-        transform: translateY(-210px) scale(1.15); /* Высокая точка взлёта */
+        transform: translateY(-210px) scale(1.15);
       }
       85% {
         transform: translateY(0) scale(1);
       }
       93% {
-        transform: translateY(-12px) scale(1.02); /* Отскок */
+        transform: translateY(-12px) scale(1.02);
       }
       100% {
         transform: translateY(0) scale(1);
@@ -387,73 +399,94 @@
     <div class="tab-section active" id="section-coin">
       <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
         
+        <canvas id="burst-canvas"></canvas>
+
         <div class="coin-trajectory-box">
           <div class="coin-3d" id="coin-3d">
             
-            <!-- СТОРОНА 1: ОРЁЛ -->
+            <!-- СТОРОНА 1: МУЖСКОЙ СИМВОЛ ♂ (МАРС) -->
             <div class="coin-side coin-front">
               <svg class="coin-svg" viewBox="0 0 200 200">
                 <defs>
-                  <radialGradient id="goldPlate" cx="35%" cy="30%" r="70%">
+                  <radialGradient id="goldPlateM" cx="35%" cy="30%" r="70%">
                     <stop offset="0%" stop-color="#fff4b8"/>
                     <stop offset="25%" stop-color="#e8be56"/>
                     <stop offset="65%" stop-color="#ab7717"/>
                     <stop offset="100%" stop-color="#543700"/>
                   </radialGradient>
-                  <linearGradient id="goldEdge" x1="0" y1="0" x2="1" y2="1">
+                  <linearGradient id="goldEdgeM" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stop-color="#ffe699"/>
                     <stop offset="50%" stop-color="#805400"/>
                     <stop offset="100%" stop-color="#ffdc80"/>
                   </linearGradient>
+                  <linearGradient id="marsShine" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#3d2600"/>
+                    <stop offset="40%" stop-color="#6e4600"/>
+                    <stop offset="70%" stop-color="#ffea9f"/>
+                    <stop offset="100%" stop-color="#ffffff"/>
+                  </linearGradient>
                 </defs>
-                <circle cx="100" cy="100" r="98" fill="url(#goldPlate)" stroke="url(#goldEdge)" stroke-width="4"/>
+                <circle cx="100" cy="100" r="98" fill="url(#goldPlateM)" stroke="url(#goldEdgeM)" stroke-width="4"/>
                 <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
                 <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
                 
-                <g fill="#422900" stroke="#fce69a" stroke-width="0.8">
-                  <path d="M 97,64 C 94,56 97,46 103,46 C 107,46 111,54 107,64 C 112,68 114,80 114,94 L 86,94 C 86,80 88,68 97,64 Z"/>
-                  <path d="M 103,46 C 101,42 97,42 94,45 L 88,48 L 94,52 C 94,56 99,57 103,55 Z"/>
-                  <path d="M 90,80 L 110,80 L 110,98 C 110,110 100,118 100,118 C 100,118 90,110 90,98 Z" fill="#edd072" stroke="#422900" stroke-width="1.8"/>
-                  <path d="M 94,80 L 94,106 M 98,80 L 98,112 M 102,80 L 102,112 M 106,80 L 106,106" stroke="#422900" stroke-width="1.2"/>
-                  <path d="M 88,68 C 76,55 58,48 38,45 C 38,55 48,68 56,76 C 45,72 34,70 26,73 C 32,82 46,92 58,96 C 46,95 38,97 34,103 C 44,110 60,112 70,110 C 62,113 56,118 56,124 C 66,125 78,118 88,110 Z"/>
-                  <path d="M 112,68 C 124,55 142,48 162,45 C 162,55 152,68 144,76 C 155,72 166,70 174,73 C 168,82 154,92 142,96 C 154,95 162,97 166,103 C 156,110 140,112 130,110 C 138,113 144,118 144,124 C 134,125 122,118 112,110 Z"/>
-                  <path d="M 92,118 L 108,118 L 114,142 L 86,142 Z"/>
-                  <line x1="72" y1="134" x2="128" y2="126" stroke="#2b1a00" stroke-width="2.5" stroke-linecap="round"/>
-                  <line x1="74" y1="126" x2="126" y2="134" stroke="#2b1a00" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Символ Марса (♂) -->
+                <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.65))">
+                  <!-- Круг со стрелой -->
+                  <circle cx="88" cy="112" r="38" fill="none" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round"/>
+                  <line x1="115" y1="85" x2="148" y2="52" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round"/>
+                  <!-- Наконечник стрелы -->
+                  <polyline points="120,52 148,52 148,80" fill="none" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
                 </g>
-                <g fill="#fce69a">
-                  <circle cx="50" cy="150" r="3"/><circle cx="65" cy="162" r="3"/>
-                  <circle cx="100" cy="172" r="3.5"/><circle cx="135" cy="162" r="3"/>
-                  <circle cx="150" cy="150" r="3"/>
+                <!-- Орнамент звёзд по кругу -->
+                <g fill="#fce69a" opacity="0.8">
+                  <circle cx="38" cy="72" r="2.8"/><circle cx="48" cy="48" r="2.8"/>
+                  <circle cx="72" cy="36" r="2.8"/><circle cx="152" cy="152" r="2.8"/>
+                  <circle cx="164" cy="128" r="2.8"/><circle cx="128" cy="164" r="2.8"/>
                 </g>
               </svg>
             </div>
 
-            <!-- СТОРОНА 2: РЕШКА -->
+            <!-- СТОРОНА 2: ЖЕНСКИЙ СИМВОЛ ♀ (ВЕНЕРА) -->
             <div class="coin-side coin-back">
               <svg class="coin-svg" viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="98" fill="url(#goldPlate)" stroke="url(#goldEdge)" stroke-width="4"/>
+                <defs>
+                  <radialGradient id="goldPlateF" cx="35%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="#fff4b8"/>
+                    <stop offset="25%" stop-color="#e8be56"/>
+                    <stop offset="65%" stop-color="#ab7717"/>
+                    <stop offset="100%" stop-color="#543700"/>
+                  </radialGradient>
+                  <linearGradient id="goldEdgeF" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ffe699"/>
+                    <stop offset="50%" stop-color="#805400"/>
+                    <stop offset="100%" stop-color="#ffdc80"/>
+                  </linearGradient>
+                  <linearGradient id="venusShine" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="35%" stop-color="#ffea9f"/>
+                    <stop offset="70%" stop-color="#6e4600"/>
+                    <stop offset="100%" stop-color="#3d2600"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="98" fill="url(#goldPlateF)" stroke="url(#goldEdgeF)" stroke-width="4"/>
                 <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
                 <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
                 
-                <text x="100" y="112" font-family="'Times New Roman', Georgia, serif" font-size="78" font-weight="bold" text-anchor="middle" fill="#382100" stroke="#ffeb99" stroke-width="1.8" filter="drop-shadow(0 2px 2px rgba(255,255,255,0.4))">1</text>
-                
-                <g fill="none" stroke="#4a2e00" stroke-width="2.2" stroke-linecap="round">
-                  <path d="M 46,128 C 36,92 48,58 72,42"/>
-                  <path d="M 154,128 C 164,92 152,58 128,42"/>
+                <!-- Символ Венеры (♀) -->
+                <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.65))">
+                  <!-- Круг зеркала -->
+                  <circle cx="100" cy="80" r="38" fill="none" stroke="url(#venusShine)" stroke-width="13"/>
+                  <!-- Крест внизу -->
+                  <line x1="100" y1="118" x2="100" y2="162" stroke="url(#venusShine)" stroke-width="13" stroke-linecap="round"/>
+                  <line x1="78" y1="140" x2="122" y2="140" stroke="url(#venusShine)" stroke-width="13" stroke-linecap="round"/>
                 </g>
-                <g fill="#edd072" stroke="#4a2e00" stroke-width="1.2">
-                  <ellipse cx="44" cy="115" rx="7" ry="4" transform="rotate(-30 44 115)"/>
-                  <ellipse cx="40" cy="95" rx="7" ry="4" transform="rotate(-15 40 95)"/>
-                  <ellipse cx="45" cy="75" rx="7" ry="4" transform="rotate(10 45 75)"/>
-                  <ellipse cx="58" cy="58" rx="7" ry="4" transform="rotate(35 58 58)"/>
-                  
-                  <ellipse cx="156" cy="115" rx="7" ry="4" transform="rotate(30 156 115)"/>
-                  <ellipse cx="160" cy="95" rx="7" ry="4" transform="rotate(15 160 95)"/>
-                  <ellipse cx="155" cy="75" rx="7" ry="4" transform="rotate(-10 155 75)"/>
-                  <ellipse cx="142" cy="58" rx="7" ry="4" transform="rotate(-35 142 58)"/>
+                <!-- Орнамент звёзд по бокам -->
+                <g fill="#fce69a" opacity="0.8">
+                  <circle cx="44" cy="120" r="2.8"/><circle cx="36" cy="94" r="2.8"/>
+                  <circle cx="44" cy="68" r="2.8"/><circle cx="156" cy="120" r="2.8"/>
+                  <circle cx="164" cy="94" r="2.8"/><circle cx="156" cy="68" r="2.8"/>
                 </g>
-                <path d="M 85,46 L 90,38 L 100,43 L 110,38 L 115,46 Z" fill="#edd072" stroke="#4a2e00" stroke-width="1.5"/>
               </svg>
             </div>
 
@@ -527,6 +560,129 @@
     }
 
     // ==========================================
+    // СИСТЕМА САЛЮТА И КОНФЕТТИ
+    // ==========================================
+    const canvas = document.getElementById('burst-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animId = null;
+
+    function resizeCanvas() {
+      const stage = document.getElementById('coin-stage');
+      if (stage && canvas) {
+        canvas.width = stage.clientWidth;
+        canvas.height = stage.clientHeight;
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+
+    // Запуск мини-салюта и конфетти прямо от монеты
+    function launchCoinCelebration() {
+      resizeCanvas();
+      particles = [];
+
+      const originX = canvas.width / 2;
+      const originY = canvas.height / 2 + 10;
+
+      // Палитра под стиль проекта
+      const colors = [
+        '#FFD700', '#FFA500', '#FFFFFF', // Золото и искры
+        '#E63956', '#FF2A85',            // Рубиновый и неоново-розовый
+        '#00D2FF', '#9B51E0'             // Электрик-циан и аметист
+      ];
+
+      // 1. Искры мини-салюта (быстрые светящиеся точки)
+      for (let i = 0; i < 38; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 3.5;
+        particles.push({
+          type: 'spark',
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: Math.random() * 2.2 + 1.2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.025 + 0.018,
+          gravity: 0.12
+        });
+      }
+
+      // 2. Порхающее конфетти (вращающиеся лепестки)
+      for (let i = 0; i < 30; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2.5;
+        particles.push({
+          type: 'confetti',
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 2.5,
+          w: Math.random() * 6 + 4,
+          h: Math.random() * 4 + 2.5,
+          rot: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.25,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.014 + 0.009,
+          gravity: 0.09
+        });
+      }
+
+      if (!animId) animateParticles();
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.98;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+
+        if (p.type === 'spark') {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = p.color;
+          ctx.fill();
+        } else if (p.type === 'confetti') {
+          p.rot += p.vRot;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        }
+
+        ctx.restore();
+      }
+
+      if (particles.length > 0) {
+        animId = requestAnimationFrame(animateParticles);
+      } else {
+        cancelAnimationFrame(animId);
+        animId = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // ==========================================
     // ЛОГИКА: КУВЫРОК ВВЕРХ-ВНИЗ (rotateX)
     // ==========================================
     let isTossing = false;
@@ -538,24 +694,26 @@
 
       const stage = document.getElementById('coin-stage');
       const coin3D = document.getElementById('coin-3d');
-      const isHeads = Math.random() < 0.5; // true = Орёл, false = Решка
+      // true = Мужской (♂), false = Женский (♀)
+      const isMale = Math.random() < 0.5;
 
       stage.classList.add('toss-flying');
       triggerHaptic('medium');
 
-      // 6 полных кувырков через ребро (верх-низ) + доворот до нужной стороны
+      // 6 полных кувырков через ребро + доворот до нужной стороны
       const fullSpins = 360 * 6;
-      currentRotationX += fullSpins + (isHeads ? 0 : 180) - (currentRotationX % 360);
+      currentRotationX += fullSpins + (isMale ? 0 : 180) - (currentRotationX % 360);
 
-      // Вращение по оси X
       coin3D.style.transition = 'transform 1.35s cubic-bezier(0.2, 0.85, 0.25, 1)';
       coin3D.style.transform = `rotateX(${currentRotationX}deg)`;
 
       setTimeout(() => triggerHaptic('light'), 300);
       setTimeout(() => triggerHaptic('light'), 650);
 
+      // Приземление: удар + САЛЮТ И КОНФЕТТИ
       setTimeout(() => {
         triggerHaptic('heavy');
+        launchCoinCelebration();
         stage.classList.remove('toss-flying');
         isTossing = false;
       }, 1350);
