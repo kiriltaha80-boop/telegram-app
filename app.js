@@ -74,9 +74,9 @@ function renderActiveTab(tabId) {
    ======================================================== */
 let isDesktopEditMode = false;
 let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
-{ id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' },
-   { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
+  { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
   { id: 'tile-female', type: 'tile', title: 'Нижняя ♀', icon: '🌹', target: 'tab-female-session' },
+  { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' }, // <-- ДОБАВЛЕНО
   { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop' },
   { id: 'tile-sexshop', type: 'tile', title: 'Секс-шоп', icon: '🔮', target: 'tab-sexshop' },
   { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract' },
@@ -86,6 +86,12 @@ let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
   { id: 'w-balance', type: 'widget-balance', span: 2 },
   { id: 'w-contract', type: 'widget-contract', span: 4 }
 ];
+
+// Автоматически добавляем иконку, если в localStorage её ещё нет
+if (!desktopItems.some(i => i.id === 'tile-random')) {
+  desktopItems.splice(2, 0, { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' });
+  saveDesktopItems();
+}
 
 function saveDesktopItems() {
   localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
