@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Pact & Passion — Рандомайзер</title>
+  <title>Pact & Passion — Жребий & Монета</title>
   
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -24,12 +24,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 14px;
-      overflow-x: hidden;
+      justify-content: center;
+      padding: 16px 12px;
+      overflow: hidden;
       position: relative;
     }
 
-    /* Фоновое рубиновое свечение */
+    /* Фоновые неоновые пятна */
     .ambient-glow {
       position: fixed;
       width: 320px;
@@ -43,48 +44,130 @@
     .glow-1 { top: -80px; left: -80px; background: #E63956; }
     .glow-2 { bottom: -60px; right: -60px; background: #680E2B; }
 
-    .randomizer-wrapper {
+    /* Главная карточка окна */
+    .random-app-card {
       position: relative;
       z-index: 10;
       width: 100%;
       max-width: 360px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .card {
-      background: rgba(22, 18, 30, 0.88);
+      min-height: 480px;
+      background: rgba(20, 16, 28, 0.94);
       border: 1px solid rgba(230, 57, 86, 0.35);
-      border-radius: 22px;
-      padding: 20px 16px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(230, 57, 86, 0.15);
+      border-radius: 26px;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(230, 57, 86, 0.15);
+      padding: 18px 16px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
     }
 
-    .section-title {
+    .sub-screen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .header-title {
+      font-weight: 800;
+      color: #FFFFFF;
       font-size: 13px;
-      font-weight: 900;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #FFA3B5;
-      margin-bottom: 12px;
       text-shadow: 0 0 10px rgba(230, 57, 86, 0.6);
     }
 
-    /* 3D МОНЕТКА */
-    .coin-wrapper {
-      width: 82px;
-      height: 82px;
+    /* Переключатель режимов: Монетка / Числа */
+    .mode-switch-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: rgba(10, 8, 16, 0.65);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .mode-tab-btn {
+      padding: 10px 0;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #9A91A5;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .mode-tab-btn.active {
+      background: linear-gradient(135deg, rgba(230, 57, 86, 0.9), rgba(160, 16, 53, 0.95));
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(230, 57, 86, 0.4);
+    }
+
+    /* Контейнеры секций */
+    .tab-section {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+    }
+    .tab-section.active {
+      display: flex;
+    }
+
+    /* ========================================================
+       РЕЖИМ 1: РЕАЛИСТИЧНАЯ 3D-МОНЕТА И ПОЛЁТ ВВЕРХ
+       ======================================================== */
+    .coin-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      perspective: 1200px;
+      cursor: pointer;
+      min-height: 330px;
+    }
+
+    /* Физическая тень под монетой */
+    .coin-shadow {
+      width: 110px;
+      height: 18px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 70%);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 45px;
+      transition: transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+      filter: blur(3px);
+      pointer-events: none;
+    }
+
+    /* Сцена полёта вверх-вниз */
+    .coin-trajectory-box {
+      position: relative;
+      width: 135px;
+      height: 135px;
+      transform-style: preserve-3d;
+      margin-bottom: 25px;
+      will-change: transform;
+    }
+
+    /* 3D-вращение самой монеты */
+    .coin-3d {
+      width: 100%;
+      height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 1.25s cubic-bezier(0.2, 0.8, 0.25, 1);
-      margin: 8px auto;
+      will-change: transform;
     }
 
     .coin-side {
@@ -93,51 +176,98 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 42px;
       backface-visibility: hidden;
-      background: radial-gradient(circle at 35% 35%, #ffd277 0%, #b8861d 60%, #573a00 100%);
-      border: 2.5px solid #ffe6a3;
-      box-shadow: 0 0 24px rgba(230, 160, 57, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .coin-front {
+      transform: rotateY(0deg);
     }
 
     .coin-back {
       transform: rotateY(180deg);
     }
 
-    /* ТАБЛО И НАСТРОЙКИ СЛУЧАЙНОГО ЧИСЛА */
-    .dice-display-box {
-      width: 86px;
-      height: 86px;
-      border-radius: 22px;
-      background: radial-gradient(circle at 40% 40%, rgba(45, 20, 36, 0.9) 0%, rgba(15, 10, 20, 0.95) 100%);
-      border: 1.5px solid rgba(230, 57, 86, 0.55);
-      box-shadow: 0 0 20px rgba(230, 57, 86, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      font-weight: 900;
-      color: #FFFFFF;
-      margin: 8px auto 12px auto;
-      text-shadow: 0 0 16px rgba(230, 57, 86, 0.9);
-      transition: transform 0.15s ease;
+    .coin-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    /* Блок управления диапазоном (до N) */
+    /* Анимация траектории подбрасывания вверх и падения */
+    .toss-flying .coin-trajectory-box {
+      animation: coinFlyTrajectory 1.35s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
+    }
+
+    @keyframes coinFlyTrajectory {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+      42% {
+        transform: translateY(-210px) scale(1.15); /* Высокий взлёт к верху экрана */
+      }
+      85% {
+        transform: translateY(0) scale(1); /* Падение обратно */
+      }
+      93% {
+        transform: translateY(-12px) scale(1.02); /* Отскок от удара о поверхность */
+      }
+      100% {
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Динамика тени при взлёте монеты */
+    .toss-flying .coin-shadow {
+      animation: coinShadowFlight 1.35s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
+    }
+
+    @keyframes coinShadowFlight {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.9;
+        filter: blur(3px);
+      }
+      42% {
+        transform: scale(0.35); /* Тень уменьшается и размывается на пике высоты */
+        opacity: 0.2;
+        filter: blur(8px);
+      }
+      85% {
+        transform: scale(1.1);
+        opacity: 0.95;
+        filter: blur(2px);
+      }
+      93% {
+        transform: scale(0.85);
+        opacity: 0.7;
+      }
+    }
+
+    /* ========================================================
+       РЕЖИМ 2: РАНДОМАЙЗЕР ЧИСЕЛ (1 ДО N)
+       ======================================================== */
+    .number-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      padding: 10px 0;
+    }
+
     .range-selector-row {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 10px;
-      background: rgba(10, 8, 16, 0.6);
+      margin-bottom: 12px;
+      background: rgba(10, 8, 16, 0.65);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 8px 12px;
-      border-radius: 12px;
+      padding: 8px 14px;
+      border-radius: 14px;
     }
 
     .range-label {
@@ -149,39 +279,31 @@
     }
 
     .range-input {
-      width: 76px;
+      width: 80px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(230, 57, 86, 0.45);
-      border-radius: 8px;
-      padding: 6px 8px;
+      border-radius: 10px;
+      padding: 6px 10px;
       color: #FFFFFF;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
       text-align: center;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .range-input:focus {
-      border-color: #E63956;
-      box-shadow: 0 0 10px rgba(230, 57, 86, 0.5);
-    }
-
-    /* Быстрые кнопки-чипы */
     .quick-chips-row {
       display: flex;
       gap: 6px;
       width: 100%;
-      margin-bottom: 12px;
-      justify-content: center;
+      margin-bottom: 14px;
     }
 
     .chip-btn {
       flex: 1;
-      padding: 6px 0;
+      padding: 7px 0;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
+      border-radius: 10px;
       color: #c9c2d1;
       font-size: 10px;
       font-weight: 800;
@@ -196,23 +318,40 @@
       box-shadow: 0 0 10px rgba(230, 57, 86, 0.4);
     }
 
-    /* Текст результата и кнопка */
-    .result-label {
-      font-size: 14px;
-      font-weight: 800;
+    .dice-display-box {
+      width: 90px;
+      height: 90px;
+      border-radius: 22px;
+      background: radial-gradient(circle at 40% 40%, rgba(45, 20, 36, 0.9) 0%, rgba(15, 10, 20, 0.95) 100%);
+      border: 1.5px solid rgba(230, 57, 86, 0.55);
+      box-shadow: 0 0 22px rgba(230, 57, 86, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      font-weight: 900;
       color: #FFFFFF;
-      min-height: 22px;
-      margin-bottom: 12px;
-      text-shadow: 0 0 12px rgba(230, 57, 86, 0.6);
+      margin: 10px auto;
+      text-shadow: 0 0 18px rgba(230, 57, 86, 0.9);
+      transition: transform 0.15s ease;
     }
 
-    .action-btn {
+    .result-status-lbl {
+      font-size: 13px;
+      font-weight: 800;
+      color: #FFA3B5;
+      min-height: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .action-roll-btn {
       width: 100%;
-      padding: 13px;
-      border-radius: 12px;
+      padding: 14px;
+      border-radius: 14px;
       border: none;
-      font-size: 12px;
-      font-weight: 900;
+      font-size: 13px;
+      font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       cursor: pointer;
@@ -222,7 +361,7 @@
       transition: transform 0.15s ease;
     }
 
-    .action-btn:active {
+    .action-roll-btn:active {
       transform: scale(0.97);
     }
   </style>
@@ -232,45 +371,137 @@
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <div class="randomizer-wrapper">
-
-    <!-- 1. ОРЁЛ ИЛИ РЕШКА -->
-    <div class="card">
-      <div class="section-title">🪙 Орёл или Решка</div>
-      
-      <div class="coin-wrapper" id="coin-element">
-        <div class="coin-side coin-front">👑</div>
-        <div class="coin-side coin-back">🦅</div>
-      </div>
-      
-      <div class="result-label" id="coin-result-lbl">Сделайте бросок</div>
-      <button class="action-btn" onclick="playCoinFlip()">Бросить монетку</button>
+  <!-- ОКНО ПРИЛОЖЕНИЯ -->
+  <div class="random-app-card">
+    
+    <div class="sub-screen-header">
+      <div class="header-title">Судьба & Жребий</div>
+      <span style="font-size: 16px;">✨</span>
     </div>
 
-    <!-- 2. СЛУЧАЙНОЕ ЧИСЛО 1 ДО N -->
-    <div class="card">
-      <div class="section-title">🎲 Случайное число</div>
-      
-      <!-- Поле ввода верхнего предела -->
-      <div class="range-selector-row">
-        <span class="range-label">Диапазон: от 1 до</span>
-        <input type="number" id="max-limit-input" class="range-input" value="10" min="2" max="9999" onchange="syncPresetChips(this.value)">
+    <!-- ВКЛАДКИ -->
+    <div class="mode-switch-tabs">
+      <button class="mode-tab-btn active" id="tab-btn-coin" onclick="switchMode('coin')">🪙 Монетка</button>
+      <button class="mode-tab-btn" id="tab-btn-dice" onclick="switchMode('dice')">🎲 Число (1-N)</button>
+    </div>
+
+    <!-- 1. ЭКРАН МОНЕТЫ -->
+    <div class="tab-section active" id="section-coin">
+      <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
+        
+        <div class="coin-trajectory-box">
+          <div class="coin-3d" id="coin-3d">
+            
+            <!-- СТОРОНА 1: ОРЁЛ (Точная детализация геральдического орла) -->
+            <div class="coin-side coin-front">
+              <svg class="coin-svg" viewBox="0 0 200 200">
+                <defs>
+                  <radialGradient id="goldPlate" cx="35%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="#fff4b8"/>
+                    <stop offset="25%" stop-color="#e8be56"/>
+                    <stop offset="65%" stop-color="#ab7717"/>
+                    <stop offset="100%" stop-color="#543700"/>
+                  </radialGradient>
+                  <linearGradient id="goldEdge" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ffe699"/>
+                    <stop offset="50%" stop-color="#805400"/>
+                    <stop offset="100%" stop-color="#ffdc80"/>
+                  </linearGradient>
+                </defs>
+                <!-- Основа монеты -->
+                <circle cx="100" cy="100" r="98" fill="url(#goldPlate)" stroke="url(#goldEdge)" stroke-width="4"/>
+                <!-- Рифлёный гурт / чеканный кант -->
+                <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
+                <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
+                
+                <!-- ГЕРАЛЬДИЧЕСКИЙ ОРЁЛ С РАСПРАВЛЕННЫМИ КРЫЛЬЯМИ -->
+                <g fill="#422900" stroke="#fce69a" stroke-width="0.8">
+                  <!-- Тело и шея -->
+                  <path d="M 97,64 C 94,56 97,46 103,46 C 107,46 111,54 107,64 C 112,68 114,80 114,94 L 86,94 C 86,80 88,68 97,64 Z"/>
+                  <!-- Голова орла в профиль с острым клювом -->
+                  <path d="M 103,46 C 101,42 97,42 94,45 L 88,48 L 94,52 C 94,56 99,57 103,55 Z"/>
+                  <!-- Щит на груди -->
+                  <path d="M 90,80 L 110,80 L 110,98 C 110,110 100,118 100,118 C 100,118 90,110 90,98 Z" fill="#edd072" stroke="#422900" stroke-width="1.8"/>
+                  <path d="M 94,80 L 94,106 M 98,80 L 98,112 M 102,80 L 102,112 M 106,80 L 106,106" stroke="#422900" stroke-width="1.2"/>
+                  <!-- Левое мощное крыло -->
+                  <path d="M 88,68 C 76,55 58,48 38,45 C 38,55 48,68 56,76 C 45,72 34,70 26,73 C 32,82 46,92 58,96 C 46,95 38,97 34,103 C 44,110 60,112 70,110 C 62,113 56,118 56,124 C 66,125 78,118 88,110 Z"/>
+                  <!-- Правое мощное крыло -->
+                  <path d="M 112,68 C 124,55 142,48 162,45 C 162,55 152,68 144,76 C 155,72 166,70 174,73 C 168,82 154,92 142,96 C 154,95 162,97 166,103 C 156,110 140,112 130,110 C 138,113 144,118 144,124 C 134,125 122,118 112,110 Z"/>
+                  <!-- Хвост и стрелы в когтях -->
+                  <path d="M 92,118 L 108,118 L 114,142 L 86,142 Z"/>
+                  <line x1="72" y1="134" x2="128" y2="126" stroke="#2b1a00" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="74" y1="126" x2="126" y2="134" stroke="#2b1a00" stroke-width="2.5" stroke-linecap="round"/>
+                </g>
+                <!-- Звезды по кругу -->
+                <g fill="#fce69a">
+                  <circle cx="50" cy="150" r="3"/><circle cx="65" cy="162" r="3"/>
+                  <circle cx="100" cy="172" r="3.5"/><circle cx="135" cy="162" r="3"/>
+                  <circle cx="150" cy="150" r="3"/>
+                </g>
+              </svg>
+            </div>
+
+            <!-- СТОРОНА 2: РЕШКА / НОМИНАЛ И ВЕНОК -->
+            <div class="coin-side coin-back">
+              <svg class="coin-svg" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="98" fill="url(#goldPlate)" stroke="url(#goldEdge)" stroke-width="4"/>
+                <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
+                <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
+                
+                <!-- Рельефная цифра 1 -->
+                <text x="100" y="112" font-family="'Times New Roman', Georgia, serif" font-size="78" font-weight="bold" text-anchor="middle" fill="#382100" stroke="#ffeb99" stroke-width="1.8" filter="drop-shadow(0 2px 2px rgba(255,255,255,0.4))">1</text>
+                
+                <!-- Классический лавровый венок -->
+                <g fill="none" stroke="#4a2e00" stroke-width="2.2" stroke-linecap="round">
+                  <path d="M 46,128 C 36,92 48,58 72,42"/>
+                  <path d="M 154,128 C 164,92 152,58 128,42"/>
+                </g>
+                <!-- Листья венка -->
+                <g fill="#edd072" stroke="#4a2e00" stroke-width="1.2">
+                  <ellipse cx="44" cy="115" rx="7" ry="4" transform="rotate(-30 44 115)"/>
+                  <ellipse cx="40" cy="95" rx="7" ry="4" transform="rotate(-15 40 95)"/>
+                  <ellipse cx="45" cy="75" rx="7" ry="4" transform="rotate(10 45 75)"/>
+                  <ellipse cx="58" cy="58" rx="7" ry="4" transform="rotate(35 58 58)"/>
+                  
+                  <ellipse cx="156" cy="115" rx="7" ry="4" transform="rotate(30 156 115)"/>
+                  <ellipse cx="160" cy="95" rx="7" ry="4" transform="rotate(15 160 95)"/>
+                  <ellipse cx="155" cy="75" rx="7" ry="4" transform="rotate(-10 155 75)"/>
+                  <ellipse cx="142" cy="58" rx="7" ry="4" transform="rotate(-35 142 58)"/>
+                </g>
+                <!-- Корона над номиналом -->
+                <path d="M 85,46 L 90,38 L 100,43 L 110,38 L 115,46 Z" fill="#edd072" stroke="#4a2e00" stroke-width="1.5"/>
+              </svg>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="coin-shadow" id="coin-shadow"></div>
       </div>
+    </div>
 
-      <!-- Быстрые пресеты -->
-      <div class="quick-chips-row">
-        <button class="chip-btn" onclick="setMaxLimit(6, this)">до 6</button>
-        <button class="chip-btn active" onclick="setMaxLimit(10, this)">до 10</button>
-        <button class="chip-btn" onclick="setMaxLimit(20, this)">до 20</button>
-        <button class="chip-btn" onclick="setMaxLimit(50, this)">до 50</button>
-        <button class="chip-btn" onclick="setMaxLimit(100, this)">до 100</button>
+    <!-- 2. ЭКРАН РАНДОМАЙЗЕРА ЧИСЕЛ -->
+    <div class="tab-section" id="section-dice">
+      <div class="number-stage">
+        
+        <div class="range-selector-row">
+          <span class="range-label">Диапазон: от 1 до</span>
+          <input type="number" id="dice-max-input" class="range-input" value="10" min="2" max="9999" onchange="syncPresetChips(this.value)">
+        </div>
+
+        <div class="quick-chips-row">
+          <button class="chip-btn" onclick="setDiceMax(6, this)">до 6</button>
+          <button class="chip-btn active" onclick="setDiceMax(10, this)">до 10</button>
+          <button class="chip-btn" onclick="setDiceMax(20, this)">до 20</button>
+          <button class="chip-btn" onclick="setDiceMax(50, this)">до 50</button>
+          <button class="chip-btn" onclick="setDiceMax(100, this)">до 100</button>
+        </div>
+
+        <div class="dice-display-box" id="dice-display-num">?</div>
+        <div class="result-status-lbl" id="dice-status-lbl">Задайте предел и испытайте жребий</div>
+
+        <button class="action-roll-btn" onclick="rollRandomNumber()">Испытать судьбу</button>
       </div>
-
-      <!-- Табло числа -->
-      <div class="dice-display-box" id="dice-display">?</div>
-
-      <div class="result-label" id="dice-result-lbl">Задайте число и бросьте</div>
-      <button class="action-btn" id="btn-roll-dice" onclick="playRandomRoll()">Испытать судьбу</button>
     </div>
 
   </div>
@@ -292,47 +523,71 @@
         if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
       } else if (navigator.vibrate) {
         if (type === 'light') navigator.vibrate(20);
-        if (type === 'medium') navigator.vibrate(50);
+        if (type === 'medium') navigator.vibrate(45);
         if (type === 'heavy') navigator.vibrate(85);
       }
     }
 
-    // ==========================================
-    // ЛОГИКА 1: МОНЕТКА
-    // ==========================================
-    let isCoinFlipping = false;
-    let coinRotation = 0;
+    // Переключение вкладок (Монетка / Числа)
+    function switchMode(mode) {
+      triggerHaptic('light');
+      document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
 
-    function playCoinFlip() {
-      if (isCoinFlipping) return;
-      isCoinFlipping = true;
-
-      const coin = document.getElementById('coin-element');
-      const label = document.getElementById('coin-result-lbl');
-      const isHeads = Math.random() < 0.5;
-
-      label.innerText = 'Монетка в воздухе...';
-      triggerHaptic('medium');
-
-      // 4 полных оборота + нужная сторона
-      const extraRot = 360 * 4;
-      coinRotation += extraRot + (isHeads ? 0 : 180);
-      if (coin) coin.style.transform = `rotateY(${coinRotation}deg)`;
-
-      setTimeout(() => {
-        label.innerText = isHeads ? 'Выпала: РЕШКА 👑' : 'Выпал: ОРЁЛ 🦅';
-        triggerHaptic('success');
-        isCoinFlipping = false;
-      }, 1300);
+      if (mode === 'coin') {
+        document.getElementById('tab-btn-coin').classList.add('active');
+        document.getElementById('section-coin').classList.add('active');
+      } else {
+        document.getElementById('tab-btn-dice').classList.add('active');
+        document.getElementById('section-dice').classList.add('active');
+      }
     }
 
     // ==========================================
-    // ЛОГИКА 2: СЛУЧАЙНОЕ ЧИСЛО 1 ДО N
+    // ЛОГИКА ПОДБРАСЫВАНИЯ МОНЕТЫ
     // ==========================================
-    let isRolling = false;
+    let isTossing = false;
+    let currentRotationY = 0;
 
-    function setMaxLimit(val, btnEl) {
-      const input = document.getElementById('max-limit-input');
+    function tossCoin() {
+      if (isTossing) return;
+      isTossing = true;
+
+      const stage = document.getElementById('coin-stage');
+      const coin3D = document.getElementById('coin-3d');
+      const isHeads = Math.random() < 0.5; // true = Орёл, false = Решка
+
+      // Запуск полёта вверх
+      stage.classList.add('toss-flying');
+      triggerHaptic('medium');
+
+      // Делаем 5 полных оборотов в воздухе + нужная сторона
+      const fullSpins = 360 * 5;
+      currentRotationY += fullSpins + (isHeads ? 0 : 180) - (currentRotationY % 360);
+
+      // Плавное вращение кувырком во время полёта
+      coin3D.style.transition = 'transform 1.35s cubic-bezier(0.2, 0.85, 0.25, 1)';
+      coin3D.style.transform = `rotateY(${currentRotationY}deg)`;
+
+      // Тактильные щелчки рассекания воздуха
+      setTimeout(() => triggerHaptic('light'), 300);
+      setTimeout(() => triggerHaptic('light'), 650);
+
+      // Момент падения на ладонь / поверхность
+      setTimeout(() => {
+        triggerHaptic('heavy');
+        stage.classList.remove('toss-flying');
+        isTossing = false;
+      }, 1350);
+    }
+
+    // ==========================================
+    // ЛОГИКА РАНДОМАЙЗЕРА ЧИСЕЛ
+    // ==========================================
+    let isRollingDice = false;
+
+    function setDiceMax(val, btnEl) {
+      const input = document.getElementById('dice-max-input');
       if (input) input.value = val;
 
       document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
@@ -341,28 +596,28 @@
     }
 
     function syncPresetChips(val) {
-      const numVal = parseInt(val);
+      const num = parseInt(val);
       document.querySelectorAll('.chip-btn').forEach(b => {
-        const chipVal = parseInt(b.innerText.replace('до ', ''));
-        b.classList.toggle('active', chipVal === numVal);
+        const chipNum = parseInt(b.innerText.replace('до ', ''));
+        b.classList.toggle('active', chipNum === num);
       });
     }
 
-    function playRandomRoll() {
-      if (isRolling) return;
+    function rollRandomNumber() {
+      if (isRollingDice) return;
 
-      const input = document.getElementById('max-limit-input');
+      const input = document.getElementById('dice-max-input');
       let max = parseInt(input?.value) || 10;
-      if (max < 2) max = 2; // Минимальная граница для броска
+      if (max < 2) max = 2;
       if (input) input.value = max;
 
-      isRolling = true;
-      const display = document.getElementById('dice-display');
-      const label = document.getElementById('dice-result-lbl');
-      label.innerText = `Выбираем из 1...${max}`;
+      isRollingDice = true;
+      const display = document.getElementById('dice-display-num');
+      const statusLbl = document.getElementById('dice-status-lbl');
+      statusLbl.innerText = `Вращение от 1 до ${max}...`;
 
       let ticks = 0;
-      const totalTicks = 18; // Количество прокруток перед остановкой
+      const totalTicks = 18;
 
       const interval = setInterval(() => {
         const temp = Math.floor(Math.random() * max) + 1;
@@ -380,9 +635,9 @@
             display.innerText = finalResult;
             display.style.transform = 'scale(1)';
           }
-          label.innerText = `Выпало: ${finalResult}`;
+          statusLbl.innerText = `Выпало число: ${finalResult}`;
           triggerHaptic('success');
-          isRolling = false;
+          isRollingDice = false;
         }
       }, 65);
     }
