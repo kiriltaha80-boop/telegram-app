@@ -9,8 +9,9 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
-
-    /* Контейнер соглашения по центру */
+/* ========================================================
+   1. КОНТРАКТ И СТИЛИ СОГЛАШЕНИЯ
+   ======================================================== */
 .ds-agreement-container {
   display: flex;
   align-items: center;
@@ -20,7 +21,6 @@
   padding: 20px 10px;
 }
 
-/* Стилизованная надпись «Соглашение D/S» */
 .ds-agreement-title {
   font-size: 22px;
   font-weight: 900;
@@ -29,8 +29,151 @@
   color: #FFFFFF;
   text-shadow: 0 0 16px rgba(230, 57, 86, 0.75), 0 0 30px rgba(230, 57, 86, 0.4);
 }
-    /* ========================================================
-   СЕТКА И КАРТОЧКИ ВЫБОРА АВАТАРОК
+
+.contract-box-flex {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 270px);
+}
+
+.contract-body-placeholder {
+  flex: 1;
+  min-height: 120px;
+}
+
+.contract-footer-action {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+/* Зеленая кнопка: ПОДПИСАТЬ */
+.btn-contract-sign {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
+  transition: transform 0.15s ease;
+}
+
+.btn-contract-sign:active {
+  transform: scale(0.97);
+}
+
+/* Красная кнопка: РАСТОРГНУТЬ */
+.btn-contract-terminate {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  box-shadow: 0 4px 18px rgba(239, 68, 68, 0.45);
+  transition: transform 0.15s ease;
+}
+
+.btn-contract-terminate:active {
+  transform: scale(0.97);
+}
+
+/* Большая иконка контракта по центру (до подписания) */
+.desktop-locked-hero {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 60px auto 0 auto;
+  cursor: pointer;
+}
+
+.hero-contract-icon {
+  width: 115px;
+  height: 115px;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 54px;
+  background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
+  border: 2px solid rgba(230, 57, 86, 0.7);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 28px rgba(230, 57, 86, 0.55);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.desktop-locked-hero:active .hero-contract-icon {
+  transform: scale(0.92);
+}
+
+.hero-contract-label {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-top: 14px;
+  text-shadow: 0 0 14px rgba(230, 57, 86, 0.7);
+}
+
+/* Модалка подтверждения */
+.contract-confirm-card {
+  text-align: center;
+  padding: 24px 18px;
+}
+
+.contract-confirm-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.45;
+  margin-bottom: 22px;
+}
+
+.contract-confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-btn-yes {
+  flex: 1;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+  cursor: pointer;
+}
+
+.confirm-btn-no {
+  flex: 1;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+  cursor: pointer;
+}
+
+/* ========================================================
+   2. СЕТКА И КАРТОЧКИ ВЫБОРА АВАТАРОК
    ======================================================== */
 .profile-avatar-container {
   width: 112px !important;
@@ -61,9 +204,7 @@
   display: block !important;
 }
     
-/* ========================================================
-   ИМЯ ПРОФИЛЯ
-   ======================================================== */
+/* Имя профиля */
 .profile-name-row {
   display: flex;
   align-items: center;
@@ -1092,23 +1233,21 @@
     </div>
   </div>
  
-<!-- ЭКРАН 5: КОНТРАКТ -->
+  <!-- ЭКРАН 5: КОНТРАКТ -->
   <div id="tab-contract" class="tab-content">
     <div class="card contract-box-flex">
-      <!-- Шапка по центру без кнопки "Назад" -->
       <div class="sub-screen-header" style="justify-content: center;">
         <div style="font-weight: 800; color: #FFFFFF; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(230, 57, 86, 0.6);">Соглашение D/S</div>
       </div>
       
-      <!-- Пространство для текста договора -->
       <div class="contract-body-placeholder"></div>
 
-      <!-- Кнопка действия в самом низу (Подписать / Расторгнуть) -->
       <div class="contract-footer-action">
         <button id="btn-contract-action" class="btn-contract-sign" onclick="handleContractButtonClick()">Подписать</button>
       </div>
     </div>
   </div>
+
   <div id="tab-shop" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1549,7 +1688,7 @@
       });
     }
 
- let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
+    let isContractSigned = localStorage.getItem('pact_contract_signed') === 'true';
     let pendingContractAction = null;
 
     function renderDesktop() {
@@ -1664,12 +1803,7 @@
       updateContractButtonUI();
       renderDesktop();
       closeContractConfirmModal();
-      handleBackAction(); // Возвращает на рабочий стол, чтобы сразу увидеть изменения
-    }
-        wrap.innerHTML = inner;
-        attachTouchEvents(wrap, index);
-        container.appendChild(wrap);
-      });
+      handleBackAction();
     }
 
     function deleteDesktopItem(index) {
@@ -2419,6 +2553,7 @@
         loadSavedRole();
         loadSavedAvatars();
         loadSavedProfileName();
+        updateContractButtonUI();
         renderDesktop();
         renderCycleInfo();
         renderTasks();
