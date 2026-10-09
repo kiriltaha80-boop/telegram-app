@@ -23,15 +23,22 @@ function hideSplash() {
     setTimeout(() => { splash.style.display = 'none'; }, 700);
   }
 }
-setTimeout(hideSplash, 1600);
-
 let navStack = ['tab-home'];
 
 function openSubScreen(tabId) {
+  // Защита: Верхний не может открыть Нижнюю, Нижняя — Верхнего
+  if (tabId === 'tab-male-session' && currentAvatarRole !== 'male') {
+    tg?.HapticFeedback?.notificationOccurred?.('warning');
+    return;
+  }
+  if (tabId === 'tab-female-session' && currentAvatarRole !== 'female') {
+    tg?.HapticFeedback?.notificationOccurred?.('warning');
+    return;
+  }
+
   if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
   renderActiveTab(tabId);
 }
-
 function handleBackAction() {
   tg?.HapticFeedback?.impactOccurred?.('light');
   if (navStack.length > 1) {
