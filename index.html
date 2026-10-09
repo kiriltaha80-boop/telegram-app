@@ -391,6 +391,25 @@
     </div>
   </div>
 
+ <!-- 12 ЭКРАН: ГАРДЕРОБ -->
+  <div id="tab-wardrobe" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div style="font-weight: 800; color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;">Гардероб</div>
+        <div style="width: 50px;"></div>
+      </div>
+      
+      <!-- Кнопки выбора категорий -->
+      <div class="category-chips">
+        <button class="chip-btn" onclick="setWardrobeCategory('Белье', this)">👙 Белье</button>
+        <button class="chip-btn" onclick="setWardrobeCategory('Игрушки', this)">🧸 Игрушки</button>
+      </div>
+
+      <!-- Сетка вещей гардероба -->
+      <div id="wardrobe-items-list" class="products-grid-view"></div>
+    </div>
+  </div>
   <!-- ПЛАВАЮЩАЯ КНОПКА СМЕНЫ ОБОЕВ -->
   <button id="dock-wallpaper-btn" class="dock-wallpaper-btn" onclick="openWallpaperModal()">
     <span>🖼️</span>
