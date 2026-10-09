@@ -92,6 +92,7 @@ let pendingContractAction = null;
 let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
   { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
   { id: 'tile-female', type: 'tile', title: 'Нижняя ♀', icon: '🌹', target: 'tab-female-session' },
+  { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '👗', target: 'tab-wardrobe' }, // <-- ДОБАВЛЕНО
   { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' },
   { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop' },
   { id: 'tile-sexshop', type: 'tile', title: 'Секс-шоп', icon: '🔮', target: 'tab-sexshop' },
@@ -103,8 +104,9 @@ let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
   { id: 'w-contract', type: 'widget-contract', span: 4 }
 ];
 
-if (!desktopItems.some(item => item.id === 'tile-random')) {
-  desktopItems.splice(2, 0, { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' });
+// Автоматически добавляем Гардероб, если в памяти его ещё нет:
+if (!desktopItems.some(item => item.id === 'tile-wardrobe')) {
+  desktopItems.splice(2, 0, { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '👗', target: 'tab-wardrobe' });
   localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
 }
 
