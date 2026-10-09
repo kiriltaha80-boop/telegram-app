@@ -74,7 +74,8 @@ function renderActiveTab(tabId) {
    ======================================================== */
 let isDesktopEditMode = false;
 let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
-  { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
+{ id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer' },
+   { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session' },
   { id: 'tile-female', type: 'tile', title: 'Нижняя ♀', icon: '🌹', target: 'tab-female-session' },
   { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop' },
   { id: 'tile-sexshop', type: 'tile', title: 'Секс-шоп', icon: '🔮', target: 'tab-sexshop' },
@@ -1135,3 +1136,290 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Ошибка инициализации приложения:', err);
   }
 });
+/* ========================================================
+   13. ЛОГИКА ИГРЫ «СУДЬБА & ЖРЕБИЙ» (МОНЕТКА + ЧИСЛА + ЭФФЕКТЫ)
+   ======================================================== */
+function switchRandomMode(mode) {
+  tg?.HapticFeedback?.impactOccurred?.('light');
+  document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tab-randomizer .tab-section').forEach(s => s.classList.remove('active'));
+
+  if (mode === 'coin') {
+    document.getElementById('tab-btn-coin')?.classList.add('active');
+    document.getElementById('section-coin')?.classList.add('active');
+  } else {
+    document.getElementById('tab-btn-dice')?.classList.add('active');
+    document.getElementById('section-dice')?.classList.add('active');
+  }
+}
+
+// ХОЛСТ САЛЮТА, КОНФЕТТИ И СЕРПАНТИНА
+const burstCanvas = document.getElementById('burst-canvas');
+const burstCtx = burstCanvas?.getContext('2d');
+let burstParticles = [];
+let burstAnimId = null;
+
+function resizeBurstCanvas() {
+  const card = document.getElementById('random-app-card');
+  if (card && burstCanvas) {
+    burstCanvas.width = card.clientWidth;
+    burstCanvas.height = card.clientHeight;
+  }
+}
+window.addEventListener('resize', resizeBurstCanvas);
+
+function launchCelebration(x, y) {
+  resizeBurstCanvas();
+  burstParticles = [];
+
+  const originX = (x !== undefined) ? x : burstCanvas.width / 2;
+  const originY = (y !== undefined) ? y : burstCanvas.height / 2;
+
+  const colors = [
+    '#FFD700', '#FFB703', '#FFFFFF',
+    '#E63956', '#FF1493', '#FF2A85',
+    '#00F0FF', '#00D2FF', '#9B51E0',
+    '#00E676', '#FF5722'
+  ];
+
+  // 1. Искры салюта
+  for (let i = 0; i < 45; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 8.5 + 4;
+    burstParticles.push({
+      type: 'spark',
+      x: originX,
+      y: originY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      radius: Math.random() * 2.5 + 1.2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: Math.random() * 0.025 + 0.016,
+      gravity: 0.14
+    });
+  }
+
+  // 2. Порхающее конфетти
+  for (let i = 0; i < 48; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 6.5 + 3;
+    burstParticles.push({
+      type: 'confetti',
+      x: originX,
+      y: originY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 3.2,
+      w: Math.random() * 7 + 4.5,
+      h: Math.random() * 4.5 + 2.8,
+      rot: Math.random() * Math.PI * 2,
+      vRot: (Math.random() - 0.5) * 0.28,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: Math.random() * 0.014 + 0.008,
+      gravity: 0.1
+    });
+  }
+
+  // 3. Серпантин — длинные извивающиеся спиральные ленты
+  for (let i = 0; i < 24; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 5.5 + 2.5;
+    burstParticles.push({
+      type: 'serpentine',
+      x: originX,
+      y: originY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 4.5,
+      length: Math.random() * 26 + 22,
+      width: Math.random() * 2.6 + 2.4,
+      wave: Math.random() * Math.PI * 2,
+      waveSpeed: Math.random() * 0.16 + 0.09,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: Math.random() * 0.009 + 0.006,
+      gravity: 0.08
+    });
+  }
+
+  if (!burstAnimId) animateBurstParticles();
+}
+
+function animateBurstParticles() {
+  if (!burstCtx || !burstCanvas) return;
+  burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+
+  for (let i = burstParticles.length - 1; i >= 0; i--) {
+    const p = burstParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += p.gravity;
+    p.vx *= 0.98;
+    p.alpha -= p.decay;
+
+    if (p.alpha <= 0) {
+      burstParticles.splice(i, 1);
+      continue;
+    }
+
+    burstCtx.save();
+    burstCtx.globalAlpha = Math.max(0, p.alpha);
+
+    if (p.type === 'spark') {
+      burstCtx.beginPath();
+      burstCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      burstCtx.fillStyle = p.color;
+      burstCtx.shadowBlur = 10;
+      burstCtx.shadowColor = p.color;
+      burstCtx.fill();
+    } else if (p.type === 'confetti') {
+      p.rot += p.vRot;
+      burstCtx.translate(p.x, p.y);
+      burstCtx.rotate(p.rot);
+      burstCtx.fillStyle = p.color;
+      burstCtx.shadowBlur = 4;
+      burstCtx.shadowColor = p.color;
+      burstCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    } else if (p.type === 'serpentine') {
+      p.wave += p.waveSpeed;
+      burstCtx.translate(p.x, p.y);
+      burstCtx.beginPath();
+      const segments = 6;
+      const segLen = p.length / segments;
+      burstCtx.lineWidth = p.width;
+      burstCtx.strokeStyle = p.color;
+      burstCtx.lineCap = 'round';
+      burstCtx.lineJoin = 'round';
+      burstCtx.shadowBlur = 6;
+      burstCtx.shadowColor = p.color;
+
+      for (let s = 0; s <= segments; s++) {
+        const px = Math.sin(p.wave + s * 1.1) * (p.width * 2.8);
+        const py = s * segLen;
+        if (s === 0) burstCtx.moveTo(px, py);
+        else burstCtx.lineTo(px, py);
+      }
+      burstCtx.stroke();
+    }
+
+    burstCtx.restore();
+  }
+
+  if (burstParticles.length > 0) {
+    burstAnimId = requestAnimationFrame(animateBurstParticles);
+  } else {
+    cancelAnimationFrame(burstAnimId);
+    burstAnimId = null;
+    burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+  }
+}
+
+// БРОСОК МОНЕТКИ
+let isTossing = false;
+let currentRotationX = 0;
+
+function tossCoin() {
+  if (isTossing) return;
+  isTossing = true;
+
+  const stage = document.getElementById('coin-stage');
+  const coin3D = document.getElementById('coin-3d');
+  const isMale = Math.random() < 0.5; // true = ♂, false = ♀
+
+  stage?.classList.add('toss-flying');
+  tg?.HapticFeedback?.impactOccurred?.('medium');
+
+  const fullSpins = 360 * 6;
+  currentRotationX += fullSpins + (isMale ? 0 : 180) - (currentRotationX % 360);
+
+  if (coin3D) {
+    coin3D.style.transition = 'transform 1.35s cubic-bezier(0.2, 0.85, 0.25, 1)';
+    coin3D.style.transform = `rotateX(${currentRotationX}deg)`;
+  }
+
+  setTimeout(() => tg?.HapticFeedback?.impactOccurred?.('light'), 300);
+  setTimeout(() => tg?.HapticFeedback?.impactOccurred?.('light'), 650);
+
+  setTimeout(() => {
+    tg?.HapticFeedback?.impactOccurred?.('heavy');
+    
+    if (stage && burstCanvas) {
+      const stageRect = stage.getBoundingClientRect();
+      const cardRect = document.getElementById('random-app-card')?.getBoundingClientRect() || stageRect;
+      const originX = (stageRect.left + stageRect.width / 2) - cardRect.left;
+      const originY = (stageRect.top + stageRect.height / 2) - cardRect.top;
+      launchCelebration(originX, originY);
+    }
+
+    stage?.classList.remove('toss-flying');
+    isTossing = false;
+  }, 1350);
+}
+
+// РАНДОМАЙЗЕР ЧИСЕЛ
+let isRollingDice = false;
+
+function setDiceMax(val, btnEl) {
+  const input = document.getElementById('dice-max-input');
+  if (input) input.value = val;
+
+  document.querySelectorAll('#section-dice .chip-btn').forEach(b => b.classList.remove('active'));
+  btnEl?.classList.add('active');
+  tg?.HapticFeedback?.impactOccurred?.('light');
+}
+
+function syncPresetChips(val) {
+  const num = parseInt(val);
+  document.querySelectorAll('#section-dice .chip-btn').forEach(b => {
+    const chipNum = parseInt(b.innerText.replace('до ', ''));
+    b.classList.toggle('active', chipNum === num);
+  });
+}
+
+function rollRandomNumber() {
+  if (isRollingDice) return;
+
+  const input = document.getElementById('dice-max-input');
+  let max = parseInt(input?.value) || 10;
+  if (max < 2) max = 2;
+  if (input) input.value = max;
+
+  isRollingDice = true;
+  const display = document.getElementById('dice-display-num');
+  const statusLbl = document.getElementById('dice-status-lbl');
+  if (statusLbl) statusLbl.innerText = `Вращение от 1 до ${max}...`;
+
+  let ticks = 0;
+  const totalTicks = 18;
+
+  const interval = setInterval(() => {
+    const temp = Math.floor(Math.random() * max) + 1;
+    if (display) {
+      display.innerText = temp;
+      display.style.transform = `scale(${1 + (ticks % 2 === 0 ? 0.08 : -0.04)})`;
+    }
+    tg?.HapticFeedback?.impactOccurred?.('light');
+    ticks++;
+
+    if (ticks >= totalTicks) {
+      clearInterval(interval);
+      const finalResult = Math.floor(Math.random() * max) + 1;
+      if (display) {
+        display.innerText = finalResult;
+        display.style.transform = 'scale(1)';
+      }
+      if (statusLbl) statusLbl.innerText = `Выпало число: ${finalResult}`;
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+
+      if (display && burstCanvas) {
+        const dispRect = display.getBoundingClientRect();
+        const cardRect = document.getElementById('random-app-card')?.getBoundingClientRect() || dispRect;
+        const originX = (dispRect.left + dispRect.width / 2) - cardRect.left;
+        const originY = (dispRect.top + dispRect.height / 2) - cardRect.top;
+        launchCelebration(originX, originY);
+      }
+
+      isRollingDice = false;
+    }
+  }, 65);
+}
