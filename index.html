@@ -158,4 +158,327 @@
     .ceremony-half {
       position: absolute;
       inset: 0;
-      width: 1
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      will-change: transform, opacity, filter;
+    }
+
+    /* Фигурный рваный контур по центру */
+    .half-left {
+      clip-path: polygon(0% 0%, 53% 0%, 47% 20%, 54% 42%, 46% 62%, 53% 82%, 48% 100%, 0% 100%);
+    }
+    .half-right {
+      clip-path: polygon(53% 0%, 100% 0%, 100% 100%, 48% 100%, 53% 82%, 46% 62%, 54% 42%, 47% 20%);
+    }
+
+    /* Сам лист договора */
+    .ceremony-parchment {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #1d1222 0%, #120b18 55%, #0b070f 100%);
+      border: 1.5px solid rgba(230, 57, 86, 0.45);
+      border-radius: 22px;
+      padding: 24px 20px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    }
+
+    .ceremony-header {
+      text-align: center;
+    }
+
+    .ceremony-badge {
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #E63956;
+      text-transform: uppercase;
+    }
+
+    .ceremony-title {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+      color: #FFFFFF;
+      margin-top: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(230, 57, 86, 0.6);
+    }
+
+    .ceremony-body-text {
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #c9c2d1;
+      font-style: italic;
+      text-align: center;
+      padding: 0 6px;
+    }
+
+    .ceremony-sig-wrap {
+      text-align: center;
+      position: relative;
+      border-bottom: 1px dashed rgba(230, 57, 86, 0.45);
+      padding-bottom: 6px;
+      min-height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ceremony-sig-svg {
+      width: 230px;
+      height: 75px;
+      overflow: visible;
+      filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.85)) drop-shadow(0 0 18px rgba(255, 107, 149, 0.45));
+    }
+
+    .ceremony-sig-svg path {
+      fill: none;
+      stroke: #FFFFFF;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+    }
+
+    /* Анимация письма пером: ровно 3.2 секунды слева направо */
+    .ceremony-container.anim-signing .ceremony-sig-svg path {
+      animation: drawCeremonySig 3.2s cubic-bezier(0.38, 0.05, 0.22, 1) forwards;
+    }
+
+    @keyframes drawCeremonySig {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .ceremony-wax-seal {
+      align-self: center;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #E63956, #800e26);
+      padding: 4px 14px;
+      border-radius: 999px;
+      box-shadow: 0 0 16px rgba(230, 57, 86, 0.65);
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+    }
+
+    .ceremony-container.anim-signing .ceremony-wax-seal {
+      box-shadow: 0 0 26px rgba(230, 57, 86, 0.95);
+      transform: scale(1.05);
+    }
+
+    /* Огненная вспышка-трещина по центру шва */
+    .tear-spark-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      transform: translateX(-50%) scaleY(0);
+      background: #ff1e42;
+      box-shadow: 0 0 25px 6px #ff1e42, 0 0 50px 14px rgba(255, 60, 90, 0.85);
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .ceremony-container.anim-tearing .tear-spark-line {
+      animation: sparkFlash 0.45s ease-out forwards;
+    }
+
+    @keyframes sparkFlash {
+      0% { transform: translateX(-50%) scaleY(0); opacity: 1; }
+      50% { transform: translateX(-50%) scaleY(1); opacity: 1; }
+      100% { transform: translateX(-50%) scaleY(1); opacity: 0; }
+    }
+
+    /* Разлёт и падение разорванных половин */
+    .ceremony-container.anim-tearing .half-left {
+      animation: ripLeft 1.6s cubic-bezier(0.18, 0.8, 0.25, 1) 0.35s forwards;
+    }
+
+    .ceremony-container.anim-tearing .half-right {
+      animation: ripRight 1.6s cubic-bezier(0.18, 0.8, 0.25, 1) 0.35s forwards;
+    }
+
+    @keyframes ripLeft {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 1; }
+      30% { transform: translate3d(-30px, 20px, 0) rotate(-9deg); filter: drop-shadow(0 0 24px #ff1e42); }
+      100% { transform: translate3d(-140px, 220px, 0) rotate(-35deg); opacity: 0; filter: blur(6px); }
+    }
+
+    @keyframes ripRight {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 1; }
+      30% { transform: translate3d(30px, 22px, 0) rotate(9deg); filter: drop-shadow(0 0 24px #ff1e42); }
+      100% { transform: translate3d(140px, 230px, 0) rotate(32deg); opacity: 0; filter: blur(6px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Панель проверки -->
+  <div class="demo-dashboard">
+    <div class="demo-title">Контракт D/S</div>
+    <div class="demo-status" id="demo-status-lbl">Статус: <span id="status-text">Не подписан</span></div>
+    
+    <button class="btn-test btn-test-sign" onclick="startSigningDemo()">✍️ Протестировать подпись</button>
+    <button class="btn-test btn-test-rip" onclick="startTearingDemo()">⚡ Протестировать разрыв</button>
+  </div>
+
+  <!-- ЦЕРЕМОНИАЛЬНОЕ ОКНО -->
+  <div class="ceremony-overlay" id="ceremony-overlay">
+    <div class="ceremony-container" id="ceremony-container">
+      
+      <!-- Линия огненной вспышки по центру шва -->
+      <div class="tear-spark-line" id="tear-spark-line"></div>
+
+      <!-- ЛЕВАЯ ПОЛОВИНА СВИТКА -->
+      <div class="ceremony-half half-left">
+        <div class="ceremony-parchment">
+          <div class="ceremony-header">
+            <span class="ceremony-badge">PACT & PASSION</span>
+            <div class="ceremony-title">СОГЛАШЕНИЕ D/S</div>
+          </div>
+          <div class="ceremony-body-text">
+            «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
+          </div>
+          <div class="ceremony-sig-wrap">
+            <svg class="ceremony-sig-svg" viewBox="0 0 260 85">
+              <!-- Компактная подпись с элегантной заглавной А и нижним штрихом -->
+              <path pathLength="1000" d="M 40,64 C 22,44 42,14 62,18 C 78,22 56,66 48,66 C 58,52 75,46 84,58 C 90,48 102,48 108,56 C 114,46 128,46 134,56 C 142,32 158,22 163,36 C 168,54 145,66 158,64 C 182,62 212,50 230,44 C 238,42 222,66 175,71 C 125,76 65,74 35,69" />
+            </svg>
+          </div>
+          <div class="ceremony-wax-seal">PAIRED</div>
+        </div>
+      </div>
+
+      <!-- ПРАВАЯ ПОЛОВИНА СВИТКА (ЗЕРКАЛЬНО СОВПАДАЕТ) -->
+      <div class="ceremony-half half-right">
+        <div class="ceremony-parchment">
+          <div class="ceremony-header">
+            <span class="ceremony-badge">PACT & PASSION</span>
+            <div class="ceremony-title">СОГЛАШЕНИЕ D/S</div>
+          </div>
+          <div class="ceremony-body-text">
+            «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
+          </div>
+          <div class="ceremony-sig-wrap">
+            <svg class="ceremony-sig-svg" viewBox="0 0 260 85">
+              <!-- Идентичная линия для бесшовного раскола -->
+              <path pathLength="1000" d="M 40,64 C 22,44 42,14 62,18 C 78,22 56,66 48,66 C 58,52 75,46 84,58 C 90,48 102,48 108,56 C 114,46 128,46 134,56 C 142,32 158,22 163,36 C 168,54 145,66 158,64 C 182,62 212,50 230,44 C 238,42 222,66 175,71 C 125,76 65,74 35,69" />
+            </svg>
+          </div>
+          <div class="ceremony-wax-seal">PAIRED</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      try {
+        tg.ready();
+        tg.expand();
+      } catch (e) {}
+    }
+
+    const overlay = document.getElementById('ceremony-overlay');
+    const container = document.getElementById('ceremony-container');
+    const statusText = document.getElementById('status-text');
+
+    function triggerHaptic(type) {
+      if (tg?.HapticFeedback) {
+        if (type === 'light') tg.HapticFeedback.impactOccurred('light');
+        if (type === 'medium') tg.HapticFeedback.impactOccurred('medium');
+        if (type === 'heavy') tg.HapticFeedback.impactOccurred('heavy');
+        if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+        if (type === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+      } else if (navigator.vibrate) {
+        if (type === 'light') navigator.vibrate(25);
+        if (type === 'medium') navigator.vibrate(55);
+        if (type === 'heavy') navigator.vibrate(100);
+      }
+    }
+
+    // 1. АНИМАЦИЯ ПОДПИСАНИЯ
+    function startSigningDemo() {
+      container.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
+
+      // Скрываем штрих перед стартом
+      container.querySelectorAll('.ceremony-sig-svg path').forEach(p => {
+        p.style.strokeDashoffset = '1000';
+      });
+
+      overlay.classList.add('active');
+
+      // ПАУЗА 2.2 СЕКУНДЫ: даём спокойно прочитать текст договора
+      setTimeout(() => {
+        container.classList.add('anim-signing');
+
+        // Тактильный ритм движения пера
+        triggerHaptic('medium'); // Заглавная петля
+        setTimeout(() => triggerHaptic('light'), 800);
+        setTimeout(() => triggerHaptic('light'), 1600);
+        setTimeout(() => triggerHaptic('medium'), 2400);
+        setTimeout(() => triggerHaptic('heavy'), 2900); // Финальный нижний росчерк
+
+        // Завершение церемонии
+        setTimeout(() => {
+          triggerHaptic('success');
+          overlay.classList.remove('active');
+          container.classList.remove('anim-signing');
+
+          statusText.className = '';
+          statusText.innerText = 'Подписан';
+        }, 3600);
+      }, 2200);
+    }
+
+    // 2. АНИМАЦИЯ РАЗРЫВА ДОГОВОРА
+    function startTearingDemo() {
+      container.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
+
+      // Показываем лист с уже готовой подписью
+      container.querySelectorAll('.ceremony-sig-svg path').forEach(p => {
+        p.style.strokeDashoffset = '0';
+      });
+
+      overlay.classList.add('active');
+
+      // Фаза 1: Пауза перед разрывом + дрожание свитка
+      setTimeout(() => {
+        container.classList.add('anim-rumble');
+        triggerHaptic('medium');
+
+        // Фаза 2: Огненный раскол по шву и разлёт половин
+        setTimeout(() => {
+          container.classList.remove('anim-rumble');
+          container.classList.add('anim-tearing');
+          triggerHaptic('heavy');
+
+          setTimeout(() => triggerHaptic('warning'), 400);
+
+          // Фаза 3: Завершение церемонии (1.7 сек)
+          setTimeout(() => {
+            overlay.classList.remove('active');
+            container.classList.remove('anim-tearing');
+
+            statusText.className = 'terminated';
+            statusText.innerText = 'Расторгнут';
+          }, 1700);
+        }, 750);
+      }, 600);
+    }
+  </script>
+</body>
+</html>
