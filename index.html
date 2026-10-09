@@ -1269,6 +1269,17 @@
     </div>
   </div>
 
+  <!-- МОДАЛКА ПРЕДУПРЕЖДЕНИЯ ДЛЯ КОНТРАКТА -->
+  <div class="modal-overlay" id="contract-confirm-modal" onclick="if(event.target === this) closeContractConfirmModal()">
+    <div class="modal-card contract-confirm-card">
+      <div id="contract-confirm-text" class="contract-confirm-text">...</div>
+      <div class="contract-confirm-actions">
+        <button id="btn-confirm-yes" class="confirm-btn-yes" onclick="confirmContractAction()">Да</button>
+        <button id="btn-confirm-no" class="confirm-btn-no" onclick="closeContractConfirmModal()">Нет</button>
+      </div>
+    </div>
+  </div>
+  
   <div class="modal-overlay" id="avatar-modal" onclick="if(event.target === this) closeAvatarModal()">
     <div class="modal-card">
       <div class="modal-header">
