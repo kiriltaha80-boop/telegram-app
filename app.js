@@ -172,7 +172,7 @@ function renderDesktop() {
   if (!container) return;
   container.innerHTML = '';
 
-  // Если контракт НЕ подписан — показываем только одну большую плитку в центре
+  // Если контракт НЕ подписан — показываем только иконку контракта
   if (!isContractSigned) {
     container.innerHTML = `
       <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')">
@@ -182,6 +182,48 @@ function renderDesktop() {
     `;
     return;
   }
+
+  // Отображение плиток с умной фильтрацией сессий
+  desktopItems.forEach((item, index) => {
+    // Верхний видит только свою сессию ♂, Нижняя — только свою ♀
+    if (item.target === 'tab-male-session' && currentAvatarRole !== 'male') return;
+    if (item.target === 'tab-female-session' && currentAvatarRole !== 'female') return;
+
+    const wrap = document.createElement('div');
+    wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
+    wrap.dataset.index = index;
+
+    let inner = `<button class="item-delete-btn" onclick="deleteDesktopItem(${index})">✕</button>`;
+
+    if (item.type === 'tile') {
+      inner += `
+        <div class="desktop-tile" onclick="if(!isDesktopEditMode) openSubScreen('${item.target}')">
+          <div class="tile-icon">${item.icon}</div>
+          <div class="tile-label">${item.title}</div>
+        </div>`;
+    } else if (item.type === 'widget-balance') {
+      const balanceTitle = currentAvatarRole === 'male' ? 'Баланс Заботы' : 'Очки Трат';
+      const balanceValue = currentAvatarRole === 'male' ? '3,450 PTS' : '1,250 PTS';
+      inner += `
+        <div class="desktop-widget" onclick="if(!isDesktopEditMode) openSubScreen('tab-profile')">
+          <div class="widget-header"><span>${balanceTitle}</span><span>🔥</span></div>
+          <div class="widget-title">${balanceValue}</div>
+          <div class="widget-sub">Нажмите для статистики</div>
+        </div>`;
+    } else if (item.type === 'widget-contract') {
+      inner += `
+        <div class="desktop-widget" onclick="if(!isDesktopEditMode) openSubScreen('tab-contract')">
+          <div class="widget-header"><span>Обет Дня</span><span>📜</span></div>
+          <div class="widget-title">"Согласие и правила вечера"</div>
+          <div class="widget-sub">Статус: Активно</div>
+        </div>`;
+    }
+
+    wrap.innerHTML = inner;
+    attachTouchEvents(wrap, index);
+    container.appendChild(wrap);
+  });
+}
 
   // Если контракт подписан — отображаем весь рабочий стол
   desktopItems.forEach((item, index) => {
