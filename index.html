@@ -1847,22 +1847,104 @@
       pendingContractAction = null;
     }
 
-    // Подтверждение действия при нажатии "Да"
+   // Подтверждение действия в модалке (запуск церемоний)
     function confirmContractAction() {
-      if (pendingContractAction === 'sign') {
-        isContractSigned = true;
-        localStorage.setItem('pact_contract_signed', 'true');
-        window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('success');
-      } else if (pendingContractAction === 'terminate') {
-        isContractSigned = false;
-        localStorage.setItem('pact_contract_signed', 'false');
-        window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('warning');
+      const confirmModal = document.getElementById('contract-confirm-modal');
+      if (confirmModal) {
+        confirmModal.classList.remove('active');
+        confirmModal.style.display = 'none';
       }
 
-      updateContractButtonUI();
-      renderDesktop();
-      closeContractConfirmModal();
-      handleBackAction();
+      if (pendingContractAction === 'sign') {
+        runSigningCeremony();
+      } else if (pendingContractAction === 'terminate') {
+        runTearingCeremony();
+      }
+
+      pendingContractAction = null;
+    }
+
+    // 1. ЦЕРЕМОНИЯ ПОДПИСАНИЯ
+    function runSigningCeremony() {
+      const modal = document.getElementById('contract-ceremony-modal');
+      const box = document.getElementById('ceremony-container');
+      if (!modal || !box) return;
+
+      box.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
+
+      // Сбрасываем штрихи (лист чистый)
+      box.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '1200');
+      box.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '400');
+
+      modal.classList.add('active');
+
+      // Пауза 2 секунды для прочтения текста
+      setTimeout(() => {
+        box.classList.add('anim-signing');
+
+        // Тактильные отклики Telegram в такт движению пера
+        window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
+        setTimeout(() => window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'), 600);
+        setTimeout(() => window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium'), 1200);
+        setTimeout(() => window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'), 1800);
+        setTimeout(() => window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('heavy'), 2200); // Резкий нижний росчерк
+
+        // Завершение церемонии: контракт зафиксирован, стол разблокирован
+        setTimeout(() => {
+          isContractSigned = true;
+          localStorage.setItem('pact_contract_signed', 'true');
+          modal.classList.remove('active');
+          box.classList.remove('anim-signing');
+
+          updateContractButtonUI();
+          renderDesktop();
+          window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('success');
+          handleBackAction(); // Возвращаем на разблокированный рабочий стол
+        }, 3200);
+      }, 2000);
+    }
+
+    // 2. ЦЕРЕМОНИЯ РАЗРЫВА
+    function runTearingCeremony() {
+      const modal = document.getElementById('contract-ceremony-modal');
+      const box = document.getElementById('ceremony-container');
+      if (!modal || !box) return;
+
+      box.classList.remove('anim-signing');
+      // Показываем свиток с готовой подписью
+      box.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '0');
+      box.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '0');
+
+      modal.classList.add('active');
+
+      // Пауза и дрожание бумаги
+      setTimeout(() => {
+        box.classList.add('anim-rumble');
+        window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('medium');
+
+        // Огненная вспышка и разрыв
+        setTimeout(() => {
+          box.classList.remove('anim-rumble');
+          box.classList.add('anim-tearing');
+          window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('heavy');
+
+          setTimeout(() => {
+            window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('warning');
+          }, 400);
+
+          // Завершение: договор аннулирован, стол заблокирован
+          setTimeout(() => {
+            isContractSigned = false;
+            localStorage.setItem('pact_contract_signed', 'false');
+            modal.classList.remove('active');
+            box.classList.remove('anim-tearing');
+
+            updateContractButtonUI();
+            renderDesktop();
+            handleBackAction(); // Возвращаем на заблокированный стол с одной иконкой
+          }, 1700);
+        }, 750);
+      }, 600);
     }
 
     function deleteDesktopItem(index) {
