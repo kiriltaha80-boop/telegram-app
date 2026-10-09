@@ -1,5 +1,5 @@
 /* ========================================================
-   1. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEB APP
+   1. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEB APP & РОЛЬ
    ======================================================== */
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -13,6 +13,9 @@ if (tg) {
   }
 }
 
+// Роль объявляем в самом начале, чтобы она была доступна везде
+let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
+
 /* ========================================================
    2. ЗАСТАВКА (SPLASH SCREEN) & НАВИГАЦИЯ
    ======================================================== */
@@ -23,10 +26,12 @@ function hideSplash() {
     setTimeout(() => { splash.style.display = 'none'; }, 700);
   }
 }
+setTimeout(hideSplash, 1600);
+
 let navStack = ['tab-home'];
 
 function openSubScreen(tabId) {
-  // Защита: Верхний не может открыть Нижнюю, Нижняя — Верхнего
+  // Умная защита: Верхний не может открыть Нижнюю, Нижняя — Верхнего
   if (tabId === 'tab-male-session' && currentAvatarRole !== 'male') {
     tg?.HapticFeedback?.notificationOccurred?.('warning');
     return;
@@ -39,6 +44,7 @@ function openSubScreen(tabId) {
   if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
   renderActiveTab(tabId);
 }
+
 function handleBackAction() {
   tg?.HapticFeedback?.impactOccurred?.('light');
   if (navStack.length > 1) {
@@ -49,10 +55,6 @@ function handleBackAction() {
     renderActiveTab('tab-home');
   }
 }
-
-function renderActiveTab(tabId) {
-  document.querySelectorAll('.tab-content:not(#tab-home)').forEach(tab => tab.classList.remove('active'));
-
   const homeEl = document.getElementById('tab-home');
   const activeEl = document.getElementById(tabId);
   const capsuleBtn = document.getElementById('brand-capsule-btn');
