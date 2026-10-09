@@ -1094,12 +1094,19 @@
  
 <!-- ЭКРАН 5: КОНТРАКТ -->
   <div id="tab-contract" class="tab-content">
-    <div class="card">
+    <div class="card contract-box-flex">
+      <!-- Шапка по центру без кнопки "Назад" -->
       <div class="sub-screen-header" style="justify-content: center;">
         <div style="font-weight: 800; color: #FFFFFF; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(230, 57, 86, 0.6);">Соглашение D/S</div>
       </div>
       
-      <!-- Пустая чистая область для будущего наполнения контракта -->
+      <!-- Пространство для текста договора -->
+      <div class="contract-body-placeholder"></div>
+
+      <!-- Кнопка действия в самом низу (Подписать / Расторгнуть) -->
+      <div class="contract-footer-action">
+        <button id="btn-contract-action" class="btn-contract-sign" onclick="handleContractButtonClick()">Подписать</button>
+      </div>
     </div>
   </div>
   <div id="tab-shop" class="tab-content">
