@@ -63,6 +63,16 @@
       overflow: hidden;
     }
 
+    /* Общий холст для салюта, конфетти и серпантина на всё окно */
+    #burst-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 99;
+    }
+
     .sub-screen-header {
       display: flex;
       align-items: center;
@@ -70,6 +80,8 @@
       margin-bottom: 14px;
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      z-index: 2;
     }
 
     .header-title {
@@ -91,6 +103,8 @@
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       margin-bottom: 18px;
+      position: relative;
+      z-index: 2;
     }
 
     .mode-tab-btn {
@@ -118,6 +132,8 @@
       flex-direction: column;
       flex: 1;
       width: 100%;
+      position: relative;
+      z-index: 2;
     }
     .tab-section.active {
       display: flex;
@@ -138,17 +154,6 @@
       min-height: 340px;
     }
 
-    /* Холст эффектов (салют и конфетти) */
-    #burst-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 40;
-    }
-
-    /* Тень под монетой */
     .coin-shadow {
       width: 110px;
       height: 18px;
@@ -162,7 +167,6 @@
       z-index: 1;
     }
 
-    /* Взлёт всей конструкции вверх-вниз */
     .coin-trajectory-box {
       position: relative;
       width: 135px;
@@ -173,7 +177,6 @@
       z-index: 10;
     }
 
-    /* 3D-вращение через ребро (верх-низ) */
     .coin-3d {
       width: 100%;
       height: 100%;
@@ -207,27 +210,16 @@
       display: block;
     }
 
-    /* Траектория полёта */
     .toss-flying .coin-trajectory-box {
       animation: coinFlyTrajectory 1.35s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
     }
 
     @keyframes coinFlyTrajectory {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-      42% {
-        transform: translateY(-210px) scale(1.15);
-      }
-      85% {
-        transform: translateY(0) scale(1);
-      }
-      93% {
-        transform: translateY(-12px) scale(1.02);
-      }
-      100% {
-        transform: translateY(0) scale(1);
-      }
+      0% { transform: translateY(0) scale(1); }
+      42% { transform: translateY(-210px) scale(1.15); }
+      85% { transform: translateY(0) scale(1); }
+      93% { transform: translateY(-12px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); }
     }
 
     .toss-flying .coin-shadow {
@@ -235,25 +227,10 @@
     }
 
     @keyframes coinShadowFlight {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.9;
-        filter: blur(3px);
-      }
-      42% {
-        transform: scale(0.35);
-        opacity: 0.2;
-        filter: blur(8px);
-      }
-      85% {
-        transform: scale(1.1);
-        opacity: 0.95;
-        filter: blur(2px);
-      }
-      93% {
-        transform: scale(0.85);
-        opacity: 0.7;
-      }
+      0%, 100% { transform: scale(1); opacity: 0.9; filter: blur(3px); }
+      42% { transform: scale(0.35); opacity: 0.2; filter: blur(8px); }
+      85% { transform: scale(1.1); opacity: 0.95; filter: blur(2px); }
+      93% { transform: scale(0.85); opacity: 0.7; }
     }
 
     /* ========================================================
@@ -382,8 +359,11 @@
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <div class="random-app-card">
+  <div class="random-app-card" id="app-card">
     
+    <!-- Общий холст праздничных эффектов -->
+    <canvas id="burst-canvas"></canvas>
+
     <div class="sub-screen-header">
       <div class="header-title">Судьба & Жребий</div>
       <span style="font-size: 16px;">✨</span>
@@ -399,8 +379,6 @@
     <div class="tab-section active" id="section-coin">
       <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
         
-        <canvas id="burst-canvas"></canvas>
-
         <div class="coin-trajectory-box">
           <div class="coin-3d" id="coin-3d">
             
@@ -419,7 +397,7 @@
                     <stop offset="50%" stop-color="#805400"/>
                     <stop offset="100%" stop-color="#ffdc80"/>
                   </linearGradient>
-                  <linearGradient id="marsShine" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <linearGradient id="marsShine" gradientUnits="userSpaceOnUse" x1="50" y1="150" x2="150" y2="50">
                     <stop offset="0%" stop-color="#3d2600"/>
                     <stop offset="40%" stop-color="#6e4600"/>
                     <stop offset="70%" stop-color="#ffea9f"/>
@@ -430,15 +408,11 @@
                 <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
                 <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
                 
-                <!-- Символ Марса (♂) -->
                 <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.65))">
-                  <!-- Круг со стрелой -->
                   <circle cx="88" cy="112" r="38" fill="none" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round"/>
                   <line x1="115" y1="85" x2="148" y2="52" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round"/>
-                  <!-- Наконечник стрелы -->
                   <polyline points="120,52 148,52 148,80" fill="none" stroke="url(#marsShine)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
                 </g>
-                <!-- Орнамент звёзд по кругу -->
                 <g fill="#fce69a" opacity="0.8">
                   <circle cx="38" cy="72" r="2.8"/><circle cx="48" cy="48" r="2.8"/>
                   <circle cx="72" cy="36" r="2.8"/><circle cx="152" cy="152" r="2.8"/>
@@ -462,7 +436,7 @@
                     <stop offset="50%" stop-color="#805400"/>
                     <stop offset="100%" stop-color="#ffdc80"/>
                   </linearGradient>
-                  <linearGradient id="venusShine" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <linearGradient id="venusShine" gradientUnits="userSpaceOnUse" x1="100" y1="35" x2="100" y2="165">
                     <stop offset="0%" stop-color="#ffffff"/>
                     <stop offset="35%" stop-color="#ffea9f"/>
                     <stop offset="70%" stop-color="#6e4600"/>
@@ -473,15 +447,14 @@
                 <circle cx="100" cy="100" r="91" fill="none" stroke="#664300" stroke-width="2.5" stroke-dasharray="3.2 2"/>
                 <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,245,190,0.5)" stroke-width="1.2"/>
                 
-                <!-- Символ Венеры (♀) -->
                 <g filter="drop-shadow(0 3px 4px rgba(0,0,0,0.65))">
-                  <!-- Круг зеркала -->
-                  <circle cx="100" cy="80" r="38" fill="none" stroke="url(#venusShine)" stroke-width="13"/>
-                  <!-- Крест внизу -->
-                  <line x1="100" y1="118" x2="100" y2="162" stroke="url(#venusShine)" stroke-width="13" stroke-linecap="round"/>
-                  <line x1="78" y1="140" x2="122" y2="140" stroke="url(#venusShine)" stroke-width="13" stroke-linecap="round"/>
+                  <path d="M 100,40 A 34,34 0 1,1 99.9,40 M 100,108 L 100,158 M 74,133 L 126,133"
+                        fill="none"
+                        stroke="url(#venusShine)"
+                        stroke-width="13"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
                 </g>
-                <!-- Орнамент звёзд по бокам -->
                 <g fill="#fce69a" opacity="0.8">
                   <circle cx="44" cy="120" r="2.8"/><circle cx="36" cy="94" r="2.8"/>
                   <circle cx="44" cy="68" r="2.8"/><circle cx="156" cy="120" r="2.8"/>
@@ -560,7 +533,7 @@
     }
 
     // ==========================================
-    // СИСТЕМА САЛЮТА И КОНФЕТТИ
+    // СИСТЕМА САЛЮТА, КОНФЕТТИ И СЕРПАНТИНА
     // ==========================================
     const canvas = document.getElementById('burst-canvas');
     const ctx = canvas.getContext('2d');
@@ -568,66 +541,88 @@
     let animId = null;
 
     function resizeCanvas() {
-      const stage = document.getElementById('coin-stage');
-      if (stage && canvas) {
-        canvas.width = stage.clientWidth;
-        canvas.height = stage.clientHeight;
+      const card = document.getElementById('app-card');
+      if (card && canvas) {
+        canvas.width = card.clientWidth;
+        canvas.height = card.clientHeight;
       }
     }
     window.addEventListener('resize', resizeCanvas);
     setTimeout(resizeCanvas, 100);
 
-    // Запуск мини-салюта и конфетти прямо от монеты
-    function launchCoinCelebration() {
+    // Запуск яркого праздника с лентами серпантина
+    function launchCelebration(x, y) {
       resizeCanvas();
       particles = [];
 
-      const originX = canvas.width / 2;
-      const originY = canvas.height / 2 + 10;
+      const originX = (x !== undefined) ? x : canvas.width / 2;
+      const originY = (y !== undefined) ? y : canvas.height / 2;
 
-      // Палитра под стиль проекта
+      // Богатая палитра: золото, рубин, неон, циан, фиолетовый, изумруд
       const colors = [
-        '#FFD700', '#FFA500', '#FFFFFF', // Золото и искры
-        '#E63956', '#FF2A85',            // Рубиновый и неоново-розовый
-        '#00D2FF', '#9B51E0'             // Электрик-циан и аметист
+        '#FFD700', '#FFB703', '#FFFFFF',
+        '#E63956', '#FF1493', '#FF2A85',
+        '#00F0FF', '#00D2FF', '#9B51E0',
+        '#00E676', '#FF5722'
       ];
 
-      // 1. Искры мини-салюта (быстрые светящиеся точки)
-      for (let i = 0; i < 38; i++) {
+      // 1. Искры салюта (45 шт)
+      for (let i = 0; i < 45; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 7 + 3.5;
+        const speed = Math.random() * 8.5 + 4;
         particles.push({
           type: 'spark',
           x: originX,
           y: originY,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          radius: Math.random() * 2.2 + 1.2,
+          radius: Math.random() * 2.5 + 1.2,
           color: colors[Math.floor(Math.random() * colors.length)],
           alpha: 1,
-          decay: Math.random() * 0.025 + 0.018,
-          gravity: 0.12
+          decay: Math.random() * 0.025 + 0.016,
+          gravity: 0.14
         });
       }
 
-      // 2. Порхающее конфетти (вращающиеся лепестки)
-      for (let i = 0; i < 30; i++) {
+      // 2. Порхающее конфетти (48 шт)
+      for (let i = 0; i < 48; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 2.5;
+        const speed = Math.random() * 6.5 + 3;
         particles.push({
           type: 'confetti',
           x: originX,
           y: originY,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 2.5,
-          w: Math.random() * 6 + 4,
-          h: Math.random() * 4 + 2.5,
+          vy: Math.sin(angle) * speed - 3.2,
+          w: Math.random() * 7 + 4.5,
+          h: Math.random() * 4.5 + 2.8,
           rot: Math.random() * Math.PI * 2,
-          vRot: (Math.random() - 0.5) * 0.25,
+          vRot: (Math.random() - 0.5) * 0.28,
           color: colors[Math.floor(Math.random() * colors.length)],
           alpha: 1,
-          decay: Math.random() * 0.014 + 0.009,
-          gravity: 0.09
+          decay: Math.random() * 0.014 + 0.008,
+          gravity: 0.1
+        });
+      }
+
+      // 3. Серпантин — длинные извивающиеся спиральные ленты (24 шт)
+      for (let i = 0; i < 24; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5.5 + 2.5;
+        particles.push({
+          type: 'serpentine',
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 4.5,
+          length: Math.random() * 26 + 22,
+          width: Math.random() * 2.6 + 2.4,
+          wave: Math.random() * Math.PI * 2,
+          waveSpeed: Math.random() * 0.16 + 0.09,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.009 + 0.006,
+          gravity: 0.08
         });
       }
 
@@ -657,7 +652,7 @@
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
           ctx.fillStyle = p.color;
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 10;
           ctx.shadowColor = p.color;
           ctx.fill();
         } else if (p.type === 'confetti') {
@@ -668,6 +663,26 @@
           ctx.shadowBlur = 4;
           ctx.shadowColor = p.color;
           ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        } else if (p.type === 'serpentine') {
+          p.wave += p.waveSpeed;
+          ctx.translate(p.x, p.y);
+          ctx.beginPath();
+          const segments = 6;
+          const segLen = p.length / segments;
+          ctx.lineWidth = p.width;
+          ctx.strokeStyle = p.color;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = p.color;
+
+          for (let s = 0; s <= segments; s++) {
+            const px = Math.sin(p.wave + s * 1.1) * (p.width * 2.8);
+            const py = s * segLen;
+            if (s === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
         }
 
         ctx.restore();
@@ -700,7 +715,6 @@
       stage.classList.add('toss-flying');
       triggerHaptic('medium');
 
-      // 6 полных кувырков через ребро + доворот до нужной стороны
       const fullSpins = 360 * 6;
       currentRotationX += fullSpins + (isMale ? 0 : 180) - (currentRotationX % 360);
 
@@ -710,10 +724,17 @@
       setTimeout(() => triggerHaptic('light'), 300);
       setTimeout(() => triggerHaptic('light'), 650);
 
-      // Приземление: удар + САЛЮТ И КОНФЕТТИ
+      // Приземление: мощный вибро-отклик + салют, конфетти и серпантин
       setTimeout(() => {
         triggerHaptic('heavy');
-        launchCoinCelebration();
+        
+        // Запуск из центра экрана монеты
+        const stageRect = stage.getBoundingClientRect();
+        const cardRect = document.getElementById('app-card').getBoundingClientRect();
+        const originX = (stageRect.left + stageRect.width / 2) - cardRect.left;
+        const originY = (stageRect.top + stageRect.height / 2) - cardRect.top;
+
+        launchCelebration(originX, originY);
         stage.classList.remove('toss-flying');
         isTossing = false;
       }, 1350);
@@ -775,6 +796,14 @@
           }
           statusLbl.innerText = `Выпало число: ${finalResult}`;
           triggerHaptic('success');
+          
+          // ЗАПУСК САЛЮТА, КОНФЕТТИ И СЕРПАНТИНА ДЛЯ РАНДОМАЙЗЕРА
+          const dispRect = display.getBoundingClientRect();
+          const cardRect = document.getElementById('app-card').getBoundingClientRect();
+          const originX = (dispRect.left + dispRect.width / 2) - cardRect.left;
+          const originY = (dispRect.top + dispRect.height / 2) - cardRect.top;
+          launchCelebration(originX, originY);
+
           isRollingDice = false;
         }
       }, 65);
