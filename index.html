@@ -2100,9 +2100,16 @@
         <div class="screen-title">Личный Профиль</div>
       </div>
       <div class="profile-card-header">
-        <div class="profile-avatar-container" onclick="openAvatarModal()">
-          <img id="avatar-img-view" class="profile-avatar-img" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Avatar">
-        </div>
+      <div class="profile-avatar-container" onclick="triggerAvatarUpload()" style="position: relative; cursor: pointer;">
+  <img id="avatar-img-view" class="profile-avatar-img" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Avatar">
+  <!-- Неоновый значок камеры внизу аватарки -->
+  <div style="position: absolute; bottom: 2px; right: 2px; background: var(--accent-gradient); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid #0C0A10; box-shadow: 0 0 10px rgba(230,57,86,0.6);">
+    📷
+  </div>
+</div>
+
+<!-- Скрытый системный выбор файла -->
+<input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
         <div class="profile-name-row">
           <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😇</span>
           <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
