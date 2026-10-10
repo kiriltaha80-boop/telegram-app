@@ -457,7 +457,7 @@ document.getElementById('desktop-page-2')
 ];
 
 if (!pages[0] || !pages[1] || !pages[2]) return;
-pages.forEach(p => p.innerHTML = '');
+pages.forEach(p => { p.innerHTML = ''; });
 
 if (!isContractSigned) {
 pages[0].innerHTML = <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')"> <div class="hero-contract-icon">📜</div> <div class="hero-contract-label">Контракт D/S</div> </div>;
@@ -619,7 +619,7 @@ if (isItemDragging && dragGhost) {
   const targetItem = elemBelow?.closest('.desktop-item-wrapper');
   const currentGrid = document.getElementById(`desktop-page-${currentDesktopPage}`);
 
-  if (targetItem && targetItem !== draggedElement && currentGrid.contains(targetItem)) {
+  if (targetItem && targetItem !== draggedElement && currentGrid?.contains(targetItem)) {
     const children = Array.from(currentGrid.children);
     const draggedIdx = children.indexOf(draggedElement);
     const targetIdx = children.indexOf(targetItem);
@@ -898,8 +898,8 @@ const box = document.getElementById('ceremony-container');
 if (!modal || !box) return;
 
 box.classList.remove('anim-tearing', 'anim-rumble', 'anim-signing');
-box.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '1200');
-box.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '400');
+box.querySelectorAll('.sig-path-word').forEach(p => { p.style.strokeDashoffset = '1200'; });
+box.querySelectorAll('.sig-path-slash').forEach(p => { p.style.strokeDashoffset = '400'; });
 
 modal.classList.add('active');
 
@@ -933,8 +933,8 @@ const box = document.getElementById('ceremony-container');
 if (!modal || !box) return;
 
 box.classList.remove('anim-signing');
-box.querySelectorAll('.sig-path-word').forEach(p => p.style.strokeDashoffset = '0');
-box.querySelectorAll('.sig-path-slash').forEach(p => p.style.strokeDashoffset = '0');
+box.querySelectorAll('.sig-path-word').forEach(p => { p.style.strokeDashoffset = '0'; });
+box.querySelectorAll('.sig-path-slash').forEach(p => { p.style.strokeDashoffset = '0'; });
 
 modal.classList.add('active');
 
@@ -1628,23 +1628,17 @@ if (femaleBalances.stc < amount) {
 showToast(У Нижней недостаточно ❤️! Доступно: ${femaleBalances.stc}, 'error');
 return;
 }
-
 femaleBalances.stc -= amount;
 maleBalances.stc += amount;
 if (!note) note = 'Дань Верхнему 💋';
-
-
 } else {
 if (maleBalances.stc < amount) {
 showToast(У Верхнего недостаточно ❤️! Доступно: ${maleBalances.stc}, 'error');
 return;
 }
-
 maleBalances.stc -= amount;
 femaleBalances.stc += amount;
 if (!note) note = 'Подарок Нижней на желания 🔥';
-
-
 }
 
 localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
@@ -1948,27 +1942,40 @@ openSubScreen('tab-product-detail');
 function renderProductDetail(item) {
 if (!item) return;
 
-document.getElementById('detail-top-title').innerText = item._type === 'boutique' ? 'БУТИК' : 'СЕКС-ШОП';
-document.getElementById('detail-title-elem').innerText = item.title;
+const topTitle = document.getElementById('detail-top-title');
+if (topTitle) topTitle.innerText = item._type === 'boutique' ? 'БУТИК' : 'СЕКС-ШОП';
+
+const titleEl = document.getElementById('detail-title-elem');
+if (titleEl) titleEl.innerText = item.title;
 
 const priceElem = document.getElementById('detail-price-elem');
+if (priceElem) {
 if (item._type === 'boutique') {
 priceElem.innerHTML = 💜 ${item.pricePtc} + 🖤 ${item.priceOtc};
 } else {
 priceElem.innerHTML = ❤️ ${item.priceStc};
 }
+}
 
-document.getElementById('detail-desc-elem').innerText = item.desc || 'Эксклюзивный будуарный атрибут из коллекции Pact & Passion.';
+const descElem = document.getElementById('detail-desc-elem');
+if (descElem) descElem.innerText = item.desc || 'Эксклюзивный будуарный атрибут из коллекции Pact & Passion.';
 
 const peppersSlot = document.getElementById('detail-peppers-slot');
+if (peppersSlot) {
 peppersSlot.innerHTML = <div class="peppers-pill"> ${renderPeppers(item.peppers || 1)} <span>${getPepperDescription(item.peppers || 1)}</span> </div>;
+}
 
-document.getElementById('detail-main-img-elem').src = activeDetailPhotoSrc;
+const mainImgElem = document.getElementById('detail-main-img-elem');
+if (mainImgElem) mainImgElem.src = activeDetailPhotoSrc;
 
 const gallery = item.gallery && item.gallery.length > 0 ? item.gallery : [item.mainImg];
-document.getElementById('detail-gallery-strip').innerHTML = gallery.map(photoUrl => <img class="detail-thumb-img ${photoUrl === activeDetailPhotoSrc ? 'active' : ''}"  src="${photoUrl}"  alt="thumb"  onclick="selectDetailPhoto('${photoUrl}', this)">).join('');
+const galleryStrip = document.getElementById('detail-gallery-strip');
+if (galleryStrip) {
+galleryStrip.innerHTML = gallery.map(photoUrl => <img class="detail-thumb-img ${photoUrl === activeDetailPhotoSrc ? 'active' : ''}" src="${photoUrl}" alt="thumb" onclick="selectDetailPhoto('${photoUrl}', this)">).join('');
+}
 
 const actionSlot = document.getElementById('detail-action-slot');
+if (actionSlot) {
 if (item._type === 'boutique') {
 if (currentAvatarRole === 'female') {
 actionSlot.innerHTML = <button class="shop-buy-btn" onclick="buyBoutiqueItem(${item.id})">Приобрести комплект • 💜 ${item.pricePtc} + 🖤 ${item.priceOtc}</button>;
@@ -1979,10 +1986,12 @@ actionSlot.innerHTML = <button class="shop-buy-btn" style="background: rgba(255,
 actionSlot.innerHTML = <button class="shop-buy-btn" onclick="buySexshopItem(${item.id})">Купить девайс • ❤️ ${item.priceStc}</button>;
 }
 }
+}
 
 function selectDetailPhoto(photoUrl, thumbElem) {
 activeDetailPhotoSrc = photoUrl;
-document.getElementById('detail-main-img-elem').src = photoUrl;
+const mainImg = document.getElementById('detail-main-img-elem');
+if (mainImg) mainImg.src = photoUrl;
 document.querySelectorAll('.detail-thumb-img').forEach(el => el.classList.remove('active'));
 thumbElem?.classList.add('active');
 tg?.HapticFeedback?.selectionChanged?.();
@@ -1995,8 +2004,8 @@ openFullscreenPhoto(activeDetailPhotoSrc);
 function openFullscreenPhoto(src) {
 const modal = document.getElementById('fullscreen-photo-modal');
 const img = document.getElementById('fullscreen-photo-elem');
-img.src = src;
-modal.classList.add('active');
+if (img) img.src = src;
+modal?.classList.add('active');
 tg?.HapticFeedback?.impactOccurred?.('medium');
 }
 
@@ -2124,7 +2133,8 @@ openConverterModal();
 }
 
 function openAddProductModal(shop) {
-document.getElementById('target-modal-shop').value = shop;
+const target = document.getElementById('target-modal-shop');
+if (target) target.value = shop;
 document.getElementById('add-product-modal')?.classList.add('active');
 }
 function closeAddProductModal() {
@@ -2174,6 +2184,7 @@ document.getElementById('currency-converter-modal')?.classList.remove('active');
 
 function updateConverterUI() {
 const bView = document.getElementById('converter-balances-view');
+if (!bView) return;
 if (currentAvatarRole === 'female') {
 bView.innerHTML = <span>💜 <b>${femaleBalances.ptc}</b></span> <span>🖤 <b>${femaleBalances.otc}</b></span> <span>❤️ <b>${femaleBalances.stc}</b></span>;
 } else {
@@ -2183,10 +2194,11 @@ calculateConversion();
 }
 
 function calculateConversion() {
-const fromCurr = document.getElementById('conv-from-currency').value;
-const toCurr = document.getElementById('conv-to-currency').value;
-const fromAmount = parseFloat(document.getElementById('conv-from-amount').value) || 0;
+const fromCurr = document.getElementById('conv-from-currency')?.value;
+const toCurr = document.getElementById('conv-to-currency')?.value;
+const fromAmount = parseFloat(document.getElementById('conv-from-amount')?.value) || 0;
 const toInput = document.getElementById('conv-to-amount');
+if (!toInput) return;
 
 if (fromCurr === toCurr) {
 toInput.value = fromAmount;
@@ -2342,8 +2354,10 @@ bullets: [
 
 function openTutorial(sectionKey) {
 const data = tutorialsData[sectionKey] || tutorialsData.desktop;
-document.getElementById('tutorial-icon').innerText = data.icon;
-document.getElementById('tutorial-title').innerText = data.title;
+const icon = document.getElementById('tutorial-icon');
+const title = document.getElementById('tutorial-title');
+if (icon) icon.innerText = data.icon;
+if (title) title.innerText = data.title;
 
 const slot = document.getElementById('tutorial-content-slot');
 if (slot) {
@@ -2365,12 +2379,12 @@ let cycleStartDate = localStorage.getItem('cycle_start_date') || new Date(Date.n
 let cycleDuration = parseInt(localStorage.getItem('cycle_duration') || '28');
 
 function toggleCycleSettings() {
-document.getElementById('cycle-settings').classList.toggle('open');
+document.getElementById('cycle-settings')?.classList.toggle('open');
 }
 
 function updateCycleSettings() {
-const startIn = document.getElementById('cycle-start-input').value;
-const lenIn = document.getElementById('cycle-length-input').value;
+const startIn = document.getElementById('cycle-start-input')?.value;
+const lenIn = document.getElementById('cycle-length-input')?.value;
 if (startIn) cycleStartDate = startIn;
 if (lenIn) cycleDuration = parseInt(lenIn);
 
@@ -2567,8 +2581,8 @@ function launchCelebration(x, y) {
 resizeBurstCanvas();
 burstParticles = [];
 
-const originX = (x !== undefined) ? x : burstCanvas.width / 2;
-const originY = (y !== undefined) ? y : burstCanvas.height / 2;
+const originX = (x !== undefined) ? x : (burstCanvas ? burstCanvas.width / 2 : 150);
+const originY = (y !== undefined) ? y : (burstCanvas ? burstCanvas.height / 2 : 150);
 
 const colors = [
 '#FFD700', '#FFB703', '#FFFFFF',
