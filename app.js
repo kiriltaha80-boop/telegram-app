@@ -32,9 +32,9 @@ stc: 90
 };
 
 // Версионирование кэша для безопасного сброса устаревших структур
-if (localStorage.getItem('pact_single_ver') !== 'v36_final_stable_release') {
+if (localStorage.getItem('pact_single_ver') !== 'v46_final_complete_fixes') {
 localStorage.removeItem('pact_desktop_items');
-localStorage.setItem('pact_single_ver', 'v36_final_stable_release');
+localStorage.setItem('pact_single_ver', 'v46_final_complete_fixes');
 }
 
 // Лог истории операций
@@ -135,7 +135,7 @@ activeEl.scrollTop = 0;
 }
 if (homeEl) homeEl.style.filter = 'blur(6px) brightness(0.65)';
 if (isDesktopEditMode) {
-toggleDesktopEditMode();
+toggleDesktopEditMode(false);
 }
 }
 
@@ -150,7 +150,7 @@ if (tabId === 'tab-shop') renderProducts();
 }
 
 /* ========================================================
-4. ВСПЛЫВАЮЩАЯ ПАНЕЛЬ НАД НИЖНИМ НАВБАРОМ
+4. ВСПЛЫВАЮЩАЯ ПАНЕЛЬ НАД НИЖНИМ НАВБАРОМ & КОЛБА
 ======================================================== */
 function toggleCapsuleToolbar() {
 const toolbar = document.getElementById('capsule-dock-toolbar');
@@ -159,6 +159,9 @@ if (!toolbar) return;
 
 const isActive = toolbar.classList.toggle('active');
 capsule?.classList.toggle('active', isActive);
+
+// Активируем режим перетаскивания иконок по столу
+toggleDesktopEditMode(isActive);
 
 if (isActive) {
 tg?.HapticFeedback?.impactOccurred?.('medium');
@@ -176,30 +179,34 @@ capsule?.classList.remove('active');
 
 function openAddWidgetModalDirect() {
 closeCapsuleToolbar();
-openCustomizationModal();
-setCustomModalTab('widgets');
+renderDesktopCatalogModal();
+document.getElementById('customization-modal')?.classList.add('active');
 tg?.HapticFeedback?.selectionChanged?.();
 }
 
 function openWallpaperModalDirect() {
 closeCapsuleToolbar();
-openCustomizationModal();
-setCustomModalTab('wallpapers');
+document.getElementById('wallpaper-modal')?.classList.add('active');
 tg?.HapticFeedback?.selectionChanged?.();
+}
+
+function closeWallpaperModal() {
+document.getElementById('wallpaper-modal')?.classList.remove('active');
 }
 
 document.addEventListener('touchstart', (e) => {
 const toolbar = document.getElementById('capsule-dock-toolbar');
 const capsule = document.getElementById('brand-capsule-btn');
 if (toolbar && toolbar.classList.contains('active')) {
-if (!toolbar.contains(e.target) && !capsule.contains(e.target)) {
+if (!toolbar.contains(e.target) && !capsule?.contains(e.target)) {
 closeCapsuleToolbar();
+toggleDesktopEditMode(false);
 }
 }
 }, { passive: true });
 
 /* ========================================================
-5. ГРАДУС СТРАСТИ 🌶️ & ГАРДЕРОБ
+5. ГРАДУС СТРАСТИ 🌶️ & ГАРДЕРОБ (СИММЕТРИЧНЫЙ 50/50 + НАМЁК)
 ======================================================== */
 let wardrobeItems = JSON.parse(localStorage.getItem('wardrobe_items')) || [
 { id: 1, title: '«Винтажная Муза»', desc: 'Корсетный топ цвета слоновой кости с кружевом', category: 'Белье', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
@@ -212,6 +219,8 @@ let wardrobeItems = JSON.parse(localStorage.getItem('wardrobe_items')) || [
 
 let wardrobeFilterCat = 'Белье';
 let selectedWardrobeIds = JSON.parse(localStorage.getItem('pact_selected_wardrobe_ids')) || [1, 2];
+let partnerHintIds = JSON.parse(localStorage.getItem('pact_partner_hint_ids')) || [2];
+let showPartnerPrefsOnly = false;
 
 function renderPeppers(count = 1) {
 const peppers = '🌶️'.repeat(Math.min(Math.max(count, 1), 3));
@@ -265,10 +274,39 @@ return { total, countItems, title, desc, progressPercent };
 }
 
 function setWardrobeCategory(cat, btn) {
+showPartnerPrefsOnly = false;
 wardrobeFilterCat = cat;
-document.querySelectorAll('#tab-wardrobe .chip-btn').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('.wardrobe-col-tab-btn').forEach(b => b.classList.remove('active'));
+document.getElementById('wardrobe-partner-prefs-btn')?.classList.remove('active');
 btn?.classList.add('active');
 tg?.HapticFeedback?.selectionChanged?.();
+renderWardrobe();
+}
+
+function togglePartnerPrefsFilter() {
+showPartnerPrefsOnly = !showPartnerPrefsOnly;
+const btn = document.getElementById('wardrobe-partner-prefs-btn');
+btn?.classList.toggle('active', showPartnerPrefsOnly);
+if (showPartnerPrefsOnly) {
+document.querySelectorAll('.wardrobe-col-tab-btn').forEach(b => b.classList.remove('active'));
+} else {
+document.getElementById(wardrobeFilterCat === 'Белье' ? 'btn-wardrobe-lingerie' : 'btn-wardrobe-toys')?.classList.add('active');
+}
+tg?.HapticFeedback?.selectionChanged?.();
+renderWardrobe();
+}
+
+function togglePartnerHint(id) {
+const index = partnerHintIds.indexOf(id);
+if (index > -1) {
+partnerHintIds.splice(index, 1);
+showToast('Намёк снят ✕', 'info');
+} else {
+partnerHintIds.push(id);
+showToast('Намёк отправлен Нижней! 💋', 'success');
+tg?.HapticFeedback?.notificationOccurred?.('success');
+}
+localStorage.setItem('pact_partner_hint_ids', JSON.stringify(partnerHintIds));
 renderWardrobe();
 }
 
@@ -291,30 +329,53 @@ function renderWardrobe() {
 const banner = document.getElementById('wardrobe-passion-summary');
 const passion = getPassionStatus();
 if (banner) {
-banner.innerHTML = <div> <div style="font-size: 9px; font-weight: 800; color: #FF8566; text-transform: uppercase;">Текущий образ:</div> <div style="font-size: 13px; font-weight: 800; color: #fff;">${passion.title}</div> </div> <div style="text-align: right;"> <div style="font-size: 12.5px; font-weight: 900; color: #FFB703;">${passion.total} 🌶️</div> <div style="font-size: 9px; color: var(--text-muted);">${passion.countItems} предмет(ов)</div> </div>;
+banner.innerHTML =  <div> <div style="font-size: 9px; font-weight: 800; color: #FF8566; text-transform: uppercase;">Текущий образ:</div> <div style="font-size: 13px; font-weight: 800; color: #fff;">${passion.title}</div> </div> <div style="text-align: right;"> <div style="font-size: 12.5px; font-weight: 900; color: #FFB703;">${passion.total} 🌶️</div> <div style="font-size: 9px; color: var(--text-muted);">${passion.countItems} предмет(ов)</div> </div>;
+}
+
+// Кнопка предпочтений партнера для Нижней
+const prefsSlot = document.getElementById('wardrobe-partner-prefs-btn-slot');
+if (prefsSlot) {
+if (currentAvatarRole === 'female') {
+prefsSlot.innerHTML =  <button id="wardrobe-partner-prefs-btn" class="wardrobe-partner-prefs-btn ${showPartnerPrefsOnly ? 'active' : ''}" onclick="togglePartnerPrefsFilter()"> <span>👑</span> <span>Предпочтения партнёра (${partnerHintIds.length})</span> </button>;
+} else {
+prefsSlot.innerHTML =  <div style="font-size: 9.5px; color: #D4AF37; font-weight: 700; text-align: center; margin-bottom: 6px; padding: 4px;"> Нажмите «Намекнуть 💋» на вещи, чтобы выделить её для Нижней </div>;
+}
 }
 
 const container = document.getElementById('wardrobe-items-list');
 if (!container) return;
 
-const filtered = wardrobeItems.filter(item => item.category === wardrobeFilterCat);
+let filtered = wardrobeItems;
+if (showPartnerPrefsOnly) {
+filtered = wardrobeItems.filter(item => partnerHintIds.includes(item.id));
+} else {
+filtered = wardrobeItems.filter(item => item.category === wardrobeFilterCat);
+}
 
 if (filtered.length === 0) {
-container.innerHTML = 'В этой категории пока пусто';
+container.innerHTML = <div style="text-align: center; color: var(--text-muted); padding: 35px 10px; font-size: 11px;">${showPartnerPrefsOnly ? 'Партнёр пока не оставил намёков' : 'В этой категории пока пусто'}</div>;
 return;
 }
 
 container.innerHTML = filtered.map(item => {
 const isSelected = selectedWardrobeIds.includes(item.id);
+const isHinted = partnerHintIds.includes(item.id);
 const isToy = (item.category === 'Игрушки');
 const badgeText = isToy ? 'БУДЕТ ИСПОЛЬЗОВАНО ⚡' : 'НАДЕТО ✨';
 const activeBtnText = isToy ? '✓ Будет использовано' : '✓ Надето';
+
+// В режиме Верхнего кнопка намёка
+const hintBtnHtml = (currentAvatarRole === 'male') ? `
+  <button class="wardrobe-hint-action-btn ${isHinted ? 'active-hint' : ''}" onclick="event.stopPropagation(); togglePartnerHint(${item.id})">
+    ${isHinted ? '★ Намёк активен' : 'Намекнуть 💋'}
+  </button>` : '';
 
 return `
   <div class="wardrobe-card-row ${isSelected ? 'is-selected' : ''}" onclick="selectWardrobeItem(${item.id})">
     <div class="wardrobe-img-wrap" onclick="event.stopPropagation(); openFullscreenPhoto('${item.mainImg}')">
       <img class="wardrobe-row-img" src="${item.mainImg}" alt="${item.title}" loading="lazy">
       ${isSelected ? `<span class="selected-badge ${isToy ? 'badge-toy' : ''}">${badgeText}</span>` : ''}
+      ${isHinted ? `<span class="wardrobe-hint-badge">Намёк 💋</span>` : ''}
     </div>
     <div class="wardrobe-row-info">
       <div>
@@ -326,9 +387,12 @@ return `
       </div>
       <div class="wardrobe-row-footer">
         <span class="wardrobe-row-cat">${item.category === 'Белье' ? 'Белье' : 'Секс-шоп'}</span>
-        <button class="wardrobe-select-btn ${isSelected ? (isToy ? 'active-toy' : 'active-lingerie') : ''}">
-          ${isSelected ? activeBtnText : 'Выбрать'}
-        </button>
+        <div style="display: flex; align-items: center;">
+          ${hintBtnHtml}
+          <button class="wardrobe-select-btn ${isSelected ? (isToy ? 'active-toy' : 'active-lingerie') : ''}">
+            ${isSelected ? activeBtnText : 'Выбрать'}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -339,41 +403,44 @@ return `
 }
 
 /* ========================================================
-6. РАБОЧИЙ СТОЛ (3 СТОЛА, СВАЙП, DRAG & DROP)
+6. РАБОЧИЙ СТОЛ (3 СТОЛА, СВАЙП, DRAG & DROP БЕЗ ОБЕТА ДНЯ)
 ======================================================== */
 let isDesktopEditMode = false;
 let isContractSigned = localStorage.getItem('pact_contract_signed') !== 'false';
 let currentDesktopPage = 0;
 let editingTileId = null;
 
+// Дефолтный набор элементов: без виджета «Обет Дня», баланс — квадратный span 2
 let desktopItems = JSON.parse(localStorage.getItem('pact_desktop_items')) || [
 { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
-{ id: 'w-balance', type: 'widget-balance', span: 4, page: 0 },
+{ id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
 { id: 'tile-male', type: 'tile', title: 'Верхний ♂', icon: '⚡', target: 'tab-male-session', page: 0 },
 { id: 'tile-female', type: 'tile', title: 'Нижняя ♀', icon: '🌹', target: 'tab-female-session', page: 0 },
 { id: 'tile-bank', type: 'tile', title: 'Баланс', icon: '💖', target: 'tab-bank', page: 0 },
 { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🩱', target: 'tab-wardrobe', page: 0 },
 { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
-{ id: 'tile-sexshop', type: 'tile', title: 'Секс-шоп', icon: '🔮', target: 'tab-sexshop', page: 0 },
 { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 1 },
 { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 1 },
 { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 1 },
 { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '🌸', target: 'tab-cycle', page: 1 },
-{ id: 'tile-chat', type: 'tile', title: 'Чат', icon: '💬', target: 'tab-messenger', page: 1 },
-{ id: 'w-contract', type: 'widget-contract', span: 4, page: 1 }
+{ id: 'tile-chat', type: 'tile', title: 'Чат', icon: '💬', target: 'tab-messenger', page: 1 }
 ];
 
 function saveDesktopItems() {
 localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
 }
 
-function toggleDesktopEditMode() {
+function toggleDesktopEditMode(forceState) {
+if (typeof forceState === 'boolean') {
+isDesktopEditMode = forceState;
+} else {
 isDesktopEditMode = !isDesktopEditMode;
-const homeTab = document.getElementById('tab-home');
+}
 
+const homeTab = document.getElementById('tab-home');
 if (isDesktopEditMode) {
 homeTab?.classList.add('edit-mode');
-showToast('Режим редактирования: зажмите и перемещайте элементы или нажмите для смены иконки', 'info');
+showToast('Режим редактирования: перетаскивайте элементы по сетке', 'info');
 } else {
 homeTab?.classList.remove('edit-mode');
 }
@@ -441,13 +508,14 @@ goToDesktopPage(currentDesktopPage - 1);
 });
 }
 
-/* СЕНСОРНЫЙ DRAG & DROP */
+/* СЕНСОРНЫЙ DRAG & DROP С ПОДДЕРЖКОЙ LONG-PRESS */
 let draggedElement = null;
 let dragGhost = null;
 let dragGhostStartX = 0;
 let dragGhostStartY = 0;
 let isItemDragging = false;
 let edgeFlipTimeout = null;
+let longPressTimeout = null;
 
 function renderDesktop() {
 const pages = [
@@ -460,7 +528,7 @@ if (!pages[0] || !pages[1] || !pages[2]) return;
 pages.forEach(p => { p.innerHTML = ''; });
 
 if (!isContractSigned) {
-pages[0].innerHTML = <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')"> <div class="hero-contract-icon">📜</div> <div class="hero-contract-label">Контракт D/S</div> </div>;
+pages[0].innerHTML =  <div class="desktop-locked-hero" onclick="openSubScreen('tab-contract')"> <div class="hero-contract-icon">📜</div> <div class="hero-contract-label">Контракт D/S</div> </div>;
 return;
 }
 
@@ -502,11 +570,12 @@ if (item.type === 'tile') {
     }
   };
 } else if (item.type === 'widget-passion') {
+  // 1. «Градус страстей» строго без слова «Звание»
   inner = `
     ${deleteBtn}
     <div class="desktop-widget widget-passion-box">
       <div class="passion-top-row">
-        <div class="widget-title-lbl" style="color: #FF8566; margin: 0;">🌶️ Градус Страсти & Звание</div>
+        <div class="widget-title-lbl" style="color: #FF8566; margin: 0; font-size: 11px; font-weight: 800;">🌶️ Градус Страсти</div>
         <div class="passion-peppers-badge">${passion.total} 🌶️</div>
       </div>
       <div class="passion-rank-title">${passion.title}</div>
@@ -523,47 +592,31 @@ if (item.type === 'tile') {
     if (!isItemDragging && !isDesktopEditMode) openSubScreen('tab-wardrobe');
   };
 } else if (item.type === 'widget-balance') {
+  // 5. Квадратный виджет баланса очков со столбиком валют (до 9999)
   let balanceHtml = '';
   if (currentAvatarRole === 'female') {
     balanceHtml = `
-      <div class="curr-chip ptc">💜 ${femaleBalances.ptc}</div>
-      <div class="curr-chip otc">🖤 ${femaleBalances.otc}</div>
-      <div class="curr-chip stc">❤️ ${femaleBalances.stc}</div>
+      <div class="bal-col-row"><span class="bal-col-name">💜 Страсть:</span><span class="bal-col-val ptc">${femaleBalances.ptc}</span></div>
+      <div class="bal-col-row"><span class="bal-col-name">🖤 Покорность:</span><span class="bal-col-val otc">${femaleBalances.otc}</span></div>
+      <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${femaleBalances.stc}</span></div>
     `;
   } else {
     balanceHtml = `
-      <div class="curr-chip att">💙 ${maleBalances.atc}</div>
-      <div class="curr-chip care">💚 ${maleBalances.ctc}</div>
-      <div class="curr-chip stc">❤️ ${maleBalances.stc}</div>
+      <div class="bal-col-row"><span class="bal-col-name">💙 Внимание:</span><span class="bal-col-val att">${maleBalances.atc}</span></div>
+      <div class="bal-col-row"><span class="bal-col-name">💚 Забота:</span><span class="bal-col-val care">${maleBalances.ctc}</span></div>
+      <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${maleBalances.stc}</span></div>
     `;
   }
 
   inner = `
     ${deleteBtn}
-    <div class="desktop-widget">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div class="widget-title-lbl" style="margin: 0;">💖 Баланс Очков</div>
-        <div style="font-size: 10px; color: var(--accent-color); font-weight: 700;">Открыть ⚖️</div>
-      </div>
-      <div class="widget-balance-grid" style="display: flex; gap: 4px; margin-top: 4px;">
-        ${balanceHtml}
-      </div>
+    <div class="desktop-widget widget-balance-square">
+      <div class="widget-title-lbl" style="color: #FF8599; margin: 0 0 6px 0; font-size: 11px; font-weight: 800;">💖 Баланс</div>
+      <div class="widget-balance-column">${balanceHtml}</div>
     </div>`;
 
   wrap.onclick = () => {
     if (!isItemDragging && !isDesktopEditMode) openSubScreen('tab-bank');
-  };
-} else if (item.type === 'widget-contract') {
-  inner = `
-    ${deleteBtn}
-    <div class="desktop-widget">
-      <div class="widget-header"><span>Обет Дня</span><span>📜</span></div>
-      <div class="widget-title">"Согласие и правила вечера"</div>
-      <div class="widget-sub">Статус: Действует</div>
-    </div>`;
-
-  wrap.onclick = () => {
-    if (!isItemDragging && !isDesktopEditMode) openSubScreen('tab-contract');
   };
 }
 
@@ -583,21 +636,35 @@ p.innerHTML = <div style="grid-column: span 4; text-align: center; color: var(--
 
 function attachDragEvents(el) {
 el.addEventListener('touchstart', (e) => {
-if (!isDesktopEditMode || e.target.closest('.item-delete-btn')) return;
+if (e.target.closest('.item-delete-btn')) return;
 dragGhostStartX = e.touches[0].clientX;
 dragGhostStartY = e.touches[0].clientY;
 draggedElement = el;
 isItemDragging = false;
+
+// Длинное зажатие для активации перемещения без меню
+longPressTimeout = setTimeout(() => {
+  if (!isDesktopEditMode) {
+    toggleDesktopEditMode(true);
+  }
+}, 400);
+
+
 }, { passive: true });
 
 el.addEventListener('touchmove', (e) => {
-if (!isDesktopEditMode || !draggedElement) return;
-
 const curX = e.touches[0].clientX;
 const curY = e.touches[0].clientY;
 const dist = Math.hypot(curX - dragGhostStartX, curY - dragGhostStartY);
 
-if (!isItemDragging && dist > 7) {
+if (dist > 8 && longPressTimeout) {
+  clearTimeout(longPressTimeout);
+  longPressTimeout = null;
+}
+
+if (!isDesktopEditMode || !draggedElement) return;
+
+if (!isItemDragging && dist > 10) {
   isItemDragging = true;
   tg?.HapticFeedback?.impactOccurred?.('medium');
 
@@ -653,6 +720,10 @@ if (isItemDragging && dragGhost) {
 }, { passive: false });
 
 el.addEventListener('touchend', () => {
+if (longPressTimeout) {
+clearTimeout(longPressTimeout);
+longPressTimeout = null;
+}
 if (edgeFlipTimeout) {
 clearTimeout(edgeFlipTimeout);
 edgeFlipTimeout = null;
@@ -733,7 +804,7 @@ if (titleInput) titleInput.value = tile.title;
 
 const grid = document.getElementById('icon-picker-grid');
 if (grid) {
-grid.innerHTML = availableIconsList.map(ico => <div style="font-size: 22px; text-align: center; padding: 6px; border-radius: 10px; cursor: pointer; background: ${ico === selectedTileIcon ? 'rgba(230,57,86,0.3)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${ico === selectedTileIcon ? 'var(--accent-color)' : 'var(--border-color)'};" onclick="selectPickerIcon('${ico}', this)"> ${ico} </div>).join('');
+grid.innerHTML = availableIconsList.map(ico =>  <div style="font-size: 22px; text-align: center; padding: 6px; border-radius: 10px; cursor: pointer; background: ${ico === selectedTileIcon ? 'rgba(230,57,86,0.3)' : 'rgba(255,255,255,0.05)'}; border: 1px solid ${ico === selectedTileIcon ? 'var(--accent-color)' : 'var(--border-color)'};" onclick="selectPickerIcon('${ico}', this)"> ${ico} </div>).join('');
 }
 
 setTileTargetPage(selectedTileTargetPage);
@@ -781,60 +852,89 @@ renderDesktop();
 }
 
 /* ========================================================
-8. ЕДИНЫЙ ЦЕНТР КАСТОМИЗАЦИИ (ВИДЖЕТЫ + ОБОИ)
+8. КАТАЛОГ «ДОБАВИТЬ НА ЭКРАН» (СТАТУСЫ ✓ / ✕)
 ======================================================== */
-function openCustomizationModal() {
-document.getElementById('customization-modal')?.classList.add('active');
-tg?.HapticFeedback?.impactOccurred?.('light');
-}
+const availableCatalogItems = [
+{ id: 'w-passion', type: 'widget-passion', span: 4, title: 'Градус Страсти', icon: '🌶️', desc: 'Сумма перчинок и будуарный статус вечера' },
+{ id: 'w-balance', type: 'widget-balance', span: 2, title: 'Баланс Очков', icon: '💖', desc: 'Квадратный виджет счетов в столбик' },
+{ id: 'tile-male', type: 'tile', target: 'tab-male-session', title: 'Верхний ♂', icon: '⚡', desc: 'Ритуалы и задания Верхнего' },
+{ id: 'tile-female', type: 'tile', target: 'tab-female-session', title: 'Нижняя ♀', icon: '🌹', desc: 'Обряды и ванна Нижней' },
+{ id: 'tile-bank', type: 'tile', target: 'tab-bank', title: 'Баланс', icon: '💖', desc: 'Казна, поощрения и штрафы' },
+{ id: 'tile-wardrobe', type: 'tile', target: 'tab-wardrobe', title: 'Гардероб', icon: '🩱', desc: 'Примерка белья и игрушек на вечер' },
+{ id: 'tile-boutique', type: 'tile', target: 'tab-shop', title: 'Бутик', icon: '🛍️', desc: 'Бутик белья и секс-шоп девайсов' },
+{ id: 'tile-cycle', type: 'tile', target: 'tab-cycle', title: 'Календарь', icon: '🌸', desc: 'Женский цикл и настроение' },
+{ id: 'tile-contract', type: 'tile', target: 'tab-contract', title: 'Контракт', icon: '📜', desc: 'Соглашение пары D/S' },
+{ id: 'tile-random', type: 'tile', target: 'tab-randomizer', title: 'Жребий', icon: '🎲', desc: '3D-монетка и кубик судьбы' },
+{ id: 'tile-gifts', type: 'tile', target: 'tab-gifts', title: 'Желания', icon: '✨', desc: 'Подарки и тайные просьбы' },
+{ id: 'tile-chat', type: 'tile', target: 'tab-messenger', title: 'Чат', icon: '💬', desc: 'Диалог с Pact Bot' }
+];
 
 function closeCustomizationModal() {
 document.getElementById('customization-modal')?.classList.remove('active');
 }
 
-function setCustomModalTab(tab) {
-document.querySelectorAll('.custom-tab-btn').forEach(b => b.classList.remove('active'));
-document.getElementById(btn-tab-${tab})?.classList.add('active');
+function renderDesktopCatalogModal() {
+const container = document.getElementById('desktop-catalog-dynamic-list');
+if (!container) return;
+container.innerHTML = '';
 
-const widgetsContent = document.getElementById('custom-tab-content-widgets');
-const wallpapersContent = document.getElementById('custom-tab-content-wallpapers');
+availableCatalogItems.forEach(item => {
+// Проверка, есть ли элемент уже на рабочем столе
+const isPresent = desktopItems.some(d =>
+item.type === 'tile' ? d.target === item.target : d.type === item.type
+);
 
-if (tab === 'widgets') {
-if (widgetsContent) widgetsContent.style.display = 'flex';
-if (wallpapersContent) wallpapersContent.style.display = 'none';
-} else {
-if (widgetsContent) widgetsContent.style.display = 'none';
-if (wallpapersContent) wallpapersContent.style.display = 'grid';
-}
-tg?.HapticFeedback?.selectionChanged?.();
-}
+const card = document.createElement('div');
+card.className = 'widget-catalog-card';
+card.innerHTML = `
+  <div class="cat-icon">${item.icon}</div>
+  <div class="cat-info">
+    <div class="title">${item.title}</div>
+    <div class="sub">${item.desc}</div>
+  </div>
+  <button class="catalog-status-btn ${isPresent ? 'remove' : 'add'}">
+    ${isPresent ? '✕' : '✓'}
+  </button>
+`;
 
-function createWidgetOnDesktop(type, span) {
-desktopItems.push({
-id: 'w-' + Date.now(),
-type,
-span,
-page: currentDesktopPage
+card.onclick = () => {
+  if (isPresent) {
+    desktopItems = desktopItems.filter(d => 
+      item.type === 'tile' ? d.target !== item.target : d.type !== item.type
+    );
+    showToast(`«${item.title}» убран со стола`, 'info');
+  } else {
+    if (item.type === 'tile') {
+      desktopItems.push({
+        id: 't-' + Date.now(),
+        type: 'tile',
+        title: item.title,
+        icon: item.icon,
+        target: item.target,
+        page: currentDesktopPage
+      });
+    } else {
+      // Добавляем строго только выбранный виджет без сопутствующих плиток
+      desktopItems.push({
+        id: 'w-' + Date.now(),
+        type: item.type,
+        span: item.span,
+        page: currentDesktopPage
+      });
+    }
+    showToast(`«${item.title}» добавлен на Стол ${currentDesktopPage + 1}!`, 'success');
+  }
+
+  saveDesktopItems();
+  renderDesktop();
+  renderDesktopCatalogModal();
+  tg?.HapticFeedback?.selectionChanged?.();
+};
+
+container.appendChild(card);
+
+
 });
-saveDesktopItems();
-closeCustomizationModal();
-renderDesktop();
-showToast(Виджет добавлен на Стол ${currentDesktopPage + 1}!, 'success');
-}
-
-function createTileOnDesktop(title, icon, target) {
-desktopItems.push({
-id: 't-' + Date.now(),
-type: 'tile',
-title,
-icon,
-target,
-page: currentDesktopPage
-});
-saveDesktopItems();
-closeCustomizationModal();
-renderDesktop();
-showToast(Плитка «${title}» добавлена на Стол ${currentDesktopPage + 1}!, 'success');
 }
 
 /* ========================================================
@@ -1168,16 +1268,8 @@ const savedKey = localStorage.getItem('pact_wallpaper_key') || 'ruby_opal';
 setWallpaper(savedKey);
 }
 
-function openWallpaperModal() {
-openCustomizationModal();
-setCustomModalTab('wallpapers');
-}
-function closeWallpaperModal() {
-closeCustomizationModal();
-}
-
 /* ========================================================
-11. ПРОФИЛЬ, ИМЯ & АВАТАРКИ
+11. ПРОФИЛЬ (БЕЗ ОЧКОВ БАЛАНСА И ВЫПОЛНЕНИЯ ОБЕТОВ)
 ======================================================== */
 const MALE_CARTOON_AVATARS = [
 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png',
@@ -1231,6 +1323,7 @@ applyAvatarToUI(currentAvatarRole, defaultList[0]);
 renderDesktop();
 renderBankScreen();
 renderProducts();
+renderWardrobe();
 showToast(Активная роль: ${currentAvatarRole === 'male' ? '👑 Верхний ♂' : '🗝️ Нижняя ♀'}, 'info');
 tg?.HapticFeedback?.impactOccurred?.('medium');
 }
@@ -1677,10 +1770,10 @@ toInput.value = fromAmount;
 }
 
 function executeBankCurrencyExchange() {
-const fromCurr = document.getElementById('bank-conv-from-currency').value;
-const toCurr = document.getElementById('bank-conv-to-currency').value;
-const fromAmount = parseInt(document.getElementById('bank-conv-from-amount').value) || 0;
-const toAmount = parseInt(document.getElementById('bank-conv-to-amount').value) || 0;
+const fromCurr = document.getElementById('bank-conv-from-currency')?.value;
+const toCurr = document.getElementById('bank-conv-to-currency')?.value;
+const fromAmount = parseInt(document.getElementById('bank-conv-from-amount')?.value) || 0;
+const toAmount = parseInt(document.getElementById('bank-conv-to-amount')?.value) || 0;
 
 if (fromAmount <= 0) {
 showToast('Введите корректную сумму для обмена.', 'error');
@@ -1832,24 +1925,22 @@ calculateBankConversion();
 }
 
 /* ========================================================
-13. БУТИК & СЕКС-ШОП С ПЛАШКОЙ NEW
+13. БУТИК ИСКУШЕНИЯ (ЕДИНЫЙ МАГАЗИН: 1 РЯД, ЛАЙКИ, БЕЗ ОБМЕНА)
 ======================================================== */
 let boutiqueItems = JSON.parse(localStorage.getItem('boutique_items')) || [
-{ id: 101, title: 'Кружевной Комплект Velour', category: 'Комплект', pricePtc: 220, priceOtc: 80, peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом цвета слоновой кости', seen: true },
-{ id: 102, title: '«Тёмная Покорность»', category: 'Комплект', pricePtc: 160, priceOtc: 340, peppers: 2, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, пояс с гартерами', seen: true },
-{ id: 103, title: '«Цветение Айвори»', category: 'Комплект', pricePtc: 280, priceOtc: 140, peppers: 2, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт с цветочной вышивкой', seen: true },
-{ id: 104, title: '«Чистый Соблазн»', category: 'Комплект', pricePtc: 380, priceOtc: 300, peppers: 3, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Белоснежный открытый бра с кольцами', seen: false }
+{ id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом цвета слоновой кости', seen: true },
+{ id: 102, title: '«Тёмная Покорность»', category: 'Белье', pricePtc: 160, priceOtc: 340, peppers: 2, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, пояс с гартерами', seen: true },
+{ id: 103, title: '«Цветение Айвори»', category: 'Белье', pricePtc: 280, priceOtc: 140, peppers: 2, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт с цветочной вышивкой', seen: true },
+{ id: 104, title: '«Чистый Соблазн»', category: 'Белье', pricePtc: 380, priceOtc: 300, peppers: 3, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Белоснежный открытый бра с кольцами', seen: false },
+// Товары бывшего секс-шопа интегрированы в единую витрину:
+{ id: 201, title: '«Бархатный Ошейник»', category: 'Секс-шоп', priceStc: 180, peppers: 2, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900', desc: 'Чёрный ошейник с позолоченным кольцом и поводком', seen: true },
+{ id: 202, title: '«Атласные Ленты & Повязка»', category: 'Секс-шоп', priceStc: 120, peppers: 1, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Для депривации чувств во время сессии', seen: true },
+{ id: 203, title: '«Кожаный Флоггер Покора»', category: 'Секс-шоп', priceStc: 260, peppers: 3, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900', desc: 'Мягкие замшевые хвосты на эргономичной рукояти', seen: true },
+{ id: 204, title: '«Вибратор Неоновый Пульс»', category: 'Секс-шоп', priceStc: 350, peppers: 3, mainImg: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=900', desc: '10 режимов глубокой пульсации', seen: true }
 ];
 
-let sexshopItems = JSON.parse(localStorage.getItem('sexshop_items')) || [
-{ id: 201, title: '«Бархатный Ошейник»', category: 'Бондаж', priceStc: 180, peppers: 2, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900', desc: 'Чёрный ошейник с позолоченным кольцом и поводком' },
-{ id: 202, title: '«Атласные Ленты & Повязка»', category: 'Бондаж', priceStc: 120, peppers: 1, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Для депривации чувств во время сессии' },
-{ id: 203, title: '«Кожаный Флоггер Покора»', category: 'Игрушки', priceStc: 260, peppers: 3, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900', desc: 'Мягкие замшевые хвосты на эргономичной рукояти' },
-{ id: 204, title: '«Вибратор Неоновый Пульс»', category: 'Игрушки', priceStc: 350, peppers: 3, mainImg: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=900', desc: '10 режимов глубокой пульсации' }
-];
-
-let shopFilterCat = 'all';
-let sexshopFilterCat = 'all';
+let likedShopItemIds = JSON.parse(localStorage.getItem('pact_liked_shop_ids')) || [102];
+let shopFilterCat = 'Белье';
 let currentDetailItem = null;
 let activeDetailPhotoSrc = '';
 
@@ -1860,70 +1951,89 @@ btn?.classList.add('active');
 renderProducts();
 }
 
-function setSexshopCategory(cat, btn) {
-sexshopFilterCat = cat;
-document.querySelectorAll('#tab-sexshop .chip-btn').forEach(b => b.classList.remove('active'));
-btn?.classList.add('active');
+function toggleProductLike(id) {
+const index = likedShopItemIds.indexOf(id);
+if (index > -1) {
+likedShopItemIds.splice(index, 1);
+} else {
+likedShopItemIds.push(id);
+tg?.HapticFeedback?.impactOccurred?.('medium');
+}
+localStorage.setItem('pact_liked_shop_ids', JSON.stringify(likedShopItemIds));
 renderProducts();
+}
+
+function requestPartnerGift() {
+tg?.HapticFeedback?.notificationOccurred?.('success');
+showToast('Намёк на подарок отправлен партнёру! 🎁', 'success');
 }
 
 function renderShopBalance() {
 const slot = document.getElementById('shop-account-balance-slot');
 if (!slot) return;
 
+// 6. Убрана кнопка «Обмен» из плашки баланса
 if (currentAvatarRole === 'female') {
-slot.innerHTML = <div> <div class="shop-bal-label">Твой баланс</div> <div class="shop-bal-chips-group"> <span class="curr-chip ptc">💜 <b>${femaleBalances.ptc}</b></span> <span class="curr-chip otc">🖤 <b>${femaleBalances.otc}</b></span> <span class="curr-chip stc">❤️ <b>${femaleBalances.stc}</b></span> </div> </div> <button class="shop-bal-action-btn" onclick="openConverterModal()"> <span>🔄</span> Обмен </button>;
+slot.innerHTML =  <div> <div class="shop-bal-label">Твой баланс</div> <div class="shop-bal-chips-group"> <span class="curr-chip ptc">💜 <b>${femaleBalances.ptc}</b></span> <span class="curr-chip otc">🖤 <b>${femaleBalances.otc}</b></span> <span class="curr-chip stc">❤️ <b>${femaleBalances.stc}</b></span> </div> </div> <div style="font-size: 10px; font-weight: 800; color: #FF8599;">Бутик 🛍️</div>;
 } else {
-slot.innerHTML = <div> <div class="shop-bal-label">Баланс Верхнего</div> <div class="shop-bal-chips-group"> <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span> <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span> <span class="curr-chip stc">❤️ <b>${maleBalances.stc}</b></span> </div> </div> <button class="shop-bal-action-btn" onclick="openSubScreen('tab-bank')"> <span>💖</span> Баланс </button>;
+slot.innerHTML =  <div> <div class="shop-bal-label">Баланс Верхнего</div> <div class="shop-bal-chips-group"> <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span> <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span> <span class="curr-chip stc">❤️ <b>${maleBalances.stc}</b></span> </div> </div> <div style="font-size: 10px; font-weight: 800; color: #4A90E2;">Казна 👑</div>;
 }
+
+// Кнопка «+ Добавить» видна только Верхнему
+const addBtn = document.getElementById('shop-add-btn-master');
+if (addBtn) addBtn.style.display = (currentAvatarRole === 'male') ? 'block' : 'none';
 }
 
 function renderProducts() {
 renderShopBalance();
 const bCont = document.getElementById('shop-products-list');
-const sCont = document.getElementById('custom-products-sexshop');
+if (!bCont) return;
 
-if (bCont) {
-const filteredBoutique = (shopFilterCat === 'all')
-? boutiqueItems
-: boutiqueItems.filter(item => item.category === shopFilterCat);
-
-bCont.innerHTML = filteredBoutique.map(p => {
-  const newBadgeHtml = (!p.seen && currentAvatarRole === 'female') ? `<div class="product-new-badge">NEW</div>` : '';
-  return `
-    <div class="product-card" onclick="openProductDetail(${p.id}, 'boutique')">
-      ${newBadgeHtml}
-      <img class="product-main-img" src="${p.mainImg}" alt="${p.title}" loading="lazy">
-      <div class="product-title">${p.title}</div>
-      <div class="product-category-lbl">${p.category}</div>
-      <div class="product-price-lbl">💜 ${p.pricePtc} + 🖤 ${p.priceOtc}</div>
-    </div>
-  `;
-}).join('');
-
-
+let filtered = boutiqueItems;
+if (shopFilterCat === 'Понравилось') {
+filtered = boutiqueItems.filter(item => likedShopItemIds.includes(item.id));
+} else {
+filtered = boutiqueItems.filter(item => item.category === shopFilterCat);
 }
 
-if (sCont) {
-const filteredSexshop = (sexshopFilterCat === 'all')
-? sexshopItems
-: sexshopItems.filter(item => item.category === sexshopFilterCat);
+if (filtered.length === 0) {
+bCont.innerHTML = <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 11px;">${shopFilterCat === 'Понравилось' ? 'В избранном пока ничего нет' : 'Товаров в этой категории не найдено'}</div>;
+return;
+}
 
-sCont.innerHTML = filteredSexshop.map(p => `
-  <div class="product-card" onclick="openProductDetail(${p.id}, 'sexshop')">
+// Карточки товаров строго в 1 колонку
+bCont.innerHTML = filtered.map(p => {
+const isLiked = likedShopItemIds.includes(p.id);
+const newBadgeHtml = (!p.seen && currentAvatarRole === 'female') ? <div class="product-new-badge">NEW</div> : '';
+const priceText = (p.category === 'Белье') ? 💜 ${p.pricePtc} + 🖤 ${p.priceOtc} : ❤️ ${p.priceStc};
+
+return `
+  <div class="product-card" onclick="openProductDetail(${p.id})">
+    ${newBadgeHtml}
+    <button class="product-like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike(${p.id})">
+      ${isLiked ? '❤️' : '🤍'}
+    </button>
     <img class="product-main-img" src="${p.mainImg}" alt="${p.title}" loading="lazy">
-    <div class="product-title">${p.title}</div>
-    <div class="product-category-lbl">${p.category}</div>
-    <div class="product-price-lbl">❤️ ${p.priceStc}</div>
+    <div class="product-single-info">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+          <div class="product-title" style="font-size: 12.5px; font-weight: 800; color: #fff;">${p.title}</div>
+          <div>${renderPeppers(p.peppers || 1)}</div>
+        </div>
+        <div class="product-category-lbl" style="margin-top: 2px;">${p.category}</div>
+        <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 4px; line-height: 1.3;">${p.desc}</div>
+      </div>
+      <div class="product-price-lbl" style="font-size: 12px; font-weight: 900; margin-top: 6px;">${priceText}</div>
+    </div>
   </div>
-`).join('');
+`;
 
 
+}).join('');
 }
-}
 
-function openProductDetail(id, type) {
-const item = (type === 'boutique') ? boutiqueItems.find(p => p.id === id) : sexshopItems.find(p => p.id === id);
+function openProductDetail(id) {
+const item = boutiqueItems.find(p => p.id === id);
 if (!item) return;
 
 if (!item.seen && currentAvatarRole === 'female') {
@@ -1933,7 +2043,7 @@ renderDesktop();
 renderProducts();
 }
 
-currentDetailItem = { ...item, _type: type };
+currentDetailItem = item;
 activeDetailPhotoSrc = item.mainImg;
 renderProductDetail(currentDetailItem);
 openSubScreen('tab-product-detail');
@@ -1943,18 +2053,14 @@ function renderProductDetail(item) {
 if (!item) return;
 
 const topTitle = document.getElementById('detail-top-title');
-if (topTitle) topTitle.innerText = item._type === 'boutique' ? 'БУТИК' : 'СЕКС-ШОП';
+if (topTitle) topTitle.innerText = item.category === 'Белье' ? 'БУТИК' : 'СЕКС-ШОП';
 
 const titleEl = document.getElementById('detail-title-elem');
 if (titleEl) titleEl.innerText = item.title;
 
 const priceElem = document.getElementById('detail-price-elem');
 if (priceElem) {
-if (item._type === 'boutique') {
-priceElem.innerHTML = 💜 ${item.pricePtc} + 🖤 ${item.priceOtc};
-} else {
-priceElem.innerHTML = ❤️ ${item.priceStc};
-}
+priceElem.innerHTML = (item.category === 'Белье') ? 💜 ${item.pricePtc} + 🖤 ${item.priceOtc} : ❤️ ${item.priceStc};
 }
 
 const descElem = document.getElementById('detail-desc-elem');
@@ -1976,14 +2082,14 @@ galleryStrip.innerHTML = gallery.map(photoUrl => <img class="detail-thumb-img ${
 
 const actionSlot = document.getElementById('detail-action-slot');
 if (actionSlot) {
-if (item._type === 'boutique') {
+if (item.category === 'Белье') {
 if (currentAvatarRole === 'female') {
 actionSlot.innerHTML = <button class="shop-buy-btn" onclick="buyBoutiqueItem(${item.id})">Приобрести комплект • 💜 ${item.pricePtc} + 🖤 ${item.priceOtc}</button>;
 } else {
 actionSlot.innerHTML = <button class="shop-buy-btn" style="background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.2); color: var(--text-muted); cursor: default;" onclick="showToast('Бельё выбирает и приобретает Нижняя за 💜 и 🖤.', 'info')">👙 Бельё выбирает Нижняя</button>;
 }
 } else {
-actionSlot.innerHTML = <button class="shop-buy-btn" onclick="buySexshopItem(${item.id})">Купить девайс • ❤️ ${item.priceStc}</button>;
+actionSlot.innerHTML = <button class="shop-buy-btn" onclick="buyBoutiqueItem(${item.id})">Купить девайс • ❤️ ${item.priceStc}</button>;
 }
 }
 }
@@ -2017,6 +2123,7 @@ function buyBoutiqueItem(id) {
 const item = boutiqueItems.find(p => p.id === id);
 if (!item) return;
 
+if (item.category === 'Белье') {
 if (currentAvatarRole !== 'female') {
 showToast('Бельё за 💜 и 🖤 выбирает и приобретает Нижняя.', 'info');
 return;
@@ -2024,15 +2131,15 @@ return;
 
 const deficits = [];
 if (femaleBalances.ptc < item.pricePtc) {
-deficits.push({ heart: '💜', amount: item.pricePtc - femaleBalances.ptc });
+  deficits.push({ heart: '💜', amount: item.pricePtc - femaleBalances.ptc });
 }
 if (femaleBalances.otc < item.priceOtc) {
-deficits.push({ heart: '🖤', amount: item.priceOtc - femaleBalances.otc });
+  deficits.push({ heart: '🖤', amount: item.priceOtc - femaleBalances.otc });
 }
 
 if (deficits.length > 0) {
-showInsufficientFundsModal(item, deficits, 'boutique');
-return;
+  showInsufficientFundsModal(item, deficits, 'boutique');
+  return;
 }
 
 femaleBalances.ptc -= item.pricePtc;
@@ -2040,61 +2147,57 @@ femaleBalances.otc -= item.priceOtc;
 localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
 
 if (!wardrobeItems.some(w => w.title === item.title)) {
-wardrobeItems.unshift({
-id: Date.now(),
-title: item.title,
-desc: item.desc || '',
-category: 'Белье',
-peppers: item.peppers || 1,
-mainImg: item.mainImg
-});
-localStorage.setItem('wardrobe_items', JSON.stringify(wardrobeItems));
+  wardrobeItems.unshift({
+    id: Date.now(),
+    title: item.title,
+    desc: item.desc || '',
+    category: 'Белье',
+    peppers: item.peppers || 1,
+    mainImg: item.mainImg
+  });
+  localStorage.setItem('wardrobe_items', JSON.stringify(wardrobeItems));
 }
 
-logTransaction('penalty', 'female', '💜+🖤', ${item.pricePtc}+${item.priceOtc}, Покупка: ${item.title} 🛍️);
+logTransaction('penalty', 'female', '💜+🖤', `${item.pricePtc}+${item.priceOtc}`, `Покупка: ${item.title} 🛍️`);
 
-updateRoleUI();
-renderShopBalance();
-renderWardrobe();
-showToast(✨ Комплект ${item.title} приобретен и добавлен в Гардероб!, 'success');
-}
 
-function buySexshopItem(id) {
-const item = sexshopItems.find(p => p.id === id);
-if (!item) return;
-
-const activeBalance = currentAvatarRole === 'female' ? femaleBalances.stc : maleBalances.stc;
+} else {
+// Секс-шоп за ❤️
+const activeBalance = (currentAvatarRole === 'female') ? femaleBalances.stc : maleBalances.stc;
 if (activeBalance < item.priceStc) {
 showInsufficientFundsModal(item, [{ heart: '❤️', amount: item.priceStc - activeBalance }], 'sexshop');
 return;
 }
 
 if (currentAvatarRole === 'female') {
-femaleBalances.stc -= item.priceStc;
-localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
+  femaleBalances.stc -= item.priceStc;
+  localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
 } else {
-maleBalances.stc -= item.priceStc;
-localStorage.setItem('pact_male_balances', JSON.stringify(maleBalances));
+  maleBalances.stc -= item.priceStc;
+  localStorage.setItem('pact_male_balances', JSON.stringify(maleBalances));
 }
 
 if (!wardrobeItems.some(w => w.title === item.title)) {
-wardrobeItems.unshift({
-id: Date.now(),
-title: item.title,
-desc: item.desc || '',
-category: 'Игрушки',
-peppers: item.peppers || 2,
-mainImg: item.mainImg
-});
-localStorage.setItem('wardrobe_items', JSON.stringify(wardrobeItems));
+  wardrobeItems.unshift({
+    id: Date.now(),
+    title: item.title,
+    desc: item.desc || '',
+    category: 'Игрушки',
+    peppers: item.peppers || 2,
+    mainImg: item.mainImg
+  });
+  localStorage.setItem('wardrobe_items', JSON.stringify(wardrobeItems));
 }
 
-logTransaction('penalty', currentAvatarRole, '❤️', item.priceStc, Покупка: ${item.title} 🔮);
+logTransaction('penalty', currentAvatarRole, '❤️', item.priceStc, `Покупка: ${item.title} 🔮`);
+
+
+}
 
 updateRoleUI();
 renderShopBalance();
 renderWardrobe();
-showToast(✨ Девайс ${item.title} приобретен и добавлен в Гардероб!, 'success');
+showToast(✨ «${item.title}» приобретен и добавлен в Гардероб!, 'success');
 }
 
 function showInsufficientFundsModal(item, deficits, type) {
@@ -2105,9 +2208,9 @@ if (!modal || !previewSlot) return;
 tg?.HapticFeedback?.notificationOccurred?.('error');
 
 const chipsHtml = deficits.map(d => <span class="deficit-chip">Не хватает: ${d.amount} ${d.heart}</span>).join('');
-const priceText = type === 'boutique' ? 💜 ${item.pricePtc} + 🖤 ${item.priceOtc} : ❤️ ${item.priceStc};
+const priceText = (type === 'boutique') ? 💜 ${item.pricePtc} + 🖤 ${item.priceOtc} : ❤️ ${item.priceStc};
 
-previewSlot.innerHTML = <img class="insufficient-item-img" src="${item.mainImg}" alt="${item.title}"> <div class="insufficient-item-meta"> <div style="font-size: 12px; font-weight: 800; color: #fff;">${item.title}</div> <div style="font-size: 9.5px; color: var(--text-muted);">Стоимость: ${priceText}</div> <div style="margin-top: 4px;">${chipsHtml}</div> </div>;
+previewSlot.innerHTML =  <img class="insufficient-item-img" src="${item.mainImg}" alt="${item.title}"> <div class="insufficient-item-meta"> <div style="font-size: 12px; font-weight: 800; color: #fff;">${item.title}</div> <div style="font-size: 9.5px; color: var(--text-muted);">Стоимость: ${priceText}</div> <div style="margin-top: 4px;">${chipsHtml}</div> </div>;
 
 modal.classList.add('active');
 }
@@ -2124,12 +2227,8 @@ setBalanceTab(currentAvatarRole === 'female' ? 'transfer' : 'reward', document.g
 
 function goToExchangeCurrency() {
 closeInsufficientFundsModal();
-if (currentAvatarRole === 'male') {
 openSubScreen('tab-bank');
-setBalanceTab('transfer', document.getElementById('bal-tab-btn-transfer'));
-} else {
-openConverterModal();
-}
+setBalanceTab('exchange', document.getElementById('bal-tab-btn-exchange'));
 }
 
 function openAddProductModal(shop) {
@@ -2137,129 +2236,53 @@ const target = document.getElementById('target-modal-shop');
 if (target) target.value = shop;
 document.getElementById('add-product-modal')?.classList.add('active');
 }
+
 function closeAddProductModal() {
 document.getElementById('add-product-modal')?.classList.remove('active');
 }
 
 function handleProductSubmit(e) {
 e.preventDefault();
-const shop = document.getElementById('target-modal-shop').value;
+const title = document.getElementById('prod-title')?.value.trim();
+const category = document.getElementById('prod-category')?.value.trim();
+const mainImg = document.getElementById('prod-main-img')?.value.trim();
+const pricePts = parseInt(document.getElementById('prod-price-pts')?.value || '200');
+
 const newProd = {
 id: Date.now(),
-title: document.getElementById('prod-title').value.trim(),
-category: document.getElementById('prod-category').value.trim(),
-mainImg: document.getElementById('prod-main-img').value.trim(),
+title,
+category: category.toLowerCase().includes('игрушк') || category.toLowerCase().includes('бондаж') ? 'Секс-шоп' : 'Белье',
+mainImg,
 peppers: 2,
 seen: false
 };
 
-if (shop === 'boutique') {
-newProd.pricePtc = 250;
-newProd.priceOtc = 150;
-boutiqueItems.push(newProd);
-localStorage.setItem('boutique_items', JSON.stringify(boutiqueItems));
+if (newProd.category === 'Белье') {
+newProd.pricePtc = Math.round(pricePts * 0.6);
+newProd.priceOtc = Math.round(pricePts * 0.4);
 } else {
-newProd.priceStc = parseInt(document.getElementById('prod-price-pts').value || '200');
-sexshopItems.push(newProd);
-localStorage.setItem('sexshop_items', JSON.stringify(sexshopItems));
+newProd.priceStc = pricePts;
 }
 
-document.getElementById('add-product-form').reset();
+boutiqueItems.unshift(newProd);
+localStorage.setItem('boutique_items', JSON.stringify(boutiqueItems));
+
+document.getElementById('add-product-form')?.reset();
 closeAddProductModal();
 renderProducts();
 showToast('Товар добавлен в каталог!', 'success');
 }
 
 /* ========================================================
-14. КОНВЕРТЕР ВАЛЮТ
-======================================================== */
-function openConverterModal() {
-updateConverterUI();
-document.getElementById('currency-converter-modal')?.classList.add('active');
-}
-
-function closeConverterModal() {
-document.getElementById('currency-converter-modal')?.classList.remove('active');
-}
-
-function updateConverterUI() {
-const bView = document.getElementById('converter-balances-view');
-if (!bView) return;
-if (currentAvatarRole === 'female') {
-bView.innerHTML = <span>💜 <b>${femaleBalances.ptc}</b></span> <span>🖤 <b>${femaleBalances.otc}</b></span> <span>❤️ <b>${femaleBalances.stc}</b></span>;
-} else {
-bView.innerHTML = <span>💙 <b>${maleBalances.atc}</b></span> <span>💚 <b>${maleBalances.ctc}</b></span> <span>❤️ <b>${maleBalances.stc}</b></span>;
-}
-calculateConversion();
-}
-
-function calculateConversion() {
-const fromCurr = document.getElementById('conv-from-currency')?.value;
-const toCurr = document.getElementById('conv-to-currency')?.value;
-const fromAmount = parseFloat(document.getElementById('conv-from-amount')?.value) || 0;
-const toInput = document.getElementById('conv-to-amount');
-if (!toInput) return;
-
-if (fromCurr === toCurr) {
-toInput.value = fromAmount;
-return;
-}
-
-if ((fromCurr === 'PTC' || fromCurr === 'OTC') && toCurr === 'STC') {
-toInput.value = Math.floor(fromAmount / 2);
-} else if (fromCurr === 'STC' && (toCurr === 'PTC' || toCurr === 'OTC')) {
-toInput.value = Math.floor(fromAmount * 2);
-} else {
-toInput.value = fromAmount;
-}
-}
-
-function executeCurrencyExchange() {
-if (currentAvatarRole !== 'female') {
-showToast('Обмен сердец страсти и покорности доступен для Нижней.', 'info');
-return;
-}
-
-const fromCurr = document.getElementById('conv-from-currency').value;
-const toCurr = document.getElementById('conv-to-currency').value;
-const fromAmount = parseInt(document.getElementById('conv-from-amount').value) || 0;
-const toAmount = parseInt(document.getElementById('conv-to-amount').value) || 0;
-
-if (fromAmount <= 0) {
-showToast('Введите корректное число для обмена.', 'error');
-return;
-}
-
-const keyMap = { 'PTC': 'ptc', 'OTC': 'otc', 'STC': 'stc' };
-const fromKey = keyMap[fromCurr];
-const toKey = keyMap[toCurr];
-
-if (femaleBalances[fromKey] < fromAmount) {
-showToast(Недостаточно средств на балансе ${getHeartByCurrency(fromCurr)}! У вас: ${femaleBalances[fromKey]}, 'error');
-return;
-}
-
-femaleBalances[fromKey] -= fromAmount;
-femaleBalances[toKey] += toAmount;
-localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
-
-updateRoleUI();
-updateConverterUI();
-renderDesktop();
-renderShopBalance();
-showToast(🔄 Успешно обменяно ${fromAmount} ${getHeartByCurrency(fromCurr)} на ${toAmount} ${getHeartByCurrency(toCurr)}!, 'success');
-}
-
-/* ========================================================
-15. ИНТЕРАКТИВНЫЙ ТУТОРИАЛ (?)
+14. ИНТЕРАКТИВНЫЙ ТУТОРИАЛ (?)
 ======================================================== */
 const tutorialsData = {
 desktop: {
 icon: '📱',
-title: 'Рабочий стол смартфона',
+title: 'Рабочий стол',
 bullets: [
 '3 экрана: свайпайте влево или вправо по экрану для переключения между столами.',
-'Центральная колба: нажмите на колбу вверху, чтобы открыть меню смены обоев и добавления элементов.',
+'Центральная колба: нажмите на колбу вверху, чтобы войти в режим перемещения и вызвать панель управления.',
 'Крестик ✕: удаляет элемент с экрана в режиме настройки.',
 'Градус Страсти 🌶️: виджет считает сумму перчинок надетых комплектов и девайсов на вечер.'
 ]
@@ -2272,7 +2295,7 @@ bullets: [
 'Валюты Верхнего: 💙 Внимание и 💚 Забота.',
 '➕ Поощрение & ➖ Штраф: дисциплинарные инструменты Верхнего.',
 '💌 Перевод ❤️: прямая пересылка секс-токенов между партнерами.',
-'🔄 Обмен (Нижняя): конвертация 💜 и 🖤 в ❤️ по курсу казны 2 к 1.'
+'🔄 Обмен (Нижняя): конвертация 💜 и 🖤 в ❤️ по курсу 2 к 1.'
 ]
 },
 wardrobe: {
@@ -2280,16 +2303,16 @@ icon: '🩱',
 title: 'Гардероб и примерка',
 bullets: [
 'Выбор на вечер: тапайте по вещам, чтобы надеть комплект или активировать игрушку.',
-'Шкала Перчинок 🌶️: каждая вещь приносит от 1 до 3 перчинок, формируя ранг вечера.'
+'Намёк 💋: золотистый знак показывает вещи, которые Верхний выбрал в свои предпочтения на вечер.'
 ]
 },
 shop: {
 icon: '🛍️',
-title: 'Бутик & Секс-шоп',
+title: 'Бутик Искушения',
 bullets: [
 'Бельё за 💜 и 🖤: комплекты выбирает и приобретает Нижняя.',
-'Секс-шоп за ❤️: девайсы и игрушки доступны обоим партнерам.',
-'Бейдж NEW: гаснет после первого просмотра карточки Нижней.'
+'Секс-шоп за ❤️: девайсы и атрибуты доступны обоим партнерам.',
+'Избранное ❤️: отмечайте понравившиеся позиции сердечком для быстрого доступа.'
 ]
 },
 contract: {
@@ -2310,8 +2333,8 @@ randomizer: {
 icon: '🎲',
 title: 'Судьба & Жребий',
 bullets: [
-'3D-монетка: Марс ♂ и Венера ♀ для мгновенного разрешения споров.',
-'Рандомайзер чисел: бросок кубика от 1 до N с праздничным салютом.'
+'3D-монетка: Марс ♂ и Венера ♀ для мгновенного разрешения споров и выбора роли вечера.',
+'Числовой жребий: бросок кубика от 1 до N с праздничным салютом для выбора фантов, поз и минут.'
 ]
 },
 gifts: {
@@ -2361,7 +2384,7 @@ if (title) title.innerText = data.title;
 
 const slot = document.getElementById('tutorial-content-slot');
 if (slot) {
-slot.innerHTML = data.bullets.map(b => <div class="tutorial-bullet-item"> <span class="tutorial-bullet-icon">✦</span> <div>${b}</div> </div>).join('');
+slot.innerHTML = data.bullets.map(b =>  <div class="tutorial-bullet-item"> <span class="tutorial-bullet-icon">✦</span> <div>${b}</div> </div>).join('');
 }
 
 document.getElementById('tutorial-modal')?.classList.add('active');
@@ -2373,7 +2396,7 @@ document.getElementById('tutorial-modal')?.classList.remove('active');
 }
 
 /* ========================================================
-16. ЖЕНСКИЙ КАЛЕНДАРЬ
+15. ЖЕНСКИЙ КАЛЕНДАРЬ
 ======================================================== */
 let cycleStartDate = localStorage.getItem('cycle_start_date') || new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0];
 let cycleDuration = parseInt(localStorage.getItem('cycle_duration') || '28');
@@ -2433,7 +2456,7 @@ calGrid.innerHTML += <div class="${cls}">${i}</div>;
 }
 
 /* ========================================================
-17. СЕССИИ И ЗАДАНИЯ (ВЕРХНИЙ ♂ / НИЖНЯЯ ♀)
+16. СЕССИИ И ЗАДАНИЯ (ВЕРХНИЙ ♂ / НИЖНЯЯ ♀)
 ======================================================== */
 let maleTasks = JSON.parse(localStorage.getItem('male_tasks')) || [
 { id: 1, title: 'Утренний кофейный обряд', points: 150 },
@@ -2449,29 +2472,31 @@ const mCont = document.getElementById('male-tasks-container');
 const fCont = document.getElementById('female-tasks-container');
 
 if (mCont) {
-mCont.innerHTML = maleTasks.map((t, idx) => <div class="contract-item"> <div class="contract-info"> <div class="name">${t.title}</div> <div class="reward">+${t.points} PTS</div> </div> <button class="back-action-btn" onclick="deleteTask('male', ${idx})">✕</button> </div>).join('');
+mCont.innerHTML = maleTasks.map((t, idx) =>  <div class="contract-item"> <div class="contract-info"> <div class="name">${t.title}</div> <div class="reward">+${t.points} PTS</div> </div> <button class="back-action-btn" onclick="deleteTask('male', ${idx})">✕</button> </div>).join('');
 }
 
 if (fCont) {
-fCont.innerHTML = femaleTasks.map((t, idx) => <div class="contract-item"> <div class="contract-info"> <div class="name">${t.title}</div> <div class="reward">+${t.points} PTS</div> </div> <button class="back-action-btn" onclick="deleteTask('female', ${idx})">✕</button> </div>).join('');
+fCont.innerHTML = femaleTasks.map((t, idx) =>  <div class="contract-item"> <div class="contract-info"> <div class="name">${t.title}</div> <div class="reward">+${t.points} PTS</div> </div> <button class="back-action-btn" onclick="deleteTask('female', ${idx})">✕</button> </div>).join('');
 }
 }
 
 function addCustomTask(gender) {
 if (gender === 'male') {
-const title = document.getElementById('input-male-title').value.trim();
-const pts = document.getElementById('input-male-points').value || 100;
+const title = document.getElementById('input-male-title')?.value.trim();
+const pts = document.getElementById('input-male-points')?.value || 100;
 if (!title) return;
 maleTasks.push({ id: Date.now(), title, points: parseInt(pts) });
 localStorage.setItem('male_tasks', JSON.stringify(maleTasks));
-document.getElementById('input-male-title').value = '';
+const inp = document.getElementById('input-male-title');
+if (inp) inp.value = '';
 } else {
-const title = document.getElementById('input-female-title').value.trim();
-const pts = document.getElementById('input-female-points').value || 100;
+const title = document.getElementById('input-female-title')?.value.trim();
+const pts = document.getElementById('input-female-points')?.value || 100;
 if (!title) return;
 femaleTasks.push({ id: Date.now(), title, points: parseInt(pts) });
 localStorage.setItem('female_tasks', JSON.stringify(femaleTasks));
-document.getElementById('input-female-title').value = '';
+const inp = document.getElementById('input-female-title');
+if (inp) inp.value = '';
 }
 renderTasks();
 }
@@ -2488,7 +2513,7 @@ renderTasks();
 }
 
 /* ========================================================
-18. ЖЕЛАНИЯ & ПОДАРКИ
+17. ЖЕЛАНИЯ & ПОДАРКИ
 ======================================================== */
 let giftWishes = JSON.parse(localStorage.getItem('gift_wishes')) || [
 'Шелковый халат глубокого рубинового цвета',
@@ -2498,16 +2523,17 @@ let giftWishes = JSON.parse(localStorage.getItem('gift_wishes')) || [
 function renderGifts() {
 const gCont = document.getElementById('gifts-list-container');
 if (gCont) {
-gCont.innerHTML = giftWishes.map((w, i) => <div class="contract-item"> <div class="contract-info"><div class="name">🎁 ${w}</div></div> <button class="back-action-btn" onclick="deleteGiftWish(${i})">✕</button> </div>).join('');
+gCont.innerHTML = giftWishes.map((w, i) =>  <div class="contract-item"> <div class="contract-info"><div class="name">🎁 ${w}</div></div> <button class="back-action-btn" onclick="deleteGiftWish(${i})">✕</button> </div>).join('');
 }
 }
 
 function addGiftWish() {
-const val = document.getElementById('input-gift-title').value.trim();
+const inp = document.getElementById('input-gift-title');
+const val = inp?.value.trim();
 if (!val) return;
 giftWishes.push(val);
 localStorage.setItem('gift_wishes', JSON.stringify(giftWishes));
-document.getElementById('input-gift-title').value = '';
+if (inp) inp.value = '';
 renderGifts();
 }
 
@@ -2518,7 +2544,7 @@ renderGifts();
 }
 
 /* ========================================================
-19. ЧАТ & СООБЩЕНИЯ
+18. ЧАТ & СООБЩЕНИЯ
 ======================================================== */
 let chatHistory = [
 { sender: 'bot', text: 'Приветствую в личном пространстве Pact & Passion. Готовы ли вы закрепить новые правила вечера?' }
@@ -2533,7 +2559,7 @@ box.scrollTop = box.scrollHeight;
 
 function sendChatMessage() {
 const input = document.getElementById('chat-input');
-const txt = input.value.trim();
+const txt = input?.value.trim();
 if (!txt) return;
 
 chatHistory.push({ sender: 'user', text: txt });
@@ -2547,7 +2573,7 @@ renderChat();
 }
 
 /* ========================================================
-20. СУДЬБА & ЖРЕБИЙ (МОНЕТКА + РАНДОМАЙЗЕР + САЛЮТ)
+19. СУДЬБА & ЖРЕБИЙ (3D МОНЕТКА + КУБИК + САЛЮТ)
 ======================================================== */
 function switchRandomMode(mode) {
 tg?.HapticFeedback?.impactOccurred?.('light');
@@ -2563,16 +2589,15 @@ document.getElementById('section-dice')?.classList.add('active');
 }
 }
 
-const burstCanvas = document.getElementById('burst-canvas');
-const burstCtx = burstCanvas?.getContext('2d');
 let burstParticles = [];
 let burstAnimId = null;
 
 function resizeBurstCanvas() {
 const card = document.getElementById('random-app-card');
-if (card && burstCanvas) {
-burstCanvas.width = card.clientWidth;
-burstCanvas.height = card.clientHeight;
+const canvas = document.getElementById('burst-canvas');
+if (card && canvas) {
+canvas.width = card.clientWidth;
+canvas.height = card.clientHeight;
 }
 }
 window.addEventListener('resize', resizeBurstCanvas);
@@ -2581,8 +2606,9 @@ function launchCelebration(x, y) {
 resizeBurstCanvas();
 burstParticles = [];
 
-const originX = (x !== undefined) ? x : (burstCanvas ? burstCanvas.width / 2 : 150);
-const originY = (y !== undefined) ? y : (burstCanvas ? burstCanvas.height / 2 : 150);
+const canvas = document.getElementById('burst-canvas');
+const originX = (x !== undefined) ? x : (canvas ? canvas.width / 2 : 150);
+const originY = (y !== undefined) ? y : (canvas ? canvas.height / 2 : 150);
 
 const colors = [
 '#FFD700', '#FFB703', '#FFFFFF',
@@ -2628,32 +2654,15 @@ gravity: 0.1
 });
 }
 
-for (let i = 0; i < 24; i++) {
-const angle = Math.random() * Math.PI * 2;
-const speed = Math.random() * 5.5 + 2.5;
-burstParticles.push({
-type: 'serpentine',
-x: originX,
-y: originY,
-vx: Math.cos(angle) * speed,
-vy: Math.sin(angle) * speed - 4.5,
-length: Math.random() * 26 + 22,
-width: Math.random() * 2.6 + 2.4,
-wave: Math.random() * Math.PI * 2,
-waveSpeed: Math.random() * 0.16 + 0.09,
-color: colors[Math.floor(Math.random() * colors.length)],
-alpha: 1,
-decay: Math.random() * 0.009 + 0.006,
-gravity: 0.08
-});
-}
-
 if (!burstAnimId) animateBurstParticles();
 }
 
 function animateBurstParticles() {
-if (!burstCtx || !burstCanvas) return;
-burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+const canvas = document.getElementById('burst-canvas');
+const ctx = canvas?.getContext('2d');
+if (!ctx || !canvas) return;
+
+ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 for (let i = burstParticles.length - 1; i >= 0; i--) {
 const p = burstParticles[i];
@@ -2668,47 +2677,27 @@ if (p.alpha <= 0) {
   continue;
 }
 
-burstCtx.save();
-burstCtx.globalAlpha = Math.max(0, p.alpha);
+ctx.save();
+ctx.globalAlpha = Math.max(0, p.alpha);
 
 if (p.type === 'spark') {
-  burstCtx.beginPath();
-  burstCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-  burstCtx.fillStyle = p.color;
-  burstCtx.shadowBlur = 10;
-  burstCtx.shadowColor = p.color;
-  burstCtx.fill();
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+  ctx.fillStyle = p.color;
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = p.color;
+  ctx.fill();
 } else if (p.type === 'confetti') {
   p.rot += p.vRot;
-  burstCtx.translate(p.x, p.y);
-  burstCtx.rotate(p.rot);
-  burstCtx.fillStyle = p.color;
-  burstCtx.shadowBlur = 4;
-  burstCtx.shadowColor = p.color;
-  burstCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-} else if (p.type === 'serpentine') {
-  p.wave += p.waveSpeed;
-  burstCtx.translate(p.x, p.y);
-  burstCtx.beginPath();
-  const segments = 6;
-  const segLen = p.length / segments;
-  burstCtx.lineWidth = p.width;
-  burstCtx.strokeStyle = p.color;
-  burstCtx.lineCap = 'round';
-  burstCtx.lineJoin = 'round';
-  burstCtx.shadowBlur = 6;
-  burstCtx.shadowColor = p.color;
-
-  for (let s = 0; s <= segments; s++) {
-    const px = Math.sin(p.wave + s * 1.1) * (p.width * 2.8);
-    const py = s * segLen;
-    if (s === 0) burstCtx.moveTo(px, py);
-    else burstCtx.lineTo(px, py);
-  }
-  burstCtx.stroke();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rot);
+  ctx.fillStyle = p.color;
+  ctx.shadowBlur = 4;
+  ctx.shadowColor = p.color;
+  ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
 }
 
-burstCtx.restore();
+ctx.restore();
 
 
 }
@@ -2718,7 +2707,7 @@ burstAnimId = requestAnimationFrame(animateBurstParticles);
 } else {
 cancelAnimationFrame(burstAnimId);
 burstAnimId = null;
-burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 }
 
@@ -2750,7 +2739,8 @@ setTimeout(() => tg?.HapticFeedback?.impactOccurred?.('light'), 650);
 setTimeout(() => {
 tg?.HapticFeedback?.impactOccurred?.('heavy');
 
-if (stage && burstCanvas) {
+const canvas = document.getElementById('burst-canvas');
+if (stage && canvas) {
   const stageRect = stage.getBoundingClientRect();
   const cardRect = document.getElementById('random-app-card')?.getBoundingClientRect() || stageRect;
   const originX = (stageRect.left + stageRect.width / 2) - cardRect.left;
@@ -2819,7 +2809,8 @@ if (ticks >= totalTicks) {
   if (statusLbl) statusLbl.innerText = `Выпало число: ${finalResult}`;
   tg?.HapticFeedback?.notificationOccurred?.('success');
 
-  if (display && burstCanvas) {
+  const canvas = document.getElementById('burst-canvas');
+  if (display && canvas) {
     const dispRect = display.getBoundingClientRect();
     const cardRect = document.getElementById('random-app-card')?.getBoundingClientRect() || dispRect;
     const originX = (dispRect.left + dispRect.width / 2) - cardRect.left;
@@ -2835,7 +2826,7 @@ if (ticks >= totalTicks) {
 }
 
 /* ========================================================
-21. БЛОКИРОВКА СКРОЛЛА & ИНИЦИАЛИЗАЦИЯ
+20. БЛОКИРОВКА СКРОЛЛА & ИНИЦИАЛИЗАЦИЯ
 ======================================================== */
 document.addEventListener('touchmove', (e) => {
 if (document.body.classList.contains('lock-scroll')) {
