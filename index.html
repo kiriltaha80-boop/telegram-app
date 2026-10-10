@@ -2938,7 +2938,7 @@
       updateRoleEmojiUI();
       renderDesktop();
       if (typeof window.renderPairChat === 'function') window.renderPairChat();
-      showToast(`Активная роль: ${currentAvatarRole === 'male' ? '👑 Верхний ♂' : '🗝️ Нижняя ♀'}`, 'info');
+      showToast(`Активная роль: ${currentAvatarRole === 'male' ? 'Верхний ' : 'Нижняя '}`, 'info');
     }
     function updateRoleEmojiUI() {
       const el = document.getElementById('role-toggle-emoji');
