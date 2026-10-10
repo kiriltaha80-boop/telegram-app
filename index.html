@@ -1,1069 +1,610 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>Pact & Passion</title>
-  
-  <!-- Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-  <!-- Всплывающие уведомления -->
-  <div id="toast-container" class="toast-container"></div>
-
-  <!-- Фоновые неоновые пятна -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-
-  <!-- Верхняя колба: чистый логотип с переливом без лишних символов -->
-  <header class="desktop-header-bar" id="desktop-header-bar">
-    <div class="dead-zone-brand" id="brand-capsule-btn" onclick="toggleCapsuleToolbar()">
-      <span class="brand-shimmer-title">Pact & Passion</span>
-    </div>
-  </header>
-
-  <!-- Заставка при запуске -->
-  <div id="splash-screen" onclick="hideSplash()">
-    <div class="splash-bg"></div>
-    <div class="splash-bottom-fade"></div>
-    <div class="contract-stage">
-      <h1 class="typewriter">Pact & Passion</h1>
-      <div class="splash-subtitle">• RESTRICTED 18+ •</div>
-      <div class="loading-line-bg">
-        <div class="loading-line-fill"></div>
-      </div>
+  <div class="desktop-viewport" id="desktop-viewport">
+    <div class="desktop-pages-track" id="desktop-pages-track">
+      <div class="desktop-page" id="desktop-page-0"></div>
+      <div class="desktop-page" id="desktop-page-1"></div>
+      <div class="desktop-page" id="desktop-page-2"></div>
     </div>
   </div>
 
-  <!-- 1. РАБОЧИЙ СТОЛ (3 СТОЛА СО СВАЙПОМ) -->
-  <div id="tab-home" class="tab-content active">
-    <div class="desktop-wrapper">
-      
-      <div class="desktop-viewport" id="desktop-viewport">
-        <div class="desktop-pages-track" id="desktop-pages-track">
-          <div class="desktop-page" id="desktop-page-0"></div>
-          <div class="desktop-page" id="desktop-page-1"></div>
-          <div class="desktop-page" id="desktop-page-2"></div>
-        </div>
-      </div>
-
-      <!-- Точки пагинации 3 столов -->
-      <div class="desktop-pagination-dots" id="desktop-dots-container">
-        <div class="desktop-dot active" onclick="goToDesktopPage(0)"></div>
-        <div class="desktop-dot" onclick="goToDesktopPage(1)"></div>
-        <div class="desktop-dot" onclick="goToDesktopPage(2)"></div>
-      </div>
-
-    </div>
+  <!-- Точки пагинации 3 столов -->
+  <div class="desktop-pagination-dots" id="desktop-dots-container">
+    <div class="desktop-dot active" onclick="goToDesktopPage(0)"></div>
+    <div class="desktop-dot" onclick="goToDesktopPage(1)"></div>
+    <div class="desktop-dot" onclick="goToDesktopPage(2)"></div>
   </div>
 
-  <!-- 2. ВЕРХНИЙ СЕССИЯ ♂ -->
-  <div id="tab-male-session" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #4A90E2; font-size: 11px;">Верхний Сессия ♂</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('session_male')">?</button>
-      </div>
-      <div class="add-input-box">
-        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Добавить задание</div>
-        <div class="form-group">
-          <input type="text" id="input-male-title" class="form-control" placeholder="Название ритуала...">
-        </div>
-        <div style="display: flex; gap: 6px;">
-          <input type="number" id="input-male-points" class="form-control" placeholder="Очки (напр. 150)" style="flex: 1;">
-          <button class="small-btn" onclick="addCustomTask('male')">Добавить</button>
-        </div>
-      </div>
-      <div id="male-tasks-container" class="contract-list"></div>
-    </div>
+</div>
+
+
+  <div class="contract-body-placeholder" style="padding: 10px 0; text-align: center; color: #c9c2d1; font-size: 11.5px; line-height: 1.6; font-style: italic;">
+    «Стороны соглашаются на добровольное подчинение, взаимное доверие и соблюдение установленных правил. Слово Верхнего — закон. Желание Нижней — священно.»
   </div>
 
-  <!-- 3. НИЖНЯЯ СЕССИЯ ♀ -->
-  <div id="tab-female-session" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: var(--accent-color); font-size: 11px;">Нижняя Сессия ♀</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('session_female')">?</button>
-      </div>
-      <div class="add-input-box">
-        <div style="font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px;">+ Добавить задание</div>
-        <div class="form-group">
-          <input type="text" id="input-female-title" class="form-control" placeholder="Название ритуала...">
-        </div>
-        <div style="display: flex; gap: 6px;">
-          <input type="number" id="input-female-points" class="form-control" placeholder="Очки (напр. 200)" style="flex: 1;">
-          <button class="small-btn" onclick="addCustomTask('female')">Добавить</button>
-        </div>
-      </div>
-      <div id="female-tasks-container" class="contract-list"></div>
-    </div>
+  <div class="contract-footer-action">
+    <button id="btn-contract-action" class="btn-contract-sign" onclick="handleContractButtonClick()">Подписать</button>
+  </div>
+</div>
+
+
+  <div class="shop-account-balance-bar" id="shop-account-balance-slot"></div>
+
+  <div class="category-chips">
+    <button class="chip-btn active" onclick="setShopCategory('all', this)">Все</button>
+    <button class="chip-btn" onclick="setShopCategory('Комплект', this)">🎀 Комплект</button>
+    <button class="chip-btn" onclick="setShopCategory('Белье', this)">👙 Белье</button>
+  </div>
+  <div id="shop-products-list" class="products-grid-view"></div>
+</div>
+
+
+  <div class="sub-screen-header">
+    <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+    <div style="font-weight: 800; color: #FFFFFF; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;">Судьба & Жребий</div>
+    <button class="tutorial-help-btn" onclick="openTutorial('randomizer')">?</button>
   </div>
 
-  <!-- 4. ЖЕНСКИЙ КАЛЕНДАРЬ -->
-  <div id="tab-cycle" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Женский Календарь</div>
-        <div style="display: flex; gap: 6px;">
-          <button class="small-btn" onclick="toggleCycleSettings()">⚙️ Опции</button>
-          <button class="tutorial-help-btn" onclick="openTutorial('cycle')">?</button>
-        </div>
-      </div>
-      <div class="cycle-two-boxes" style="margin-bottom: 10px;">
-        <div class="cycle-big-box">
-          <div class="box-lbl">До месячных</div>
-          <div id="box-period-val" class="box-val">...</div>
-          <div id="box-period-sub" class="box-sub">...</div>
-        </div>
-        <div class="cycle-big-box">
-          <div class="box-lbl">До овуляции</div>
-          <div id="box-ovulation-val" class="box-val" style="color: var(--ovulation-color);">...</div>
-          <div id="box-ovulation-sub" class="box-sub">...</div>
-        </div>
-      </div>
-      <div class="cycle-settings-panel" id="cycle-settings">
-        <div class="form-group">
-          <label>Начало последних месячных:</label>
-          <input type="date" id="cycle-start-input" class="form-control" onchange="updateCycleSettings()">
-        </div>
-        <div class="form-group">
-          <label>Длительность цикла (дней):</label>
-          <input type="number" id="cycle-length-input" class="form-control" value="28" min="20" max="45" onchange="updateCycleSettings()">
-        </div>
-      </div>
-      <div class="calendar-grid" id="calendar-grid"></div>
-    </div>
+  <div class="mode-switch-tabs">
+    <button class="mode-tab-btn active" id="tab-btn-coin" onclick="switchRandomMode('coin')">🪙 Монетка</button>
+    <button class="mode-tab-btn" id="tab-btn-dice" onclick="switchRandomMode('dice')">🎲 Число (1-N)</button>
   </div>
 
-  <!-- 5. КОНТРАКТ D/S -->
-  <div id="tab-contract" class="tab-content">
-    <div class="card contract-box-flex">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 800; color: #FFFFFF; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;">Соглашение D/S</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('contract')">?</button>
-      </div>
-      
-      <div class="contract-body-placeholder" style="padding: 10px 0; text-align: center; color: #c9c2d1; font-size: 11.5px; line-height: 1.6; font-style: italic;">
-        «Стороны соглашаются на добровольное подчинение, взаимное доверие и соблюдение установленных правил. Слово Верхнего — закон. Желание Нижней — священно.»
-      </div>
-
-      <div class="contract-footer-action">
-        <button id="btn-contract-action" class="btn-contract-sign" onclick="handleContractButtonClick()">Подписать</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. БУТИК ИСКУШЕНИЯ -->
-  <div id="tab-shop" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Бутик Искушения</div>
-        <div style="display: flex; gap: 6px;">
-          <button class="small-btn" onclick="openAddProductModal('boutique')">+ Добавить</button>
-          <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
-        </div>
-      </div>
-
-      <div class="shop-account-balance-bar" id="shop-account-balance-slot"></div>
-
-      <div class="category-chips">
-        <button class="chip-btn active" onclick="setShopCategory('all', this)">Все</button>
-        <button class="chip-btn" onclick="setShopCategory('Комплект', this)">🎀 Комплект</button>
-        <button class="chip-btn" onclick="setShopCategory('Белье', this)">👙 Белье</button>
-      </div>
-      <div id="shop-products-list" class="products-grid-view"></div>
-    </div>
-  </div>
-
-  <!-- 7. СЕКС-ШОП АТРИБУТОВ -->
-  <div id="tab-sexshop" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Секс-шоп Атрибутов</div>
-        <div style="display: flex; gap: 6px;">
-          <button class="small-btn" onclick="openAddProductModal('sexshop')">+ Добавить</button>
-          <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
-        </div>
-      </div>
-      <div class="category-chips">
-        <button class="chip-btn active" onclick="setSexshopCategory('all', this)">Все</button>
-        <button class="chip-btn" onclick="setSexshopCategory('Бондаж', this)">⛓ Бондаж</button>
-        <button class="chip-btn" onclick="setSexshopCategory('Игрушки', this)">🧸 Игрушки</button>
-      </div>
-      <div id="custom-products-sexshop" class="products-grid-view"></div>
-    </div>
-  </div>
-
-  <!-- 8. ЖЕЛАНИЯ & ПОДАРКИ -->
-  <div id="tab-gifts" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Подарки & Просьбы</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
-      </div>
-      <div class="add-input-box">
-        <div class="form-group">
-          <input type="text" id="input-gift-title" class="form-control" placeholder="Загадать желание...">
-        </div>
-        <button class="small-btn" style="width: 100%;" onclick="addGiftWish()">Загадать Желание ✨</button>
-      </div>
-      <div id="gifts-list-container" class="contract-list"></div>
-    </div>
-  </div>
-
-  <!-- 9. СООБЩЕНИЯ -->
-  <div id="tab-messenger" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Сообщения</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('messenger')">?</button>
-      </div>
-      <div class="contract-list">
-        <div class="contract-item" onclick="openSubScreen('tab-chat-1')" style="cursor: pointer;">
-          <div class="contract-info">
-            <div class="name">Pact Bot</div>
-            <div class="reward" style="color: var(--text-muted);">Нажмите, чтобы открыть диалог</div>
-          </div>
-          <span>💬</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 10. ЧАТ С БОТОМ -->
-  <div id="tab-chat-1" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Чат с Pact Bot</div>
-      </div>
-      <div id="chat-messages" class="chat-box"></div>
-      <div style="display: flex; gap: 6px;">
-        <input type="text" id="chat-input" class="form-control" placeholder="Написать ответ...">
-        <button class="small-btn" onclick="sendChatMessage()">Отправить</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 11. СУДЬБА & ЖРЕБИЙ -->
-  <div id="tab-randomizer" class="tab-content">
-    <div class="card random-app-card" id="random-app-card">
-      <canvas id="burst-canvas"></canvas>
-
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 800; color: #FFFFFF; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;">Судьба & Жребий</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('randomizer')">?</button>
-      </div>
-
-      <div class="mode-switch-tabs">
-        <button class="mode-tab-btn active" id="tab-btn-coin" onclick="switchRandomMode('coin')">🪙 Монетка</button>
-        <button class="mode-tab-btn" id="tab-btn-dice" onclick="switchRandomMode('dice')">🎲 Число (1-N)</button>
-      </div>
-
-      <div class="tab-section active" id="section-coin">
-        <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
-          <div class="coin-trajectory-box">
-            <div class="coin-3d" id="coin-3d">
-              <div class="coin-side coin-front">
-                <svg class="coin-svg" viewBox="0 0 200 200">
-                  <circle cx="100" cy="100" r="98" fill="#e8be56" stroke="#805400" stroke-width="4"/>
-                  <circle cx="88" cy="112" r="38" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
-                  <line x1="115" y1="85" x2="148" y2="52" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
-                  <polyline points="120,52 148,52 148,80" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
-                </svg>
-              </div>
-              <div class="coin-side coin-back">
-                <svg class="coin-svg" viewBox="0 0 200 200">
-                  <circle cx="100" cy="100" r="98" fill="#e8be56" stroke="#805400" stroke-width="4"/>
-                  <path d="M 100,40 A 34,34 0 1,1 99.9,40 M 100,108 L 100,158 M 74,133 L 126,133" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div class="coin-shadow" id="coin-shadow"></div>
-        </div>
-      </div>
-
-      <div class="tab-section" id="section-dice">
-        <div class="number-stage">
-          <div class="range-selector-row">
-            <span class="range-label">Диапазон: от 1 до</span>
-            <input type="number" id="dice-max-input" class="range-input" value="10" min="2" max="9999" onchange="syncPresetChips(this.value)">
-          </div>
-
-          <div class="quick-chips-row">
-            <button class="chip-btn" onclick="setDiceMax(6, this)">до 6</button>
-            <button class="chip-btn active" onclick="setDiceMax(10, this)">до 10</button>
-            <button class="chip-btn" onclick="setDiceMax(20, this)">до 20</button>
-            <button class="chip-btn" onclick="setDiceMax(50, this)">до 50</button>
-            <button class="chip-btn" onclick="setDiceMax(100, this)">до 100</button>
-          </div>
-
-          <div class="dice-display-box" id="dice-display-num">?</div>
-          <div class="result-status-lbl" id="dice-status-lbl">Задайте предел и испытайте жребий</div>
-          <button class="action-roll-btn" onclick="rollRandomNumber()">Испытать судьбу</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  
-  <!-- 12. ЛИЧНЫЙ ПРОФИЛЬ -->
-  <div id="tab-profile" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 700; color: #fff; font-size: 11px;">Личный Профиль</div>
-      </div>
-      <div class="profile-card-header">
-        <div class="profile-avatar-container" onclick="openAvatarModal(currentAvatarRole)">
-          <img id="avatar-img-female" class="profile-avatar-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&topType=longStraight&hairColor=black" alt="Avatar">
-        </div>
-        <div class="profile-name-row">
-          <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😈</span>
-          <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
-        </div>
-      </div>
-      <div class="profile-stats-grid">
-        <div class="stat-box" onclick="openSubScreen('tab-bank')" style="cursor: pointer;">
-          <div class="val" id="profile-pts-val">3,450 PTS</div>
-          <div class="lbl">Очки Баланса ⚖️</div>
-        </div>
-        <div class="stat-box">
-          <div class="val" id="profile-vows-val">14</div>
-          <div class="lbl">Выполнено Обет</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 13. ГАРДЕРОБ -->
-  <div id="tab-wardrobe" class="tab-content">
-    <div class="card wardrobe-main-card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="font-weight: 800; color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;">Гардероб</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('wardrobe')">?</button>
-      </div>
-      
-      <div class="wardrobe-passion-banner" id="wardrobe-passion-summary"></div>
-
-      <div class="category-chips">
-        <button class="chip-btn active" onclick="setWardrobeCategory('Белье', this)">👙 Белье</button>
-        <button class="chip-btn" onclick="setWardrobeCategory('Игрушки', this)">🧸 Игрушки</button>
-      </div>
-
-      <div id="wardrobe-items-list" class="wardrobe-list-column"></div>
-    </div>
-  </div>
-
-  <!-- 14. БАЛАНС -->
-  <div id="tab-bank" class="tab-content">
-    <div class="card bank-main-card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">БАЛАНС</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('bank')">?</button>
-      </div>
-
-      <div class="bank-balances-summary">
-        <div class="bank-side-box" id="bank-box-female">
-          <div class="bank-side-title" id="bank-title-female">🗝️ Нижняя</div>
-          <div class="bank-side-chips">
-            <span class="curr-chip ptc">💜 Страсть: <b id="bank-f-ptc">0</b></span>
-            <span class="curr-chip otc">🖤 Покорность: <b id="bank-f-otc">0</b></span>
-            <span class="curr-chip stc">❤️ Секс-токены: <b id="bank-f-stc">0</b></span>
-          </div>
-        </div>
-        <div class="bank-side-box" id="bank-box-male">
-          <div class="bank-side-title" id="bank-title-male">👑 Верхний</div>
-          <div class="bank-side-chips">
-            <span class="curr-chip att">💙 Внимание: <b id="bank-m-atc">0</b></span>
-            <span class="curr-chip care">💚 Забота: <b id="bank-m-ctc">0</b></span>
-            <span class="curr-chip stc">❤️ Секс-токены: <b id="bank-m-stc">0</b></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="balance-nav-grid">
-        <button class="bal-tab-btn reward active" id="bal-tab-btn-reward" onclick="setBalanceTab('reward', this)">➕ Поощрение</button>
-        <button class="bal-tab-btn penalty" id="bal-tab-btn-penalty" onclick="setBalanceTab('penalty', this)">➖ Штраф</button>
-        <button class="bal-tab-btn transfer" id="bal-tab-btn-transfer" onclick="setBalanceTab('transfer', this)">💌 Перевод ❤️</button>
-        <button class="bal-tab-btn exchange" id="bal-tab-btn-exchange" onclick="setBalanceTab('exchange', this)">🔄 Обмен</button>
-        <button class="bal-tab-btn history" id="bal-tab-btn-history" onclick="setBalanceTab('history', this)">📜 История</button>
-      </div>
-
-      <!-- Поощрение -->
-      <div id="bal-sec-reward" class="bank-sub-content active">
-        <div class="bank-field-group" id="reward-target-field-group">
-          <label class="bank-field-label">Кому начислить:</label>
-          <div class="bank-target-selector">
-            <button class="bank-target-btn active" id="btn-reward-target-f" onclick="setRewardTarget('female')">🗝️ Нижней</button>
-            <button class="bank-target-btn" id="btn-reward-target-m" onclick="setRewardTarget('male')">👑 Верхнему</button>
-          </div>
-        </div>
-
-        <div class="bank-field-group">
-          <label class="bank-field-label">Валюта:</label>
-          <div class="bank-currency-pills" id="reward-curr-pills-slot"></div>
-        </div>
-
-        <div class="bank-field-group">
-          <label class="bank-field-label">Количество очков:</label>
-          <input type="number" id="reward-amount-input" class="bank-amount-input" value="50" min="1" step="5" oninput="updateRewardBtnText()">
-          <div class="quick-chips-row">
-            <button class="quick-chip-btn" onclick="setQuickRewardAmount(10)">+10</button>
-            <button class="quick-chip-btn" onclick="setQuickRewardAmount(25)">+25</button>
-            <button class="quick-chip-btn" onclick="setQuickRewardAmount(50)">+50</button>
-            <button class="quick-chip-btn" onclick="setQuickRewardAmount(100)">+100</button>
-          </div>
-        </div>
-
-        <div class="bank-field-group">
-          <label class="bank-field-label">За что поощрение:</label>
-          <input type="text" id="reward-reason-input" class="bank-reason-input" placeholder="Кофе в постель, помощь, послушание...">
-          <div class="quick-reasons-strip">
-            <div class="quick-reason-tag" onclick="setQuickRewardReason('Кофе в постель ☕')">Кофе ☕</div>
-            <div class="quick-reason-tag" onclick="setQuickRewardReason('Идеальное послушание ✨')">Послушание ✨</div>
-            <div class="quick-reason-tag" onclick="setQuickRewardReason('Помощь по дому 🧹')">Помощь 🧹</div>
-            <div class="quick-reason-tag" onclick="setQuickRewardReason('Вкусный ужин 🍷')">Ужин 🍷</div>
-            <div class="quick-reason-tag" onclick="setQuickRewardReason('Массаж 💆')">Массаж 💆</div>
-          </div>
-        </div>
-
-        <button class="bank-submit-btn reward" id="btn-submit-reward" onclick="executeRewardTransaction()">
-          ➕ Начислить 50
-        </button>
-      </div>
-
-      <!-- Штраф -->
-      <div id="bal-sec-penalty" class="bank-sub-content">
-        <div class="bank-field-group" id="penalty-target-field-group">
-          <label class="bank-field-label">Кого оштрафовать:</label>
-          <div class="bank-target-selector">
-            <button class="bank-target-btn active" id="btn-penalty-target-f" onclick="setPenaltyTarget('female')">🗝️ Нижнюю</button>
-            <button class="bank-target-btn" id="btn-penalty-target-m" onclick="setPenaltyTarget('male')">👑 Верхнего</button>
-          </div>
-        </div>
-
-        <div class="bank-field-group">
-          <label class="bank-field-label">Списать валюту:</label>
-          <div class="bank-currency-pills" id="penalty-curr-pills-slot"></div>
-        </div>
-
-        <div class="bank-field-group">
-          <label class="bank-field-label">Размер штрафа:</label>
-          <input type="number" id="penalty-amount-input" class="bank-amount-input" value="30" min="1" step="5" oninput="updatePenaltyBtnText()">
-          <div class="quick-chips-row">
-            <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(10)">-10</button>
-            <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(25)">-25</button>
-            <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(50)">-50</button>
-            <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(100)">-100</button>
-          </div>
-        </div>
-
-        <div class="bank-field-group">
-          <label class="bank-field-label">Причина штрафа:</label>
-          <input type="text" id="penalty-reason-input" class="bank-reason-input" placeholder="Опоздание, дерзкий тон, каприз...">
-          <div class="quick-reasons-strip">
-            <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Опоздание ⏱️')">Опоздание ⏱️</div>
-            <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Дерзкий тон 🤐')">Дерзкий тон 🤐</div>
-            <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Непослушание ⚡')">Непослушание ⚡</div>
-            <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Забытое правило 📜')">Забытое правило 📜</div>
-            <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Каприз без повода 😤')">Каприз 😤</div>
-          </div>
-        </div>
-
-        <button class="bank-submit-btn penalty" id="btn-submit-penalty" onclick="executePenaltyTransaction()">
-          ➖ Списать штраф 30
-        </button>
-      </div>
-
-      <!-- Перевод -->
-      <div id="bal-sec-transfer" class="bank-sub-content">
-        <div class="converter-card-box">
-          <div class="converter-rate-badge" style="border-color: rgba(230, 57, 86, 0.4); background: rgba(230, 57, 86, 0.1);">
-            💌 <b>Прямой перевод ❤️ между партнерами</b>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; text-align: center;">
-              <div style="font-size: 10px; color: var(--text-muted); font-weight: 800;">Нижняя 🗝️</div>
-              <div style="font-size: 16px; font-weight: 900; color: #FF8599; margin-top: 2px;">❤️ <span id="transfer-f-stc">0</span></div>
-            </div>
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; text-align: center;">
-              <div style="font-size: 10px; color: var(--text-muted); font-weight: 800;">Верхний 👑</div>
-              <div style="font-size: 16px; font-weight: 900; color: #FF8599; margin-top: 2px;">❤️ <span id="transfer-m-stc">0</span></div>
-            </div>
-          </div>
-
-          <div class="conv-row-group" id="transfer-direction-row">
-            <label>Направление перевода:</label>
-            <div class="bank-target-selector">
-              <button class="bank-target-btn active" id="btn-transfer-f2m" onclick="setTransferDirection('f2m')">🗝️ Нижняя ➔ 👑 Верхний</button>
-              <button class="bank-target-btn" id="btn-transfer-m2f" onclick="setTransferDirection('m2f')">👑 Верхний ➔ 🗝️ Нижняя</button>
-            </div>
-          </div>
-
-          <div class="conv-row-group">
-            <label>Количество ❤️:</label>
-            <input type="number" id="transfer-amount-input" class="bank-amount-input" value="50" min="1" step="5" oninput="updateTransferBtnText()">
-            <div class="quick-chips-row">
-              <button class="quick-chip-btn" onclick="setQuickTransferAmount(25)">25</button>
-              <button class="quick-chip-btn" onclick="setQuickTransferAmount(50)">50</button>
-              <button class="quick-chip-btn" onclick="setQuickTransferAmount(100)">100</button>
-              <button class="quick-chip-btn" onclick="setQuickTransferAmount('all')">Все ❤️</button>
-            </div>
-          </div>
-
-          <div class="conv-row-group">
-            <label>Послание к переводу (опционально):</label>
-            <input type="text" id="transfer-note-input" class="bank-reason-input" placeholder="Дань Верхнему 💋 / На новую игрушку 🔥">
-          </div>
-
-          <button class="shop-buy-btn" id="transfer-submit-btn" style="margin-top: 6px;" onclick="executeSexTokensTransfer()">
-            💌 Перевести 50 ❤️ Верхнему
-          </button>
-        </div>
-      </div>
-
-      <!-- Обмен -->
-      <div id="bal-sec-exchange" class="bank-sub-content">
-        <div class="converter-card-box">
-          <div class="converter-rate-badge">Курс обмена Нижней: <b>2 💜 / 2 🖤 = 1 ❤️</b></div>
-
-          <div class="conv-row-group">
-            <label>Отдать:</label>
-            <div class="conv-input-row">
-              <input type="number" id="bank-conv-from-amount" value="50" min="2" step="2" oninput="calculateBankConversion()">
-              <select id="bank-conv-from-currency" onchange="calculateBankConversion()">
-                <option value="PTC">💜 Страсть</option>
-                <option value="OTC">🖤 Покорность</option>
-                <option value="STC">❤️ Секс-токен</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="conv-row-group">
-            <label>Получить:</label>
-            <div class="conv-input-row">
-              <input type="text" id="bank-conv-to-amount" readonly value="25">
-              <select id="bank-conv-to-currency" onchange="calculateBankConversion()">
-                <option value="STC">❤️ Секс-токен</option>
-                <option value="PTC">💜 Страсть</option>
-                <option value="OTC">🖤 Покорность</option>
-              </select>
-            </div>
-          </div>
-
-          <button class="shop-buy-btn" style="margin-top: 8px;" onclick="executeBankCurrencyExchange()">
-            Совершить обмен 🔄
-          </button>
-        </div>
-      </div>
-
-      <!-- История -->
-      <div id="bal-sec-history" class="bank-sub-content">
-        <div class="bank-history-list" id="bank-history-items-slot"></div>
-        <button class="clear-history-btn" onclick="clearBankHistory()">Очистить историю</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 15. ДЕТАЛИ ТОВАРА -->
-  <div id="tab-product-detail" class="tab-content">
-    <div class="card product-detail-card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title" id="detail-top-title">ТОВАР</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('product')">?</button>
-      </div>
-
-      <div class="detail-main-img-wrap" onclick="openCurrentFullscreen()">
-        <img id="detail-main-img-elem" class="detail-main-img" src="" alt="Main photo">
-        <div class="zoom-hint-badge">🔍 На весь экран</div>
-      </div>
-
-      <div class="detail-gallery-strip" id="detail-gallery-strip"></div>
-
-      <div class="detail-info-block">
-        <div class="detail-header-row">
-          <div class="detail-title" id="detail-title-elem"></div>
-          <div class="detail-price-box" id="detail-price-elem"></div>
-        </div>
-
-        <div class="detail-peppers-card">
-          <span class="detail-peppers-lbl">Степень откровенности:</span>
-          <div id="detail-peppers-slot"></div>
-        </div>
-
-        <div class="detail-desc" id="detail-desc-elem"></div>
-      </div>
-
-      <div class="detail-action-container" id="detail-action-slot"></div>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА: LIGHTBOX ДЛЯ ФОТО -->
-  <div id="fullscreen-photo-modal" class="fullscreen-modal" onclick="closeFullscreenPhoto()">
-    <img id="fullscreen-photo-elem" class="fullscreen-img" src="" alt="Fullscreen Image">
-  </div>
-
-  <!-- МОДАЛКА: ИНТЕРАКТИВНЫЙ ТУТОРИАЛ (?) -->
-  <div id="tutorial-modal" class="modal-overlay" onclick="closeTutorial()">
-    <div class="modal-card tutorial-card" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="tutorial-header-icon" id="tutorial-icon">💡</span>
-          <h3 id="tutorial-title" style="color: #fff; font-size: 14px; font-weight: 800;">Гид по разделу</h3>
-        </div>
-        <span class="modal-close-btn" onclick="closeTutorial()">✕</span>
-      </div>
-      <div class="tutorial-body" id="tutorial-content-slot"></div>
-      <button class="shop-buy-btn" style="margin-top: 14px;" onclick="closeTutorial()">Понятно ✨</button>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА: НАСТРОЙКА И СМЕНА ИКОНКИ ПЛИТКИ -->
-  <div id="icon-picker-modal" class="modal-overlay" onclick="closeIconPickerModal()">
-    <div class="modal-card" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>⚙️ Настройка плитки</h3>
-        <span class="modal-close-btn" onclick="closeIconPickerModal()">✕</span>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div class="conv-row-group">
-          <label>Название плитки:</label>
-          <input type="text" id="tile-edit-title-input" class="bank-amount-input" placeholder="Название...">
-        </div>
-        <div class="conv-row-group">
-          <label>Выбери иконку:</label>
-          <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-height: 140px; overflow-y: auto; padding: 4px;" id="icon-picker-grid"></div>
-        </div>
-        <div class="conv-row-group">
-          <label>Переместить на стол:</label>
-          <div class="bank-target-selector">
-            <button class="bank-target-btn active" id="btn-move-page-0" onclick="setTileTargetPage(0)">Стол 1</button>
-            <button class="bank-target-btn" id="btn-move-page-1" onclick="setTileTargetPage(1)">Стол 2</button>
-            <button class="bank-target-btn" id="btn-move-page-2" onclick="setTileTargetPage(2)">Стол 3</button>
-          </div>
-        </div>
-        <button class="shop-buy-btn" style="margin-top: 6px;" onclick="saveTileSettings()">Сохранить изменения</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА: ЕДИНЫЙ ЦЕНТР КАСТОМИЗАЦИИ (ВИДЖЕТЫ + ОБОИ) -->
-  <div id="customization-modal" class="modal-overlay" onclick="if(event.target === this) closeCustomizationModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="custom-modal-tabs">
-          <button class="custom-tab-btn active" id="btn-tab-widgets" onclick="setCustomModalTab('widgets')">➕ Виджеты & Плитки</button>
-          <button class="custom-tab-btn" id="btn-tab-wallpapers" onclick="setCustomModalTab('wallpapers')">🖼️ Смена обоев</button>
-        </div>
-        <span class="modal-close-btn" onclick="closeCustomizationModal()">✕</span>
-      </div>
-
-      <!-- Вкладка 1: Виджеты & Плитки -->
-      <div id="custom-tab-content-widgets" class="widget-catalog-list">
-        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-passion', 4)">
-          <div class="cat-icon">🌶️</div>
-          <div class="cat-info">
-            <div class="title">Градус Страсти & Звание</div>
-            <div class="sub">Сумма перчинок и будуарный статус вечера</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-balance', 4)">
-          <div class="cat-icon">💖</div>
-          <div class="cat-info">
-            <div class="title">Баланс Очков & Валют</div>
-            <div class="sub">Быстрый просмотр сердец и очков</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-contract', 4)">
-          <div class="cat-icon">📜</div>
-          <div class="cat-info">
-            <div class="title">Обет Дня (Договор)</div>
-            <div class="sub">Виджет правил и соглашений пары</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Баланс', '💖', 'tab-bank')">
-          <div class="cat-icon">💖</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Баланс</div>
-            <div class="sub">Поощрения, штрафы и казна</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Гардероб', '🩱', 'tab-wardrobe')">
-          <div class="cat-icon">🩱</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Гардероб</div>
-            <div class="sub">Выбор белья и девайсов на ночь</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Бутик', '🛍️', 'tab-shop')">
-          <div class="cat-icon">🛍️</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Бутик</div>
-            <div class="sub">Покупки за будуарные баллы</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Секс-шоп', '🔮', 'tab-sexshop')">
-          <div class="cat-icon">🔮</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Секс-шоп</div>
-            <div class="sub">Атрибуты и девайсы за ❤️</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Календарь', '🌸', 'tab-cycle')">
-          <div class="cat-icon">🌸</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Календарь</div>
-            <div class="sub">Женский цикл и настроение</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Договор', '📜', 'tab-contract')">
-          <div class="cat-icon">📜</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Договор</div>
-            <div class="sub">Соглашение сторон и обеты</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Жребий', '🎲', 'tab-randomizer')">
-          <div class="cat-icon">🎲</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Жребий</div>
-            <div class="sub">Монетка и кубик судьбы</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Желания', '✨', 'tab-gifts')">
-          <div class="cat-icon">✨</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Желания</div>
-            <div class="sub">Подарки и просьбы</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-
-        <div class="widget-catalog-card" onclick="createTileOnDesktop('Чат', '💬', 'tab-messenger')">
-          <div class="cat-icon">💬</div>
-          <div class="cat-info">
-            <div class="title">Плитка: Чат</div>
-            <div class="sub">Диалог с ботом</div>
-          </div>
-          <button class="small-btn">+</button>
-        </div>
-      </div>
-
-      <!-- Вкладка 2: Выбор обоев -->
-      <div id="custom-tab-content-wallpapers" class="wallpaper-presets-grid" style="display: none;">
-        <div class="wallpaper-thumb" data-wp="ruby_opal" onclick="setWallpaper('ruby_opal')" style="background: radial-gradient(at 15% 15%, #5E0D20 0%, #0C0A10 100%);">
-          <span>Рубиновый Опал</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="neon_velvet" onclick="setWallpaper('neon_velvet')" style="background: radial-gradient(at 20% 20%, #6E0F48 0%, #0C0A10 100%);">
-          <span>Неоновый Бархат</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="wine_sunset" onclick="setWallpaper('wine_sunset')" style="background: radial-gradient(at 80% 15%, #6B172B 0%, #0C0A10 100%);">
-          <span>Винный Закат</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="amethyst_haze" onclick="setWallpaper('amethyst_haze')" style="background: radial-gradient(at 25% 15%, #42145C 0%, #0C0A10 100%);">
-          <span>Аметистовая Дымка</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="emerald_silk" onclick="setWallpaper('emerald_silk')" style="background: radial-gradient(at 20% 20%, #0F3D2A 0%, #0C0A10 100%);">
-          <span>Изумрудный Шелк</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="prismatic_art" onclick="setWallpaper('prismatic_art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
-          <span>Арт Заставки</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="flirt" onclick="setWallpaper('flirt')" style="background: radial-gradient(circle at 50% 25%, #4a0d4a 0%, #220326 55%, #0b010d 100%);">
-          <span>Флирт XOXO</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="gender" onclick="setWallpaper('gender')" style="background: radial-gradient(circle at 50% 25%, #181145 0%, #0d0829 55%, #04020f 100%);">
-          <span>Марс & Венера</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="ruby" onclick="setWallpaper('ruby')" style="background: radial-gradient(circle at 50% 25%, #520617 0%, #260209 55%, #0a0103 100%);">
-          <span>Рубиновый Шелк</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="cyber" onclick="setWallpaper('cyber')" style="background: radial-gradient(circle at 50% 25%, #2a0845 0%, #12032b 55%, #050112 100%);">
-          <span>Кибер Неон</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="gold" onclick="setWallpaper('gold')" style="background: radial-gradient(circle at 50% 25%, #382407 0%, #1c1102 55%, #080500 100%);">
-          <span>Black Gold</span>
-        </div>
-        <div class="wallpaper-thumb" data-wp="lavender" onclick="setWallpaper('lavender')" style="background: radial-gradient(circle at 50% 25%, #351a54 0%, #190c2b 55%, #07020d 100%);">
-          <span>Лаванда</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА: НЕ ХВАТАЕТ СЕРДЕЦ -->
-  <div id="insufficient-funds-modal" class="modal-overlay" onclick="closeInsufficientFundsModal()">
-    <div class="modal-card insufficient-card" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span style="font-size: 16px;">💔</span>
-          <h3 style="color: #FF8599; font-weight: 800;">Недостаточно сердец</h3>
-        </div>
-        <span class="modal-close-btn" onclick="closeInsufficientFundsModal()">✕</span>
-      </div>
-
-      <div class="insufficient-modal-body">
-        <div class="insufficient-item-preview" id="insufficient-item-info"></div>
-
-        <div class="insufficient-story-text">
-          Этот предмет требует большей страсти и ресурсов... Заслужи одобрение Верхнего или используй обмен.
-        </div>
-
-        <div class="insufficient-choice-grid">
-          <div class="insufficient-option-card" onclick="goToEarnFromMaster()">
-            <div class="opt-icon">💖</div>
-            <div class="opt-info">
-              <div class="opt-title">Заслужить в Балансе</div>
-              <div class="opt-desc">Выполни задачу, прояви заботу или получи перевод</div>
-            </div>
-            <button class="opt-action-btn earn">В Баланс →</button>
-          </div>
-
-          <div class="insufficient-option-card" onclick="goToExchangeCurrency()">
-            <div class="opt-icon">🔄</div>
-            <div class="opt-info">
-              <div class="opt-title">Обменять в Конвертере</div>
-              <div class="opt-desc">Конвертируй другие сердца по курсу казны прямо сейчас</div>
-            </div>
-            <button class="opt-action-btn exchange">Обменять →</button>
-          </div>
-        </div>
-
-        <button class="insufficient-dismiss-btn" onclick="closeInsufficientFundsModal()">
-          Позже, я поняла
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА: КОНВЕРТЕР ВАЛЮТ -->
-  <div id="currency-converter-modal" class="modal-overlay" onclick="closeConverterModal()">
-    <div class="modal-card" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>🔄 Конвертер Валют</h3>
-        <span class="modal-close-btn" onclick="closeConverterModal()">✕</span>
-      </div>
-      <div class="converter-card-box">
-        <div class="converter-rate-badge">Курс обмена: <b>2 💜 / 2 🖤 = 1 ❤️</b></div>
-        <div class="conv-balances-overview" id="converter-balances-view"></div>
-
-        <div class="conv-row-group">
-          <label>Отдать:</label>
-          <div class="conv-input-row">
-            <input type="number" id="conv-from-amount" value="50" min="2" step="2" oninput="calculateConversion()">
-            <select id="conv-from-currency" onchange="calculateConversion()">
-              <option value="PTC">💜</option>
-              <option value="OTC">🖤</option>
-              <option value="STC">❤️</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="conv-row-group">
-          <label>Получить:</label>
-          <div class="conv-input-row">
-            <input type="text" id="conv-to-amount" readonly value="25">
-            <select id="conv-to-currency" onchange="calculateConversion()">
-              <option value="STC">❤️</option>
-              <option value="PTC">💜</option>
-              <option value="OTC">🖤</option>
-            </select>
-          </div>
-        </div>
-
-        <button class="shop-buy-btn" style="margin-top: 8px;" onclick="executeCurrencyExchange()">Совершить обмен 🔄</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ КОНТРАКТА -->
-  <div class="modal-overlay" id="contract-confirm-modal" onclick="if(event.target === this) closeContractConfirmModal()">
-    <div class="modal-card contract-confirm-card">
-      <div id="contract-confirm-text" class="contract-confirm-text">...</div>
-      <div class="contract-confirm-actions">
-        <button id="btn-confirm-yes" class="confirm-btn-yes" onclick="confirmContractAction()">Да</button>
-        <button id="btn-confirm-no" class="confirm-btn-no" onclick="closeContractConfirmModal()">Нет</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ЦЕРЕМОНИАЛЬНОЕ ОКНО КОНТРАКТА -->
-  <div class="ceremony-overlay" id="contract-ceremony-modal">
-    <div class="ceremony-container" id="ceremony-container">
-      <div class="tear-spark-line" id="tear-spark-line"></div>
-
-      <div class="ceremony-half half-left">
-        <div class="ceremony-parchment">
-          <div class="ceremony-header">
-            <span class="ceremony-badge">PACT & PASSION</span>
-            <div class="ceremony-title">СОГЛАШЕНИЕ D/S</div>
-          </div>
-          <div class="ceremony-body-text">
-            «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
-          </div>
-          <div class="ceremony-sig-wrap">
-            <svg class="ceremony-sig-svg" viewBox="0 0 280 150">
-              <path class="sig-path-word" pathLength="1200" d="M 68,102 C 46,90 32,62 38,44 C 44,28 62,32 68,52 C 74,72 68,110 60,122 C 64,102 78,44 84,28 L 80,116 C 83,98 90,84 96,82 C 100,80 104,92 105,102 C 108,88 116,78 122,80 C 126,82 126,94 125,98 C 129,88 136,78 143,76 C 139,74 133,80 134,88 C 135,96 142,98 146,92 L 147,82 C 150,76 154,72 156,70 C 158,68 153,82 158,84 C 160,84 163,68 165,34 L 163,82 C 166,74 172,66 178,64 C 174,62 168,68 169,74 C 170,80 177,82 181,76 L 182,68 C 185,64 188,58 190,56 C 192,54 188,68 193,70 C 195,64 197,54 198,52 L 199,66 C 202,60 208,50 213,48 C 210,46 204,52 205,58 C 206,64 213,66 217,60 L 218,54 C 220,54 225,48 229,46" />
-              <path class="sig-path-slash" pathLength="400" d="M 52,138 C 95,116 160,80 252,42" />
+  <div class="tab-section active" id="section-coin">
+    <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
+      <div class="coin-trajectory-box">
+        <div class="coin-3d" id="coin-3d">
+          <div class="coin-side coin-front">
+            <svg class="coin-svg" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="98" fill="#e8be56" stroke="#805400" stroke-width="4"/>
+              <circle cx="88" cy="112" r="38" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+              <line x1="115" y1="85" x2="148" y2="52" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+              <polyline points="120,52 148,52 148,80" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
             </svg>
           </div>
-          <div class="ceremony-wax-seal">PAIRED</div>
-        </div>
-      </div>
-
-      <div class="ceremony-half half-right">
-        <div class="ceremony-parchment">
-          <div class="ceremony-header">
-            <span class="ceremony-badge">PACT & PASSION</span>
-            <div class="ceremony-title">СОГЛАШЕНИЕ D/S</div>
-          </div>
-          <div class="ceremony-body-text">
-            «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
-          </div>
-          <div class="ceremony-sig-wrap">
-            <svg class="ceremony-sig-svg" viewBox="0 0 280 150">
-              <path class="sig-path-word" pathLength="1200" d="M 68,102 C 46,90 32,62 38,44 C 44,28 62,32 68,52 C 74,72 68,110 60,122 C 64,102 78,44 84,28 L 80,116 C 83,98 90,84 96,82 C 100,80 104,92 105,102 C 108,88 116,78 122,80 C 126,82 126,94 125,98 C 129,88 136,78 143,76 C 139,74 133,80 134,88 C 135,96 142,98 146,92 L 147,82 C 150,76 154,72 156,70 C 158,68 153,82 158,84 C 160,84 163,68 165,34 L 163,82 C 166,74 172,66 178,64 C 174,62 168,68 169,74 C 170,80 177,82 181,76 L 182,68 C 185,64 188,58 190,56 C 192,54 188,68 193,70 C 195,64 197,54 198,52 L 199,66 C 202,60 208,50 213,48 C 210,46 204,52 205,58 C 206,64 213,66 217,60 L 218,54 C 220,54 225,48 229,46" />
-              <path class="sig-path-slash" pathLength="400" d="M 52,138 C 95,116 160,80 252,42" />
+          <div class="coin-side coin-back">
+            <svg class="coin-svg" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="98" fill="#e8be56" stroke="#805400" stroke-width="4"/>
+              <path d="M 100,40 A 34,34 0 1,1 99.9,40 M 100,108 L 100,158 M 74,133 L 126,133" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
             </svg>
           </div>
-          <div class="ceremony-wax-seal">PAIRED</div>
         </div>
       </div>
-
+      <div class="coin-shadow" id="coin-shadow"></div>
     </div>
   </div>
 
-  <!-- МОДАЛКА ВЫБОРА АВАТАРКИ -->
-  <div class="modal-overlay" id="avatar-modal" onclick="if(event.target === this) closeAvatarModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="avatar-modal-title">Выбор аватарки</h3>
-        <span class="modal-close-btn" onclick="closeAvatarModal()">×</span>
+  <div class="tab-section" id="section-dice">
+    <div class="number-stage">
+      <div class="range-selector-row">
+        <span class="range-label">Диапазон: от 1 до</span>
+        <input type="number" id="dice-max-input" class="range-input" value="10" min="2" max="9999" onchange="syncPresetChips(this.value)">
       </div>
-      <input type="file" id="custom-avatar-file-input" accept="image/*" style="display:none" onchange="handleCustomAvatarUpload(event)">
-      <div class="avatar-presets-grid" id="avatar-presets-grid"></div>
+
+      <div class="quick-chips-row">
+        <button class="chip-btn" onclick="setDiceMax(6, this)">до 6</button>
+        <button class="chip-btn active" onclick="setDiceMax(10, this)">до 10</button>
+        <button class="chip-btn" onclick="setDiceMax(20, this)">до 20</button>
+        <button class="chip-btn" onclick="setDiceMax(50, this)">до 50</button>
+        <button class="chip-btn" onclick="setDiceMax(100, this)">до 100</button>
+      </div>
+
+      <div class="dice-display-box" id="dice-display-num">?</div>
+      <div class="result-status-lbl" id="dice-status-lbl">Задайте предел и испытайте жребий</div>
+      <button class="action-roll-btn" onclick="rollRandomNumber()">Испытать судьбу</button>
     </div>
   </div>
 
-  <!-- МОДАЛКА РЕДАКТИРОВАНИЯ ИМЕНИ -->
-  <div class="modal-overlay" id="name-modal" onclick="if(event.target === this) closeNameModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Ваше имя</h3>
-        <span class="modal-close-btn" onclick="closeNameModal()">×</span>
+</div>
+
+
+  <div class="wardrobe-passion-banner" id="wardrobe-passion-summary"></div>
+
+  <div class="category-chips">
+    <button class="chip-btn active" onclick="setWardrobeCategory('Белье', this)">👙 Белье</button>
+    <button class="chip-btn" onclick="setWardrobeCategory('Игрушки', this)">🧸 Игрушки</button>
+  </div>
+
+  <div id="wardrobe-items-list" class="wardrobe-list-column"></div>
+</div>
+
+
+  <div class="bank-balances-summary">
+    <div class="bank-side-box" id="bank-box-female">
+      <div class="bank-side-title" id="bank-title-female">🗝️ Нижняя</div>
+      <div class="bank-side-chips">
+        <span class="curr-chip ptc">💜 Страсть: <b id="bank-f-ptc">0</b></span>
+        <span class="curr-chip otc">🖤 Покорность: <b id="bank-f-otc">0</b></span>
+        <span class="curr-chip stc">❤️ Секс-токены: <b id="bank-f-stc">0</b></span>
       </div>
-      <div class="name-edit-form">
-        <input type="text" id="input-profile-name" class="name-text-input" placeholder="Введите имя..." maxlength="20">
-        <button type="button" class="name-save-btn" onclick="saveProfileName()">Сохранить</button>
+    </div>
+    <div class="bank-side-box" id="bank-box-male">
+      <div class="bank-side-title" id="bank-title-male">👑 Верхний</div>
+      <div class="bank-side-chips">
+        <span class="curr-chip att">💙 Внимание: <b id="bank-m-atc">0</b></span>
+        <span class="curr-chip care">💚 Забота: <b id="bank-m-ctc">0</b></span>
+        <span class="curr-chip stc">❤️ Секс-токены: <b id="bank-m-stc">0</b></span>
       </div>
     </div>
   </div>
 
-  <!-- МОДАЛКА ДОБАВЛЕНИЯ ТОВАРА -->
-  <div class="modal-overlay" id="add-product-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Добавить Товар</h3>
-        <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
-      </div>
-      <form id="add-product-form" onsubmit="handleProductSubmit(event)">
-        <input type="hidden" id="target-modal-shop" value="boutique">
-        <div class="form-group">
-          <label>Название</label>
-          <input type="text" id="prod-title" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label>Категория</label>
-          <input type="text" id="prod-category" class="form-control" placeholder="Комплект, Игрушки..." required>
-        </div>
-        <div class="form-group">
-          <label>URL Фото</label>
-          <input type="url" id="prod-main-img" class="form-control" required placeholder="https://...">
-        </div>
-        <div class="form-group">
-          <label>Цена (в PTS)</label>
-          <input type="number" id="prod-price-pts" class="form-control" placeholder="500">
-        </div>
-        <button type="submit" class="small-btn" style="width: 100%; margin-top: 6px;">Сохранить Товар</button>
-      </form>
-    </div>
+  <div class="balance-nav-grid">
+    <button class="bal-tab-btn reward active" id="bal-tab-btn-reward" onclick="setBalanceTab('reward', this)">➕ Поощрение</button>
+    <button class="bal-tab-btn penalty" id="bal-tab-btn-penalty" onclick="setBalanceTab('penalty', this)">➖ Штраф</button>
+    <button class="bal-tab-btn transfer" id="bal-tab-btn-transfer" onclick="setBalanceTab('transfer', this)">💌 Перевод ❤️</button>
+    <button class="bal-tab-btn exchange" id="bal-tab-btn-exchange" onclick="setBalanceTab('exchange', this)">🔄 Обмен</button>
+    <button class="bal-tab-btn history" id="bal-tab-btn-history" onclick="setBalanceTab('history', this)">📜 История</button>
   </div>
 
-  <!-- Всплывающая панель над нижним навбаром (активируется по нажатию на колбу) -->
-  <div class="capsule-dock-toolbar" id="capsule-dock-toolbar">
-    <button class="dock-action-btn" onclick="openWallpaperModalDirect()">
-      <span class="dock-btn-icon">🖼️</span>
-      <span>Смена обоев</span>
-    </button>
-    <button class="dock-action-btn" onclick="openAddWidgetModalDirect()">
-      <span class="dock-btn-icon">➕</span>
-      <span>Добавить на экран</span>
+  <!-- Поощрение -->
+  <div id="bal-sec-reward" class="bank-sub-content active">
+    <div class="bank-field-group" id="reward-target-field-group">
+      <label class="bank-field-label">Кому начислить:</label>
+      <div class="bank-target-selector">
+        <button class="bank-target-btn active" id="btn-reward-target-f" onclick="setRewardTarget('female')">🗝️ Нижней</button>
+        <button class="bank-target-btn" id="btn-reward-target-m" onclick="setRewardTarget('male')">👑 Верхнему</button>
+      </div>
+    </div>
+
+    <div class="bank-field-group">
+      <label class="bank-field-label">Валюта:</label>
+      <div class="bank-currency-pills" id="reward-curr-pills-slot"></div>
+    </div>
+
+    <div class="bank-field-group">
+      <label class="bank-field-label">Количество очков:</label>
+      <input type="number" id="reward-amount-input" class="bank-amount-input" value="50" min="1" step="5" oninput="updateRewardBtnText()">
+      <div class="quick-chips-row">
+        <button class="quick-chip-btn" onclick="setQuickRewardAmount(10)">+10</button>
+        <button class="quick-chip-btn" onclick="setQuickRewardAmount(25)">+25</button>
+        <button class="quick-chip-btn" onclick="setQuickRewardAmount(50)">+50</button>
+        <button class="quick-chip-btn" onclick="setQuickRewardAmount(100)">+100</button>
+      </div>
+    </div>
+
+    <div class="bank-field-group">
+      <label class="bank-field-label">За что поощрение:</label>
+      <input type="text" id="reward-reason-input" class="bank-reason-input" placeholder="Кофе в постель, помощь, послушание...">
+      <div class="quick-reasons-strip">
+        <div class="quick-reason-tag" onclick="setQuickRewardReason('Кофе в постель ☕')">Кофе ☕</div>
+        <div class="quick-reason-tag" onclick="setQuickRewardReason('Идеальное послушание ✨')">Послушание ✨</div>
+        <div class="quick-reason-tag" onclick="setQuickRewardReason('Помощь по дому 🧹')">Помощь 🧹</div>
+        <div class="quick-reason-tag" onclick="setQuickRewardReason('Вкусный ужин 🍷')">Ужин 🍷</div>
+        <div class="quick-reason-tag" onclick="setQuickRewardReason('Массаж 💆')">Массаж 💆</div>
+      </div>
+    </div>
+
+    <button class="bank-submit-btn reward" id="btn-submit-reward" onclick="executeRewardTransaction()">
+      ➕ Начислить 50
     </button>
   </div>
 
-  <!-- НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ -->
-  <nav class="nav-bar">
-    <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
-      <img id="nav-bar-avatar" class="nav-avatar-thumb" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&topType=longStraight&hairColor=black" alt="Профиль">
+  <!-- Штраф -->
+  <div id="bal-sec-penalty" class="bank-sub-content">
+    <div class="bank-field-group" id="penalty-target-field-group">
+      <label class="bank-field-label">Кого оштрафовать:</label>
+      <div class="bank-target-selector">
+        <button class="bank-target-btn active" id="btn-penalty-target-f" onclick="setPenaltyTarget('female')">🗝️ Нижнюю</button>
+        <button class="bank-target-btn" id="btn-penalty-target-m" onclick="setPenaltyTarget('male')">👑 Верхнего</button>
+      </div>
     </div>
 
-    <div class="nav-item active" id="nav-home" onclick="openSubScreen('tab-home')">
-      <svg class="nav-icon-svg" viewBox="0 0 24 24">
-        <path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 20v-4h-2v4a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 3 20v-9.5z"/>
-      </svg>
+    <div class="bank-field-group">
+      <label class="bank-field-label">Списать валюту:</label>
+      <div class="bank-currency-pills" id="penalty-curr-pills-slot"></div>
     </div>
 
-    <div class="nav-item" id="nav-back" onclick="handleBackAction()">
-      <span class="nav-back-chevron">‹</span>
+    <div class="bank-field-group">
+      <label class="bank-field-label">Размер штрафа:</label>
+      <input type="number" id="penalty-amount-input" class="bank-amount-input" value="30" min="1" step="5" oninput="updatePenaltyBtnText()">
+      <div class="quick-chips-row">
+        <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(10)">-10</button>
+        <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(25)">-25</button>
+        <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(50)">-50</button>
+        <button class="quick-chip-btn" onclick="setQuickPenaltyAmount(100)">-100</button>
+      </div>
     </div>
 
-    <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
-      <svg class="nav-icon-svg" viewBox="0 0 24 24">
-        <path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-      </svg>
+    <div class="bank-field-group">
+      <label class="bank-field-label">Причина штрафа:</label>
+      <input type="text" id="penalty-reason-input" class="bank-reason-input" placeholder="Опоздание, дерзкий тон, каприз...">
+      <div class="quick-reasons-strip">
+        <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Опоздание ⏱️')">Опоздание ⏱️</div>
+        <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Дерзкий тон 🤐')">Дерзкий тон 🤐</div>
+        <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Непослушание ⚡')">Непослушание ⚡</div>
+        <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Забытое правило 📜')">Забытое правило 📜</div>
+        <div class="quick-reason-tag" onclick="setQuickPenaltyReason('Каприз без повода 😤')">Каприз 😤</div>
+      </div>
     </div>
-  </nav>
 
-  <!-- Подключение скрипта приложения -->
-  <script src="app.js"></script>
-</body>
-</html>
+    <button class="bank-submit-btn penalty" id="btn-submit-penalty" onclick="executePenaltyTransaction()">
+      ➖ Списать штраф 30
+    </button>
+  </div>
+
+  <!-- Перевод -->
+  <div id="bal-sec-transfer" class="bank-sub-content">
+    <div class="converter-card-box">
+      <div class="converter-rate-badge" style="border-color: rgba(230, 57, 86, 0.4); background: rgba(230, 57, 86, 0.1);">
+        💌 <b>Прямой перевод ❤️ между партнерами</b>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-weight: 800;">Нижняя 🗝️</div>
+          <div style="font-size: 16px; font-weight: 900; color: #FF8599; margin-top: 2px;">❤️ <span id="transfer-f-stc">0</span></div>
+        </div>
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; text-align: center;">
+          <div style="font-size: 10px; color: var(--text-muted); font-weight: 800;">Верхний 👑</div>
+          <div style="font-size: 16px; font-weight: 900; color: #FF8599; margin-top: 2px;">❤️ <span id="transfer-m-stc">0</span></div>
+        </div>
+      </div>
+
+      <div class="conv-row-group" id="transfer-direction-row">
+        <label>Направление перевода:</label>
+        <div class="bank-target-selector">
+          <button class="bank-target-btn active" id="btn-transfer-f2m" onclick="setTransferDirection('f2m')">🗝️ Нижняя ➔ 👑 Верхний</button>
+          <button class="bank-target-btn" id="btn-transfer-m2f" onclick="setTransferDirection('m2f')">👑 Верхний ➔ 🗝️ Нижняя</button>
+        </div>
+      </div>
+
+      <div class="conv-row-group">
+        <label>Количество ❤️:</label>
+        <input type="number" id="transfer-amount-input" class="bank-amount-input" value="50" min="1" step="5" oninput="updateTransferBtnText()">
+        <div class="quick-chips-row">
+          <button class="quick-chip-btn" onclick="setQuickTransferAmount(25)">25</button>
+          <button class="quick-chip-btn" onclick="setQuickTransferAmount(50)">50</button>
+          <button class="quick-chip-btn" onclick="setQuickTransferAmount(100)">100</button>
+          <button class="quick-chip-btn" onclick="setQuickTransferAmount('all')">Все ❤️</button>
+        </div>
+      </div>
+
+      <div class="conv-row-group">
+        <label>Послание к переводу (опционально):</label>
+        <input type="text" id="transfer-note-input" class="bank-reason-input" placeholder="Дань Верхнему 💋 / На новую игрушку 🔥">
+      </div>
+
+      <button class="shop-buy-btn" id="transfer-submit-btn" style="margin-top: 6px;" onclick="executeSexTokensTransfer()">
+        💌 Перевести 50 ❤️ Верхнему
+      </button>
+    </div>
+  </div>
+
+  <!-- Обмен -->
+  <div id="bal-sec-exchange" class="bank-sub-content">
+    <div class="converter-card-box">
+      <div class="converter-rate-badge">Курс обмена Нижней: <b>2 💜 / 2 🖤 = 1 ❤️</b></div>
+
+      <div class="conv-row-group">
+        <label>Отдать:</label>
+        <div class="conv-input-row">
+          <input type="number" id="bank-conv-from-amount" value="50" min="2" step="2" oninput="calculateBankConversion()">
+          <select id="bank-conv-from-currency" onchange="calculateBankConversion()">
+            <option value="PTC">💜 Страсть</option>
+            <option value="OTC">🖤 Покорность</option>
+            <option value="STC">❤️ Секс-токен</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="conv-row-group">
+        <label>Получить:</label>
+        <div class="conv-input-row">
+          <input type="text" id="bank-conv-to-amount" readonly value="25">
+          <select id="bank-conv-to-currency" onchange="calculateBankConversion()">
+            <option value="STC">❤️ Секс-токен</option>
+            <option value="PTC">💜 Страсть</option>
+            <option value="OTC">🖤 Покорность</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="shop-buy-btn" style="margin-top: 8px;" onclick="executeBankCurrencyExchange()">
+        Совершить обмен 🔄
+      </button>
+    </div>
+  </div>
+
+  <!-- История -->
+  <div id="bal-sec-history" class="bank-sub-content">
+    <div class="bank-history-list" id="bank-history-items-slot"></div>
+    <button class="clear-history-btn" onclick="clearBankHistory()">Очистить историю</button>
+  </div>
+</div>
+
+
+  <div class="detail-main-img-wrap" onclick="openCurrentFullscreen()">
+    <img id="detail-main-img-elem" class="detail-main-img" src="" alt="Main photo">
+    <div class="zoom-hint-badge">🔍 На весь экран</div>
+  </div>
+
+  <div class="detail-gallery-strip" id="detail-gallery-strip"></div>
+
+  <div class="detail-info-block">
+    <div class="detail-header-row">
+      <div class="detail-title" id="detail-title-elem"></div>
+      <div class="detail-price-box" id="detail-price-elem"></div>
+    </div>
+
+    <div class="detail-peppers-card">
+      <span class="detail-peppers-lbl">Степень откровенности:</span>
+      <div id="detail-peppers-slot"></div>
+    </div>
+
+    <div class="detail-desc" id="detail-desc-elem"></div>
+  </div>
+
+  <div class="detail-action-container" id="detail-action-slot"></div>
+</div>
+
+
+  <!-- Вкладка 1: Виджеты & Плитки -->
+  <div id="custom-tab-content-widgets" class="widget-catalog-list">
+    <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-passion', 4)">
+      <div class="cat-icon">🌶️</div>
+      <div class="cat-info">
+        <div class="title">Градус Страсти & Звание</div>
+        <div class="sub">Сумма перчинок и будуарный статус вечера</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-balance', 4)">
+      <div class="cat-icon">💖</div>
+      <div class="cat-info">
+        <div class="title">Баланс Очков & Валют</div>
+        <div class="sub">Быстрый просмотр сердец и очков</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createWidgetOnDesktop('widget-contract', 4)">
+      <div class="cat-icon">📜</div>
+      <div class="cat-info">
+        <div class="title">Обет Дня (Договор)</div>
+        <div class="sub">Виджет правил и соглашений пары</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Баланс', '💖', 'tab-bank')">
+      <div class="cat-icon">💖</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Баланс</div>
+        <div class="sub">Поощрения, штрафы и казна</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Гардероб', '🩱', 'tab-wardrobe')">
+      <div class="cat-icon">🩱</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Гардероб</div>
+        <div class="sub">Выбор белья и девайсов на ночь</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Бутик', '🛍️', 'tab-shop')">
+      <div class="cat-icon">🛍️</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Бутик</div>
+        <div class="sub">Покупки за будуарные баллы</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Секс-шоп', '🔮', 'tab-sexshop')">
+      <div class="cat-icon">🔮</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Секс-шоп</div>
+        <div class="sub">Атрибуты и девайсы за ❤️</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Календарь', '🌸', 'tab-cycle')">
+      <div class="cat-icon">🌸</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Календарь</div>
+        <div class="sub">Женский цикл и настроение</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Договор', '📜', 'tab-contract')">
+      <div class="cat-icon">📜</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Договор</div>
+        <div class="sub">Соглашение сторон и обеты</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Жребий', '🎲', 'tab-randomizer')">
+      <div class="cat-icon">🎲</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Жребий</div>
+        <div class="sub">Монетка и кубик судьбы</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Желания', '✨', 'tab-gifts')">
+      <div class="cat-icon">✨</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Желания</div>
+        <div class="sub">Подарки и просьбы</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+
+    <div class="widget-catalog-card" onclick="createTileOnDesktop('Чат', '💬', 'tab-messenger')">
+      <div class="cat-icon">💬</div>
+      <div class="cat-info">
+        <div class="title">Плитка: Чат</div>
+        <div class="sub">Диалог с ботом</div>
+      </div>
+      <button class="small-btn">+</button>
+    </div>
+  </div>
+
+  <!-- Вкладка 2: Выбор обоев -->
+  <div id="custom-tab-content-wallpapers" class="wallpaper-presets-grid" style="display: none;">
+    <div class="wallpaper-thumb" data-wp="ruby_opal" onclick="setWallpaper('ruby_opal')" style="background: radial-gradient(at 15% 15%, #5E0D20 0%, #0C0A10 100%);">
+      <span>Рубиновый Опал</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="neon_velvet" onclick="setWallpaper('neon_velvet')" style="background: radial-gradient(at 20% 20%, #6E0F48 0%, #0C0A10 100%);">
+      <span>Неоновый Бархат</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="wine_sunset" onclick="setWallpaper('wine_sunset')" style="background: radial-gradient(at 80% 15%, #6B172B 0%, #0C0A10 100%);">
+      <span>Винный Закат</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="amethyst_haze" onclick="setWallpaper('amethyst_haze')" style="background: radial-gradient(at 25% 15%, #42145C 0%, #0C0A10 100%);">
+      <span>Аметистовая Дымка</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="emerald_silk" onclick="setWallpaper('emerald_silk')" style="background: radial-gradient(at 20% 20%, #0F3D2A 0%, #0C0A10 100%);">
+      <span>Изумрудный Шелк</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="prismatic_art" onclick="setWallpaper('prismatic_art')" style="background: url('https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png') center/cover;">
+      <span>Арт Заставки</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="flirt" onclick="setWallpaper('flirt')" style="background: radial-gradient(circle at 50% 25%, #4a0d4a 0%, #220326 55%, #0b010d 100%);">
+      <span>Флирт XOXO</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="gender" onclick="setWallpaper('gender')" style="background: radial-gradient(circle at 50% 25%, #181145 0%, #0d0829 55%, #04020f 100%);">
+      <span>Марс & Венера</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="ruby" onclick="setWallpaper('ruby')" style="background: radial-gradient(circle at 50% 25%, #520617 0%, #260209 55%, #0a0103 100%);">
+      <span>Рубиновый Шелк</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="cyber" onclick="setWallpaper('cyber')" style="background: radial-gradient(circle at 50% 25%, #2a0845 0%, #12032b 55%, #050112 100%);">
+      <span>Кибер Неон</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="gold" onclick="setWallpaper('gold')" style="background: radial-gradient(circle at 50% 25%, #382407 0%, #1c1102 55%, #080500 100%);">
+      <span>Black Gold</span>
+    </div>
+    <div class="wallpaper-thumb" data-wp="lavender" onclick="setWallpaper('lavender')" style="background: radial-gradient(circle at 50% 25%, #351a54 0%, #190c2b 55%, #07020d 100%);">
+      <span>Лаванда</span>
+    </div>
+  </div>
+</div>
+
+
+  <div class="insufficient-modal-body">
+    <div class="insufficient-item-preview" id="insufficient-item-info"></div>
+
+    <div class="insufficient-story-text">
+      Этот предмет требует большей страсти и ресурсов... Заслужи одобрение Верхнего или используй обмен.
+    </div>
+
+    <div class="insufficient-choice-grid">
+      <div class="insufficient-option-card" onclick="goToEarnFromMaster()">
+        <div class="opt-icon">💖</div>
+        <div class="opt-info">
+          <div class="opt-title">Заслужить в Балансе</div>
+          <div class="opt-desc">Выполни задачу, прояви заботу или получи перевод</div>
+        </div>
+        <button class="opt-action-btn earn">В Баланс →</button>
+      </div>
+
+      <div class="insufficient-option-card" onclick="goToExchangeCurrency()">
+        <div class="opt-icon">🔄</div>
+        <div class="opt-info">
+          <div class="opt-title">Обменять в Конвертере</div>
+          <div class="opt-desc">Конвертируй другие сердца по курсу казны прямо сейчас</div>
+        </div>
+        <button class="opt-action-btn exchange">Обменять →</button>
+      </div>
+    </div>
+
+    <button class="insufficient-dismiss-btn" onclick="closeInsufficientFundsModal()">
+      Позже, я поняла
+    </button>
+  </div>
+</div>
+
+
+    <div class="conv-row-group">
+      <label>Отдать:</label>
+      <div class="conv-input-row">
+        <input type="number" id="conv-from-amount" value="50" min="2" step="2" oninput="calculateConversion()">
+        <select id="conv-from-currency" onchange="calculateConversion()">
+          <option value="PTC">💜</option>
+          <option value="OTC">🖤</option>
+          <option value="STC">❤️</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="conv-row-group">
+      <label>Получить:</label>
+      <div class="conv-input-row">
+        <input type="text" id="conv-to-amount" readonly value="25">
+        <select id="conv-to-currency" onchange="calculateConversion()">
+          <option value="STC">❤️</option>
+          <option value="PTC">💜</option>
+          <option value="OTC">🖤</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="shop-buy-btn" style="margin-top: 8px;" onclick="executeCurrencyExchange()">Совершить обмен 🔄</button>
+  </div>
+</div>
+
+
+  <div class="ceremony-half half-left">
+    <div class="ceremony-parchment">
+      <div class="ceremony-header">
+        <span class="ceremony-badge">PACT & PASSION</span>
+        <div class="ceremony-title">СОГЛАШЕНИЕ D/S</div>
+      </div>
+      <div class="ceremony-body-text">
+        «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
+      </div>
+      <div class="ceremony-sig-wrap">
+        <svg class="ceremony-sig-svg" viewBox="0 0 280 150">
+          <path class="sig-path-word" pathLength="1200" d="M 68,102 C 46,90 32,62 38,44 C 44,28 62,32 68,52 C 74,72 68,110 60,122 C 64,102 78,44 84,28 L 80,116 C 83,98 90,84 96,82 C 100,80 104,92 105,102 C 108,88 116,78 122,80 C 126,82 126,94 125,98 C 129,88 136,78 143,76 C 139,74 133,80 134,88 C 135,96 142,98 146,92 L 147,82 C 150,76 154,72 156,70 C 158,68 153,82 158,84 C 160,84 163,68 165,34 L 163,82 C 166,74 172,66 178,64 C 174,62 168,68 169,74 C 170,80 177,82 181,76 L 182,68 C 185,64 188,58 190,56 C 192,54 188,68 193,70 C 195,64 197,54 198,52 L 199,66 C 202,60 208,50 213,48 C 210,46 204,52 205,58 C 206,64 213,66 217,60 L 218,54 C 220,54 225,48 229,46" />
+          <path class="sig-path-slash" pathLength="400" d="M 52,138 C 95,116 160,80 252,42" />
+        </svg>
+      </div>
+      <div class="ceremony-wax-seal">PAIRED</div>
+    </div>
+  </div>
+
+  <div class="ceremony-half half-right">
+    <div class="ceremony-parchment">
+      <div class="ceremony-header">
+        <span class="ceremony-badge">PACT & PASSION</span>
+        <div class="ceremony-title">СОГЛАШЕНИЕ D/S</div>
+      </div>
+      <div class="ceremony-body-text">
+        «Я принимаю установленные правила, признаю главенство и даю своё полное добровольное согласие.»
+      </div>
+      <div class="ceremony-sig-wrap">
+        <svg class="ceremony-sig-svg" viewBox="0 0 280 150">
+          <path class="sig-path-word" pathLength="1200" d="M 68,102 C 46,90 32,62 38,44 C 44,28 62,32 68,52 C 74,72 68,110 60,122 C 64,102 78,44 84,28 L 80,116 C 83,98 90,84 96,82 C 100,80 104,92 105,102 C 108,88 116,78 122,80 C 126,82 126,94 125,98 C 129,88 136,78 143,76 C 139,74 133,80 134,88 C 135,96 142,98 146,92 L 147,82 C 150,76 154,72 156,70 C 158,68 153,82 158,84 C 160,84 163,68 165,34 L 163,82 C 166,74 172,66 178,64 C 174,62 168,68 169,74 C 170,80 177,82 181,76 L 182,68 C 185,64 188,58 190,56 C 192,54 188,68 193,70 C 195,64 197,54 198,52 L 199,66 C 202,60 208,50 213,48 C 210,46 204,52 205,58 C 206,64 213,66 217,60 L 218,54 C 220,54 225,48 229,46" />
+          <path class="sig-path-slash" pathLength="400" d="M 52,138 C 95,116 160,80 252,42" />
+        </svg>
+      </div>
+      <div class="ceremony-wax-seal">PAIRED</div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="nav-item active" id="nav-home" onclick="openSubScreen('tab-home')">
+  <svg class="nav-icon-svg" viewBox="0 0 24 24">
+    <path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 20v-4h-2v4a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 3 20v-9.5z"/>
+  </svg>
+</div>
+
+<div class="nav-item" id="nav-back" onclick="handleBackAction()">
+  <span class="nav-back-chevron">‹</span>
+</div>
+
+<div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
+  <svg class="nav-icon-svg" viewBox="0 0 24 24">
+    <path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+  </svg>
+</div>
