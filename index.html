@@ -2941,6 +2941,7 @@
       window.currentAvatarRole = currentAvatarRole;
       localStorage.setItem('pact_current_role', currentAvatarRole);
       updateRoleEmojiUI();
+      updateAllAvatarsUI()
       renderDesktop();
       if (typeof window.renderPairChat === 'function') window.renderPairChat();
       showToast(`Активная роль: ${currentAvatarRole === 'male' ? 'Верхний ' : 'Нижняя '}`, 'info');
