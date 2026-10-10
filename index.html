@@ -1530,6 +1530,10 @@
       localStorage.setItem('pact_device_uid', currentDeviceUID);
     }
 
+    // НАСТРОЙКА ИМЁН В ЧАТЕ: здесь вы можете вписать любые названия (например: 'Он' и 'Она', реальные имена или 'Господин' / 'Покорная')
+    const CHAT_NAME_MALE = 'Верхний ♂';
+    const CHAT_NAME_FEMALE = 'Нижняя ♀';
+
     let livePairMessages = [];
 
     // Слушатель онлайн-сообщений из базы данных
@@ -1576,11 +1580,13 @@
       }
       if (partnerNameLabel) {
         partnerNameLabel.innerHTML = isMale 
-          ? '<span style="color:#FF8599;">🗝️ Нижняя ♀</span>' 
-          : '<span style="color:#7DD3FC;">👑 Верхний ♂</span>';
+          ? `<span style="color:#FF8599;">🗝️ ${CHAT_NAME_FEMALE}</span>` 
+          : `<span style="color:#7DD3FC;">👑 ${CHAT_NAME_MALE}</span>`;
       }
       if (roleIndicator) {
-        roleIndicator.innerText = isMale ? 'Пишешь как Верхний' : 'Пишешь как Нижняя';
+        // Убрали надпись «Пишешь как...» — теперь здесь аккуратный статус «В сети»
+        roleIndicator.innerText = 'В сети';
+        roleIndicator.style.color = '#27ae60';
       }
 
       if (livePairMessages.length === 0) {
@@ -1645,7 +1651,7 @@
       const newMsgData = {
         clientMsgId: clientMsgId,
         role: currentRole,
-        author: isMale ? 'Верхний ♂' : 'Нижняя ♀',
+        author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
         text: text,
         time: timeStr,
         senderId: currentDeviceUID,
@@ -1711,7 +1717,7 @@
           const photoMsgData = {
             clientMsgId: clientMsgId,
             role: currentRole,
-            author: isMale ? 'Верхний ♂' : 'Нижняя ♀',
+            author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
             photo: compressedDataUrl,
             time: timeStr,
             senderId: currentDeviceUID,
@@ -1994,7 +2000,7 @@
             <div id="pair-chat-partner-name" style="font-size: 12px; font-weight: 800; color: #fff; line-height: 1.2;">Собеседник</div>
             <div style="display: flex; align-items: center; gap: 4px; margin-top: 1px;">
               <span class="live-dot-pulse"></span>
-              <span id="pair-chat-role-indicator" style="font-size: 8.5px; font-weight: 700; color: #FF8599;">Онлайн-связь</span>
+              <span id="pair-chat-role-indicator" style="font-size: 8.5px; font-weight: 700; color: #27ae60;">В сети</span>
             </div>
           </div>
         </div>
