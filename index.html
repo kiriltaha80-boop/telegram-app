@@ -1290,24 +1290,65 @@
       50% { opacity: 0.45; transform: scale(0.85); }
     }
 
-    .pair-chat-card-layout {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      min-height: calc(100vh - 230px);
+    /* Фиксированный контейнер экрана чата — сам экран НЕ скроллится */
+    .tab-content.pair-chat-screen-container {
+      overflow: hidden !important;
+      display: none;
       padding: 8px 10px 10px 10px !important;
-      background: transparent !important;
-      border: none !important;
+    }
+    .tab-content.pair-chat-screen-container.active {
+      display: flex !important;
+      flex-direction: column !important;
     }
 
+    .pair-chat-card-layout {
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+    }
+
+    /* Неподвижная шапка чата */
+    .pair-chat-fixed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .pair-partner-identity {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .pair-partner-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--accent-color);
+      box-shadow: 0 0 10px rgba(230, 57, 86, 0.4);
+    }
+
+    /* Лента сообщений — единственный элемент со скроллом */
     .pair-messages-stream {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1 1 auto;
+      overflow-y: auto !important;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 8px 4px 14px 4px;
+      padding: 10px 4px;
     }
 
     /* Пузырьки сообщений */
@@ -1350,6 +1391,18 @@
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     }
 
+    /* Фотографии внутри пузырьков */
+    .pair-msg-photo-attachment {
+      max-width: 210px;
+      max-height: 250px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-top: 4px;
+      display: block;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
     /* Оформление сообщений Верхнего ♂ */
     .pair-msg-bubble.role-male {
       background: linear-gradient(135deg, #1b2c45 0%, #0d1726 100%);
@@ -1382,7 +1435,7 @@
       margin-top: 3px;
     }
 
-    /* Строка ввода классического мессенджера */
+    /* Неподвижная строка ввода со скрепкой */
     .pair-input-bar-row {
       display: flex;
       gap: 8px;
@@ -1390,7 +1443,29 @@
       padding-top: 8px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
+      width: 100%;
     }
+
+    .pair-attach-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .pair-attach-btn:active {
+      transform: scale(0.92);
+      background: rgba(230, 57, 86, 0.25);
+    }
+
     .pair-text-input {
       flex: 1;
       background: rgba(255, 255, 255, 0.06) !important;
@@ -1484,16 +1559,28 @@
     // Отрисовка ленты диалога
     function renderLiveMessagesUI() {
       const box = document.getElementById('pair-chat-messages-box');
+      const partnerAvatarImg = document.getElementById('pair-chat-partner-avatar');
+      const partnerNameLabel = document.getElementById('pair-chat-partner-name');
       const roleIndicator = document.getElementById('pair-chat-role-indicator');
       if (!box) return;
 
       const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
       const isMale = (currentRole === 'male');
 
+      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
+      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
+
+      // Обновляем шапку: показываем аватарку и имя собеседника-партнёра
+      if (partnerAvatarImg) {
+        partnerAvatarImg.src = isMale ? femaleAvatar : maleAvatar;
+      }
+      if (partnerNameLabel) {
+        partnerNameLabel.innerHTML = isMale 
+          ? '<span style="color:#FF8599;">🗝️ Нижняя ♀</span>' 
+          : '<span style="color:#7DD3FC;">👑 Верхний ♂</span>';
+      }
       if (roleIndicator) {
-        roleIndicator.innerHTML = isMale 
-          ? 'Ты пишешь как: <b style="color:#7DD3FC;">👑 Верхний ♂</b>' 
-          : 'Ты пишешь как: <b style="color:#FF8599;">🗝️ Нижняя ♀</b>';
+        roleIndicator.innerText = isMale ? 'Пишешь как Верхний' : 'Пишешь как Нижняя';
       }
 
       if (livePairMessages.length === 0) {
@@ -1504,20 +1591,21 @@
         return;
       }
 
-      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
-      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
-
       box.innerHTML = livePairMessages.map(m => {
         const isMine = (m.role === currentRole);
         const avatarSrc = (m.role === 'male') ? maleAvatar : femaleAvatar;
         const roleClass = (m.role === 'male') ? 'role-male' : 'role-female';
+
+        const photoHtml = m.photo ? `<img class="pair-msg-photo-attachment" src="${m.photo}" alt="Фото" onclick="openFullscreenPhoto('${m.photo}')">` : '';
+        const textHtml = m.text ? `<div class="pair-msg-text">${escapeHtml(m.text)}</div>` : '';
 
         return `
           <div class="pair-msg-row ${isMine ? 'outgoing' : 'incoming'}">
             <img class="pair-msg-avatar" src="${avatarSrc}" alt="${m.author}">
             <div class="pair-msg-bubble ${roleClass}">
               <div class="pair-msg-author-tag">${m.author}</div>
-              <div class="pair-msg-text">${escapeHtml(m.text)}</div>
+              ${photoHtml}
+              ${textHtml}
               <div class="pair-msg-time">${m.time || ''}</div>
             </div>
           </div>
@@ -1531,7 +1619,7 @@
       const lastPreview = document.getElementById('pair-chat-last-preview');
       if (lastPreview && livePairMessages.length > 0) {
         const last = livePairMessages[livePairMessages.length - 1];
-        lastPreview.innerText = `${last.author}: ${last.text}`;
+        lastPreview.innerText = `${last.author}: ${last.photo ? '📷 Фото' : last.text}`;
       }
     }
 
@@ -1586,6 +1674,73 @@
       });
     };
 
+    // Отправка фотографий со сжатием через Canvas
+    window.handlePairPhotoUpload = function(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800; // Оптимальный размер для быстрого облака
+          let w = img.width;
+          let h = img.height;
+
+          if (w > h && w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+
+          const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+          const isMale = (currentRole === 'male');
+          const now = new Date();
+          const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+          const clientMsgId = 'photo_' + Date.now();
+
+          const photoMsgData = {
+            clientMsgId: clientMsgId,
+            role: currentRole,
+            author: isMale ? 'Верхний ♂' : 'Нижняя ♀',
+            photo: compressedDataUrl,
+            time: timeStr,
+            senderId: currentDeviceUID,
+            createdAt: Date.now()
+          };
+
+          window.tg?.HapticFeedback?.notificationOccurred?.('success');
+          livePairMessages.push({ docId: clientMsgId, pending: true, ...photoMsgData });
+          renderLiveMessagesUI();
+          updateLastMessagePreview();
+
+          const messagesCol = collection(db, 'pair_messages');
+          addDoc(messagesCol, photoMsgData).then(docRef => {
+            const local = livePairMessages.find(m => m.clientMsgId === clientMsgId);
+            if (local) {
+              local.docId = docRef.id;
+              delete local.pending;
+            }
+          }).catch(err => {
+            console.error('Ошибка отправки фото:', err);
+            if (typeof showToast === 'function') showToast('Не удалось отправить фото', 'error');
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = ''; // Сброс инпута
+    };
+
     // Очистка переписки в базе данных
     window.clearLiveChatHistory = async function() {
       if (livePairMessages.length === 0) return;
@@ -1607,8 +1762,31 @@
       renderLiveMessagesUI();
     };
 
+    // Автоматическая прокрутка к последнему сообщению при открытии мобильной клавиатуры
+    function initKeyboardAutoScroll() {
+      const input = document.getElementById('pair-chat-input');
+      const box = document.getElementById('pair-chat-messages-box');
+      if (input && box) {
+        input.addEventListener('focus', () => {
+          setTimeout(() => { box.scrollTop = box.scrollHeight; }, 280);
+        });
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          const tab = document.getElementById('tab-chat-pair');
+          if (tab && tab.classList.contains('active')) {
+            setTimeout(() => {
+              const b = document.getElementById('pair-chat-messages-box');
+              if (b) b.scrollTop = b.scrollHeight;
+            }, 80);
+          }
+        });
+      }
+    }
+
     // Старт прослушивания живого потока сообщений
     listenLivePairMessages();
+    document.addEventListener('DOMContentLoaded', initKeyboardAutoScroll);
   </script>
 
   <!-- Всплывающие уведомления -->
@@ -1807,23 +1985,31 @@
   <!-- ЭКРАН МЕССЕНДЖЕРА ПАРЫ (ЖИВОЙ ОНЛАЙН-ЧАТ) -->
   <div id="tab-chat-pair" class="tab-content pair-chat-screen-container">
     <div class="card pair-chat-card-layout">
-      <!-- Шапка мессенджера -->
-      <div class="sub-screen-header" style="margin-bottom: 6px;">
+      <!-- Шапка мессенджера (НЕПОДВИЖНАЯ) -->
+      <div class="pair-chat-fixed-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div style="text-align: center;">
-          <div class="screen-title" style="font-size: 12px; margin: 0;">Будуарный диалог</div>
-          <div id="pair-chat-role-indicator" style="font-size: 9.5px; font-weight: 700; color: #FF8599;">Подключение...</div>
+        <div class="pair-partner-identity">
+          <img id="pair-chat-partner-avatar" class="pair-partner-header-avatar" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png" alt="Партнёр">
+          <div>
+            <div id="pair-chat-partner-name" style="font-size: 12px; font-weight: 800; color: #fff; line-height: 1.2;">Собеседник</div>
+            <div style="display: flex; align-items: center; gap: 4px; margin-top: 1px;">
+              <span class="live-dot-pulse"></span>
+              <span id="pair-chat-role-indicator" style="font-size: 8.5px; font-weight: 700; color: #FF8599;">Онлайн-связь</span>
+            </div>
+          </div>
         </div>
         <button class="small-btn" onclick="clearLiveChatHistory()" style="background: rgba(255,255,255,0.08); font-size: 9px; padding: 5px 8px;">Очистить</button>
       </div>
 
-      <!-- Лента сообщений -->
+      <!-- Лента сообщений (ЕДИНСТВЕННЫЙ СКРОЛЛЯЩИЙСЯ БЛОК) -->
       <div id="pair-chat-messages-box" class="pair-messages-stream">
         <div style="text-align: center; color: var(--text-muted); font-size: 10.5px; padding: 30px 10px;">Загрузка сообщений...</div>
       </div>
 
-      <!-- Строка ввода сообщения -->
+      <!-- Строка ввода сообщения со скрепкой (НЕПОДВИЖНАЯ) -->
       <div class="pair-input-bar-row">
+        <input type="file" id="pair-chat-file-input" accept="image/*" style="display: none;" onchange="handlePairPhotoUpload(event)">
+        <button type="button" class="pair-attach-btn" title="Прикрепить фото" onclick="document.getElementById('pair-chat-file-input').click()">📎</button>
         <input type="text" id="pair-chat-input" class="form-control pair-text-input" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendPairChatMessage()">
         <button id="pair-chat-send-btn" class="pair-send-btn" onclick="sendPairChatMessage()">
           <span>➤</span>
