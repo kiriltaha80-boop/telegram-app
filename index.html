@@ -3081,6 +3081,7 @@ function updateAllAvatarsUI() {
     document.addEventListener('DOMContentLoaded', () => {
       window.currentAvatarRole = currentAvatarRole;
       updateRoleEmojiUI();
+      updateAllAvatarsUI();
       renderDesktop();
       initSwipeGestures();
       setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
