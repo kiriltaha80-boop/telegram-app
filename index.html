@@ -1859,7 +1859,11 @@
               <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${maleBalances.stc}</span></div>
             `;
           }
-    
+    inner = `
+            ${deleteBtn}
+            <div class="desktop-widget widget-balance-square">
+              <div class="widget-balance-column">${colHtml}</div>
+            </div>`;
       
 
         wrap.innerHTML = inner;
