@@ -2950,6 +2950,96 @@
       if (el) el.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
     }
 
+   // Стандартные аватарки по умолчанию
+const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
+const DEFAULT_AVATAR_FEMALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
+
+// 1. Открытие диалога выбора фото при тапе по аватарке
+function triggerAvatarUpload() {
+  const input = document.getElementById('avatar-file-input');
+  if (input) input.click();
+}
+
+// Заглушка, если где-то вызывается старое имя openAvatarModal
+function openAvatarModal() {
+  triggerAvatarUpload();
+}
+
+// 2. Обработка, сжатие и сохранение выбранного фото
+function handleAvatarFileSelect(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      // Сжимаем фото до аккуратного квадрата 300x300 с центрированием
+      const canvas = document.createElement('canvas');
+      const size = 300;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      const minDim = Math.min(img.width, img.height);
+      const startX = (img.width - minDim) / 2;
+      const startY = (img.height - minDim) / 2;
+
+      ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
+
+      // Конвертируем в компактный Base64 JPEG (качество 0.85)
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+      // Сохраняем в localStorage под активную роль
+      const role = currentAvatarRole || 'female';
+      if (role === 'male') {
+        localStorage.setItem('pact_avatar_male', compressedBase64);
+      } else {
+        localStorage.setItem('pact_avatar_female', compressedBase64);
+      }
+
+      // Обновляем аватарки во всем интерфейсе
+      updateAllAvatarsUI();
+
+      if (typeof showToast === 'function') {
+        showToast('Аватарка успешно обновлена ✨', 'success');
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  // Сбрасываем значение, чтобы можно было загрузить то же фото снова
+  event.target.value = '';
+}
+
+// 3. Синхронизация аватарок во всех разделах
+function updateAllAvatarsUI() {
+  const role = currentAvatarRole || 'female';
+  const maleAvatar = localStorage.getItem('pact_avatar_male') || DEFAULT_AVATAR_MALE;
+  const femaleAvatar = localStorage.getItem('pact_avatar_female') || DEFAULT_AVATAR_FEMALE;
+
+  const myAvatar = role === 'male' ? maleAvatar : femaleAvatar;
+  const partnerAvatar = role === 'male' ? femaleAvatar : maleAvatar;
+
+  // Аватарка в профиле
+  const profileImg = document.getElementById('avatar-img-view');
+  if (profileImg) profileImg.src = myAvatar;
+
+  // Аватарка в нижнем навбаре
+  const navImg = document.getElementById('nav-bar-avatar');
+  if (navImg) navImg.src = myAvatar;
+
+  // Аватарка собеседника в шапке мессенджера
+  const chatPartnerImg = document.getElementById('pair-chat-partner-avatar');
+  if (chatPartnerImg) chatPartnerImg.src = partnerAvatar;
+
+  // Перерисовка сообщений чата, если открыт диалог
+  if (typeof renderLiveMessagesUI === 'function') {
+    renderLiveMessagesUI();
+  }
+}
+    
     // Баланс
     function renderBankScreen() {
       const fp = document.getElementById('bank-f-ptc'), fo = document.getElementById('bank-f-otc'), fs = document.getElementById('bank-f-stc');
