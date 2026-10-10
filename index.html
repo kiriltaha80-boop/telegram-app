@@ -1449,7 +1449,10 @@
 
         // Сортировка по времени создания
         list.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-        livePairMessages = list;
+
+        // Сохраняем локальные оптимистичные сообщения, которые ещё отправляются
+        const pendingLocal = livePairMessages.filter(m => m.pending && !list.some(s => s.clientMsgId && s.clientMsgId === m.clientMsgId));
+        livePairMessages = [...list, ...pendingLocal];
 
         renderLiveMessagesUI();
         updateLastMessagePreview();
@@ -1518,8 +1521,8 @@
       return div.innerHTML;
     }
 
-    // Отправка нового сообщения в базу данных Firebase
-    window.sendPairChatMessage = async function() {
+    // Мгновенная отправка нового сообщения в чат (0 мс задержки)
+    window.sendPairChatMessage = function() {
       const input = document.getElementById('pair-chat-input');
       const text = input ? input.value.trim() : '';
       if (!text) return;
@@ -1529,8 +1532,10 @@
 
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const clientMsgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
 
       const newMsgData = {
+        clientMsgId: clientMsgId,
         role: currentRole,
         author: isMale ? 'Верхний ♂' : 'Нижняя ♀',
         text: text,
@@ -1539,16 +1544,26 @@
         createdAt: Date.now()
       };
 
+      // 1. Мгновенно отображаем в интерфейсе и очищаем поле ввода
       if (input) input.value = '';
       window.tg?.HapticFeedback?.impactOccurred?.('light');
 
-      try {
-        const messagesCol = collection(db, 'pair_messages');
-        await addDoc(messagesCol, newMsgData);
-      } catch (e) {
+      livePairMessages.push({ docId: clientMsgId, pending: true, ...newMsgData });
+      renderLiveMessagesUI();
+      updateLastMessagePreview();
+
+      // 2. Фоновая отправка в базу данных без ожидания
+      const messagesCol = collection(db, 'pair_messages');
+      addDoc(messagesCol, newMsgData).then((docRef) => {
+        const local = livePairMessages.find(m => m.clientMsgId === clientMsgId);
+        if (local) {
+          local.docId = docRef.id;
+          delete local.pending;
+        }
+      }).catch((e) => {
         console.error('Ошибка сохранения в Firebase:', e);
         if (typeof showToast === 'function') showToast('Ошибка отправки в базу', 'error');
-      }
+      });
     };
 
     // Очистка переписки в базе данных
