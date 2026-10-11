@@ -16,7 +16,7 @@
 
   <style>
     /* ========================================================
-       1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И ОГРАНИЧЕНИЕ IPHONE 14 PRO MAX
+       1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И ФИКСИРОВАННЫЙ IPHONE 14 PRO MAX
        ======================================================== */
     :root {
       --bg-color: #0C0A10;
@@ -33,7 +33,7 @@
       --gold: #D4AF37;
 
       /* Динамические переменные тем чата */
-      --chat-overlay: rgba(0, 0, 0, 0.12);
+      --chat-overlay: rgba(0, 0, 0, 0.14);
       --chat-blur: 0px;
 
       /* Цвета сообщений Верхнего ♂ */
@@ -61,32 +61,35 @@
 
     html {
       background-color: #050407 !important;
+      margin: 0;
+      padding: 0;
       height: 100%;
       width: 100%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
 
     body {
       background-color: #0C0A10 !important;
       color: #F5F3F7;
+      margin: 0 auto;
+      padding: 0;
       width: 100%;
-      max-width: 428px;
       height: 100%;
+      max-width: 428px;
       max-height: 926px;
-      position: relative;
-      transform: translateZ(0); /* Удерживает все fixed панели строго внутри 428x926 */
       overscroll-behavior: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow: hidden;
+      position: relative;
+      transform: translateZ(0); /* Фиксирует все fixed элементы строго внутри 428x926 */
+      transition: background 0.4s ease;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: background 0.4s ease;
     }
 
-    /* Фоновые неоновые пятна */
     .ambient-glow {
       position: absolute;
       width: 280px;
@@ -100,9 +103,6 @@
     .glow-1 { top: -50px; left: -50px; background: #E63956; }
     .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
 
-    /* ========================================================
-       2. ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ (TOASTS)
-       ======================================================== */
     .toast-container {
       position: absolute;
       top: 16px;
@@ -142,9 +142,6 @@
     .app-toast.toast-error { border-color: rgba(230, 57, 86, 0.6); box-shadow: 0 0 20px rgba(230, 57, 86, 0.3); }
     .app-toast.toast-info { border-color: rgba(155, 81, 224, 0.55); box-shadow: 0 0 20px rgba(155, 81, 224, 0.25); }
 
-    /* ========================================================
-       3. ВЕРХНЯЯ КОЛБА-БРЕНДИНГ
-       ======================================================== */
     .desktop-header-bar {
       position: absolute;
       top: 52px;
@@ -204,9 +201,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* ========================================================
-       4. ЗАСТАВКА (SPLASH SCREEN)
-       ======================================================== */
     #splash-screen {
       position: absolute;
       inset: 0;
@@ -292,9 +286,6 @@
       pointer-events: none !important;
     }
 
-    /* ========================================================
-       5. РАБОЧИЙ СТОЛ (ПОЛНЫЙ ДОСТУП КО ВСЕМ ПЛИТКАМ)
-       ======================================================== */
     #tab-home {
       display: block !important;
       position: absolute;
@@ -372,7 +363,6 @@
       box-shadow: 0 0 10px rgba(230, 57, 86, 0.7);
     }
 
-    /* Плитки и виджеты */
     .desktop-item-wrapper {
       position: relative;
       user-select: none;
@@ -391,9 +381,10 @@
     }
     .desktop-tile:active { transform: scale(0.92); }
 
+    /* Иконка с надписью внутри плашки */
     .tile-icon {
-      width: 68px;
-      height: 68px;
+      width: 70px;
+      height: 70px;
       border-radius: 20px;
       position: relative;
       display: flex;
@@ -401,6 +392,7 @@
       align-items: center;
       justify-content: center;
       gap: 3px;
+      padding: 6px 4px;
       color: #fff;
       background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
       border: 1px solid rgba(255, 255, 255, 0.24);
@@ -411,21 +403,23 @@
     }
 
     .tile-emoji {
-      font-size: 26px;
+      font-size: 24px;
       line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
     }
 
-    .tile-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-top: 5px;
+    .tile-inner-label {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #F5F3F7;
       text-align: center;
       line-height: 1.1;
-      max-width: 76px;
+      max-width: 62px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      letter-spacing: 0.2px;
     }
 
     .desktop-widget {
@@ -481,14 +475,14 @@
       padding: 10px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
+      gap: 6px;
     }
     .widget-balance-column {
       display: flex;
       flex-direction: column;
       gap: 4px;
       width: 100%;
-      margin-top: 4px;
     }
     .bal-col-row {
       display: flex;
@@ -506,9 +500,6 @@
     .bal-col-val.att { color: #7DD3FC; }
     .bal-col-val.care { color: #6EE7B7; }
 
-    /* ========================================================
-       6. ВСПЛЫВАЮЩАЯ ПАНЕЛЬ НАД НАВБАРОМ
-       ======================================================== */
     .capsule-dock-toolbar {
       position: absolute;
       bottom: 84px;
@@ -552,9 +543,6 @@
     }
     .dock-action-btn:active { transform: scale(0.95); }
 
-    /* ========================================================
-       7. ШТОРКИ И ПОДЭКРАНЫ
-       ======================================================== */
     .card {
       position: relative;
       z-index: 2;
@@ -668,7 +656,6 @@
       display: flex !important;
     }
 
-    /* Прозрачная вуаль для идеального контраста */
     .pair-chat-overlay-dim {
       position: absolute;
       inset: 0;
@@ -692,7 +679,7 @@
       overflow: hidden;
     }
 
-    /* ПОЛНОСТЬЮ ПРОЗРАЧНАЯ ШАПКА БЕЗ ЧЁРНОЙ ПОЛОСЫ */
+    /* Полностью прозрачная шапка без чёрной разделительной полосы */
     .pair-chat-fixed-header {
       flex-shrink: 0;
       display: flex;
@@ -702,8 +689,8 @@
       background: transparent !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-      border-bottom: none !important;              /* Убрана черная полоса */
-      box-shadow: none !important;                 /* Убрана тень */
+      border-bottom: none !important;
+      box-shadow: none !important;
     }
 
     .pair-chat-fixed-header .back-action-btn,
@@ -741,7 +728,7 @@
       font-weight: 800;
       color: #FFF;
       line-height: 1.2;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
 
     .partner-status-row {
@@ -764,7 +751,6 @@
       50% { opacity: 0.45; transform: scale(0.85); }
     }
 
-    /* Прокручиваемая лента сообщений */
     .pair-messages-stream {
       flex: 1 1 auto;
       overflow-y: auto !important;
@@ -814,7 +800,6 @@
       transition: background 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Индивидуальные стили для Верхнего ♂ */
     .pair-msg-bubble.role-male {
       background: var(--bubble-male-bg) !important;
       border: 1px solid var(--bubble-male-border) !important;
@@ -826,7 +811,6 @@
       color: var(--bubble-male-tag) !important;
     }
 
-    /* Индивидуальные стили для Нижней ♀ */
     .pair-msg-bubble.role-female {
       background: var(--bubble-female-bg) !important;
       border: 1px solid var(--bubble-female-border) !important;
@@ -863,7 +847,7 @@
       margin-top: 3px;
     }
 
-    /* ПОЛНОСТЬЮ ПРОЗРАЧНАЯ СТРОКА ВВОДА БЕЗ ЧЁРНЫХ ЛИНИЙ */
+    /* Полностью прозрачная строка ввода без чёрной полосы */
     .pair-input-bar-row {
       flex-shrink: 0;
       display: flex;
@@ -873,7 +857,7 @@
       background: transparent !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-      border-top: none !important;                 /* Убрана черная полоса */
+      border-top: none !important;
       box-shadow: none !important;
     }
 
@@ -933,9 +917,6 @@
     }
     .pair-send-btn:active { transform: scale(0.92); }
 
-    /* ========================================================
-       9. НИЖНИЙ НАВБАР
-       ======================================================== */
     .nav-bar {
       position: absolute;
       bottom: 12px;
@@ -986,9 +967,6 @@
     .nav-icon-svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
     .nav-back-chevron { font-size: 32px; font-weight: 300; line-height: 1; color: #8A8197; }
 
-    /* ========================================================
-       10. МОДАЛКИ (ТЕМЫ INSTAGRAM, КАСТОМИЗАЦИЯ, ОБОИ, ТУТОРИАЛ)
-       ======================================================== */
     .modal-overlay {
       position: absolute;
       inset: 0;
@@ -1150,7 +1128,6 @@
     .role-toggle-emoji { font-size: 26px; cursor: pointer; }
     .profile-name-clickable { font-size: 20px; font-weight: 700; color: #fff; cursor: pointer; }
 
-    /* Бутик, гардероб, диалоги */
     .contract-list { display: flex; flex-direction: column; gap: 8px; }
     .contract-item {
       background: rgba(10, 8, 16, 0.6);
@@ -1527,6 +1504,10 @@
     let currentAuthUser = null;
     let livePairMessages = [];
 
+    // Настраиваемые имена участников в чате
+    const CHAT_NAME_MALE = 'Верхний ♂';
+    const CHAT_NAME_FEMALE = 'Нижняя ♀';
+
     // Авторизация
     async function initLiveAuth() {
       try {
@@ -1561,7 +1542,7 @@
       });
     }
 
-    // Отрисовка ленты чата
+    // Отрисовка ленты чата (без дублирования переменных)
     function renderLiveMessagesUI() {
       const box = document.getElementById('pair-chat-messages-box');
       const partnerNameEl = document.getElementById('pair-chat-partner-name');
@@ -1576,7 +1557,7 @@
 
       // Обновляем шапку собеседника
       if (partnerNameEl) {
-        partnerNameEl.innerText = isMale ? 'Нижняя ♀' : 'Верхний ♂';
+        partnerNameEl.innerText = isMale ? CHAT_NAME_FEMALE : CHAT_NAME_MALE;
       }
       if (partnerAvatarEl) {
         partnerAvatarEl.src = isMale ? femaleAvatar : maleAvatar;
@@ -1626,7 +1607,7 @@
       return div.innerHTML;
     }
 
-    // Отправка текстового сообщения (0 мс)
+    // Отправка текстового сообщения (0 мс задержки)
     window.sendPairChatMessage = async function() {
       const input = document.getElementById('pair-chat-input');
       const text = input ? input.value.trim() : '';
@@ -1640,7 +1621,7 @@
 
       const newMsgData = {
         role: currentRole,
-        author: isMale ? 'Верхний ♂' : 'Нижняя ♀',
+        author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
         text: text,
         time: timeStr,
         senderId: currentAuthUser ? currentAuthUser.uid : 'anon',
@@ -1691,7 +1672,7 @@
 
           const newPhotoMsg = {
             role: currentRole,
-            author: isMale ? 'Верхний ♂' : 'Нижняя ♀',
+            author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
             photo: compressedBase64,
             text: '',
             time: timeStr,
@@ -1919,7 +1900,6 @@
       showToast('Тема оформления обновлена ✨', 'success');
     }
 
-    // Уведомления Toast
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       if (!container) return;
@@ -1946,7 +1926,6 @@
     }
     setTimeout(hideSplash, 1500);
 
-    // Навигация
     let navStack = ['tab-home'];
     function openSubScreen(tabId) {
       closeCapsuleToolbar();
@@ -1988,9 +1967,6 @@
       }
     }
 
-    // ========================================================
-    // РАБОЧИЙ СТОЛ (ВСЕ 10 ИКОНОК ДОСТУПНЫ СРАЗУ)
-    // ========================================================
     let isDesktopEditMode = false;
     let currentDesktopPage = 0;
 
@@ -2023,8 +1999,8 @@
             <div class="desktop-tile" onclick="openSubScreen('${item.target}')">
               <div class="tile-icon">
                 <span class="tile-emoji">${item.icon}</span>
+                <span class="tile-inner-label">${item.title}</span>
               </div>
-              <div class="tile-label">${item.title}</div>
             </div>`;
         } else if (item.type === 'widget-passion') {
           inner = `
@@ -2173,7 +2149,7 @@
       document.getElementById('customization-modal')?.classList.remove('active');
     }
 
-    // Инициализация
+    // Инициализация при старте страницы
     document.addEventListener('DOMContentLoaded', () => {
       const emo = document.getElementById('role-toggle-emoji');
       if (emo) emo.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
