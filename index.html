@@ -32,8 +32,8 @@
       --border-color: rgba(255, 255, 255, 0.09);
       --gold: #D4AF37;
 
-      /* Динамические переменные тем чата */
-      --chat-overlay: rgba(0, 0, 0, 0.14);
+      /* Динамические переменные Instagram-тем чата */
+      --chat-overlay: rgba(0, 0, 0, 0.15);
       --chat-blur: 0px;
 
       /* Цвета сообщений Верхнего ♂ */
@@ -61,33 +61,29 @@
 
     html {
       background-color: #050407 !important;
-      margin: 0;
-      padding: 0;
       height: 100%;
       width: 100%;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       overflow: hidden;
     }
 
     body {
       background-color: #0C0A10 !important;
       color: #F5F3F7;
-      margin: 0 auto;
-      padding: 0;
       width: 100%;
-      height: 100%;
       max-width: 428px;
+      height: 100%;
       max-height: 926px;
+      position: relative;
+      transform: translateZ(0); /* Локализует absolute/fixed элементы строго внутри рамки body */
       overscroll-behavior: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow: hidden;
-      position: relative;
-      transform: translateZ(0); /* Фиксирует все fixed элементы строго внутри 428x926 */
-      transition: background 0.4s ease;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.4s ease;
     }
 
     .ambient-glow {
@@ -679,7 +675,6 @@
       overflow: hidden;
     }
 
-    /* Полностью прозрачная шапка без чёрной разделительной полосы */
     .pair-chat-fixed-header {
       flex-shrink: 0;
       display: flex;
@@ -847,7 +842,6 @@
       margin-top: 3px;
     }
 
-    /* Полностью прозрачная строка ввода без чёрной полосы */
     .pair-input-bar-row {
       flex-shrink: 0;
       display: flex;
@@ -917,6 +911,334 @@
     }
     .pair-send-btn:active { transform: scale(0.92); }
 
+    /* ========================================================
+       9. БУТИК ИСКУШЕНИЯ (1 КОЛОНКА + ФИКСИРОВАННАЯ ШАПКА)
+       ======================================================== */
+    .shop-layout-card, .wardrobe-layout-card {
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .shop-fixed-header-block,
+    .wardrobe-fixed-header-block {
+      position: sticky;
+      top: -16px;
+      background: rgba(18, 14, 24, 0.98);
+      backdrop-filter: blur(24px);
+      z-index: 10;
+      padding: 12px 14px 8px 14px;
+      margin: -16px -16px 8px -16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .shop-account-balance-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .shop-bal-chips-group { display: flex; gap: 6px; }
+
+    .shop-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .shop-cats-left, .shop-actions-right { display: flex; gap: 6px; }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .chip-btn.active {
+      background: rgba(230, 57, 86, 0.25);
+      border-color: var(--accent-color);
+      color: #fff;
+    }
+    .chip-btn.liked-btn.active {
+      background: rgba(230, 57, 86, 0.4);
+      border-color: var(--accent-color);
+      color: #fff;
+    }
+
+    .products-single-column-view {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 4px 0 20px 0;
+    }
+
+    .product-row-card {
+      background: rgba(14, 10, 20, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      gap: 12px;
+      position: relative;
+      cursor: pointer;
+    }
+    .product-row-img {
+      width: 90px;
+      height: 100px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .product-row-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-like-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 4;
+    }
+    .product-like-btn.liked {
+      background: rgba(230, 57, 86, 0.9);
+      box-shadow: 0 0 10px rgba(230, 57, 86, 0.6);
+    }
+
+    /* ========================================================
+       10. ГАРДЕРОБ (50/50 + НАМЁКИ)
+       ======================================================== */
+    .wardrobe-passion-banner {
+      background: linear-gradient(135deg, rgba(38, 12, 24, 0.85) 0%, rgba(18, 11, 24, 0.95) 100%);
+      border: 1px solid rgba(230, 57, 86, 0.35);
+      border-radius: 14px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wardrobe-two-column-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .wardrobe-col-tab-btn {
+      padding: 9px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #ddd;
+      font-weight: 800;
+      font-size: 11px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .wardrobe-col-tab-btn.active {
+      background: var(--accent-gradient);
+      border-color: var(--accent-color);
+      color: #fff;
+    }
+
+    .wardrobe-list-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 24px;
+    }
+    .wardrobe-card-row {
+      display: flex;
+      background: rgba(12, 10, 16, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .wardrobe-card-row.is-selected {
+      border-color: var(--accent-color);
+      background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(18, 11, 24, 0.9) 100%);
+    }
+    .wardrobe-img-wrap { width: 95px; height: 105px; position: relative; flex-shrink: 0; }
+    .wardrobe-row-img { width: 100%; height: 100%; object-fit: cover; }
+    .wardrobe-hint-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: #fff;
+      padding: 3px 7px;
+      border-radius: 8px;
+      font-size: 9px;
+      font-weight: 800;
+      box-shadow: 0 0 10px rgba(243, 156, 18, 0.6);
+      z-index: 3;
+    }
+    .selected-badge {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(230, 57, 86, 0.95);
+      color: #fff;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .wardrobe-row-info { flex: 1; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
+    .wardrobe-row-title-bar { display: flex; justify-content: space-between; align-items: center; }
+    .wardrobe-row-title { font-size: 12px; font-weight: 700; color: #fff; }
+    .wardrobe-row-desc { font-size: 9.5px; color: var(--text-muted); line-height: 1.35; margin-top: 3px; }
+    .wardrobe-row-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+
+    /* ========================================================
+       11. СУДЬБА & ЖРЕБИЙ (3D МОНЕТКА + ЧИСЛОВОЙ КУБИК)
+       ======================================================== */
+    .random-app-card { min-height: 480px; position: relative; overflow: hidden; }
+    #burst-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
+    .mode-switch-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: rgba(10, 8, 16, 0.65);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 16px;
+    }
+    .mode-tab-btn {
+      padding: 9px 0;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #9A91A5;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .mode-tab-btn.active {
+      background: var(--accent-gradient);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(230, 57, 86, 0.4);
+    }
+    .tab-section { display: none; flex-direction: column; flex: 1; width: 100%; }
+    .tab-section.active { display: flex; }
+    .coin-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+      cursor: pointer;
+      min-height: 320px;
+    }
+    .coin-trajectory-box { width: 140px; height: 140px; position: relative; transform-style: preserve-3d; }
+    .coin-3d { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+    .coin-side {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      backface-visibility: hidden;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
+    }
+    .coin-front { transform: rotateX(0deg); }
+    .coin-back { transform: rotateX(180deg); }
+    .coin-shadow {
+      width: 110px;
+      height: 16px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 70%);
+      border-radius: 50%;
+      margin-top: 25px;
+      filter: blur(3px);
+    }
+    .toss-flying .coin-trajectory-box { animation: coinFlyTrajectory 1.35s cubic-bezier(0.25, 0.85, 0.35, 1) forwards; }
+    @keyframes coinFlyTrajectory {
+      0% { transform: translateY(0) scale(1); }
+      42% { transform: translateY(-160px) scale(1.15); }
+      85% { transform: translateY(0) scale(1); }
+      93% { transform: translateY(-10px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    .number-stage { display: flex; flex-direction: column; align-items: center; justify-content: space-between; flex: 1; padding: 10px 0; }
+    .range-selector-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(10, 8, 16, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 14px;
+      border-radius: 14px;
+    }
+    .range-input {
+      width: 75px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(230, 57, 86, 0.45);
+      border-radius: 10px;
+      padding: 6px;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+    }
+    .dice-display-box {
+      width: 90px;
+      height: 90px;
+      border-radius: 22px;
+      background: radial-gradient(circle at 40% 40%, rgba(45, 20, 36, 0.9) 0%, rgba(15, 10, 20, 0.95) 100%);
+      border: 1.5px solid rgba(230, 57, 86, 0.55);
+      box-shadow: 0 0 22px rgba(230, 57, 86, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      font-weight: 900;
+      color: #FFFFFF;
+      margin: 14px auto;
+    }
+    .action-roll-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: none;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: #FFFFFF;
+      background: var(--accent-gradient);
+      box-shadow: 0 4px 16px rgba(230, 57, 86, 0.45);
+    }
+
     .nav-bar {
       position: absolute;
       bottom: 12px;
@@ -967,6 +1289,68 @@
     .nav-icon-svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
     .nav-back-chevron { font-size: 32px; font-weight: 300; line-height: 1; color: #8A8197; }
 
+    /* Профиль */
+    .profile-card-header { text-align: center; padding: 20px 0 10px 0; }
+    .profile-avatar-container {
+      width: 108px;
+      height: 108px;
+      margin: 0 auto 12px auto;
+      border-radius: 50%;
+      border: 3px solid #E63956;
+      box-shadow: 0 0 22px rgba(230, 57, 86, 0.55);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .profile-avatar-img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-cam-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: var(--accent-gradient);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border: 2px solid #0C0A10;
+      box-shadow: 0 0 8px rgba(230, 57, 86, 0.8);
+    }
+    .profile-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px auto 10px auto; }
+    .role-toggle-emoji { font-size: 26px; cursor: pointer; }
+    .profile-name-clickable { font-size: 20px; font-weight: 700; color: #fff; cursor: pointer; }
+
+    /* Календарь сетка */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .calendar-weekday {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-align: center;
+      padding-bottom: 4px;
+    }
+    .cal-day {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+    .cal-day.period { background: rgba(230, 57, 86, 0.3); border: 1px solid rgba(230, 57, 86, 0.6); color: #FF8599; }
+    .cal-day.ovulation { background: rgba(232, 160, 191, 0.3); border: 1px solid rgba(232, 160, 191, 0.6); color: #F5D0E0; }
+    .cal-day.today { box-shadow: 0 0 10px #E63956; font-weight: 900; border: 1px solid #fff; }
+
     .modal-overlay {
       position: absolute;
       inset: 0;
@@ -999,7 +1383,6 @@
     .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; }
     .modal-close-btn { font-size: 18px; color: var(--text-muted); cursor: pointer; padding: 2px 6px; }
 
-    /* Сетка тем Instagram */
     .theme-presets-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -1050,7 +1433,6 @@
       border: 1.5px solid rgba(255, 255, 255, 0.85);
     }
 
-    /* Модалка каталога рабочего стола */
     .widget-catalog-list { display: flex; flex-direction: column; gap: 8px; }
     .widget-catalog-card {
       background: rgba(12, 10, 16, 0.65);
@@ -1094,59 +1476,6 @@
       font-weight: 800;
       color: #fff;
     }
-
-    /* Профиль */
-    .profile-card-header { text-align: center; padding: 20px 0 10px 0; }
-    .profile-avatar-container {
-      width: 108px;
-      height: 108px;
-      margin: 0 auto 12px auto;
-      border-radius: 50%;
-      border: 3px solid #E63956;
-      box-shadow: 0 0 22px rgba(230, 57, 86, 0.55);
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
-    }
-    .profile-avatar-img { width: 100%; height: 100%; object-fit: cover; }
-    .avatar-cam-badge {
-      position: absolute;
-      bottom: 4px;
-      right: 4px;
-      background: var(--accent-gradient);
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      border: 2px solid #0C0A10;
-      box-shadow: 0 0 8px rgba(230, 57, 86, 0.8);
-    }
-    .profile-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px auto 10px auto; }
-    .role-toggle-emoji { font-size: 26px; cursor: pointer; }
-    .profile-name-clickable { font-size: 20px; font-weight: 700; color: #fff; cursor: pointer; }
-
-    .contract-list { display: flex; flex-direction: column; gap: 8px; }
-    .contract-item {
-      background: rgba(10, 8, 16, 0.6);
-      border: 1px solid var(--border-color);
-      padding: 10px 12px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .form-control {
-      background: rgba(10, 8, 16, 0.7);
-      border: 1px solid var(--border-color);
-      color: #fff;
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 11px;
-      outline: none;
-    }
   </style>
 </head>
 <body>
@@ -1158,14 +1487,12 @@
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
-  <!-- Верхняя колба-брендинг -->
   <header class="desktop-header-bar" id="desktop-header-bar">
     <div class="dead-zone-brand" id="brand-capsule-btn" onclick="toggleCapsuleToolbar()">
       <span class="brand-shimmer-title">Pact & Passion</span>
     </div>
   </header>
 
-  <!-- Заставка при запуске -->
   <div id="splash-screen" onclick="hideSplash()">
     <div class="splash-bg"></div>
     <div class="splash-bottom-fade"></div>
@@ -1178,7 +1505,7 @@
     </div>
   </div>
 
-  <!-- 1. РАБОЧИЙ СТОЛ (ПОЛНЫЙ ДОСТУП КО ВСЕМ ЭЛЕМЕНТАМ) -->
+  <!-- 1. РАБОЧИЙ СТОЛ -->
   <div id="tab-home" class="tab-content active">
     <div class="desktop-wrapper">
       <div class="desktop-viewport" id="desktop-viewport">
@@ -1195,7 +1522,6 @@
     </div>
   </div>
 
-  <!-- ВСПЛЫВАЮЩАЯ ПАНЕЛЬ КОЛБЫ НАД НАВБАРОМ -->
   <div class="capsule-dock-toolbar" id="capsule-dock-toolbar">
     <button class="dock-action-btn" onclick="openWallpaperModalDirect()">
       <span>🖼️ Смена обоев</span>
@@ -1237,7 +1563,11 @@
         <div class="screen-title">Женский Календарь</div>
         <button class="tutorial-help-btn" onclick="openTutorial('cycle')">?</button>
       </div>
-      <div class="calendar-grid" id="calendar-grid" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 12px;">Фазы цикла и расписание близости</div>
+      <div style="display:flex; justify-content:space-around; margin-bottom:12px; font-size:11px;">
+        <div>До цикла: <b id="box-period-val" style="color:var(--accent-color);">0 дн.</b></div>
+        <div>Овуляция: <b id="box-ovulation-val" style="color:var(--ovulation-color);">0 дн.</b></div>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
     </div>
   </div>
 
@@ -1256,15 +1586,34 @@
     </div>
   </div>
 
-  <!-- 6. БУТИК ИСКУШЕНИЯ -->
+  <!-- 6. БУТИК ИСКУШЕНИЯ (ПОЛНОСТЬЮ ВОССТАНОВЛЕННЫЙ) -->
   <div id="tab-shop" class="tab-content shop-tab-container">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Бутик Искушения</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
+    <div class="card shop-layout-card">
+      <div class="shop-fixed-header-block">
+        <div class="sub-screen-header">
+          <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+          <div class="screen-title">Бутик Искушения</div>
+          <div style="display: flex; gap: 6px;">
+            <button id="shop-add-btn-master" class="small-btn" onclick="openAddProductModal()" style="display: none;">+ Добавить</button>
+            <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
+          </div>
+        </div>
+
+        <div class="shop-account-balance-bar" id="shop-account-balance-slot"></div>
+
+        <div class="shop-controls-bar">
+          <div class="shop-cats-left">
+            <button class="chip-btn active" id="shop-cat-btn-lingerie" onclick="setShopCategory('Белье', this)">👙 Белье</button>
+            <button class="chip-btn" id="shop-cat-btn-sexshop" onclick="setShopCategory('Секс-шоп', this)">🔮 Секс-шоп</button>
+          </div>
+          <div class="shop-actions-right">
+            <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 В подарок</button>
+            <button class="chip-btn liked-btn" id="shop-cat-btn-liked" onclick="setShopCategory('Понравилось', this)">❤️ Избранное</button>
+          </div>
+        </div>
       </div>
-      <div id="shop-products-list" style="display:flex; flex-direction:column; gap:10px; padding:10px 0;"></div>
+
+      <div id="shop-products-list" class="products-single-column-view"></div>
     </div>
   </div>
 
@@ -1276,7 +1625,7 @@
         <div class="screen-title">Подарки & Желания</div>
         <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
       </div>
-      <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 24px;">Список желаний и намёков партнёру</div>
+      <div id="gifts-list-container" style="display:flex; flex-direction:column; gap:8px;"></div>
     </div>
   </div>
 
@@ -1288,8 +1637,7 @@
         <div class="screen-title">Сообщения</div>
         <button class="tutorial-help-btn" onclick="openTutorial('messenger')">?</button>
       </div>
-      <div class="contract-list">
-        <!-- Главный живой диалог пары -->
+      <div style="display:flex; flex-direction:column; gap:8px;">
         <div class="contract-item" onclick="openSubScreen('tab-chat-pair')" style="cursor: pointer; border-color: rgba(230, 57, 86, 0.45); background: linear-gradient(135deg, rgba(38, 14, 28, 0.85) 0%, rgba(18, 11, 24, 0.95) 100%);">
           <div style="display: flex; align-items: center; gap: 10px;">
             <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(230, 57, 86, 0.2); border: 1px solid rgba(230, 57, 86, 0.45); display: flex; align-items: center; justify-content: center;">
@@ -1310,12 +1658,11 @@
     </div>
   </div>
 
-  <!-- 9. ЖИВОЙ БУДУАРНЫЙ ЧАТ ПАРЫ С ТЕМАМИ И СКРЕПКОЙ (ПРОЗРАЧНЫЙ) -->
+  <!-- 9. ПРОЗРАЧНЫЙ ЖИВОЙ БУДУАРНЫЙ ЧАТ -->
   <div id="tab-chat-pair" class="tab-content">
     <div class="pair-chat-overlay-dim"></div>
     <div class="pair-chat-card-layout">
       
-      <!-- Прозрачная неподвижная шапка чата -->
       <div class="pair-chat-fixed-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
         
@@ -1336,20 +1683,14 @@
         </div>
       </div>
 
-      <!-- Прокручиваемая лента сообщений -->
       <div id="pair-chat-messages-box" class="pair-messages-stream">
         <div style="text-align: center; color: var(--text-muted); font-size: 10.5px; padding: 30px 10px;">Загрузка сообщений...</div>
       </div>
 
-      <!-- Прозрачная неподвижная строка ввода со скрепкой -->
       <div class="pair-input-bar-row">
-        <button class="pair-paperclip-btn" onclick="document.getElementById('pair-chat-file-input').click()" title="Отправить фото">
-          📎
-        </button>
+        <button class="pair-paperclip-btn" onclick="document.getElementById('pair-chat-file-input').click()" title="Отправить фото">📎</button>
         <input type="file" id="pair-chat-file-input" accept="image/*" style="display: none;" onchange="handlePairPhotoUpload(event)">
-        
         <input type="text" id="pair-chat-input" class="form-control pair-text-input" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendPairChatMessage()">
-        
         <button id="pair-chat-send-btn" class="pair-send-btn" onclick="sendPairChatMessage()">
           <span>➤</span>
         </button>
@@ -1358,14 +1699,58 @@
     </div>
   </div>
 
-  <!-- 10. СУДЬБА & ЖРЕБИЙ -->
+  <!-- 10. СУДЬБА & ЖРЕБИЙ (ВОССТАНОВЛЕН С 3D МОНЕТКОЙ И РАНДОМАЙЗЕРОМ) -->
   <div id="tab-randomizer" class="tab-content">
-    <div class="card">
+    <div class="card random-app-card" id="random-app-card">
+      <canvas id="burst-canvas"></canvas>
+
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
         <div class="screen-title">Судьба & Жребий</div>
+        <button class="tutorial-help-btn" onclick="openTutorial('randomizer')">?</button>
       </div>
-      <div style="text-align: center; padding: 30px 10px; color: var(--text-muted); font-size: 12px;">3D-монетка и кубик случайного выбора</div>
+
+      <div class="mode-switch-tabs">
+        <button class="mode-tab-btn active" id="tab-btn-coin" onclick="switchRandomMode('coin')">🪙 Монетка</button>
+        <button class="mode-tab-btn" id="tab-btn-dice" onclick="switchRandomMode('dice')">🎲 Число (1-N)</button>
+      </div>
+
+      <div class="tab-section active" id="section-coin">
+        <div class="coin-stage" id="coin-stage" onclick="tossCoin()">
+          <div class="coin-trajectory-box">
+            <div class="coin-3d" id="coin-3d">
+              <div class="coin-side coin-front">
+                <svg viewBox="0 0 200 200" style="width:100%; height:100%;">
+                  <circle cx="100" cy="100" r="96" fill="#e8be56" stroke="#805400" stroke-width="4"/>
+                  <circle cx="88" cy="112" r="38" fill="none" stroke="#fff" stroke-width="12"/>
+                  <line x1="115" y1="85" x2="148" y2="52" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+                  <polyline points="120,52 148,52 148,80" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="coin-side coin-back">
+                <svg viewBox="0 0 200 200" style="width:100%; height:100%;">
+                  <circle cx="100" cy="100" r="96" fill="#e8be56" stroke="#805400" stroke-width="4"/>
+                  <path d="M 100,40 A 34,34 0 1,1 99.9,40 M 100,108 L 100,158 M 74,133 L 126,133" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="coin-shadow" id="coin-shadow"></div>
+          <div id="coin-result-lbl" style="margin-top:14px; font-size:12px; font-weight:800; color:#FFB703;">Нажмите на монетку для броска</div>
+        </div>
+      </div>
+
+      <div class="tab-section" id="section-dice">
+        <div class="number-stage">
+          <div class="range-selector-row">
+            <span style="font-size:11px; font-weight:700; color:#9A91A5; text-transform:uppercase;">Диапазон: от 1 до</span>
+            <input type="number" id="dice-max-input" class="range-input" value="10" min="2" max="9999">
+          </div>
+          <div class="dice-display-box" id="dice-display-num">?</div>
+          <div id="dice-status-lbl" style="font-size:12px; font-weight:700; color:#FFA3B5; margin-bottom:12px;">Нажмите кнопку для броска</div>
+          <button class="action-roll-btn" onclick="rollRandomNumber()">Испытать судьбу</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1391,14 +1776,26 @@
     </div>
   </div>
 
-  <!-- 12. ГАРДЕРОБ -->
-  <div id="tab-wardrobe" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Гардероб</div>
+  <!-- 12. ГАРДЕРОБ (ПОЛНОСТЬЮ ВОССТАНОВЛЕН 50/50 + НАМЁКИ) -->
+  <div id="tab-wardrobe" class="tab-content wardrobe-tab-container">
+    <div class="card wardrobe-layout-card">
+      <div class="wardrobe-fixed-header-block">
+        <div class="sub-screen-header">
+          <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+          <div class="screen-title">Гардероб</div>
+          <button class="tutorial-help-btn" onclick="openTutorial('wardrobe')">?</button>
+        </div>
+        
+        <div class="wardrobe-passion-banner" id="wardrobe-passion-summary"></div>
+        <div id="wardrobe-partner-prefs-btn-slot"></div>
+
+        <div class="wardrobe-two-column-tabs">
+          <button class="wardrobe-col-tab-btn active" id="btn-wardrobe-lingerie" onclick="setWardrobeCategory('Белье', this)">👙 Белье</button>
+          <button class="wardrobe-col-tab-btn" id="btn-wardrobe-toys" onclick="setWardrobeCategory('Игрушки', this)">🧸 Игрушки</button>
+        </div>
       </div>
-      <div id="wardrobe-items-list" style="padding: 10px 0; color: var(--text-muted); font-size: 12px; text-align: center;">Примерка белья и аксессуаров</div>
+
+      <div id="wardrobe-items-list" class="wardrobe-list-column"></div>
     </div>
   </div>
 
@@ -1463,6 +1860,43 @@
     </div>
   </div>
 
+  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ТОВАРА ВЕРХНИМ -->
+  <div id="add-product-modal" class="modal-overlay" onclick="if(event.target === this) closeAddProductModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Добавить товар</h3>
+        <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <input type="text" id="new-prod-title" class="form-control" placeholder="Название комплекта или игрушки">
+        <select id="new-prod-category" class="form-control">
+          <option value="Белье">Белье</option>
+          <option value="Секс-шоп">Секс-шоп</option>
+        </select>
+        <input type="text" id="new-prod-img" class="form-control" placeholder="Ссылка на фото">
+        <input type="number" id="new-prod-price-ptc" class="form-control" placeholder="Цена в 💜 PTC (для белья)">
+        <input type="number" id="new-prod-price-otc" class="form-control" placeholder="Цена в 🖤 OTC (для белья)">
+        <input type="number" id="new-prod-price-stc" class="form-control" placeholder="Цена в ❤️ STC (для секс-шопа)">
+        <button class="small-btn" style="padding:10px; margin-top:4px;" onclick="handleAddNewProduct()">Сохранить товар</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА: ТУТОРИАЛ -->
+  <div id="tutorial-modal" class="modal-overlay" onclick="closeTutorial()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="tutorial-icon" style="font-size:18px;">💡</span>
+          <h3 id="tutorial-title" style="color: #fff; font-size: 13px; font-weight: 800;">Гид</h3>
+        </div>
+        <span class="modal-close-btn" onclick="closeTutorial()">✕</span>
+      </div>
+      <div id="tutorial-content-slot" style="display:flex; flex-direction:column; gap:8px; font-size:11px; color:#D6CEDF; line-height:1.45;"></div>
+      <button class="small-btn" style="width:100%; margin-top:14px; padding:10px;" onclick="closeTutorial()">Понятно ✨</button>
+    </div>
+  </div>
+
   <!-- НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ -->
   <nav class="nav-bar">
     <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
@@ -1487,7 +1921,6 @@
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Реальные ключи вашего проекта Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAJa0xpj9YG5wib6G-P4TaeKz9No4Ee1eE",
       authDomain: "pact-passion-chat.firebaseapp.com",
@@ -1504,11 +1937,9 @@
     let currentAuthUser = null;
     let livePairMessages = [];
 
-    // Настраиваемые имена участников в чате
     const CHAT_NAME_MALE = 'Верхний ♂';
     const CHAT_NAME_FEMALE = 'Нижняя ♀';
 
-    // Авторизация
     async function initLiveAuth() {
       try {
         const cred = await signInAnonymously(auth);
@@ -1521,7 +1952,6 @@
       }
     }
 
-    // Слушатель Firestore в реальном времени
     function listenLivePairMessages() {
       if (!currentAuthUser) return;
       const messagesCol = collection(db, 'pair_messages');
@@ -1542,7 +1972,6 @@
       });
     }
 
-    // Отрисовка ленты чата (без дублирования переменных)
     function renderLiveMessagesUI() {
       const box = document.getElementById('pair-chat-messages-box');
       const partnerNameEl = document.getElementById('pair-chat-partner-name');
@@ -1555,7 +1984,6 @@
       const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
       const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
 
-      // Обновляем шапку собеседника
       if (partnerNameEl) {
         partnerNameEl.innerText = isMale ? CHAT_NAME_FEMALE : CHAT_NAME_MALE;
       }
@@ -1607,7 +2035,6 @@
       return div.innerHTML;
     }
 
-    // Отправка текстового сообщения (0 мс задержки)
     window.sendPairChatMessage = async function() {
       const input = document.getElementById('pair-chat-input');
       const text = input ? input.value.trim() : '';
@@ -1631,7 +2058,6 @@
       if (input) input.value = '';
       window.tg?.HapticFeedback?.impactOccurred?.('light');
 
-      // Моментальное отображение
       livePairMessages.push({ docId: 'local_' + Date.now(), ...newMsgData });
       renderLiveMessagesUI();
 
@@ -1643,7 +2069,6 @@
       }
     };
 
-    // Отправка фото через скрепку 📎
     window.handlePairPhotoUpload = function(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -1652,7 +2077,6 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = async function() {
-          // Сжатие фото через Canvas до 800px
           const canvas = document.createElement('canvas');
           const maxDim = 800;
           let w = img.width, h = img.height;
@@ -1696,7 +2120,6 @@
       event.target.value = '';
     };
 
-    // Очистить историю
     window.clearLiveChatHistory = async function() {
       if (livePairMessages.length === 0) return;
       try {
@@ -1717,7 +2140,6 @@
       renderLiveMessagesUI();
     };
 
-    // Автофокус при появлении мобильной клавиатуры
     const chatInput = document.getElementById('pair-chat-input');
     if (chatInput) {
       chatInput.addEventListener('focus', () => {
@@ -1752,14 +2174,12 @@
       } catch (e) { console.warn(e); }
     }
 
-    // Роль и балансы
     let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
     let femaleBalances = JSON.parse(localStorage.getItem('pact_female_balances')) || { ptc: 750, otc: 330, stc: 290 };
     let maleBalances = JSON.parse(localStorage.getItem('pact_male_balances')) || { atc: 850, ctc: 720, stc: 90 };
+    let likedShopItemIds = JSON.parse(localStorage.getItem('pact_liked_shop_ids')) || [];
+    let partnerHintIds = JSON.parse(localStorage.getItem('pact_partner_hint_ids')) || [1];
 
-    // ========================================================
-    // ТЕМЫ ЧАТА: IM1.jpeg, mp2.jpeg, mp3.jpeg (ing/incon chat/)
-    // ========================================================
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/ing/incon%20chat/';
 
     const CHAT_PRESETS = [
@@ -1962,14 +2382,16 @@
       else if (tabId === 'tab-profile') document.getElementById('nav-profile')?.classList.add('active');
       else if (tabId === 'tab-chat-pair' || tabId === 'tab-messenger') document.getElementById('nav-chat')?.classList.add('active');
 
+      if (tabId === 'tab-wardrobe') renderWardrobe();
+      if (tabId === 'tab-shop') renderProducts();
+      if (tabId === 'tab-bank') renderBankScreen();
+      if (tabId === 'tab-cycle') renderCycleInfo();
       if (tabId === 'tab-chat-pair' && typeof window.renderPairChat === 'function') {
         window.renderPairChat();
       }
     }
 
-    let isDesktopEditMode = false;
     let currentDesktopPage = 0;
-
     let desktopItems = [
       { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
       { id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
@@ -2003,18 +2425,19 @@
               </div>
             </div>`;
         } else if (item.type === 'widget-passion') {
+          const passion = getPassionStatus();
           inner = `
             <div class="desktop-widget widget-passion-box" onclick="openSubScreen('tab-wardrobe')">
               <div class="passion-top-row">
                 <div style="font-size: 10px; font-weight: 800; color: #FF8566;">🌶️ Градус Страсти</div>
-                <div class="passion-peppers-badge">3 🌶️</div>
+                <div class="passion-peppers-badge">${passion.total} 🌶️</div>
               </div>
-              <div class="passion-rank-title">Опасная искусительница 🥀</div>
+              <div class="passion-rank-title">${passion.title}</div>
               <div class="passion-progress-bg">
-                <div class="passion-progress-fill" style="width: 65%;"></div>
+                <div class="passion-progress-fill" style="width: ${passion.progressPercent}%;"></div>
               </div>
               <div class="passion-status-desc">
-                <span>Образ на вечер готов</span>
+                <span>${passion.desc}</span>
                 <span style="color: var(--accent-color); font-weight: 700;">В гардероб →</span>
               </div>
             </div>`;
@@ -2057,8 +2480,490 @@
     }
 
     // ========================================================
-    // ЗАГРУЗКА И ОБНОВЛЕНИЕ АВАТАРОК
+    // ГАРДЕРОБ: МЕХАНИКА, НАМЁКИ ВЕРХНЕГО И ПЕРЧИНКИ
     // ========================================================
+    let wardrobeFilterCat = 'Белье';
+    let selectedWardrobeIds = JSON.parse(localStorage.getItem('pact_selected_wardrobe_ids')) || [1, 2];
+
+    let wardrobeItems = JSON.parse(localStorage.getItem('wardrobe_items')) || [
+      { id: 1, title: '«Винтажная Муза»', desc: 'Корсетный топ цвета слоновой кости с кружевом', category: 'Белье', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
+      { id: 2, title: '«Тёмная Покорность»', desc: 'Чёрное кружево, чокер, пояс с гартерами и портупея', category: 'Белье', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
+      { id: 3, title: '«Цветение Айвори»', desc: 'Цветочная вышивка, глубокий вырез и двойные бретели', category: 'Белье', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
+      { id: 4, title: '«Чистый Соблазн»', desc: 'Белоснежный открытый бра с кольцами и микро-стринги', category: 'Белье', peppers: 3, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
+      { id: 5, title: '«Атласные Ленты & Повязка»', desc: 'Для ограничения зрения и депривации чувств', category: 'Игрушки', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
+      { id: 6, title: '«Бархатный Ошейник»', desc: 'Чёрный ошейник с позолоченным кольцом и поводком', category: 'Игрушки', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900' },
+      { id: 7, title: '«Кожаный Флоггер Покора»', desc: 'Мягкие замшевые хвосты на эргономичной рукояти', category: 'Игрушки', peppers: 3, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900' }
+    ];
+
+    function getPassionStatus() {
+      let total = 0, countItems = 0;
+      selectedWardrobeIds.forEach(id => {
+        const item = wardrobeItems.find(w => w.id === id);
+        if (item) {
+          total += (item.peppers || 1);
+          countItems++;
+        }
+      });
+
+      let title = 'Невинный образ 🕊️';
+      let desc = 'Ничего не надето на вечер';
+      const maxCap = 9;
+
+      if (countItems === 0 || total === 0) {
+        title = 'Невинный образ 🕊️';
+        desc = 'Ничего не надето на вечер';
+      } else if (total <= 2) {
+        title = 'Скромная девочка 🎀';
+        desc = 'Будуарная романтика и нежность';
+      } else if (total <= 4) {
+        title = 'Игривая кокетка ✨';
+        desc = 'Соблазнительный флирт и акценты';
+      } else if (total <= 6) {
+        title = 'Опасная искусительница 🥀';
+        desc = 'Тонкая провокация и скрытая страсть';
+      } else if (total <= 8) {
+        title = 'Покорная грешница ⛓️';
+        desc = 'Строгие гартеры и покорность слову';
+      } else {
+        title = 'Развратная богиня 🔥';
+        desc = 'Пик наготы, экстаза и повиновения';
+      }
+
+      const progressPercent = Math.min(Math.round((total / maxCap) * 100), 100);
+      return { total, countItems, title, desc, progressPercent };
+    }
+
+    function setWardrobeCategory(cat, btn) {
+      wardrobeFilterCat = cat;
+      document.querySelectorAll('.wardrobe-col-tab-btn').forEach(b => b.classList.remove('active'));
+      btn?.classList.add('active');
+      renderWardrobe();
+    }
+
+    function toggleWardrobeSelect(id) {
+      if (currentAvatarRole === 'male') {
+        togglePartnerHint(id);
+        return;
+      }
+      const idx = selectedWardrobeIds.indexOf(id);
+      if (idx > -1) {
+        selectedWardrobeIds.splice(idx, 1);
+        tg?.HapticFeedback?.impactOccurred?.('light');
+      } else {
+        selectedWardrobeIds.push(id);
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+      }
+      localStorage.setItem('pact_selected_wardrobe_ids', JSON.stringify(selectedWardrobeIds));
+      renderWardrobe();
+      renderDesktop();
+    }
+
+    function togglePartnerHint(id) {
+      const idx = partnerHintIds.indexOf(id);
+      const item = wardrobeItems.find(w => w.id === id);
+      if (idx > -1) {
+        partnerHintIds.splice(idx, 1);
+        showToast(`Намёк снят: ${item ? item.title : ''}`, 'info');
+      } else {
+        partnerHintIds.push(id);
+        tg?.HapticFeedback?.impactOccurred?.('heavy');
+        showToast(`Намёк оставлен: ${item ? item.title : ''} 💋`, 'success');
+      }
+      localStorage.setItem('pact_partner_hint_ids', JSON.stringify(partnerHintIds));
+      renderWardrobe();
+    }
+
+    function showPartnerPreferencesModal() {
+      const hintedItems = wardrobeItems.filter(i => partnerHintIds.includes(i.id));
+      if (hintedItems.length === 0) {
+        showToast('Верхний пока не оставил намёков на вечер 🕊️', 'info');
+      } else {
+        showToast(`Верхний желает видеть: ${hintedItems.map(i => i.title).join(', ')} 💋`, 'info');
+      }
+    }
+
+    function renderWardrobe() {
+      const banner = document.getElementById('wardrobe-passion-summary');
+      const passion = getPassionStatus();
+      if (banner) {
+        banner.innerHTML = `
+          <div>
+            <div style="font-size: 8.5px; font-weight: 800; color: #FF8566; text-transform: uppercase;">Текущий образ:</div>
+            <div style="font-size: 13px; font-weight: 800; color: #fff;">${passion.title}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 13px; font-weight: 900; color: #FFB703;">${passion.total} 🌶️</div>
+            <div style="font-size: 9px; color: var(--text-muted);">${passion.desc}</div>
+          </div>`;
+      }
+
+      const prefSlot = document.getElementById('wardrobe-partner-prefs-btn-slot');
+      if (prefSlot) {
+        prefSlot.innerHTML = (currentAvatarRole === 'female') ? `
+          <button class="chip-btn" style="width:100%; margin-bottom:8px; border-color:#f39c12; color:#f39c12;" onclick="showPartnerPreferencesModal()">
+            💋 Предпочтения партнёра (${partnerHintIds.length})
+          </button>` : '';
+      }
+
+      const container = document.getElementById('wardrobe-items-list');
+      if (!container) return;
+
+      const filtered = wardrobeItems.filter(i => i.category === wardrobeFilterCat);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:30px;">В этой категории пока ничего нет</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isSelected = selectedWardrobeIds.includes(item.id);
+        const hasHint = partnerHintIds.includes(item.id);
+        const isToy = item.category === 'Игрушки';
+        const badgeText = isToy ? 'БУДЕТ ИСПОЛЬЗОВАНО ⚡' : 'НАДЕТО ✨';
+        const actionText = isSelected ? 'Снять' : (isToy ? 'Выбрать' : 'Надеть');
+
+        return `
+          <div class="wardrobe-card-row ${isSelected ? 'is-selected' : ''}" onclick="toggleWardrobeSelect(${item.id})">
+            <div class="wardrobe-img-wrap">
+              <img class="wardrobe-row-img" src="${item.mainImg}" alt="${item.title}" loading="lazy">
+              ${hasHint ? `<div class="wardrobe-hint-badge">Намёк 💋</div>` : ''}
+              ${isSelected ? `<span class="selected-badge">${badgeText}</span>` : ''}
+            </div>
+            <div class="wardrobe-row-info">
+              <div>
+                <div class="wardrobe-row-title-bar">
+                  <div class="wardrobe-row-title">${item.title}</div>
+                  <div style="font-size:11px;">${'🌶️'.repeat(item.peppers || 1)}</div>
+                </div>
+                <div class="wardrobe-row-desc">${item.desc}</div>
+              </div>
+              <div class="wardrobe-row-footer">
+                <span style="font-size:9.5px; font-weight:800; color:var(--accent-color);">${item.category}</span>
+                ${currentAvatarRole === 'male' ? `
+                  <button class="small-btn" style="background:${hasHint ? 'linear-gradient(135deg, #f39c12, #d35400)' : 'rgba(255,255,255,0.1)'}" onclick="event.stopPropagation(); togglePartnerHint(${item.id})">
+                    ${hasHint ? '✓ Намекнул' : 'Намекнуть 💋'}
+                  </button>
+                ` : `
+                  <button class="small-btn">${actionText}</button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ========================================================
+    // БУТИК ИСКУШЕНИЯ: КАТАЛОГ, ПОКУПКИ И ИЗБРАННОЕ
+    // ========================================================
+    let shopFilterCat = 'Белье';
+    let boutiqueItems = JSON.parse(localStorage.getItem('boutique_items')) || [
+      { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ цвета слоновой кости с кружевом' },
+      { id: 102, title: '«Тёмная Покорность»', category: 'Белье', pricePtc: 160, priceOtc: 340, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, пояс с гартерами и портупея' },
+      { id: 103, title: '«Цветение Айвори»', category: 'Белье', pricePtc: 280, priceOtc: 140, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт с цветочной вышивкой' },
+      { id: 201, title: '«Бархатный Ошейник»', category: 'Секс-шоп', priceStc: 180, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900', desc: 'С позолоченным кольцом и поводком' },
+      { id: 202, title: '«Атласные Ленты & Повязка»', category: 'Секс-шоп', priceStc: 120, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Для ограничения чувств и депривации' },
+      { id: 203, title: '«Кожаный Флоггер Покора»', category: 'Секс-шоп', priceStc: 260, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900', desc: 'Мягкие замшевые хвосты на эргономичной рукояти' }
+    ];
+
+    function setShopCategory(cat, btn) {
+      shopFilterCat = cat;
+      document.querySelectorAll('#tab-shop .chip-btn').forEach(b => b.classList.remove('active'));
+      btn?.classList.add('active');
+      renderProducts();
+    }
+
+    function toggleProductLike(id) {
+      const idx = likedShopItemIds.indexOf(id);
+      if (idx > -1) likedShopItemIds.splice(idx, 1);
+      else { likedShopItemIds.push(id); tg?.HapticFeedback?.impactOccurred?.('medium'); }
+      localStorage.setItem('pact_liked_shop_ids', JSON.stringify(likedShopItemIds));
+      renderProducts();
+    }
+
+    function requestPartnerGift() {
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+      showToast('Намёк на подарок отправлен партнёру! 🎁', 'success');
+    }
+
+    function renderProducts() {
+      const slot = document.getElementById('shop-account-balance-slot');
+      if (slot) {
+        if (currentAvatarRole === 'female') {
+          slot.innerHTML = `
+            <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Твой баланс:</div>
+            <div class="shop-bal-chips-group">
+              <span class="curr-chip ptc">💜 <b>${femaleBalances.ptc}</b></span>
+              <span class="curr-chip otc">🖤 <b>${femaleBalances.otc}</b></span>
+              <span class="curr-chip stc">❤️ <b>${femaleBalances.stc}</b></span>
+            </div>`;
+        } else {
+          slot.innerHTML = `
+            <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Баланс Верхнего:</div>
+            <div class="shop-bal-chips-group">
+              <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span>
+              <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span>
+              <span class="curr-chip stc">❤️ <b>${maleBalances.stc}</b></span>
+            </div>`;
+        }
+      }
+
+      const addBtn = document.getElementById('shop-add-btn-master');
+      if (addBtn) addBtn.style.display = (currentAvatarRole === 'male') ? 'block' : 'none';
+
+      const container = document.getElementById('shop-products-list');
+      if (!container) return;
+
+      let filtered = boutiqueItems;
+      if (shopFilterCat === 'Понравилось') {
+        filtered = boutiqueItems.filter(p => likedShopItemIds.includes(p.id));
+      } else {
+        filtered = boutiqueItems.filter(p => p.category === shopFilterCat);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:30px;">В этом разделе пока пусто</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => {
+        const isLiked = likedShopItemIds.includes(p.id);
+        const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
+        return `
+          <div class="product-row-card">
+            <div class="product-like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike(${p.id})">
+              ${isLiked ? '❤️' : '🤍'}
+            </div>
+            <img class="product-row-img" src="${p.mainImg}" alt="${p.title}" loading="lazy">
+            <div class="product-row-details">
+              <div>
+                <div style="font-size:12.5px; font-weight:800; color:#fff;">${p.title}</div>
+                <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${p.desc}</div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                <span style="font-size:11px; font-weight:800; color:var(--ovulation-color);">${priceStr}</span>
+                <button class="small-btn" onclick="buyShopItem(${p.id})">Купить</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function buyShopItem(id) {
+      const item = boutiqueItems.find(p => p.id === id);
+      if (!item) return;
+
+      if (item.category === 'Белье') {
+        if (currentAvatarRole !== 'female') {
+          showToast('Бельё выбирает и приобретает Нижняя за 💜 и 🖤.', 'info');
+          return;
+        }
+        if (femaleBalances.ptc < (item.pricePtc || 0) || femaleBalances.otc < (item.priceOtc || 0)) {
+          showToast(`Недостаточно средств! Нужно: 💜 ${item.pricePtc} и 🖤 ${item.priceOtc}`, 'error');
+          tg?.HapticFeedback?.notificationOccurred?.('warning');
+          return;
+        }
+        femaleBalances.ptc -= item.pricePtc;
+        femaleBalances.otc -= item.priceOtc;
+        localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
+      } else {
+        const currentStc = (currentAvatarRole === 'female') ? femaleBalances.stc : maleBalances.stc;
+        const price = item.priceStc || 150;
+        if (currentStc < price) {
+          showToast(`Недостаточно ❤️ Секс-токенов! Доступно: ${currentStc}, нужно: ${price}`, 'error');
+          tg?.HapticFeedback?.notificationOccurred?.('warning');
+          return;
+        }
+        if (currentAvatarRole === 'female') {
+          femaleBalances.stc -= price;
+          localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
+        } else {
+          maleBalances.stc -= price;
+          localStorage.setItem('pact_male_balances', JSON.stringify(maleBalances));
+        }
+      }
+
+      if (!wardrobeItems.some(w => w.title === item.title)) {
+        wardrobeItems.unshift({
+          id: Date.now(),
+          title: item.title,
+          desc: item.desc || '',
+          category: item.category === 'Белье' ? 'Белье' : 'Игрушки',
+          peppers: 2,
+          mainImg: item.mainImg
+        });
+        localStorage.setItem('wardrobe_items', JSON.stringify(wardrobeItems));
+      }
+
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+      showToast(`✨ «${item.title}» приобретен и добавлен в Гардероб!`, 'success');
+      renderProducts();
+      renderWardrobe();
+      renderDesktop();
+      renderBankScreen();
+    }
+
+    function openAddProductModal() {
+      document.getElementById('add-product-modal')?.classList.add('active');
+    }
+    function closeAddProductModal() {
+      document.getElementById('add-product-modal')?.classList.remove('active');
+    }
+
+    function handleAddNewProduct() {
+      const title = document.getElementById('new-prod-title')?.value.trim();
+      const cat = document.getElementById('new-prod-category')?.value;
+      const img = document.getElementById('new-prod-img')?.value.trim() || 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600';
+      const ptc = parseInt(document.getElementById('new-prod-price-ptc')?.value) || 200;
+      const otc = parseInt(document.getElementById('new-prod-price-otc')?.value) || 100;
+      const stc = parseInt(document.getElementById('new-prod-price-stc')?.value) || 150;
+
+      if (!title) {
+        showToast('Введите название товара', 'error');
+        return;
+      }
+
+      const newP = {
+        id: Date.now(),
+        title,
+        category: cat,
+        mainImg: img,
+        desc: 'Эксклюзивный будуарный атрибут'
+      };
+
+      if (cat === 'Белье') {
+        newP.pricePtc = ptc;
+        newP.priceOtc = otc;
+      } else {
+        newP.priceStc = stc;
+      }
+
+      boutiqueItems.unshift(newP);
+      localStorage.setItem('boutique_items', JSON.stringify(boutiqueItems));
+      closeAddProductModal();
+      renderProducts();
+      showToast(`Товар «${title}» добавлен в бутик!`, 'success');
+    }
+
+    // ========================================================
+    // СУДЬБА & ЖРЕБИЙ: 3D МОНЕТКА, ЧИСЛА И САЛЮТ
+    // ========================================================
+    function switchRandomMode(mode) {
+      document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-randomizer .tab-section').forEach(s => s.classList.remove('active'));
+      if (mode === 'coin') {
+        document.getElementById('tab-btn-coin')?.classList.add('active');
+        document.getElementById('section-coin')?.classList.add('active');
+      } else {
+        document.getElementById('tab-btn-dice')?.classList.add('active');
+        document.getElementById('section-dice')?.classList.add('active');
+      }
+    }
+
+    let isTossing = false;
+    let coinRot = 0;
+    function tossCoin() {
+      if (isTossing) return;
+      isTossing = true;
+      const stage = document.getElementById('coin-stage');
+      const coin = document.getElementById('coin-3d');
+      const resultLbl = document.getElementById('coin-result-lbl');
+      const isMale = Math.random() < 0.5;
+
+      stage?.classList.add('toss-flying');
+      tg?.HapticFeedback?.impactOccurred?.('medium');
+      if (resultLbl) resultLbl.innerText = 'Монетка летит...';
+
+      coinRot += 360 * 5 + (isMale ? 0 : 180);
+
+      if (coin) {
+        coin.style.transition = 'transform 1.35s cubic-bezier(0.2, 0.85, 0.25, 1)';
+        coin.style.transform = `rotateX(${coinRot}deg)`;
+      }
+
+      setTimeout(() => {
+        stage?.classList.remove('toss-flying');
+        isTossing = false;
+        tg?.HapticFeedback?.impactOccurred?.('heavy');
+
+        if (resultLbl) {
+          resultLbl.innerHTML = isMale 
+            ? '<span style="color:#7DD3FC;">👑 Выпал Марс ♂ (Слово Верхнего)</span>' 
+            : '<span style="color:#FF8599;">🗝️ Выпала Венера ♀ (Желание Нижней)</span>';
+        }
+        launchCelebration();
+      }, 1350);
+    }
+
+    function rollRandomNumber() {
+      const input = document.getElementById('dice-max-input');
+      let max = parseInt(input?.value) || 10;
+      if (max < 2) max = 2;
+      if (input) input.value = max;
+
+      const display = document.getElementById('dice-display-num');
+      const status = document.getElementById('dice-status-lbl');
+      if (status) status.innerText = `Вращение от 1 до ${max}...`;
+
+      let ticks = 0;
+      const interval = setInterval(() => {
+        if (display) display.innerText = Math.floor(Math.random() * max) + 1;
+        ticks++;
+        if (ticks > 14) {
+          clearInterval(interval);
+          const finalVal = Math.floor(Math.random() * max) + 1;
+          if (display) display.innerText = finalVal;
+          if (status) status.innerText = `Выпало число: ${finalVal} ✨`;
+          tg?.HapticFeedback?.notificationOccurred?.('success');
+          launchCelebration();
+        }
+      }, 70);
+    }
+
+    function launchCelebration() {
+      const canvas = document.getElementById('burst-canvas');
+      if (!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      const colors = ['#E63956', '#FFB703', '#FFFFFF', '#00D2FF', '#9B51E0', '#FF8599'];
+
+      for (let i = 0; i < 50; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 7 + 3;
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height * 0.45,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd - 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          radius: Math.random() * 3 + 1.5,
+          alpha: 1
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.14;
+          p.alpha -= 0.02;
+          ctx.globalAlpha = Math.max(0, p.alpha);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        particles = particles.filter(p => p.alpha > 0);
+        if (particles.length > 0) requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
     const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
     const DEFAULT_AVATAR_FEMALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
 
@@ -2127,6 +3032,8 @@
       if (emo) emo.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
       updateAllAvatarsUI();
       renderDesktop();
+      renderProducts();
+      renderWardrobe();
       showToast(`Роль переключена: ${currentAvatarRole === 'male' ? 'Верхний ♂' : 'Нижняя ♀'}`, 'info');
     }
 
@@ -2134,22 +3041,89 @@
       showToast('Контракт D/S скреплен узами пары ✨', 'success');
     }
 
+    function renderBankScreen() {
+      const fp = document.getElementById('bank-f-ptc'), fo = document.getElementById('bank-f-otc'), fs = document.getElementById('bank-f-stc');
+      const ma = document.getElementById('bank-m-atc'), mc = document.getElementById('bank-m-ctc'), ms = document.getElementById('bank-m-stc');
+      if (fp) fp.innerText = femaleBalances.ptc;
+      if (fo) fo.innerText = femaleBalances.otc;
+      if (fs) fs.innerText = femaleBalances.stc;
+      if (ma) ma.innerText = maleBalances.atc;
+      if (mc) mc.innerText = maleBalances.ctc;
+      if (ms) ms.innerText = maleBalances.stc;
+    }
+
+    function renderCycleInfo() {
+      const pVal = document.getElementById('box-period-val');
+      const oVal = document.getElementById('box-ovulation-val');
+      if (pVal) pVal.innerText = '12 дн.';
+      if (oVal) oVal.innerText = '2 дн.';
+
+      const grid = document.getElementById('calendar-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+      daysOfWeek.forEach(d => { grid.innerHTML += `<div class="calendar-weekday">${d}</div>`; });
+
+      for (let i = 1; i <= 28; i++) {
+        let cls = 'cal-day';
+        if (i <= 4) cls += ' period';
+        if (i === 14) cls += ' ovulation';
+        if (i === 12) cls += ' today';
+        grid.innerHTML += `<div class="${cls}">${i}</div>`;
+      }
+    }
+
+    const tutorialsData = {
+      randomizer: {
+        icon: '🎲',
+        title: 'Судьба & Жребий',
+        bullets: [
+          '3D-монетка: Марс ♂ и Венера ♀ для мгновенного разрешения споров пары.',
+          'Числовой кубик: задайте любой предел от 1 до N и испытайте волю случая.'
+        ]
+      },
+      shop: {
+        icon: '🛍️',
+        title: 'Бутик & Секс-шоп',
+        bullets: [
+          'Единый магазин: выбирайте белье и девайсы в одном каталоге.',
+          '❤️ Избранное: сохраняйте понравившееся в свой вишлист.',
+          '🎁 В подарок: отправляйте намек партнеру на желаемый сюрприз.'
+        ]
+      },
+      wardrobe: {
+        icon: '🩱',
+        title: 'Гардероб',
+        bullets: [
+          'Разделение 50/50: отдельно Белье и Игрушки на вечер.',
+          'Намёк Верхнего: метка, подсказывающая Нижней предпочтительный образ.'
+        ]
+      }
+    };
+
+    function openTutorial(key) {
+      const data = tutorialsData[key] || tutorialsData.randomizer;
+      const icon = document.getElementById('tutorial-icon');
+      const title = document.getElementById('tutorial-title');
+      const slot = document.getElementById('tutorial-content-slot');
+      if (icon) icon.innerText = data.icon;
+      if (title) title.innerText = data.title;
+      if (slot) slot.innerHTML = data.bullets.map(b => `<div>✦ ${b}</div>`).join('');
+      document.getElementById('tutorial-modal')?.classList.add('active');
+    }
+    function closeTutorial() { document.getElementById('tutorial-modal')?.classList.remove('active'); }
+
     function openWallpaperModalDirect() {
       closeCapsuleToolbar();
       document.getElementById('wallpaper-modal')?.classList.add('active');
     }
-    function closeWallpaperModal() {
-      document.getElementById('wallpaper-modal')?.classList.remove('active');
-    }
+    function closeWallpaperModal() { document.getElementById('wallpaper-modal')?.classList.remove('active'); }
     function openAddWidgetModalDirect() {
       closeCapsuleToolbar();
       document.getElementById('customization-modal')?.classList.add('active');
     }
-    function closeCustomizationModal() {
-      document.getElementById('customization-modal')?.classList.remove('active');
-    }
+    function closeCustomizationModal() { document.getElementById('customization-modal')?.classList.remove('active'); }
 
-    // Инициализация при старте страницы
     document.addEventListener('DOMContentLoaded', () => {
       const emo = document.getElementById('role-toggle-emoji');
       if (emo) emo.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
@@ -2159,6 +3133,10 @@
 
       updateAllAvatarsUI();
       renderDesktop();
+      renderProducts();
+      renderWardrobe();
+      renderBankScreen();
+      renderCycleInfo();
     });
   </script>
 </body>
