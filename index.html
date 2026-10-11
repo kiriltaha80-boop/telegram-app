@@ -1777,17 +1777,18 @@
     let maleBalances = JSON.parse(localStorage.getItem('pact_male_balances')) || { atc: 850, ctc: 720, stc: 90 };
 
     // ========================================================
-    // ТЕМЫ ЧАТА: MP1.jpeg, mp2.jpeg, mp3.jpeg
+    // ТЕМЫ ЧАТА: IM1.jpeg, IM2.jpeg, IM3.jpeg (ing/incon chat/)
     // ========================================================
-    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/img/';
+    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/ing/incon%20chat/';
 
     const CHAT_PRESETS = [
       {
-        id: 'theme_mp1',
-        title: 'Тема I • MP1',
-        bgImage: GITHUB_IMG_BASE + 'MP1.jpeg',
-        localBg: 'img/incon chat/MP1.jpeg',
-        altBg: 'mp1.jpeg',
+        id: 'theme_im1',
+        title: 'Тема I • IM1',
+        bgImage: GITHUB_IMG_BASE + 'IM1.jpeg',
+        localBg: 'ing/incon%20chat/IM1.jpeg',
+        altBg: 'ing/incon chat/IM1.jpeg',
+        altUrl: GITHUB_IMG_BASE + 'im1.jpeg',
         overlay: 'rgba(0, 0, 0, 0.12)',
         blur: '0px',
         male: {
@@ -1806,11 +1807,12 @@
         }
       },
       {
-        id: 'theme_mp2',
-        title: 'Тема II • mp2',
-        bgImage: GITHUB_IMG_BASE + 'mp2.jpeg',
-        localBg: 'img/incon chat/mp2.jpeg',
-        altBg: 'MP2.jpeg',
+        id: 'theme_im2',
+        title: 'Тема II • IM2',
+        bgImage: GITHUB_IMG_BASE + 'IM2.jpeg',
+        localBg: 'ing/incon%20chat/IM2.jpeg',
+        altBg: 'ing/incon chat/IM2.jpeg',
+        altUrl: GITHUB_IMG_BASE + 'im2.jpeg',
         overlay: 'rgba(0, 0, 0, 0.12)',
         blur: '0px',
         male: {
@@ -1829,11 +1831,12 @@
         }
       },
       {
-        id: 'theme_mp3',
-        title: 'Тема III • mp3',
-        bgImage: GITHUB_IMG_BASE + 'mp3.jpeg',
-        localBg: 'img/incon chat/mp3.jpeg',
-        altBg: 'MP3.jpeg',
+        id: 'theme_im3',
+        title: 'Тема III • IM3',
+        bgImage: GITHUB_IMG_BASE + 'IM3.jpeg',
+        localBg: 'ing/incon%20chat/IM3.jpeg',
+        altBg: 'ing/incon chat/IM3.jpeg',
+        altUrl: GITHUB_IMG_BASE + 'im3.jpeg',
         overlay: 'rgba(0, 0, 0, 0.12)',
         blur: '0px',
         male: {
@@ -1859,7 +1862,7 @@
       const root = document.documentElement;
 
       if (chatScreen) {
-        chatScreen.style.backgroundImage = `url('${preset.localBg}'), url('img/${preset.altBg}'), url('${preset.bgImage}')`;
+        chatScreen.style.backgroundImage = `url('${preset.localBg}'), url('${preset.altBg}'), url('${preset.bgImage}'), url('${preset.altUrl}')`;
         chatScreen.style.backgroundSize = 'cover';
         chatScreen.style.backgroundPosition = 'center center';
         chatScreen.style.backgroundRepeat = 'no-repeat';
@@ -1885,13 +1888,13 @@
 
     function openChatThemeModal() {
       const container = document.getElementById('theme-presets-container');
-      const curId = localStorage.getItem('pact_selected_chat_theme') || 'theme_mp1';
+      const curId = localStorage.getItem('pact_selected_chat_theme') || 'theme_im1';
       if (!container) return;
 
       container.innerHTML = CHAT_PRESETS.map(p => {
         const isAct = p.id === curId ? 'active' : '';
         return `
-          <div class="theme-card-preview ${isAct}" style="background-image: url('${p.localBg}'), url('img/${p.altBg}'), url('${p.bgImage}'); background-size: cover; background-position: center;" onclick="selectThemeAndClose('${p.id}')">
+          <div class="theme-card-preview ${isAct}" style="background-image: url('${p.localBg}'), url('${p.bgImage}'), url('${p.altUrl}'); background-size: cover; background-position: center;" onclick="selectThemeAndClose('${p.id}')">
             <span class="theme-title-tag">${p.title}</span>
             <div class="theme-bubbles-demo">
               <div class="theme-bubble-dot" style="background: ${p.male.bg}; border-color: ${p.male.border};"></div>
