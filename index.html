@@ -1777,7 +1777,7 @@
     let maleBalances = JSON.parse(localStorage.getItem('pact_male_balances')) || { atc: 850, ctc: 720, stc: 90 };
 
     // ========================================================
-    // ТЕМЫ ЧАТА: IM1.jpeg, IM2.jpeg, IM3.jpeg (ing/incon chat/)
+    // ТЕМЫ ЧАТА: IM1.jpeg, mp2.jpeg, mp3.jpeg (ing/incon chat/)
     // ========================================================
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/ing/incon%20chat/';
 
@@ -1807,12 +1807,13 @@
         }
       },
       {
-        id: 'theme_im2',
-        title: 'Тема II • IM2',
-        bgImage: GITHUB_IMG_BASE + 'IM2.jpeg',
-        localBg: 'ing/incon%20chat/IM2.jpeg',
-        altBg: 'ing/incon chat/IM2.jpeg',
-        altUrl: GITHUB_IMG_BASE + 'im2.jpeg',
+        id: 'theme_mp2',
+        title: 'Тема II • mp2',
+        bgImage: GITHUB_IMG_BASE + 'mp2.jpeg',
+        localBg: 'ing/incon%20chat/mp2.jpeg',
+        altBg: 'ing/incon chat/mp2.jpeg',
+        altUrl: GITHUB_IMG_BASE + 'MP2.jpeg',
+        altUrl2: GITHUB_IMG_BASE + 'IM2.jpeg',
         overlay: 'rgba(0, 0, 0, 0.12)',
         blur: '0px',
         male: {
@@ -1831,12 +1832,13 @@
         }
       },
       {
-        id: 'theme_im3',
-        title: 'Тема III • IM3',
-        bgImage: GITHUB_IMG_BASE + 'IM3.jpeg',
-        localBg: 'ing/incon%20chat/IM3.jpeg',
-        altBg: 'ing/incon chat/IM3.jpeg',
-        altUrl: GITHUB_IMG_BASE + 'im3.jpeg',
+        id: 'theme_mp3',
+        title: 'Тема III • mp3',
+        bgImage: GITHUB_IMG_BASE + 'mp3.jpeg',
+        localBg: 'ing/incon%20chat/mp3.jpeg',
+        altBg: 'ing/incon chat/mp3.jpeg',
+        altUrl: GITHUB_IMG_BASE + 'MP3.jpeg',
+        altUrl2: GITHUB_IMG_BASE + 'IM3.jpeg',
         overlay: 'rgba(0, 0, 0, 0.12)',
         blur: '0px',
         male: {
@@ -1862,7 +1864,7 @@
       const root = document.documentElement;
 
       if (chatScreen) {
-        chatScreen.style.backgroundImage = `url('${preset.localBg}'), url('${preset.altBg}'), url('${preset.bgImage}'), url('${preset.altUrl}')`;
+        chatScreen.style.backgroundImage = `url('${preset.bgImage}'), url('${preset.localBg}'), url('${preset.altBg}'), url('${preset.altUrl}'), url('${preset.altUrl2 || preset.altUrl}')`;
         chatScreen.style.backgroundSize = 'cover';
         chatScreen.style.backgroundPosition = 'center center';
         chatScreen.style.backgroundRepeat = 'no-repeat';
@@ -1894,7 +1896,7 @@
       container.innerHTML = CHAT_PRESETS.map(p => {
         const isAct = p.id === curId ? 'active' : '';
         return `
-          <div class="theme-card-preview ${isAct}" style="background-image: url('${p.localBg}'), url('${p.bgImage}'), url('${p.altUrl}'); background-size: cover; background-position: center;" onclick="selectThemeAndClose('${p.id}')">
+          <div class="theme-card-preview ${isAct}" style="background-image: url('${p.bgImage}'), url('${p.localBg}'), url('${p.altUrl}'); background-size: cover; background-position: center;" onclick="selectThemeAndClose('${p.id}')">
             <span class="theme-title-tag">${p.title}</span>
             <div class="theme-bubbles-demo">
               <div class="theme-bubble-dot" style="background: ${p.male.bg}; border-color: ${p.male.border};"></div>
@@ -2176,7 +2178,7 @@
       const emo = document.getElementById('role-toggle-emoji');
       if (emo) emo.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
 
-      const savedTheme = localStorage.getItem('pact_selected_chat_theme') || 'theme_mp1';
+      const savedTheme = localStorage.getItem('pact_selected_chat_theme') || 'theme_im1';
       applyChatTheme(savedTheme);
 
       updateAllAvatarsUI();
