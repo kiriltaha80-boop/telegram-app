@@ -9,14 +9,9 @@
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;1,400;1,600&display=swap" rel="stylesheet">
-
   <style>
     /* ========================================================
-       1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И ФИКСИРОВАННЫЙ IPHONE 14 PRO MAX
+       1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И БАЗОВЫЙ RESET
        ======================================================== */
     :root {
       --bg-color: #0C0A10;
@@ -30,25 +25,6 @@
       --text-main: #F5F3F7;
       --text-muted: #9A91A5;
       --border-color: rgba(255, 255, 255, 0.09);
-      --gold: #D4AF37;
-
-      /* Динамические переменные Instagram-тем чата */
-      --chat-overlay: rgba(0, 0, 0, 0.15);
-      --chat-blur: 0px;
-
-      /* Цвета сообщений Верхнего ♂ */
-      --bubble-male-bg: linear-gradient(135deg, rgba(24, 40, 62, 0.88) 0%, rgba(13, 22, 36, 0.92) 100%);
-      --bubble-male-border: rgba(74, 144, 226, 0.65);
-      --bubble-male-text: #f0f6ff;
-      --bubble-male-tag: #7DD3FC;
-      --bubble-male-shadow: rgba(74, 144, 226, 0.3);
-
-      /* Цвета сообщений Нижней ♀ */
-      --bubble-female-bg: linear-gradient(135deg, rgba(72, 18, 36, 0.88) 0%, rgba(36, 7, 17, 0.92) 100%);
-      --bubble-female-border: rgba(230, 57, 86, 0.65);
-      --bubble-female-text: #fff0f3;
-      --bubble-female-tag: #FF8599;
-      --bubble-female-shadow: rgba(230, 57, 86, 0.35);
     }
 
     * {
@@ -61,33 +37,45 @@
 
     html {
       background-color: #050407 !important;
+      margin: 0;
+      padding: 0;
       height: 100%;
       width: 100%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
 
     body {
       background-color: #0C0A10 !important;
       color: #F5F3F7;
+      margin: 0 auto;
+      padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 90px) 12px;
       width: 100%;
-      max-width: 428px;
       height: 100%;
+      max-width: 428px;
       max-height: 926px;
-      position: relative;
-      transform: translateZ(0); /* Локализует absolute/fixed элементы строго внутри рамки body */
       overscroll-behavior: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow: hidden;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      /* transform: translateZ(0) заставляет все элементы position: fixed удерживаться строго внутри рамки body */
+      transform: translateZ(0);
       transition: background 0.4s ease;
     }
 
+    /* На мониторах и планшетах (когда экран больше 428x926) оформляем как изящный смартфон с неоновой рамкой */
+    @media (min-width: 429px), (min-height: 927px) {
+      body {
+        border-radius: 36px;
+        box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 0 1.5px rgba(230, 57, 86, 0.35);
+      }
+    }
+
+    /* Фоновые неоновые пятна */
     .ambient-glow {
-      position: absolute;
+      position: fixed;
       width: 280px;
       height: 280px;
       border-radius: 50%;
@@ -99,8 +87,53 @@
     .glow-1 { top: -50px; left: -50px; background: #E63956; }
     .glow-2 { bottom: 100px; right: -50px; background: #5C1D38; }
 
-    .toast-container {
+    #wallpaper-particles {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-wp-item {
       position: absolute;
+      bottom: -90px;
+      user-select: none;
+      pointer-events: none;
+      animation: floatUpPuffyAnim linear infinite;
+      will-change: transform, opacity;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes floatUpPuffyAnim {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(0.88); opacity: 0; }
+      12% { opacity: var(--target-opacity, 0.75); }
+      85% { opacity: var(--target-opacity, 0.75); }
+      100% { transform: translate3d(var(--drift-x, 30px), -118vh, 0) rotate(var(--target-rot, 18deg)) scale(1.08); opacity: 0; }
+    }
+
+    .wp-puffy-heart {
+      width: var(--size, 52px);
+      height: var(--size, 52px);
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55)) drop-shadow(0 2px 8px var(--glow-color, rgba(230, 57, 86, 0.35)));
+      transform: rotate(var(--tilt-angle, -6deg));
+    }
+
+    .wp-gender-svg {
+      width: var(--size, 46px);
+      height: var(--size, 46px);
+      filter: drop-shadow(0 0 12px var(--symbol-glow));
+    }
+
+    /* ========================================================
+       2. ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ (TOASTS)
+       ======================================================== */
+    .toast-container {
+      position: fixed;
       top: 16px;
       left: 50%;
       transform: translateX(-50%);
@@ -109,7 +142,7 @@
       flex-direction: column;
       gap: 8px;
       width: calc(100% - 28px);
-      max-width: 390px;
+      max-width: 440px;
       pointer-events: none;
     }
 
@@ -133,14 +166,18 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: auto;
     }
+
     .app-toast.visible { opacity: 1; transform: translateY(0) scale(1); }
     .app-toast.toast-success { border-color: rgba(16, 185, 129, 0.55); box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); }
-    .app-toast.toast-error { border-color: rgba(230, 57, 86, 0.6); box-shadow: 0 0 20px rgba(230, 57, 86, 0.3); }
+    .app-toast.toast-penalty, .app-toast.toast-error { border-color: rgba(230, 57, 86, 0.6); box-shadow: 0 0 20px rgba(230, 57, 86, 0.3); }
     .app-toast.toast-info { border-color: rgba(155, 81, 224, 0.55); box-shadow: 0 0 20px rgba(155, 81, 224, 0.25); }
 
+    /* ========================================================
+       3. ВЕРХНЯЯ КОЛБА-БРЕНДИНГ
+       ======================================================== */
     .desktop-header-bar {
       position: absolute;
-      top: 52px;
+      top: 65px;
       left: 0;
       right: 0;
       height: 42px;
@@ -169,6 +206,7 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 14px rgba(230, 57, 86, 0.25), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.6) !important;
       transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease !important;
     }
+
     .dead-zone-brand:active { transform: scale(0.95) !important; }
     .dead-zone-brand.active {
       background: linear-gradient(135deg, rgba(230, 57, 86, 0.85), rgba(120, 14, 34, 0.9)) !important;
@@ -191,14 +229,18 @@
       animation: brandShimmerWave 3.4s ease-in-out infinite;
       filter: drop-shadow(0 1.5px 0px rgba(0, 0, 0, 0.95)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(230, 57, 86, 0.7));
     }
+
     @keyframes brandShimmerWave {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
+    /* ========================================================
+       4. ЗАСТАВКА (SPLASH SCREEN)
+       ======================================================== */
     #splash-screen {
-      position: absolute;
+      position: fixed;
       inset: 0;
       z-index: 99999;
       display: flex;
@@ -211,6 +253,7 @@
       overflow: hidden;
       cursor: pointer;
     }
+
     .splash-bg {
       position: absolute;
       inset: 0;
@@ -224,6 +267,7 @@
       -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 95%);
       mask-image: radial-gradient(ellipse 90% 75% at 50% 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0) 95%);
     }
+
     .splash-bottom-fade {
       position: absolute;
       inset: 0;
@@ -231,6 +275,7 @@
       z-index: 2;
       pointer-events: none;
     }
+
     .contract-stage {
       position: relative;
       z-index: 5;
@@ -243,6 +288,7 @@
       padding: 0 20px;
       transform: translateY(-40px);
     }
+
     .typewriter {
       font-size: 26px;
       font-weight: 900;
@@ -252,6 +298,7 @@
       margin: 0;
       text-shadow: 0 0 20px rgba(230, 57, 86, 0.9);
     }
+
     .splash-subtitle {
       font-size: 10px;
       color: var(--accent-color);
@@ -260,6 +307,7 @@
       font-weight: 700;
       margin-top: 6px;
     }
+
     .loading-line-bg {
       width: 140px;
       height: 3px;
@@ -268,6 +316,7 @@
       margin-top: 24px;
       overflow: hidden;
     }
+
     .loading-line-fill {
       width: 0%;
       height: 100%;
@@ -275,27 +324,36 @@
       box-shadow: 0 0 12px var(--accent-color);
       animation: fillBar 1.8s ease forwards;
     }
+
     @keyframes fillBar { to { width: 100%; } }
+
     #splash-screen.hidden {
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
     }
 
+    /* ========================================================
+       5. РАБОЧИЙ СТОЛ (БЕЗ ВЕРТИКАЛЬНОГО СКРОЛЛА + СВАЙП)
+       ======================================================== */
     #tab-home {
       display: block !important;
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 1;
-      padding-top: 105px !important;
-      padding-bottom: 95px !important;
+      padding-top: 120px !important;
       overflow: hidden !important;
+      touch-action: pan-x !important;
+      max-height: calc(100vh - 80px) !important;
     }
 
     .desktop-wrapper {
       position: relative;
       width: 100%;
-      height: 100%;
+      height: calc(100vh - 210px);
       overflow: hidden !important;
       display: flex;
       flex-direction: column;
@@ -303,9 +361,10 @@
 
     .desktop-viewport {
       width: 100%;
-      height: 100%;
       overflow: hidden !important;
       position: relative;
+      touch-action: pan-x !important;
+      flex: 1;
     }
 
     .desktop-pages-track {
@@ -313,26 +372,25 @@
       width: 100%;
       height: 100%;
       transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+      will-change: transform;
     }
 
     .desktop-page {
       min-width: 100%;
       width: 100%;
-      height: 100%;
       flex-shrink: 0;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-auto-rows: min-content;
-      gap: 12px;
+      gap: 10px;
       align-content: start;
-      padding: 6px 10px 80px 10px;
-      overflow-y: auto !important;
-      -webkit-overflow-scrolling: touch;
+      padding: 4px 6px;
+      overflow: hidden !important;
     }
 
     .desktop-pagination-dots {
-      position: absolute !important;
-      bottom: 84px !important;
+      position: fixed !important;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 98px) !important;
       left: 0;
       right: 0;
       margin: auto !important;
@@ -352,6 +410,7 @@
       transition: all 0.25s ease;
       cursor: pointer;
     }
+
     .desktop-dot.active {
       width: 18px;
       border-radius: 10px;
@@ -359,13 +418,19 @@
       box-shadow: 0 0 10px rgba(230, 57, 86, 0.7);
     }
 
+    /* ========================================================
+       6. ПЛИТКИ И ВИДЖЕТЫ
+       ======================================================== */
     .desktop-item-wrapper {
       position: relative;
       user-select: none;
+      touch-action: pan-x;
       transition: transform 0.2s ease, opacity 0.2s ease;
       display: flex;
       justify-content: center;
     }
+    .edit-mode .desktop-item-wrapper { touch-action: none; }
+    .desktop-item-wrapper.is-dragging { opacity: 0.35; transform: scale(0.92); z-index: 100; }
 
     .desktop-tile {
       display: flex;
@@ -377,19 +442,16 @@
     }
     .desktop-tile:active { transform: scale(0.92); }
 
-    /* Иконка с надписью внутри плашки */
     .tile-icon {
-      width: 70px;
-      height: 70px;
+      width: 68px;
+      height: 68px;
       border-radius: 20px;
       position: relative;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 6px 4px;
       color: #fff;
+      font-size: 30px;
       background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
       border: 1px solid rgba(255, 255, 255, 0.24);
       border-bottom-color: rgba(230, 57, 86, 0.6);
@@ -398,25 +460,46 @@
       -webkit-backdrop-filter: blur(20px);
     }
 
-    .tile-emoji {
-      font-size: 24px;
-      line-height: 1;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-    }
-
-    .tile-inner-label {
-      font-size: 9.5px;
-      font-weight: 800;
-      color: #F5F3F7;
+    .tile-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 5px;
       text-align: center;
       line-height: 1.1;
-      max-width: 62px;
+      max-width: 76px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-      letter-spacing: 0.2px;
     }
+
+    .edit-mode .desktop-tile, .edit-mode .desktop-widget {
+      animation: jiggle 0.28s infinite alternate ease-in-out;
+    }
+    @keyframes jiggle {
+      0% { transform: rotate(-1.5deg) scale(0.98); }
+      100% { transform: rotate(1.5deg) scale(1.01); }
+    }
+
+    .item-delete-btn {
+      position: absolute;
+      top: -6px;
+      right: -4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #E63956;
+      color: #fff;
+      border: 2px solid #0C0A10;
+      font-size: 11px;
+      font-weight: bold;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .edit-mode .item-delete-btn { display: flex; }
 
     .desktop-widget {
       background: linear-gradient(135deg, rgba(30, 22, 42, 0.92) 0%, rgba(15, 11, 22, 0.96) 100%);
@@ -433,6 +516,7 @@
     .widget-span-2 { grid-column: span 2; }
     .widget-span-4 { grid-column: span 4; }
 
+    /* Виджет «Градус Страсти» */
     .widget-passion-box {
       background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(22, 10, 20, 0.9) 100%) !important;
       border: 1px solid rgba(255, 90, 54, 0.4) !important;
@@ -466,6 +550,7 @@
     }
     .passion-status-desc { font-size: 10px; color: #c9bfd4; display: flex; justify-content: space-between; }
 
+    /* Квадратный виджет «Баланс Очков» (span 2) */
     .desktop-widget.widget-balance-square {
       min-height: 124px;
       padding: 10px;
@@ -496,13 +581,16 @@
     .bal-col-val.att { color: #7DD3FC; }
     .bal-col-val.care { color: #6EE7B7; }
 
+    /* ========================================================
+       7. ВСПЛЫВАЮЩАЯ ПАНЕЛЬ НАД НАВБАРОМ
+       ======================================================== */
     .capsule-dock-toolbar {
-      position: absolute;
-      bottom: 84px;
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 98px);
       left: 14px;
       right: 14px;
       margin: 0 auto;
-      max-width: 400px;
+      max-width: 440px;
       display: flex;
       gap: 10px;
       z-index: 998;
@@ -511,6 +599,7 @@
       transform: translateY(16px) scale(0.96);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .capsule-dock-toolbar.active {
       opacity: 1;
       pointer-events: auto;
@@ -539,6 +628,9 @@
     }
     .dock-action-btn:active { transform: scale(0.95); }
 
+    /* ========================================================
+       8. СТРУКТУРА ПОДЭКРАНОВ И ЕДИНЫЙ СТИЛЬ ШАПОК
+       ======================================================== */
     .card {
       position: relative;
       z-index: 2;
@@ -553,9 +645,9 @@
 
     .tab-content:not(#tab-home) {
       display: none;
-      position: absolute;
-      top: 105px;
-      bottom: 84px;
+      position: fixed;
+      top: 115px;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 98px);
       left: 12px;
       right: 12px;
       z-index: 950;
@@ -589,6 +681,7 @@
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .sub-screen-header .screen-title {
       font-weight: 800;
       color: #FFFFFF;
@@ -636,285 +729,9 @@
     }
 
     /* ========================================================
-       8. СТИЛИ МЕССЕНДЖЕРА И ПРОЗРАЧНОСТЬ БЕЗ ЧЁРНЫХ ЛИНИЙ
-       ======================================================== */
-    #tab-chat-pair {
-      padding: 0 !important;
-      overflow: hidden !important;
-      display: none;
-      flex-direction: column !important;
-      background-size: cover !important;
-      background-position: center center !important;
-      background-repeat: no-repeat !important;
-      transition: background-image 0.5s ease;
-    }
-    #tab-chat-pair.active {
-      display: flex !important;
-    }
-
-    .pair-chat-overlay-dim {
-      position: absolute;
-      inset: 0;
-      background: var(--chat-overlay);
-      backdrop-filter: blur(var(--chat-blur));
-      -webkit-backdrop-filter: blur(var(--chat-blur));
-      z-index: 1;
-      pointer-events: none;
-      transition: background 0.4s ease;
-    }
-
-    .pair-chat-card-layout {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-      background: transparent !important;
-      border: none !important;
-      overflow: hidden;
-    }
-
-    .pair-chat-fixed-header {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 14px 10px 14px;
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      border-bottom: none !important;
-      box-shadow: none !important;
-    }
-
-    .pair-chat-fixed-header .back-action-btn,
-    .pair-chat-fixed-header .small-btn {
-      background: rgba(0, 0, 0, 0.32) !important;
-      border: 1px solid rgba(255, 255, 255, 0.22) !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      color: #fff;
-    }
-
-    .pair-partner-identity {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .pair-partner-header-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--accent-color);
-      box-shadow: 0 0 12px rgba(230, 57, 86, 0.5);
-    }
-
-    .partner-info-box {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-
-    .partner-name-text {
-      font-size: 13px;
-      font-weight: 800;
-      color: #FFF;
-      line-height: 1.2;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    }
-
-    .partner-status-row {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 2px;
-    }
-
-    .live-dot-pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #27ae60;
-      box-shadow: 0 0 8px #27ae60;
-      animation: liveDotBlink 1.8s infinite;
-    }
-    @keyframes liveDotBlink {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.45; transform: scale(0.85); }
-    }
-
-    .pair-messages-stream {
-      flex: 1 1 auto;
-      overflow-y: auto !important;
-      -webkit-overflow-scrolling: touch;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 12px 10px 16px 10px;
-    }
-
-    .pair-msg-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      max-width: 86%;
-      animation: msgPopIn 0.2s ease-out;
-    }
-    @keyframes msgPopIn {
-      from { opacity: 0; transform: translateY(6px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .pair-msg-row.outgoing {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-    .pair-msg-row.incoming {
-      align-self: flex-start;
-    }
-
-    .pair-msg-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      flex-shrink: 0;
-    }
-
-    .pair-msg-bubble {
-      padding: 9px 13px;
-      border-radius: 16px;
-      font-size: 12px;
-      line-height: 1.4;
-      position: relative;
-      word-break: break-word;
-      transition: background 0.3s ease, border-color 0.3s ease;
-    }
-
-    .pair-msg-bubble.role-male {
-      background: var(--bubble-male-bg) !important;
-      border: 1px solid var(--bubble-male-border) !important;
-      color: var(--bubble-male-text) !important;
-      box-shadow: 0 4px 14px var(--bubble-male-shadow) !important;
-      border-bottom-right-radius: 4px;
-    }
-    .pair-msg-bubble.role-male .pair-msg-author-tag {
-      color: var(--bubble-male-tag) !important;
-    }
-
-    .pair-msg-bubble.role-female {
-      background: var(--bubble-female-bg) !important;
-      border: 1px solid var(--bubble-female-border) !important;
-      color: var(--bubble-female-text) !important;
-      box-shadow: 0 4px 14px var(--bubble-female-shadow) !important;
-      border-bottom-left-radius: 4px;
-    }
-    .pair-msg-bubble.role-female .pair-msg-author-tag {
-      color: var(--bubble-female-tag) !important;
-    }
-
-    .pair-msg-author-tag {
-      font-size: 8.5px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-    }
-
-    .pair-msg-photo-img {
-      max-width: 200px;
-      max-height: 220px;
-      border-radius: 12px;
-      margin-top: 4px;
-      display: block;
-      object-fit: cover;
-      cursor: pointer;
-    }
-
-    .pair-msg-time {
-      font-size: 8px;
-      color: rgba(255, 255, 255, 0.45);
-      text-align: right;
-      margin-top: 3px;
-    }
-
-    .pair-input-bar-row {
-      flex-shrink: 0;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      padding: 10px 12px 14px 12px;
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      border-top: none !important;
-      box-shadow: none !important;
-    }
-
-    .pair-paperclip-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      background: rgba(0, 0, 0, 0.32) !important;
-      border: 1px solid rgba(255, 255, 255, 0.22) !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.15s ease;
-    }
-    .pair-paperclip-btn:active { transform: scale(0.92); }
-
-    .pair-text-input {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.32) !important;
-      border: 1px solid rgba(255, 255, 255, 0.22) !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-radius: 16px !important;
-      padding: 11px 14px !important;
-      color: #fff !important;
-      font-size: 12.5px !important;
-      outline: none;
-    }
-    .pair-text-input:focus {
-      border-color: var(--accent-color) !important;
-      background: rgba(0, 0, 0, 0.48) !important;
-      box-shadow: 0 0 12px rgba(230, 57, 86, 0.35) !important;
-    }
-
-    .pair-send-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      border: none;
-      background: var(--accent-gradient);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(230, 57, 86, 0.45);
-      transition: transform 0.15s ease;
-      flex-shrink: 0;
-    }
-    .pair-send-btn:active { transform: scale(0.92); }
-
-    /* ========================================================
        9. БУТИК ИСКУШЕНИЯ (1 КОЛОНКА + ФИКСИРОВАННАЯ ШАПКА)
        ======================================================== */
-    .shop-layout-card, .wardrobe-layout-card {
+    .shop-layout-card {
       padding: 0 !important;
       background: transparent !important;
       border: none !important;
@@ -1029,6 +846,11 @@
     /* ========================================================
        10. ГАРДЕРОБ (50/50 + НАМЁКИ)
        ======================================================== */
+    .wardrobe-layout-card {
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+    }
     .wardrobe-passion-banner {
       background: linear-gradient(135deg, rgba(38, 12, 24, 0.85) 0%, rgba(18, 11, 24, 0.95) 100%);
       border: 1px solid rgba(230, 57, 86, 0.35);
@@ -1114,7 +936,97 @@
     .wardrobe-row-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
 
     /* ========================================================
-       11. СУДЬБА & ЖРЕБИЙ (3D МОНЕТКА + ЧИСЛОВОЙ КУБИК)
+       11. МОДАЛКА: ДОБАВИТЬ НА СТОЛ (✓ / ✕)
+       ======================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal-card {
+      background: rgba(22, 18, 30, 0.98);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      max-width: 380px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
+    .modal-close-btn { font-size: 18px; color: var(--text-muted); cursor: pointer; }
+
+    .widget-catalog-list { display: flex; flex-direction: column; gap: 8px; }
+    .widget-catalog-card {
+      background: rgba(12, 10, 16, 0.65);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .widget-catalog-card .cat-icon { font-size: 22px; }
+    .widget-catalog-card .cat-info { flex: 1; }
+    .widget-catalog-card .title { font-size: 11.5px; font-weight: 700; color: #fff; }
+    .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); }
+
+    .catalog-status-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .catalog-status-btn.add {
+      background: #27ae60;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(39, 174, 96, 0.45);
+    }
+    .catalog-status-btn.remove {
+      background: #e74c3c;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(231, 76, 60, 0.45);
+    }
+
+    .wallpaper-presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .wallpaper-thumb {
+      height: 75px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-end;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      transition: transform 0.15s ease;
+    }
+    .wallpaper-thumb:active { transform: scale(0.95); }
+    .wallpaper-thumb.selected { border-color: var(--accent-color); box-shadow: 0 0 12px rgba(230, 57, 86, 0.4); }
+
+    /* ========================================================
+       12. ЖРЕБИЙ, МОНЕТКА И САЛЮТ
        ======================================================== */
     .random-app-card { min-height: 480px; position: relative; overflow: hidden; }
     #burst-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
@@ -1239,13 +1151,16 @@
       box-shadow: 0 4px 16px rgba(230, 57, 86, 0.45);
     }
 
+    /* ========================================================
+       13. НИЖНИЙ НАВБАР
+       ======================================================== */
     .nav-bar {
-      position: absolute;
-      bottom: 12px;
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
       left: 14px;
       right: 14px;
-      height: 64px;
-      border-radius: 30px;
+      height: 70px;
+      border-radius: 34px;
       background: rgba(18, 14, 25, 0.86);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -1271,7 +1186,7 @@
     .nav-item.active::after {
       content: '';
       position: absolute;
-      bottom: 6px;
+      bottom: 8px;
       width: 5px;
       height: 5px;
       border-radius: 50%;
@@ -1289,7 +1204,7 @@
     .nav-icon-svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
     .nav-back-chevron { font-size: 32px; font-weight: 300; line-height: 1; color: #8A8197; }
 
-    /* Профиль */
+    /* Профиль без очков */
     .profile-card-header { text-align: center; padding: 20px 0 10px 0; }
     .profile-avatar-container {
       width: 108px;
@@ -1300,185 +1215,584 @@
       box-shadow: 0 0 22px rgba(230, 57, 86, 0.55);
       overflow: hidden;
       cursor: pointer;
-      position: relative;
     }
     .profile-avatar-img { width: 100%; height: 100%; object-fit: cover; }
-    .avatar-cam-badge {
-      position: absolute;
-      bottom: 4px;
-      right: 4px;
-      background: var(--accent-gradient);
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      border: 2px solid #0C0A10;
-      box-shadow: 0 0 8px rgba(230, 57, 86, 0.8);
-    }
     .profile-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px auto 10px auto; }
     .role-toggle-emoji { font-size: 26px; cursor: pointer; }
     .profile-name-clickable { font-size: 20px; font-weight: 700; color: #fff; cursor: pointer; }
 
-    /* Календарь сетка */
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .calendar-weekday {
-      font-size: 9px;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-align: center;
-      padding-bottom: 4px;
-    }
-    .cal-day {
-      height: 32px;
+    /* Дополнительные вспомогательные стили */
+    .contract-list { display: flex; flex-direction: column; gap: 8px; }
+    .contract-item {
+      background: rgba(10, 8, 16, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      border-radius: 12px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.04);
-      color: #fff;
-    }
-    .cal-day.period { background: rgba(230, 57, 86, 0.3); border: 1px solid rgba(230, 57, 86, 0.6); color: #FF8599; }
-    .cal-day.ovulation { background: rgba(232, 160, 191, 0.3); border: 1px solid rgba(232, 160, 191, 0.6); color: #F5D0E0; }
-    .cal-day.today { box-shadow: 0 0 10px #E63956; font-weight: 900; border: 1px solid #fff; }
-
-    .modal-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal-card {
-      background: rgba(22, 18, 30, 0.98);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: 18px 16px;
-      width: 100%;
-      max-width: 380px;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-      display: flex;
-      flex-direction: column;
-    }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; }
-    .modal-close-btn { font-size: 18px; color: var(--text-muted); cursor: pointer; padding: 2px 6px; }
-
-    .theme-presets-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      overflow-y: auto;
-      padding: 4px;
-    }
-    .theme-card-preview {
-      position: relative;
-      height: 120px;
-      border-radius: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.12);
-      background-size: cover;
-      background-position: center;
-      overflow: hidden;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
       justify-content: space-between;
-      padding: 10px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      align-items: center;
     }
-    .theme-card-preview:active { transform: scale(0.97); }
-    .theme-card-preview.active {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 18px var(--accent-color);
-    }
-    .theme-title-tag {
-      background: rgba(0, 0, 0, 0.72);
-      backdrop-filter: blur(6px);
+    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .form-control {
+      background: rgba(10, 8, 16, 0.7);
+      border: 1px solid var(--border-color);
       color: #fff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      outline: none;
+    }
+    .curr-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 10px;
+      padding: 4px 8px;
       font-size: 10.5px;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 8px;
-      align-self: flex-start;
-      border: 1px solid rgba(255, 255, 255, 0.15);
     }
-    .theme-bubbles-demo {
-      display: flex;
-      gap: 6px;
-      align-self: flex-end;
+    .curr-chip.ptc { background: rgba(155, 81, 224, 0.16); color: #D6A4FF; border: 1px solid rgba(155, 81, 224, 0.4); }
+    .curr-chip.otc { background: rgba(255, 255, 255, 0.08); color: #F0F0F0; border: 1px solid rgba(255, 255, 255, 0.2); }
+    .curr-chip.stc { background: rgba(230, 57, 86, 0.16); color: #FF8599; border: 1px solid rgba(230, 57, 86, 0.4); }
+    .curr-chip.att { background: rgba(56, 189, 248, 0.14); color: #7DD3FC; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .curr-chip.care { background: rgba(52, 211, 153, 0.14); color: #6EE7B7; border: 1px solid rgba(52, 211, 153, 0.4); }
+    
+    /* ========================================================
+       СТИЛИ МЕССЕНДЖЕРА ПАРЫ (REAL-TIME CHAT)
+       ======================================================== */
+    .pair-chat-card-btn {
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
     }
-    .theme-bubble-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 6px;
-      border: 1.5px solid rgba(255, 255, 255, 0.85);
+    .pair-chat-card-btn:active {
+      transform: scale(0.98);
     }
-
-    .widget-catalog-list { display: flex; flex-direction: column; gap: 8px; }
-    .widget-catalog-card {
-      background: rgba(12, 10, 16, 0.65);
-      border: 1px solid var(--border-color);
+    .pair-chat-avatars-bubble {
+      width: 38px;
+      height: 38px;
       border-radius: 12px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .widget-catalog-card .cat-icon { font-size: 22px; }
-    .widget-catalog-card .cat-info { flex: 1; }
-    .widget-catalog-card .title { font-size: 11.5px; font-weight: 700; color: #fff; }
-    .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); }
-    .catalog-status-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      background: rgba(230, 57, 86, 0.2);
+      border: 1px solid rgba(230, 57, 86, 0.45);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 900;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
     }
-    .catalog-status-btn.add { background: #27ae60; color: #fff; box-shadow: 0 0 10px rgba(39, 174, 96, 0.45); }
-    .catalog-status-btn.remove { background: #e74c3c; color: #fff; box-shadow: 0 0 10px rgba(231, 76, 60, 0.45); }
+    .live-dot-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #27ae60;
+      box-shadow: 0 0 8px #27ae60;
+      display: inline-block;
+      animation: liveDotBlink 1.8s infinite;
+    }
+    @keyframes liveDotBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
 
-    .wallpaper-presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
-    .wallpaper-thumb {
-      height: 75px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
+    /* Фиксированный контейнер экрана чата — сам экран НЕ скроллится */
+    .tab-content.pair-chat-screen-container {
+      overflow: hidden !important;
+      display: none;
+      padding: 8px 10px 10px 10px !important;
+    }
+    .tab-content.pair-chat-screen-container.active {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .pair-chat-card-layout {
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+    }
+
+    /* Неподвижная шапка чата */
+    .pair-chat-fixed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .pair-partner-identity {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .pair-partner-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--accent-color);
+      box-shadow: 0 0 10px rgba(230, 57, 86, 0.4);
+    }
+
+    /* Лента сообщений — единственный элемент со скроллом */
+    .pair-messages-stream {
+      flex: 1 1 auto;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 4px;
+    }
+
+    /* Пузырьки сообщений */
+    .pair-msg-row {
       display: flex;
       align-items: flex-end;
-      padding: 8px;
+      gap: 8px;
+      max-width: 86%;
+      animation: msgPopIn 0.2s ease-out;
+    }
+    @keyframes msgPopIn {
+      from { opacity: 0; transform: translateY(6px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .pair-msg-row.outgoing {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .pair-msg-row.incoming {
+      align-self: flex-start;
+    }
+
+    .pair-msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      flex-shrink: 0;
+    }
+
+    .pair-msg-bubble {
+      padding: 9px 13px;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 1.4;
+      position: relative;
+      word-break: break-word;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Фотографии внутри пузырьков */
+    .pair-msg-photo-attachment {
+      max-width: 210px;
+      max-height: 250px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-top: 4px;
+      display: block;
       cursor: pointer;
-      font-size: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Оформление сообщений Верхнего ♂ */
+    .pair-msg-bubble.role-male {
+      background: linear-gradient(135deg, #1b2c45 0%, #0d1726 100%);
+      border: 1px solid rgba(74, 144, 226, 0.5);
+      color: #f0f6ff;
+      border-bottom-right-radius: 4px;
+    }
+    /* Оформление сообщений Нижней ♀ */
+    .pair-msg-bubble.role-female {
+      background: linear-gradient(135deg, #441326 0%, #220914 100%);
+      border: 1px solid rgba(230, 57, 86, 0.5);
+      color: #fff0f3;
+      border-bottom-left-radius: 4px;
+    }
+
+    .pair-msg-author-tag {
+      font-size: 8.5px;
       font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .pair-msg-bubble.role-male .pair-msg-author-tag { color: #7DD3FC; }
+    .pair-msg-bubble.role-female .pair-msg-author-tag { color: #FF8599; }
+
+    .pair-msg-time {
+      font-size: 8px;
+      color: rgba(255, 255, 255, 0.45);
+      text-align: right;
+      margin-top: 3px;
+    }
+
+    /* Неподвижная строка ввода со скрепкой */
+    .pair-input-bar-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .pair-attach-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
       color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .pair-attach-btn:active {
+      transform: scale(0.92);
+      background: rgba(230, 57, 86, 0.25);
+    }
+
+    .pair-text-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 16px !important;
+      padding: 10px 14px !important;
+      color: #fff !important;
+      font-size: 12.5px !important;
+    }
+    .pair-text-input:focus {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 10px rgba(230, 57, 86, 0.3) !important;
+    }
+    .pair-send-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      border: none;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(230, 57, 86, 0.45);
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+    }
+    .pair-send-btn:active {
+      transform: scale(0.92);
     }
   </style>
 </head>
 <body>
+
+  <!-- ========================================================
+       МОДУЛЬ ЖИВОГО МЕССЕНДЖЕРА ПАРЫ (FIREBASE REAL-TIME CLOUD)
+       ======================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Персональные ключи из вашего проекта Firebase Console
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJa0xpj9YG5wib6G-P4TaeKz9No4Ee1eE",
+      authDomain: "pact-passion-chat.firebaseapp.com",
+      projectId: "pact-passion-chat",
+      storageBucket: "pact-passion-chat.firebasestorage.app",
+      messagingSenderId: "551917448504",
+      appId: "1:551917448504:web:433e4fc271adee0ac8e5cd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Уникальный ID устройства
+    let currentDeviceUID = localStorage.getItem('pact_device_uid');
+    if (!currentDeviceUID) {
+      currentDeviceUID = 'dev_' + Math.random().toString(36).substring(2, 9);
+      localStorage.setItem('pact_device_uid', currentDeviceUID);
+    }
+
+    // НАСТРОЙКА ИМЁН В ЧАТЕ: здесь вы можете вписать любые названия (например: 'Он' и 'Она', реальные имена или 'Господин' / 'Покорная')
+    const CHAT_NAME_MALE = 'Верхний ';
+    const CHAT_NAME_FEMALE = 'Нижняя ';
+
+    let livePairMessages = [];
+
+    // Слушатель онлайн-сообщений из базы данных
+    function listenLivePairMessages() {
+      const messagesCol = collection(db, 'pair_messages');
+
+      onSnapshot(messagesCol, (snapshot) => {
+        const list = [];
+        snapshot.forEach(docSnap => {
+          list.push({ docId: docSnap.id, ...docSnap.data() });
+        });
+
+        // Сортировка по времени создания
+        list.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+        // Сохраняем локальные оптимистичные сообщения, которые ещё отправляются
+        const pendingLocal = livePairMessages.filter(m => m.pending && !list.some(s => s.clientMsgId && s.clientMsgId === m.clientMsgId));
+        livePairMessages = [...list, ...pendingLocal];
+
+        renderLiveMessagesUI();
+        updateLastMessagePreview();
+      }, (error) => {
+        console.error('Ошибка синхронизации Firestore:', error);
+      });
+    }
+
+    // Отрисовка ленты диалога
+    function renderLiveMessagesUI() {
+      const box = document.getElementById('pair-chat-messages-box');
+      const partnerAvatarImg = document.getElementById('pair-chat-partner-avatar');
+      const partnerNameLabel = document.getElementById('pair-chat-partner-name');
+      const roleIndicator = document.getElementById('pair-chat-role-indicator');
+      if (!box) return;
+
+      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+      const isMale = (currentRole === 'male');
+      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+      const isMale = currentRole === 'male';
+      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
+      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
+
+      // Обновляем шапку: показываем аватарку и имя собеседника-партнёра
+      if (partnerAvatarImg) {
+        partnerAvatarImg.src = isMale ? femaleAvatar : maleAvatar;
+      }
+     if (roleIndicator) {
+      roleIndicator.innerText = 'В сети';
+    }
+      if (roleIndicator) {
+        // Убрали надпись «Пишешь как...» — теперь здесь аккуратный статус «В сети»
+        roleIndicator.innerText = 'В сети';
+        roleIndicator.style.color = '#27ae60';
+      }
+
+      if (livePairMessages.length === 0) {
+        box.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 40px 10px;">
+            Сообщений пока нет.<br>Начните будуарный диалог с партнёром ✨
+          </div>`;
+        return;
+      }
+
+      box.innerHTML = livePairMessages.map(m => {
+        const isMine = (m.role === currentRole);
+        const avatarSrc = (m.role === 'male') ? maleAvatar : femaleAvatar;
+        const roleClass = (m.role === 'male') ? 'role-male' : 'role-female';
+
+        const photoHtml = m.photo ? `<img class="pair-msg-photo-attachment" src="${m.photo}" alt="Фото" onclick="openFullscreenPhoto('${m.photo}')">` : '';
+        const textHtml = m.text ? `<div class="pair-msg-text">${escapeHtml(m.text)}</div>` : '';
+
+        return `
+          <div class="pair-msg-row ${isMine ? 'outgoing' : 'incoming'}">
+            <img class="pair-msg-avatar" src="${avatarSrc}" alt="${m.author}">
+            <div class="pair-msg-bubble ${roleClass}">
+              <div class="pair-msg-author-tag">${m.author}</div>
+              ${photoHtml}
+              ${textHtml}
+              <div class="pair-msg-time">${m.time || ''}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function updateLastMessagePreview() {
+      const lastPreview = document.getElementById('pair-chat-last-preview');
+      if (lastPreview && livePairMessages.length > 0) {
+        const last = livePairMessages[livePairMessages.length - 1];
+        lastPreview.innerText = `${last.author}: ${last.photo ? '📷 Фото' : last.text}`;
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    // Мгновенная отправка нового сообщения в чат (0 мс задержки)
+    window.sendPairChatMessage = function() {
+      const input = document.getElementById('pair-chat-input');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+
+      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+      const isMale = (currentRole === 'male');
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const clientMsgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+
+      const newMsgData = {
+        clientMsgId: clientMsgId,
+        role: currentRole,
+        author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
+        text: text,
+        time: timeStr,
+        senderId: currentDeviceUID,
+        createdAt: Date.now()
+      };
+
+      // 1. Мгновенно отображаем в интерфейсе и очищаем поле ввода
+      if (input) input.value = '';
+      window.tg?.HapticFeedback?.impactOccurred?.('light');
+
+      livePairMessages.push({ docId: clientMsgId, pending: true, ...newMsgData });
+      renderLiveMessagesUI();
+      updateLastMessagePreview();
+
+      // 2. Фоновая отправка в базу данных без ожидания
+      const messagesCol = collection(db, 'pair_messages');
+      addDoc(messagesCol, newMsgData).then((docRef) => {
+        const local = livePairMessages.find(m => m.clientMsgId === clientMsgId);
+        if (local) {
+          local.docId = docRef.id;
+          delete local.pending;
+        }
+      }).catch((e) => {
+        console.error('Ошибка сохранения в Firebase:', e);
+        if (typeof showToast === 'function') showToast('Ошибка отправки в базу', 'error');
+      });
+    };
+
+    // Отправка фотографий со сжатием через Canvas
+    window.handlePairPhotoUpload = function(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800; // Оптимальный размер для быстрого облака
+          let w = img.width;
+          let h = img.height;
+
+          if (w > h && w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+
+          const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+          const isMale = (currentRole === 'male');
+          const now = new Date();
+          const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+          const clientMsgId = 'photo_' + Date.now();
+
+          const photoMsgData = {
+            clientMsgId: clientMsgId,
+            role: currentRole,
+            author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
+            photo: compressedDataUrl,
+            time: timeStr,
+            senderId: currentDeviceUID,
+            createdAt: Date.now()
+          };
+
+          window.tg?.HapticFeedback?.notificationOccurred?.('success');
+          livePairMessages.push({ docId: clientMsgId, pending: true, ...photoMsgData });
+          renderLiveMessagesUI();
+          updateLastMessagePreview();
+
+          const messagesCol = collection(db, 'pair_messages');
+          addDoc(messagesCol, photoMsgData).then(docRef => {
+            const local = livePairMessages.find(m => m.clientMsgId === clientMsgId);
+            if (local) {
+              local.docId = docRef.id;
+              delete local.pending;
+            }
+          }).catch(err => {
+            console.error('Ошибка отправки фото:', err);
+            if (typeof showToast === 'function') showToast('Не удалось отправить фото', 'error');
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = ''; // Сброс инпута
+    };
+
+    // Очистка переписки в базе данных
+    window.clearLiveChatHistory = async function() {
+      if (livePairMessages.length === 0) return;
+      try {
+        for (const m of livePairMessages) {
+          if (m.docId) {
+            await deleteDoc(doc(db, 'pair_messages', m.docId));
+          }
+        }
+        livePairMessages = [];
+        renderLiveMessagesUI();
+        if (typeof showToast === 'function') showToast('Диалог пары очищен', 'info');
+      } catch (e) {
+        console.error('Ошибка очистки:', e);
+      }
+    };
+
+    window.renderPairChat = function() {
+      renderLiveMessagesUI();
+    };
+
+    // Автоматическая прокрутка к последнему сообщению при открытии мобильной клавиатуры
+    function initKeyboardAutoScroll() {
+      const input = document.getElementById('pair-chat-input');
+      const box = document.getElementById('pair-chat-messages-box');
+      if (input && box) {
+        input.addEventListener('focus', () => {
+          setTimeout(() => { box.scrollTop = box.scrollHeight; }, 280);
+        });
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          const tab = document.getElementById('tab-chat-pair');
+          if (tab && tab.classList.contains('active')) {
+            setTimeout(() => {
+              const b = document.getElementById('pair-chat-messages-box');
+              if (b) b.scrollTop = b.scrollHeight;
+            }, 80);
+          }
+        });
+      }
+    }
+
+    // Старт прослушивания живого потока сообщений
+    listenLivePairMessages();
+    document.addEventListener('DOMContentLoaded', initKeyboardAutoScroll);
+  </script>
 
   <!-- Всплывающие уведомления -->
   <div id="toast-container" class="toast-container"></div>
@@ -1487,12 +1801,14 @@
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
+  <!-- Верхняя колба-брендинг -->
   <header class="desktop-header-bar" id="desktop-header-bar">
     <div class="dead-zone-brand" id="brand-capsule-btn" onclick="toggleCapsuleToolbar()">
       <span class="brand-shimmer-title">Pact & Passion</span>
     </div>
   </header>
 
+  <!-- Заставка при запуске -->
   <div id="splash-screen" onclick="hideSplash()">
     <div class="splash-bg"></div>
     <div class="splash-bottom-fade"></div>
@@ -1505,29 +1821,33 @@
     </div>
   </div>
 
-  <!-- 1. РАБОЧИЙ СТОЛ -->
+  <!-- 1. РАБОЧИЙ СТОЛ (3 СТОЛА СО СВАЙПОМ, СТРОГО БЕЗ ВЕРТИКАЛЬНОГО СКРОЛЛА) -->
   <div id="tab-home" class="tab-content active">
     <div class="desktop-wrapper">
       <div class="desktop-viewport" id="desktop-viewport">
         <div class="desktop-pages-track" id="desktop-pages-track">
           <div class="desktop-page" id="desktop-page-0"></div>
           <div class="desktop-page" id="desktop-page-1"></div>
+          <div class="desktop-page" id="desktop-page-2"></div>
         </div>
       </div>
 
+      <!-- Точки пагинации зафиксированы чуть выше нижней навигации -->
       <div class="desktop-pagination-dots" id="desktop-dots-container">
         <div class="desktop-dot active" onclick="goToDesktopPage(0)"></div>
         <div class="desktop-dot" onclick="goToDesktopPage(1)"></div>
+        <div class="desktop-dot" onclick="goToDesktopPage(2)"></div>
       </div>
     </div>
   </div>
 
+  <!-- ВСПЛЫВАЮЩАЯ ПАНЕЛЬ КОЛБЫ НАД НАВБАРОМ -->
   <div class="capsule-dock-toolbar" id="capsule-dock-toolbar">
     <button class="dock-action-btn" onclick="openWallpaperModalDirect()">
       <span>🖼️ Смена обоев</span>
     </button>
     <button class="dock-action-btn" onclick="openAddWidgetModalDirect()">
-      <span>➕ Добавить на стол</span>
+      <span>➕ Добавить на экран</span>
     </button>
   </div>
 
@@ -1563,10 +1883,6 @@
         <div class="screen-title">Женский Календарь</div>
         <button class="tutorial-help-btn" onclick="openTutorial('cycle')">?</button>
       </div>
-      <div style="display:flex; justify-content:space-around; margin-bottom:12px; font-size:11px;">
-        <div>До цикла: <b id="box-period-val" style="color:var(--accent-color);">0 дн.</b></div>
-        <div>Овуляция: <b id="box-ovulation-val" style="color:var(--ovulation-color);">0 дн.</b></div>
-      </div>
       <div class="calendar-grid" id="calendar-grid"></div>
     </div>
   </div>
@@ -1582,11 +1898,11 @@
       <div style="padding: 20px 0; text-align: center; color: #c9c2d1; font-size: 12px; line-height: 1.6; font-style: italic;">
         «Стороны соглашаются на добровольное подчинение, взаимное доверие и соблюдение правил. Слово Верхнего — закон. Желание Нижней — священно.»
       </div>
-      <button id="btn-contract-action" class="small-btn" style="width:100%; padding: 12px;" onclick="handleContractButtonClick()">Подписать Соглашение</button>
+      <button id="btn-contract-action" class="small-btn" style="width:100%; padding: 12px;" onclick="handleContractButtonClick()">Подписать</button>
     </div>
   </div>
 
-  <!-- 6. БУТИК ИСКУШЕНИЯ (ПОЛНОСТЬЮ ВОССТАНОВЛЕННЫЙ) -->
+  <!-- 6. БУТИК ИСКУШЕНИЯ (ЕДИНЫЙ МАГАЗИН: 1 КОЛОНКА, БЕЛЬЕ + СЕКС-ШОП) -->
   <div id="tab-shop" class="tab-content shop-tab-container">
     <div class="card shop-layout-card">
       <div class="shop-fixed-header-block">
@@ -1622,14 +1938,14 @@
     <div class="card">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Подарки & Желания</div>
+        <div class="screen-title">Подарки & Просьбы</div>
         <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
       </div>
-      <div id="gifts-list-container" style="display:flex; flex-direction:column; gap:8px;"></div>
+      <div id="gifts-list-container" class="contract-list"></div>
     </div>
   </div>
 
-  <!-- 8. СПИСОК ДИАЛОГОВ -->
+  <!-- СПИСОК ДИАЛОГОВ -->
   <div id="tab-messenger" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1637,69 +1953,92 @@
         <div class="screen-title">Сообщения</div>
         <button class="tutorial-help-btn" onclick="openTutorial('messenger')">?</button>
       </div>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <div class="contract-item" onclick="openSubScreen('tab-chat-pair')" style="cursor: pointer; border-color: rgba(230, 57, 86, 0.45); background: linear-gradient(135deg, rgba(38, 14, 28, 0.85) 0%, rgba(18, 11, 24, 0.95) 100%);">
+      <div class="contract-list">
+        <!-- Главный живой диалог пары -->
+        <div class="contract-item pair-chat-card-btn" onclick="openSubScreen('tab-chat-pair')" style="cursor: pointer; border-color: rgba(230, 57, 86, 0.45); background: linear-gradient(135deg, rgba(38, 14, 28, 0.85) 0%, rgba(18, 11, 24, 0.95) 100%);">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(230, 57, 86, 0.2); border: 1px solid rgba(230, 57, 86, 0.45); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 16px;">👑</span>
-              <span style="font-size: 14px; margin-left: -6px;">🗝️</span>
+            <div class="pair-chat-avatars-bubble">
+              <span style="font-size: 16px;"></span>
+              <span style="font-size: 14px; margin-left: -6px;"></span>
             </div>
             <div>
               <div style="font-weight: 800; color: #fff; font-size: 12px; display: flex; align-items: center; gap: 6px;">
                 Будуарный Диалог
-                <span class="live-dot-pulse"></span>
+                <span class="live-dot-pulse" title="Связь активна"></span>
               </div>
               <div id="pair-chat-last-preview" style="font-size: 10px; color: #FF8599; margin-top: 2px;">Онлайн-связь пары...</div>
             </div>
           </div>
           <span style="font-size: 18px;">💬</span>
         </div>
+
+        <!-- Системный бот -->
+        <div class="contract-item" onclick="openSubScreen('tab-chat-1')" style="cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-size: 20px;">🤖</div>
+            <div>
+              <div style="font-weight: 700; color: #fff; font-size: 12px;">Pact Bot</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Протокол правил и уведомлений</div>
+            </div>
+          </div>
+          <span>💬</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 9. ПРОЗРАЧНЫЙ ЖИВОЙ БУДУАРНЫЙ ЧАТ -->
-  <div id="tab-chat-pair" class="tab-content">
-    <div class="pair-chat-overlay-dim"></div>
-    <div class="pair-chat-card-layout">
-      
-      <div class="pair-chat-fixed-header">
+  <!-- ЭКРАН МЕССЕНДЖЕРА ПАРЫ (ЖИВОЙ ОНЛАЙН-ЧАТ) -->
+  <div id="tab-chat-pair" class="tab-content pair-chat-screen-container">
+    <div class="card pair-chat-card-layout">
+      <!-- Шапка мессенджера (НЕПОДВИЖНАЯ) -->
+      <div class="pair-chat-fixed-header"style="margin-top: 20px;">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        
         <div class="pair-partner-identity">
           <img id="pair-chat-partner-avatar" class="pair-partner-header-avatar" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png" alt="Партнёр">
-          <div class="partner-info-box">
-            <span id="pair-chat-partner-name" class="partner-name-text">Собеседник</span>
-            <div class="partner-status-row">
+          <div>
+            <div id="pair-chat-partner-name" style="font-size: 12px; font-weight: 800; color: #fff; line-height: 1.2;">Собеседник</div>
+            <div style="display: flex; align-items: center; gap: 4px; margin-top: 1px;">
               <span class="live-dot-pulse"></span>
-              <span id="pair-chat-role-indicator" class="partner-status-lbl">В сети</span>
+              <span id="pair-chat-role-indicator" style="font-size: 8.5px; font-weight: 700; color: #27ae60;">В сети</span>
             </div>
           </div>
         </div>
-
-        <div style="display: flex; gap: 6px; align-items: center;">
-          <button class="small-btn" onclick="openChatThemeModal()" style="font-size: 13px; padding: 5px 8px;" title="Сменить стиль чата">🎨</button>
-          <button class="small-btn" onclick="clearLiveChatHistory()" style="background: rgba(0,0,0,0.3); font-size: 9px; padding: 5px 8px;">Очистить</button>
-        </div>
+        <button class="small-btn" onclick="clearLiveChatHistory()" style="background: rgba(255,255,255,0.08); font-size: 9px; padding: 5px 8px;">Очистить</button>
       </div>
 
+      <!-- Лента сообщений (ЕДИНСТВЕННЫЙ СКРОЛЛЯЩИЙСЯ БЛОК) -->
       <div id="pair-chat-messages-box" class="pair-messages-stream">
         <div style="text-align: center; color: var(--text-muted); font-size: 10.5px; padding: 30px 10px;">Загрузка сообщений...</div>
       </div>
 
+      <!-- Строка ввода сообщения со скрепкой (НЕПОДВИЖНАЯ) -->
       <div class="pair-input-bar-row">
-        <button class="pair-paperclip-btn" onclick="document.getElementById('pair-chat-file-input').click()" title="Отправить фото">📎</button>
         <input type="file" id="pair-chat-file-input" accept="image/*" style="display: none;" onchange="handlePairPhotoUpload(event)">
+        <button type="button" class="pair-attach-btn" title="Прикрепить фото" onclick="document.getElementById('pair-chat-file-input').click()">📎</button>
         <input type="text" id="pair-chat-input" class="form-control pair-text-input" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendPairChatMessage()">
         <button id="pair-chat-send-btn" class="pair-send-btn" onclick="sendPairChatMessage()">
           <span>➤</span>
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- 10. СУДЬБА & ЖРЕБИЙ (ВОССТАНОВЛЕН С 3D МОНЕТКОЙ И РАНДОМАЙЗЕРОМ) -->
+  <!-- ЧАТ С PACT BOT -->
+  <div id="tab-chat-1" class="tab-content">
+    <div class="card">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div class="screen-title">Чат с Pact Bot</div>
+      </div>
+      <div id="chat-messages" style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; margin-bottom:10px;"></div>
+      <div style="display: flex; gap: 6px;">
+        <input type="text" id="chat-input" class="form-control" placeholder="Написать ответ...">
+        <button class="small-btn" onclick="sendChatMessage()">Отправить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. СУДЬБА & ЖРЕБИЙ -->
   <div id="tab-randomizer" class="tab-content">
     <div class="card random-app-card" id="random-app-card">
       <canvas id="burst-canvas"></canvas>
@@ -1736,7 +2075,6 @@
             </div>
           </div>
           <div class="coin-shadow" id="coin-shadow"></div>
-          <div id="coin-result-lbl" style="margin-top:14px; font-size:12px; font-weight:800; color:#FFB703;">Нажмите на монетку для броска</div>
         </div>
       </div>
 
@@ -1754,7 +2092,7 @@
     </div>
   </div>
 
-  <!-- 11. ЛИЧНЫЙ ПРОФИЛЬ -->
+  <!-- 10. ЛИЧНЫЙ ПРОФИЛЬ -->
   <div id="tab-profile" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -1762,21 +2100,25 @@
         <div class="screen-title">Личный Профиль</div>
       </div>
       <div class="profile-card-header">
-        <div class="profile-avatar-container" onclick="triggerAvatarUpload()">
-          <img id="avatar-img-view" class="profile-avatar-img" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Avatar">
-          <div class="avatar-cam-badge">📷</div>
-        </div>
-        <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
-        
+      <div class="profile-avatar-container" onclick="triggerAvatarUpload()" style="position: relative; cursor: pointer;">
+  <img id="avatar-img-view" class="profile-avatar-img" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Avatar">
+  <!-- Неоновый значок камеры внизу аватарки -->
+  <div style="position: absolute; bottom: 2px; right: 2px; background: var(--accent-gradient); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid #0C0A10; box-shadow: 0 0 10px rgba(230,57,86,0.6);">
+    📷
+  </div>
+</div>
+
+<!-- Скрытый системный выбор файла -->
+<input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
         <div class="profile-name-row">
           <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😇</span>
-          <div id="profile-user-name" class="profile-name-clickable">Мой Профиль</div>
+          <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 12. ГАРДЕРОБ (ПОЛНОСТЬЮ ВОССТАНОВЛЕН 50/50 + НАМЁКИ) -->
+  <!-- 11. ГАРДЕРОБ -->
   <div id="tab-wardrobe" class="tab-content wardrobe-tab-container">
     <div class="card wardrobe-layout-card">
       <div class="wardrobe-fixed-header-block">
@@ -1799,42 +2141,33 @@
     </div>
   </div>
 
-  <!-- 13. БАЛАНС -->
+  <!-- 12. БАЛАНС -->
   <div id="tab-bank" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Баланс Очков</div>
+        <div class="screen-title">БАЛАНС</div>
+        <button class="tutorial-help-btn" onclick="openTutorial('bank')">?</button>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
-        <div id="bank-box-female" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:10px;">
-          <div style="font-size:11px; font-weight:800; color:#FF8599; margin-bottom:6px;">🗝️ Нижняя</div>
-          <div style="display:flex; flex-direction:column; gap:4px; font-size:10px;">
-            <span>💜 Страсть: <b id="bank-f-ptc">750</b></span>
-            <span>🖤 Покорность: <b id="bank-f-otc">330</b></span>
-            <span>❤️ Секс-токены: <b id="bank-f-stc">290</b></span>
-          </div>
-        </div>
-        <div id="bank-box-male" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:10px;">
-          <div style="font-size:11px; font-weight:800; color:#7DD3FC; margin-bottom:6px;">👑 Верхний</div>
-          <div style="display:flex; flex-direction:column; gap:4px; font-size:10px;">
-            <span>💙 Внимание: <b id="bank-m-atc">850</b></span>
-            <span>💚 Забота: <b id="bank-m-ctc">720</b></span>
-            <span>❤️ Секс-токены: <b id="bank-m-stc">90</b></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- МОДАЛКА: ТЕМЫ ЧАТА INSTAGRAM (3 ФОНА MP1, mp2, mp3) -->
-  <div id="chat-theme-modal" class="modal-overlay" onclick="if(event.target === this) closeChatThemeModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Темы оформления чата</h3>
-        <span class="modal-close-btn" onclick="closeChatThemeModal()">✕</span>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div id="bank-box-female" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
+          <div id="bank-title-female" style="font-size:11px; font-weight:800; color:#fff; margin-bottom:6px;">🗝️ Нижняя</div>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:10px;">
+            <span>💜 Страсть: <b id="bank-f-ptc">0</b></span>
+            <span>🖤 Покорность: <b id="bank-f-otc">0</b></span>
+            <span>❤️ Секс-токены: <b id="bank-f-stc">0</b></span>
+          </div>
+        </div>
+        <div id="bank-box-male" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
+          <div id="bank-title-male" style="font-size:11px; font-weight:800; color:#fff; margin-bottom:6px;">👑 Верхний</div>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:10px;">
+            <span>💙 Внимание: <b id="bank-m-atc">0</b></span>
+            <span>💚 Забота: <b id="bank-m-ctc">0</b></span>
+            <span>❤️ Секс-токены: <b id="bank-m-stc">0</b></span>
+          </div>
+        </div>
       </div>
-      <div id="theme-presets-container" class="theme-presets-grid"></div>
     </div>
   </div>
 
@@ -1842,7 +2175,7 @@
   <div id="customization-modal" class="modal-overlay" onclick="if(event.target === this) closeCustomizationModal()">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Элементы рабочего стола</h3>
+        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Добавить на рабочий стол</h3>
         <span class="modal-close-btn" onclick="closeCustomizationModal()">✕</span>
       </div>
       <div id="desktop-catalog-dynamic-list" class="widget-catalog-list"></div>
@@ -1853,36 +2186,14 @@
   <div id="wallpaper-modal" class="modal-overlay" onclick="if(event.target === this) closeWallpaperModal()">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Выбор фона</h3>
+        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Выбор обоев</h3>
         <span class="modal-close-btn" onclick="closeWallpaperModal()">✕</span>
       </div>
       <div class="wallpaper-presets-grid" id="wallpaper-grid-slot"></div>
     </div>
   </div>
 
-  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ТОВАРА ВЕРХНИМ -->
-  <div id="add-product-modal" class="modal-overlay" onclick="if(event.target === this) closeAddProductModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Добавить товар</h3>
-        <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <input type="text" id="new-prod-title" class="form-control" placeholder="Название комплекта или игрушки">
-        <select id="new-prod-category" class="form-control">
-          <option value="Белье">Белье</option>
-          <option value="Секс-шоп">Секс-шоп</option>
-        </select>
-        <input type="text" id="new-prod-img" class="form-control" placeholder="Ссылка на фото">
-        <input type="number" id="new-prod-price-ptc" class="form-control" placeholder="Цена в 💜 PTC (для белья)">
-        <input type="number" id="new-prod-price-otc" class="form-control" placeholder="Цена в 🖤 OTC (для белья)">
-        <input type="number" id="new-prod-price-stc" class="form-control" placeholder="Цена в ❤️ STC (для секс-шопа)">
-        <button class="small-btn" style="padding:10px; margin-top:4px;" onclick="handleAddNewProduct()">Сохранить товар</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- МОДАЛКА: ТУТОРИАЛ -->
+  <!-- МОДАЛКА: ТУТОРИАЛ (?) -->
   <div id="tutorial-modal" class="modal-overlay" onclick="closeTutorial()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -1908,260 +2219,13 @@
     <div class="nav-item" id="nav-back" onclick="handleBackAction()">
       <span class="nav-back-chevron">‹</span>
     </div>
-    <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-chat-pair')">
+    <div class="nav-item" id="nav-chat" onclick="openSubScreen('tab-messenger')">
       <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
     </div>
   </nav>
 
   <!-- ========================================================
-       11. FIREBASE SDK И МОДУЛЬ ЖИВОГО ЧАТА
-       ======================================================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAJa0xpj9YG5wib6G-P4TaeKz9No4Ee1eE",
-      authDomain: "pact-passion-chat.firebaseapp.com",
-      projectId: "pact-passion-chat",
-      storageBucket: "pact-passion-chat.firebasestorage.app",
-      messagingSenderId: "551917448504",
-      appId: "1:551917448504:web:433e4fc271adee0ac8e5cd"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let currentAuthUser = null;
-    let livePairMessages = [];
-
-    const CHAT_NAME_MALE = 'Верхний ♂';
-    const CHAT_NAME_FEMALE = 'Нижняя ♀';
-
-    async function initLiveAuth() {
-      try {
-        const cred = await signInAnonymously(auth);
-        currentAuthUser = cred.user;
-        listenLivePairMessages();
-      } catch (e) {
-        console.warn('Автономный режим:', e);
-        currentAuthUser = { uid: 'offline_user' };
-        renderLiveMessagesUI();
-      }
-    }
-
-    function listenLivePairMessages() {
-      if (!currentAuthUser) return;
-      const messagesCol = collection(db, 'pair_messages');
-
-      onSnapshot(messagesCol, (snapshot) => {
-        const list = [];
-        snapshot.forEach(docSnap => {
-          list.push({ docId: docSnap.id, ...docSnap.data() });
-        });
-
-        list.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-        livePairMessages = list;
-
-        renderLiveMessagesUI();
-        updateLastMessagePreview();
-      }, (error) => {
-        console.error('Ошибка Firestore:', error);
-      });
-    }
-
-    function renderLiveMessagesUI() {
-      const box = document.getElementById('pair-chat-messages-box');
-      const partnerNameEl = document.getElementById('pair-chat-partner-name');
-      const partnerAvatarEl = document.getElementById('pair-chat-partner-avatar');
-      if (!box) return;
-
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      const isMale = currentRole === 'male';
-
-      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
-      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
-
-      if (partnerNameEl) {
-        partnerNameEl.innerText = isMale ? CHAT_NAME_FEMALE : CHAT_NAME_MALE;
-      }
-      if (partnerAvatarEl) {
-        partnerAvatarEl.src = isMale ? femaleAvatar : maleAvatar;
-        partnerAvatarEl.style.borderColor = isMale ? '#E63956' : '#7DD3FC';
-      }
-
-      if (livePairMessages.length === 0) {
-        box.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 40px 10px;">
-            Сообщений пока нет.<br>Начните священный диалог ✨
-          </div>`;
-        return;
-      }
-
-      box.innerHTML = livePairMessages.map(m => {
-        const isMine = m.role === currentRole;
-        const avatarSrc = m.role === 'male' ? maleAvatar : femaleAvatar;
-        const roleClass = m.role === 'male' ? 'role-male' : 'role-female';
-
-        return `
-          <div class="pair-msg-row ${isMine ? 'outgoing' : 'incoming'}">
-            <img class="pair-msg-avatar" src="${avatarSrc}" alt="${m.author}">
-            <div class="pair-msg-bubble ${roleClass}">
-              <div class="pair-msg-author-tag">${m.author}</div>
-              ${m.photo ? `<img class="pair-msg-photo-img" src="${m.photo}" alt="Фото" onclick="window.open('${m.photo}','_blank')">` : ''}
-              ${m.text ? `<div class="pair-msg-text">${escapeHtml(m.text)}</div>` : ''}
-              <div class="pair-msg-time">${m.time || ''}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function updateLastMessagePreview() {
-      const lastPreview = document.getElementById('pair-chat-last-preview');
-      if (lastPreview && livePairMessages.length > 0) {
-        const last = livePairMessages[livePairMessages.length - 1];
-        lastPreview.innerText = `${last.author}: ${last.text || '📷 Фото'}`;
-      }
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.innerText = text;
-      return div.innerHTML;
-    }
-
-    window.sendPairChatMessage = async function() {
-      const input = document.getElementById('pair-chat-input');
-      const text = input ? input.value.trim() : '';
-      if (!text) return;
-
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      const isMale = currentRole === 'male';
-
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-      const newMsgData = {
-        role: currentRole,
-        author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
-        text: text,
-        time: timeStr,
-        senderId: currentAuthUser ? currentAuthUser.uid : 'anon',
-        createdAt: Date.now()
-      };
-
-      if (input) input.value = '';
-      window.tg?.HapticFeedback?.impactOccurred?.('light');
-
-      livePairMessages.push({ docId: 'local_' + Date.now(), ...newMsgData });
-      renderLiveMessagesUI();
-
-      try {
-        const messagesCol = collection(db, 'pair_messages');
-        await addDoc(messagesCol, newMsgData);
-      } catch (e) {
-        console.warn('Сохранено локально:', e);
-      }
-    };
-
-    window.handlePairPhotoUpload = function(event) {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = async function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800;
-          let w = img.width, h = img.height;
-          if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
-          else if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
-
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.82);
-
-          const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-          const isMale = currentRole === 'male';
-          const now = new Date();
-          const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-          const newPhotoMsg = {
-            role: currentRole,
-            author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
-            photo: compressedBase64,
-            text: '',
-            time: timeStr,
-            senderId: currentAuthUser ? currentAuthUser.uid : 'anon',
-            createdAt: Date.now()
-          };
-
-          livePairMessages.push({ docId: 'local_' + Date.now(), ...newPhotoMsg });
-          renderLiveMessagesUI();
-
-          try {
-            const messagesCol = collection(db, 'pair_messages');
-            await addDoc(messagesCol, newPhotoMsg);
-          } catch (err) {
-            console.warn(err);
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      event.target.value = '';
-    };
-
-    window.clearLiveChatHistory = async function() {
-      if (livePairMessages.length === 0) return;
-      try {
-        for (const m of livePairMessages) {
-          if (m.docId && !m.docId.startsWith('local_')) {
-            await deleteDoc(doc(db, 'pair_messages', m.docId));
-          }
-        }
-        livePairMessages = [];
-        renderLiveMessagesUI();
-        if (typeof showToast === 'function') showToast('Диалог пары очищен', 'info');
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    window.renderPairChat = function() {
-      renderLiveMessagesUI();
-    };
-
-    const chatInput = document.getElementById('pair-chat-input');
-    if (chatInput) {
-      chatInput.addEventListener('focus', () => {
-        setTimeout(() => {
-          const box = document.getElementById('pair-chat-messages-box');
-          if (box) box.scrollTop = box.scrollHeight;
-        }, 250);
-      });
-    }
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', () => {
-        const box = document.getElementById('pair-chat-messages-box');
-        if (box) box.scrollTop = box.scrollHeight;
-      });
-    }
-
-    initLiveAuth();
-  </script>
-
-  <!-- ========================================================
-       12. ОСНОВНОЙ СЦЕНАРИЙ ПРИЛОЖЕНИЯ
+       ОСНОВНОЙ СЦЕНАРИЙ ПРИЛОЖЕНИЯ (JS)
        ======================================================== -->
   <script>
     const tg = window.Telegram?.WebApp;
@@ -2174,156 +2238,21 @@
       } catch (e) { console.warn(e); }
     }
 
+    // Роль и балансы
     let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
+    window.currentAvatarRole = currentAvatarRole;
+
     let femaleBalances = JSON.parse(localStorage.getItem('pact_female_balances')) || { ptc: 750, otc: 330, stc: 290 };
     let maleBalances = JSON.parse(localStorage.getItem('pact_male_balances')) || { atc: 850, ctc: 720, stc: 90 };
     let likedShopItemIds = JSON.parse(localStorage.getItem('pact_liked_shop_ids')) || [];
-    let partnerHintIds = JSON.parse(localStorage.getItem('pact_partner_hint_ids')) || [1];
+    let partnerHintIds = JSON.parse(localStorage.getItem('pact_partner_hint_ids')) || [];
 
-    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/ing/incon%20chat/';
-
-    const CHAT_PRESETS = [
-      {
-        id: 'theme_im1',
-        title: 'Тема I • IM1',
-        bgImage: GITHUB_IMG_BASE + 'IM1.jpeg',
-        localBg: 'ing/incon%20chat/IM1.jpeg',
-        altBg: 'ing/incon chat/IM1.jpeg',
-        altUrl: GITHUB_IMG_BASE + 'im1.jpeg',
-        overlay: 'rgba(0, 0, 0, 0.12)',
-        blur: '0px',
-        male: {
-          bg: 'linear-gradient(135deg, rgba(24, 40, 62, 0.88) 0%, rgba(13, 22, 36, 0.92) 100%)',
-          border: 'rgba(74, 144, 226, 0.65)',
-          text: '#f0f6ff',
-          tag: '#7DD3FC',
-          shadow: 'rgba(74, 144, 226, 0.3)'
-        },
-        female: {
-          bg: 'linear-gradient(135deg, rgba(72, 18, 36, 0.88) 0%, rgba(36, 7, 17, 0.92) 100%)',
-          border: 'rgba(230, 57, 86, 0.65)',
-          text: '#fff0f3',
-          tag: '#FF8599',
-          shadow: 'rgba(230, 57, 86, 0.35)'
-        }
-      },
-      {
-        id: 'theme_mp2',
-        title: 'Тема II • mp2',
-        bgImage: GITHUB_IMG_BASE + 'mp2.jpeg',
-        localBg: 'ing/incon%20chat/mp2.jpeg',
-        altBg: 'ing/incon chat/mp2.jpeg',
-        altUrl: GITHUB_IMG_BASE + 'MP2.jpeg',
-        altUrl2: GITHUB_IMG_BASE + 'IM2.jpeg',
-        overlay: 'rgba(0, 0, 0, 0.12)',
-        blur: '0px',
-        male: {
-          bg: 'linear-gradient(135deg, rgba(36, 39, 48, 0.88) 0%, rgba(17, 19, 23, 0.92) 100%)',
-          border: 'rgba(148, 163, 184, 0.55)',
-          text: '#f8fafc',
-          tag: '#cbd5e1',
-          shadow: 'rgba(0, 0, 0, 0.6)'
-        },
-        female: {
-          bg: 'linear-gradient(135deg, rgba(61, 20, 58, 0.88) 0%, rgba(28, 5, 26, 0.92) 100%)',
-          border: 'rgba(217, 70, 239, 0.65)',
-          text: '#fdf4ff',
-          tag: '#f0abfc',
-          shadow: 'rgba(217, 70, 239, 0.35)'
-        }
-      },
-      {
-        id: 'theme_mp3',
-        title: 'Тема III • mp3',
-        bgImage: GITHUB_IMG_BASE + 'mp3.jpeg',
-        localBg: 'ing/incon%20chat/mp3.jpeg',
-        altBg: 'ing/incon chat/mp3.jpeg',
-        altUrl: GITHUB_IMG_BASE + 'MP3.jpeg',
-        altUrl2: GITHUB_IMG_BASE + 'IM3.jpeg',
-        overlay: 'rgba(0, 0, 0, 0.12)',
-        blur: '0px',
-        male: {
-          bg: 'linear-gradient(135deg, rgba(26, 35, 58, 0.88) 0%, rgba(12, 18, 32, 0.92) 100%)',
-          border: 'rgba(99, 102, 241, 0.65)',
-          text: '#eef2ff',
-          tag: '#a5b4fc',
-          shadow: 'rgba(99, 102, 241, 0.35)'
-        },
-        female: {
-          bg: 'linear-gradient(135deg, rgba(59, 37, 8, 0.88) 0%, rgba(28, 17, 2, 0.92) 100%)',
-          border: 'rgba(212, 175, 55, 0.65)',
-          text: '#fffbeb',
-          tag: '#fde68a',
-          shadow: 'rgba(212, 175, 55, 0.35)'
-        }
-      }
-    ];
-
-    function applyChatTheme(presetId) {
-      const preset = CHAT_PRESETS.find(p => p.id === presetId) || CHAT_PRESETS[0];
-      const chatScreen = document.getElementById('tab-chat-pair');
-      const root = document.documentElement;
-
-      if (chatScreen) {
-        chatScreen.style.backgroundImage = `url('${preset.bgImage}'), url('${preset.localBg}'), url('${preset.altBg}'), url('${preset.altUrl}'), url('${preset.altUrl2 || preset.altUrl}')`;
-        chatScreen.style.backgroundSize = 'cover';
-        chatScreen.style.backgroundPosition = 'center center';
-        chatScreen.style.backgroundRepeat = 'no-repeat';
-      }
-
-      root.style.setProperty('--chat-overlay', preset.overlay);
-      root.style.setProperty('--chat-blur', preset.blur);
-
-      root.style.setProperty('--bubble-male-bg', preset.male.bg);
-      root.style.setProperty('--bubble-male-border', preset.male.border);
-      root.style.setProperty('--bubble-male-text', preset.male.text);
-      root.style.setProperty('--bubble-male-tag', preset.male.tag);
-      root.style.setProperty('--bubble-male-shadow', preset.male.shadow);
-
-      root.style.setProperty('--bubble-female-bg', preset.female.bg);
-      root.style.setProperty('--bubble-female-border', preset.female.border);
-      root.style.setProperty('--bubble-female-text', preset.female.text);
-      root.style.setProperty('--bubble-female-tag', preset.female.tag);
-      root.style.setProperty('--bubble-female-shadow', preset.female.shadow);
-
-      localStorage.setItem('pact_selected_chat_theme', preset.id);
-    }
-
-    function openChatThemeModal() {
-      const container = document.getElementById('theme-presets-container');
-      const curId = localStorage.getItem('pact_selected_chat_theme') || 'theme_im1';
-      if (!container) return;
-
-      container.innerHTML = CHAT_PRESETS.map(p => {
-        const isAct = p.id === curId ? 'active' : '';
-        return `
-          <div class="theme-card-preview ${isAct}" style="background-image: url('${p.bgImage}'), url('${p.localBg}'), url('${p.altUrl}'); background-size: cover; background-position: center;" onclick="selectThemeAndClose('${p.id}')">
-            <span class="theme-title-tag">${p.title}</span>
-            <div class="theme-bubbles-demo">
-              <div class="theme-bubble-dot" style="background: ${p.male.bg}; border-color: ${p.male.border};"></div>
-              <div class="theme-bubble-dot" style="background: ${p.female.bg}; border-color: ${p.female.border};"></div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('chat-theme-modal')?.classList.add('active');
-    }
-
-    function closeChatThemeModal() {
-      document.getElementById('chat-theme-modal')?.classList.remove('active');
-    }
-
-    function selectThemeAndClose(id) {
-      applyChatTheme(id);
-      closeChatThemeModal();
-      showToast('Тема оформления обновлена ✨', 'success');
-    }
-
+    // Уведомления Toast
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       if (!container) return;
       if (type === 'success') tg?.HapticFeedback?.notificationOccurred?.('success');
+      else if (type === 'error') tg?.HapticFeedback?.notificationOccurred?.('warning');
       else tg?.HapticFeedback?.impactOccurred?.('light');
 
       const toast = document.createElement('div');
@@ -2337,6 +2266,7 @@
       }, 3000);
     }
 
+    // Заставка и навигация
     function hideSplash() {
       const splash = document.getElementById('splash-screen');
       if (splash && !splash.classList.contains('hidden')) {
@@ -2380,54 +2310,122 @@
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       if (tabId === 'tab-home') document.getElementById('nav-home')?.classList.add('active');
       else if (tabId === 'tab-profile') document.getElementById('nav-profile')?.classList.add('active');
-      else if (tabId === 'tab-chat-pair' || tabId === 'tab-messenger') document.getElementById('nav-chat')?.classList.add('active');
+      else if (tabId === 'tab-messenger' || tabId === 'tab-chat-1' || tabId === 'tab-chat-pair') document.getElementById('nav-chat')?.classList.add('active');
 
       if (tabId === 'tab-wardrobe') renderWardrobe();
       if (tabId === 'tab-shop') renderProducts();
       if (tabId === 'tab-bank') renderBankScreen();
-      if (tabId === 'tab-cycle') renderCycleInfo();
-      if (tabId === 'tab-chat-pair' && typeof window.renderPairChat === 'function') {
-        window.renderPairChat();
-      }
+      if (tabId === 'tab-chat-pair' && typeof window.renderPairChat === 'function') window.renderPairChat();
     }
 
+    // 1. РАБОЧИЙ СТОЛ
+    let isDesktopEditMode = false;
     let currentDesktopPage = 0;
-    let desktopItems = [
-      { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
-      { id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
-      { id: 'tile-bank', type: 'tile', title: 'Баланс', icon: '💖', target: 'tab-bank', page: 0 },
-      { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🩱', target: 'tab-wardrobe', page: 0 },
-      { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
-      { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
-      { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
-      { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
-      { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '🌸', target: 'tab-cycle', page: 0 },
-      { id: 'tile-chat', type: 'tile', title: 'Чат', icon: '💬', target: 'tab-chat-pair', page: 0 }
-    ];
 
+    let desktopItems = [
+  { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
+  { id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
+  { id: 'tile-bank', type: 'tile', title: 'Баланс', icon: '💖', target: 'tab-bank', page: 0 },
+  { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🩱', target: 'tab-wardrobe', page: 0 },
+  { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
+  { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
+  { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
+  { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
+  { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '🌸', target: 'tab-cycle', page: 0 },
+  { id: 'tile-chat', type: 'tile', title: 'Чат', icon: '💬', target: 'tab-messenger', page: 0 }
+];
+    function saveDesktopItems() {
+      localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
+    }
+
+    function toggleDesktopEditMode(forceState) {
+      isDesktopEditMode = (forceState !== undefined) ? forceState : !isDesktopEditMode;
+      const homeTab = document.getElementById('tab-home');
+      if (isDesktopEditMode) {
+        homeTab?.classList.add('edit-mode');
+        showToast('Режим перемещения включен: перетаскивайте плитки', 'info');
+      } else {
+        homeTab?.classList.remove('edit-mode');
+      }
+      renderDesktop();
+    }
+
+    function goToDesktopPage(pageIdx) {
+      currentDesktopPage = Math.max(0, Math.min(2, pageIdx));
+      const track = document.getElementById('desktop-pages-track');
+      if (track) track.style.transform = `translateX(-${currentDesktopPage * 100}%)`;
+      document.querySelectorAll('.desktop-dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentDesktopPage);
+      });
+      tg?.HapticFeedback?.selectionChanged?.();
+    }
+
+    // Свайп строго по горизонтали
+    let touchStartX = 0, touchStartY = 0, touchDeltaX = 0, isSwiping = false;
+    function initSwipeGestures() {
+      const viewport = document.getElementById('desktop-viewport');
+      if (!viewport) return;
+
+      viewport.addEventListener('touchstart', (e) => {
+        if (isDesktopEditMode) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchDeltaX = 0;
+        isSwiping = true;
+      }, { passive: true });
+
+      viewport.addEventListener('touchmove', (e) => {
+        if (!isSwiping || isDesktopEditMode) return;
+        const diffX = e.touches[0].clientX - touchStartX;
+        const diffY = e.touches[0].clientY - touchStartY;
+        if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 10) {
+          isSwiping = false;
+          return;
+        }
+        touchDeltaX = diffX;
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', () => {
+        if (!isSwiping || isDesktopEditMode) return;
+        isSwiping = false;
+        if (touchDeltaX < -40 && currentDesktopPage < 2) goToDesktopPage(currentDesktopPage + 1);
+        else if (touchDeltaX > 40 && currentDesktopPage > 0) goToDesktopPage(currentDesktopPage - 1);
+      });
+    }
+
+    // Отрисовка рабочего стола
     function renderDesktop() {
-      const page0 = document.getElementById('desktop-page-0');
-      if (!page0) return;
-      page0.innerHTML = '';
+      const pages = [
+        document.getElementById('desktop-page-0'),
+        document.getElementById('desktop-page-1'),
+        document.getElementById('desktop-page-2')
+      ];
+      if (!pages[0] || !pages[1] || !pages[2]) return;
+      pages.forEach(p => p.innerHTML = '');
+
+      const passion = getPassionStatus();
 
       desktopItems.forEach(item => {
+        const targetContainer = pages[item.page || 0] || pages[0];
         const wrap = document.createElement('div');
         wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
         wrap.setAttribute('data-id', item.id);
 
+        const deleteBtn = `<button class="item-delete-btn" onclick="event.stopPropagation(); deleteDesktopItem('${item.id}')">✕</button>`;
         let inner = '';
+
         if (item.type === 'tile') {
           inner = `
-            <div class="desktop-tile" onclick="openSubScreen('${item.target}')">
-              <div class="tile-icon">
-                <span class="tile-emoji">${item.icon}</span>
-                <span class="tile-inner-label">${item.title}</span>
-              </div>
+            ${deleteBtn}
+            <div class="desktop-tile">
+              <div class="tile-icon">${item.icon}</div>
+              <div class="tile-label">${item.title}</div>
             </div>`;
+          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen(item.target); };
         } else if (item.type === 'widget-passion') {
-          const passion = getPassionStatus();
           inner = `
-            <div class="desktop-widget widget-passion-box" onclick="openSubScreen('tab-wardrobe')">
+            ${deleteBtn}
+            <div class="desktop-widget widget-passion-box">
               <div class="passion-top-row">
                 <div style="font-size: 10px; font-weight: 800; color: #FF8566;">🌶️ Градус Страсти</div>
                 <div class="passion-peppers-badge">${passion.total} 🌶️</div>
@@ -2441,229 +2439,162 @@
                 <span style="color: var(--accent-color); font-weight: 700;">В гардероб →</span>
               </div>
             </div>`;
+          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen('tab-wardrobe'); };
         } else if (item.type === 'widget-balance') {
-          const isFem = currentAvatarRole === 'female';
+          let colHtml = '';
+          if (currentAvatarRole === 'female') {
+            colHtml = `
+              <div class="bal-col-row"><span class="bal-col-name">💜 Страсть:</span><span class="bal-col-val ptc">${femaleBalances.ptc}</span></div>
+              <div class="bal-col-row"><span class="bal-col-name">🖤 Покорность:</span><span class="bal-col-val otc">${femaleBalances.otc}</span></div>
+              <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${femaleBalances.stc}</span></div>
+            `;
+          } else {
+            colHtml = `
+              <div class="bal-col-row"><span class="bal-col-name">💙 Внимание:</span><span class="bal-col-val att">${maleBalances.atc}</span></div>
+              <div class="bal-col-row"><span class="bal-col-name">💚 Забота:</span><span class="bal-col-val care">${maleBalances.ctc}</span></div>
+              <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${maleBalances.stc}</span></div>
+            `;
+          }
           inner = `
-            <div class="desktop-widget widget-balance-square" onclick="openSubScreen('tab-bank')">
-              <div class="widget-balance-column">
-                ${isFem ? `
-                  <div class="bal-col-row"><span class="bal-col-name">💜 Страсть:</span><span class="bal-col-val ptc">${femaleBalances.ptc}</span></div>
-                  <div class="bal-col-row"><span class="bal-col-name">🖤 Покорность:</span><span class="bal-col-val otc">${femaleBalances.otc}</span></div>
-                  <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${femaleBalances.stc}</span></div>
-                ` : `
-                  <div class="bal-col-row"><span class="bal-col-name">💙 Внимание:</span><span class="bal-col-val att">${maleBalances.atc}</span></div>
-                  <div class="bal-col-row"><span class="bal-col-name">💚 Забота:</span><span class="bal-col-val care">${maleBalances.ctc}</span></div>
-                  <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${maleBalances.stc}</span></div>
-                `}
-              </div>
+            ${deleteBtn}
+            <div class="desktop-widget widget-balance-square">
+              <div class="widget-balance-column">${colHtml}</div>
             </div>`;
+          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen('tab-bank'); };
         }
 
         wrap.innerHTML = inner;
-        page0.appendChild(wrap);
+        attachDragAndDrop(wrap);
+        targetContainer.appendChild(wrap);
       });
     }
 
-    function goToDesktopPage(idx) {
-      currentDesktopPage = idx;
-      const track = document.getElementById('desktop-pages-track');
-      if (track) track.style.transform = `translateX(-${idx * 100}%)`;
-      document.querySelectorAll('.desktop-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    function deleteDesktopItem(id) {
+      desktopItems = desktopItems.filter(item => item.id !== id);
+      saveDesktopItems();
+      renderDesktop();
+      showToast('Элемент удален с экрана', 'info');
     }
 
-    function toggleCapsuleToolbar() {
-      const tb = document.getElementById('capsule-dock-toolbar');
-      tb?.classList.toggle('active');
+    let draggedElement = null;
+    function attachDragAndDrop(el) {
+      let pressTimer = null;
+      el.addEventListener('touchstart', (e) => {
+        pressTimer = setTimeout(() => {
+          toggleDesktopEditMode(true);
+          tg?.HapticFeedback?.impactOccurred?.('heavy');
+        }, 450);
+        if (!isDesktopEditMode || e.target.closest('.item-delete-btn')) return;
+        draggedElement = el;
+      }, { passive: true });
+
+      el.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+        draggedElement = null;
+      });
+      el.addEventListener('touchmove', () => { clearTimeout(pressTimer); }, { passive: true });
     }
+
+    // 2. УПРАВЛЕНИЕ КОЛБОЙ И ОКНОМ НАСТРОЙКИ
+    function toggleCapsuleToolbar() {
+      const toolbar = document.getElementById('capsule-dock-toolbar');
+      const capsule = document.getElementById('brand-capsule-btn');
+      if (!toolbar) return;
+      const isActive = toolbar.classList.toggle('active');
+      capsule?.classList.toggle('active', isActive);
+
+      toggleDesktopEditMode(isActive);
+      tg?.HapticFeedback?.impactOccurred?.('medium');
+    }
+
     function closeCapsuleToolbar() {
       document.getElementById('capsule-dock-toolbar')?.classList.remove('active');
+      document.getElementById('brand-capsule-btn')?.classList.remove('active');
     }
 
-    // ========================================================
-    // ГАРДЕРОБ: МЕХАНИКА, НАМЁКИ ВЕРХНЕГО И ПЕРЧИНКИ
-    // ========================================================
-    let wardrobeFilterCat = 'Белье';
-    let selectedWardrobeIds = JSON.parse(localStorage.getItem('pact_selected_wardrobe_ids')) || [1, 2];
+    function openWallpaperModalDirect() {
+      closeCapsuleToolbar();
+      renderWallpaperGrid();
+      document.getElementById('wallpaper-modal')?.classList.add('active');
+    }
+    function closeWallpaperModal() { document.getElementById('wallpaper-modal')?.classList.remove('active'); }
 
-    let wardrobeItems = JSON.parse(localStorage.getItem('wardrobe_items')) || [
-      { id: 1, title: '«Винтажная Муза»', desc: 'Корсетный топ цвета слоновой кости с кружевом', category: 'Белье', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
-      { id: 2, title: '«Тёмная Покорность»', desc: 'Чёрное кружево, чокер, пояс с гартерами и портупея', category: 'Белье', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
-      { id: 3, title: '«Цветение Айвори»', desc: 'Цветочная вышивка, глубокий вырез и двойные бретели', category: 'Белье', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
-      { id: 4, title: '«Чистый Соблазн»', desc: 'Белоснежный открытый бра с кольцами и микро-стринги', category: 'Белье', peppers: 3, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
-      { id: 5, title: '«Атласные Ленты & Повязка»', desc: 'Для ограничения зрения и депривации чувств', category: 'Игрушки', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
-      { id: 6, title: '«Бархатный Ошейник»', desc: 'Чёрный ошейник с позолоченным кольцом и поводком', category: 'Игрушки', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900' },
-      { id: 7, title: '«Кожаный Флоггер Покора»', desc: 'Мягкие замшевые хвосты на эргономичной рукояти', category: 'Игрушки', peppers: 3, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900' }
+    const availableCatalogItems = [
+      { id: 'w-passion', type: 'widget-passion', span: 4, title: 'Градус Страсти', icon: '🌶️', desc: 'Сумма перчинок и статус вечера' },
+      { id: 'w-balance', type: 'widget-balance', span: 2, title: 'Баланс Очков', icon: '💖', desc: 'Квадратный виджет счетов' },
+      { id: 'tile-bank', type: 'tile', target: 'tab-bank', title: 'Баланс', icon: '💖', desc: 'Казна и дисциплина' },
+      { id: 'tile-wardrobe', type: 'tile', target: 'tab-wardrobe', title: 'Гардероб', icon: '🩱', desc: 'Примерка белья и игрушек' },
+      { id: 'tile-boutique', type: 'tile', target: 'tab-shop', title: 'Бутик', icon: '🛍️', desc: 'Белье и девайсы' },
+      { id: 'tile-cycle', type: 'tile', target: 'tab-cycle', title: 'Календарь', icon: '🌸', desc: 'Фазы женского цикла' },
+      { id: 'tile-contract', type: 'tile', target: 'tab-contract', title: 'Контракт', icon: '📜', desc: 'Соглашение пары' },
+      { id: 'tile-random', type: 'tile', target: 'tab-randomizer', title: 'Жребий', icon: '🎲', desc: 'Монетка судьбы и кубик' },
+      { id: 'tile-gifts', type: 'tile', target: 'tab-gifts', title: 'Желания', icon: '✨', desc: 'Подарки и просьбы' },
+      { id: 'tile-chat', type: 'tile', target: 'tab-messenger', title: 'Чат', icon: '💬', desc: 'Диалог с ботом' }
     ];
 
-    function getPassionStatus() {
-      let total = 0, countItems = 0;
-      selectedWardrobeIds.forEach(id => {
-        const item = wardrobeItems.find(w => w.id === id);
-        if (item) {
-          total += (item.peppers || 1);
-          countItems++;
-        }
-      });
-
-      let title = 'Невинный образ 🕊️';
-      let desc = 'Ничего не надето на вечер';
-      const maxCap = 9;
-
-      if (countItems === 0 || total === 0) {
-        title = 'Невинный образ 🕊️';
-        desc = 'Ничего не надето на вечер';
-      } else if (total <= 2) {
-        title = 'Скромная девочка 🎀';
-        desc = 'Будуарная романтика и нежность';
-      } else if (total <= 4) {
-        title = 'Игривая кокетка ✨';
-        desc = 'Соблазнительный флирт и акценты';
-      } else if (total <= 6) {
-        title = 'Опасная искусительница 🥀';
-        desc = 'Тонкая провокация и скрытая страсть';
-      } else if (total <= 8) {
-        title = 'Покорная грешница ⛓️';
-        desc = 'Строгие гартеры и покорность слову';
-      } else {
-        title = 'Развратная богиня 🔥';
-        desc = 'Пик наготы, экстаза и повиновения';
-      }
-
-      const progressPercent = Math.min(Math.round((total / maxCap) * 100), 100);
-      return { total, countItems, title, desc, progressPercent };
+    function openAddWidgetModalDirect() {
+      closeCapsuleToolbar();
+      renderDesktopCatalogModal();
+      document.getElementById('customization-modal')?.classList.add('active');
     }
+    function closeCustomizationModal() { document.getElementById('customization-modal')?.classList.remove('active'); }
 
-    function setWardrobeCategory(cat, btn) {
-      wardrobeFilterCat = cat;
-      document.querySelectorAll('.wardrobe-col-tab-btn').forEach(b => b.classList.remove('active'));
-      btn?.classList.add('active');
-      renderWardrobe();
-    }
-
-    function toggleWardrobeSelect(id) {
-      if (currentAvatarRole === 'male') {
-        togglePartnerHint(id);
-        return;
-      }
-      const idx = selectedWardrobeIds.indexOf(id);
-      if (idx > -1) {
-        selectedWardrobeIds.splice(idx, 1);
-        tg?.HapticFeedback?.impactOccurred?.('light');
-      } else {
-        selectedWardrobeIds.push(id);
-        tg?.HapticFeedback?.notificationOccurred?.('success');
-      }
-      localStorage.setItem('pact_selected_wardrobe_ids', JSON.stringify(selectedWardrobeIds));
-      renderWardrobe();
-      renderDesktop();
-    }
-
-    function togglePartnerHint(id) {
-      const idx = partnerHintIds.indexOf(id);
-      const item = wardrobeItems.find(w => w.id === id);
-      if (idx > -1) {
-        partnerHintIds.splice(idx, 1);
-        showToast(`Намёк снят: ${item ? item.title : ''}`, 'info');
-      } else {
-        partnerHintIds.push(id);
-        tg?.HapticFeedback?.impactOccurred?.('heavy');
-        showToast(`Намёк оставлен: ${item ? item.title : ''} 💋`, 'success');
-      }
-      localStorage.setItem('pact_partner_hint_ids', JSON.stringify(partnerHintIds));
-      renderWardrobe();
-    }
-
-    function showPartnerPreferencesModal() {
-      const hintedItems = wardrobeItems.filter(i => partnerHintIds.includes(i.id));
-      if (hintedItems.length === 0) {
-        showToast('Верхний пока не оставил намёков на вечер 🕊️', 'info');
-      } else {
-        showToast(`Верхний желает видеть: ${hintedItems.map(i => i.title).join(', ')} 💋`, 'info');
-      }
-    }
-
-    function renderWardrobe() {
-      const banner = document.getElementById('wardrobe-passion-summary');
-      const passion = getPassionStatus();
-      if (banner) {
-        banner.innerHTML = `
-          <div>
-            <div style="font-size: 8.5px; font-weight: 800; color: #FF8566; text-transform: uppercase;">Текущий образ:</div>
-            <div style="font-size: 13px; font-weight: 800; color: #fff;">${passion.title}</div>
-          </div>
-          <div style="text-align: right;">
-            <div style="font-size: 13px; font-weight: 900; color: #FFB703;">${passion.total} 🌶️</div>
-            <div style="font-size: 9px; color: var(--text-muted);">${passion.desc}</div>
-          </div>`;
-      }
-
-      const prefSlot = document.getElementById('wardrobe-partner-prefs-btn-slot');
-      if (prefSlot) {
-        prefSlot.innerHTML = (currentAvatarRole === 'female') ? `
-          <button class="chip-btn" style="width:100%; margin-bottom:8px; border-color:#f39c12; color:#f39c12;" onclick="showPartnerPreferencesModal()">
-            💋 Предпочтения партнёра (${partnerHintIds.length})
-          </button>` : '';
-      }
-
-      const container = document.getElementById('wardrobe-items-list');
+    function renderDesktopCatalogModal() {
+      const container = document.getElementById('desktop-catalog-dynamic-list');
       if (!container) return;
+      container.innerHTML = '';
 
-      const filtered = wardrobeItems.filter(i => i.category === wardrobeFilterCat);
+      availableCatalogItems.forEach(item => {
+        const isPresent = desktopItems.some(d => 
+          item.type === 'tile' ? d.target === item.target : d.type === item.type
+        );
 
-      if (filtered.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:30px;">В этой категории пока ничего нет</div>`;
-        return;
-      }
-
-      container.innerHTML = filtered.map(item => {
-        const isSelected = selectedWardrobeIds.includes(item.id);
-        const hasHint = partnerHintIds.includes(item.id);
-        const isToy = item.category === 'Игрушки';
-        const badgeText = isToy ? 'БУДЕТ ИСПОЛЬЗОВАНО ⚡' : 'НАДЕТО ✨';
-        const actionText = isSelected ? 'Снять' : (isToy ? 'Выбрать' : 'Надеть');
-
-        return `
-          <div class="wardrobe-card-row ${isSelected ? 'is-selected' : ''}" onclick="toggleWardrobeSelect(${item.id})">
-            <div class="wardrobe-img-wrap">
-              <img class="wardrobe-row-img" src="${item.mainImg}" alt="${item.title}" loading="lazy">
-              ${hasHint ? `<div class="wardrobe-hint-badge">Намёк 💋</div>` : ''}
-              ${isSelected ? `<span class="selected-badge">${badgeText}</span>` : ''}
-            </div>
-            <div class="wardrobe-row-info">
-              <div>
-                <div class="wardrobe-row-title-bar">
-                  <div class="wardrobe-row-title">${item.title}</div>
-                  <div style="font-size:11px;">${'🌶️'.repeat(item.peppers || 1)}</div>
-                </div>
-                <div class="wardrobe-row-desc">${item.desc}</div>
-              </div>
-              <div class="wardrobe-row-footer">
-                <span style="font-size:9.5px; font-weight:800; color:var(--accent-color);">${item.category}</span>
-                ${currentAvatarRole === 'male' ? `
-                  <button class="small-btn" style="background:${hasHint ? 'linear-gradient(135deg, #f39c12, #d35400)' : 'rgba(255,255,255,0.1)'}" onclick="event.stopPropagation(); togglePartnerHint(${item.id})">
-                    ${hasHint ? '✓ Намекнул' : 'Намекнуть 💋'}
-                  </button>
-                ` : `
-                  <button class="small-btn">${actionText}</button>
-                `}
-              </div>
-            </div>
+        const card = document.createElement('div');
+        card.className = 'widget-catalog-card';
+        card.innerHTML = `
+          <div class="cat-icon">${item.icon}</div>
+          <div class="cat-info">
+            <div class="title">${item.title}</div>
+            <div class="sub">${item.desc}</div>
           </div>
+          <button class="catalog-status-btn ${isPresent ? 'remove' : 'add'}">
+            ${isPresent ? '✕' : '✓'}
+          </button>
         `;
-      }).join('');
+
+        card.onclick = () => {
+          if (isPresent) {
+            desktopItems = desktopItems.filter(d => 
+              item.type === 'tile' ? d.target !== item.target : d.type !== item.type
+            );
+            showToast(`Удалено: ${item.title}`, 'info');
+          } else {
+            if (item.type === 'tile') {
+              desktopItems.push({ id: 't-' + Date.now(), type: 'tile', title: item.title, icon: item.icon, target: item.target, page: currentDesktopPage });
+            } else {
+              desktopItems.push({ id: 'w-' + Date.now(), type: item.type, span: item.span, page: currentDesktopPage });
+            }
+            showToast(`Добавлено: ${item.title}`, 'success');
+          }
+          saveDesktopItems();
+          renderDesktop();
+          renderDesktopCatalogModal();
+          tg?.HapticFeedback?.selectionChanged?.();
+        };
+
+        container.appendChild(card);
+      });
     }
 
-    // ========================================================
-    // БУТИК ИСКУШЕНИЯ: КАТАЛОГ, ПОКУПКИ И ИЗБРАННОЕ
-    // ========================================================
+    // 3. БУТИК ИСКУШЕНИЯ
     let shopFilterCat = 'Белье';
-    let boutiqueItems = JSON.parse(localStorage.getItem('boutique_items')) || [
-      { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ цвета слоновой кости с кружевом' },
-      { id: 102, title: '«Тёмная Покорность»', category: 'Белье', pricePtc: 160, priceOtc: 340, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, пояс с гартерами и портупея' },
-      { id: 103, title: '«Цветение Айвори»', category: 'Белье', pricePtc: 280, priceOtc: 140, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт с цветочной вышивкой' },
+    let boutiqueItems = [
+      { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом' },
+      { id: 102, title: '«Тёмная Покорность»', category: 'Белье', pricePtc: 160, priceOtc: 340, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, гартеры' },
+      { id: 103, title: '«Цветение Айвори»', category: 'Белье', pricePtc: 280, priceOtc: 140, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт' },
       { id: 201, title: '«Бархатный Ошейник»', category: 'Секс-шоп', priceStc: 180, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900', desc: 'С позолоченным кольцом и поводком' },
-      { id: 202, title: '«Атласные Ленты & Повязка»', category: 'Секс-шоп', priceStc: 120, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Для ограничения чувств и депривации' },
-      { id: 203, title: '«Кожаный Флоггер Покора»', category: 'Секс-шоп', priceStc: 260, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900', desc: 'Мягкие замшевые хвосты на эргономичной рукояти' }
+      { id: 202, title: '«Атласные Ленты & Повязка»', category: 'Секс-шоп', priceStc: 120, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Для ограничения чувств' },
+      { id: 203, title: '«Кожаный Флоггер Покора»', category: 'Секс-шоп', priceStc: 260, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900', desc: 'Мягкие замшевые хвосты' }
     ];
 
     function setShopCategory(cat, btn) {
@@ -2734,7 +2665,7 @@
             <div class="product-like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike(${p.id})">
               ${isLiked ? '❤️' : '🤍'}
             </div>
-            <img class="product-row-img" src="${p.mainImg}" alt="${p.title}" loading="lazy">
+            <img class="product-row-img" src="${p.mainImg}" alt="${p.title}">
             <div class="product-row-details">
               <div>
                 <div style="font-size:12.5px; font-weight:800; color:#fff;">${p.title}</div>
@@ -2742,7 +2673,7 @@
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
                 <span style="font-size:11px; font-weight:800; color:var(--ovulation-color);">${priceStr}</span>
-                <button class="small-btn" onclick="buyShopItem(${p.id})">Купить</button>
+                <button class="small-btn" onclick="buyShopItem(${p.id})">Выбрать</button>
               </div>
             </div>
           </div>
@@ -2751,104 +2682,125 @@
     }
 
     function buyShopItem(id) {
-      const item = boutiqueItems.find(p => p.id === id);
-      if (!item) return;
+      showToast('Предмет добавлен в гардероб!', 'success');
+    }
 
-      if (item.category === 'Белье') {
-        if (currentAvatarRole !== 'female') {
-          showToast('Бельё выбирает и приобретает Нижняя за 💜 и 🖤.', 'info');
-          return;
-        }
-        if (femaleBalances.ptc < (item.pricePtc || 0) || femaleBalances.otc < (item.priceOtc || 0)) {
-          showToast(`Недостаточно средств! Нужно: 💜 ${item.pricePtc} и 🖤 ${item.priceOtc}`, 'error');
-          tg?.HapticFeedback?.notificationOccurred?.('warning');
-          return;
-        }
-        femaleBalances.ptc -= item.pricePtc;
-        femaleBalances.otc -= item.priceOtc;
-        localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
-      } else {
-        const currentStc = (currentAvatarRole === 'female') ? femaleBalances.stc : maleBalances.stc;
-        const price = item.priceStc || 150;
-        if (currentStc < price) {
-          showToast(`Недостаточно ❤️ Секс-токенов! Доступно: ${currentStc}, нужно: ${price}`, 'error');
-          tg?.HapticFeedback?.notificationOccurred?.('warning');
-          return;
-        }
-        if (currentAvatarRole === 'female') {
-          femaleBalances.stc -= price;
-          localStorage.setItem('pact_female_balances', JSON.stringify(femaleBalances));
-        } else {
-          maleBalances.stc -= price;
-          localStorage.setItem('pact_male_balances', JSON.stringify(maleBalances));
-        }
+    // 4. ГАРДЕРОБ
+    let wardrobeFilterCat = 'Белье';
+    let selectedWardrobeIds = JSON.parse(localStorage.getItem('pact_selected_wardrobe_ids')) || [1];
+
+    let wardrobeItems = [
+      { id: 1, title: '«Винтажная Муза»', desc: 'Корсетный топ с кружевом', category: 'Белье', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
+      { id: 2, title: '«Тёмная Покорность»', desc: 'Чёрное кружево и чокер', category: 'Белье', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' },
+      { id: 3, title: '«Бархатный Ошейник»', desc: 'С позолоченным кольцом', category: 'Игрушки', peppers: 2, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900' },
+      { id: 4, title: '«Атласные Ленты»', desc: 'Для ограничения чувств', category: 'Игрушки', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600' }
+    ];
+
+    function setWardrobeCategory(cat, btn) {
+      wardrobeFilterCat = cat;
+      document.querySelectorAll('.wardrobe-col-tab-btn').forEach(b => b.classList.remove('active'));
+      btn?.classList.add('active');
+      renderWardrobe();
+    }
+
+    function togglePartnerHint(id) {
+      const idx = partnerHintIds.indexOf(id);
+      if (idx > -1) partnerHintIds.splice(idx, 1);
+      else { partnerHintIds.push(id); tg?.HapticFeedback?.impactOccurred?.('heavy'); }
+      localStorage.setItem('pact_partner_hint_ids', JSON.stringify(partnerHintIds));
+      renderWardrobe();
+    }
+
+    function getPassionStatus() {
+      let total = 0, countItems = 0;
+      selectedWardrobeIds.forEach(id => {
+        const item = wardrobeItems.find(w => w.id === id);
+        if (item) { total += (item.peppers || 1); countItems++; }
+      });
+      let title = countItems === 0 ? 'Невинный образ 🕊️' : (total <= 3 ? 'Скромная девочка 🎀' : 'Опасная искусительница 🥀');
+      let desc = countItems === 0 ? 'Ничего не надето' : `${countItems} предмет(ов) на вечер`;
+      const progressPercent = Math.min(Math.round((total / 8) * 100), 100);
+      return { total, title, desc, progressPercent };
+    }
+
+    function renderWardrobe() {
+      const banner = document.getElementById('wardrobe-passion-summary');
+      const passion = getPassionStatus();
+      if (banner) {
+        banner.innerHTML = `
+          <div>
+            <div style="font-size: 8.5px; font-weight: 800; color: #FF8566; text-transform: uppercase;">Текущий образ:</div>
+            <div style="font-size: 13px; font-weight: 800; color: #fff;">${passion.title}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 13px; font-weight: 900; color: #FFB703;">${passion.total} 🌶️</div>
+            <div style="font-size: 9px; color: var(--text-muted);">${passion.desc}</div>
+          </div>`;
       }
 
-      if (!wardrobeItems.some(w => w.title === item.title)) {
-        wardrobeItems.unshift({
-          id: Date.now(),
-          title: item.title,
-          desc: item.desc || '',
-          category: item.category === 'Белье' ? 'Белье' : 'Игрушки',
-          peppers: 2,
-          mainImg: item.mainImg
-        });
-        localStorage.setItem('wardrobe_items', JSON.stringify(wardrobeItems));
+      const prefSlot = document.getElementById('wardrobe-partner-prefs-btn-slot');
+      if (prefSlot) {
+        prefSlot.innerHTML = (currentAvatarRole === 'female') ? `
+          <button class="chip-btn" style="width:100%; margin-bottom:8px; border-color:#f39c12; color:#f39c12;" onclick="showPartnerPreferencesModal()">
+            💋 Предпочтения партнёра (${partnerHintIds.length})
+          </button>` : '';
       }
 
-      tg?.HapticFeedback?.notificationOccurred?.('success');
-      showToast(`✨ «${item.title}» приобретен и добавлен в Гардероб!`, 'success');
-      renderProducts();
+      const container = document.getElementById('wardrobe-items-list');
+      if (!container) return;
+
+      const filtered = wardrobeItems.filter(i => i.category === wardrobeFilterCat);
+      container.innerHTML = filtered.map(item => {
+        const isSelected = selectedWardrobeIds.includes(item.id);
+        const hasHint = partnerHintIds.includes(item.id);
+
+        return `
+          <div class="wardrobe-card-row ${isSelected ? 'is-selected' : ''}" onclick="toggleWardrobeSelect(${item.id})">
+            <div class="wardrobe-img-wrap">
+              <img class="wardrobe-row-img" src="${item.mainImg}" alt="${item.title}">
+              ${hasHint ? `<div class="wardrobe-hint-badge">Намёк 💋</div>` : ''}
+              ${isSelected ? `<span class="selected-badge">НАДЕТО ✨</span>` : ''}
+            </div>
+            <div class="wardrobe-row-info">
+              <div>
+                <div class="wardrobe-row-title-bar">
+                  <div class="wardrobe-row-title">${item.title}</div>
+                  <div style="font-size:11px;">${'🌶️'.repeat(item.peppers)}</div>
+                </div>
+                <div class="wardrobe-row-desc">${item.desc}</div>
+              </div>
+              <div class="wardrobe-row-footer">
+                <span style="font-size:9.5px; font-weight:800; color:var(--accent-color);">${item.category}</span>
+                ${currentAvatarRole === 'male' ? `
+                  <button class="small-btn" style="background:${hasHint ? '#f39c12' : 'rgba(255,255,255,0.1)'}" onclick="event.stopPropagation(); togglePartnerHint(${item.id})">
+                    ${hasHint ? '✓ Намекнул' : 'Намекнуть 💋'}
+                  </button>
+                ` : `
+                  <button class="small-btn">${isSelected ? 'Снять' : 'Надеть'}</button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleWardrobeSelect(id) {
+      const idx = selectedWardrobeIds.indexOf(id);
+      if (idx > -1) selectedWardrobeIds.splice(idx, 1);
+      else selectedWardrobeIds.push(id);
+      localStorage.setItem('pact_selected_wardrobe_ids', JSON.stringify(selectedWardrobeIds));
       renderWardrobe();
       renderDesktop();
-      renderBankScreen();
     }
 
-    function openAddProductModal() {
-      document.getElementById('add-product-modal')?.classList.add('active');
-    }
-    function closeAddProductModal() {
-      document.getElementById('add-product-modal')?.classList.remove('active');
-    }
-
-    function handleAddNewProduct() {
-      const title = document.getElementById('new-prod-title')?.value.trim();
-      const cat = document.getElementById('new-prod-category')?.value;
-      const img = document.getElementById('new-prod-img')?.value.trim() || 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600';
-      const ptc = parseInt(document.getElementById('new-prod-price-ptc')?.value) || 200;
-      const otc = parseInt(document.getElementById('new-prod-price-otc')?.value) || 100;
-      const stc = parseInt(document.getElementById('new-prod-price-stc')?.value) || 150;
-
-      if (!title) {
-        showToast('Введите название товара', 'error');
-        return;
-      }
-
-      const newP = {
-        id: Date.now(),
-        title,
-        category: cat,
-        mainImg: img,
-        desc: 'Эксклюзивный будуарный атрибут'
-      };
-
-      if (cat === 'Белье') {
-        newP.pricePtc = ptc;
-        newP.priceOtc = otc;
-      } else {
-        newP.priceStc = stc;
-      }
-
-      boutiqueItems.unshift(newP);
-      localStorage.setItem('boutique_items', JSON.stringify(boutiqueItems));
-      closeAddProductModal();
-      renderProducts();
-      showToast(`Товар «${title}» добавлен в бутик!`, 'success');
+    function showPartnerPreferencesModal() {
+      const hintedItems = wardrobeItems.filter(i => partnerHintIds.includes(i.id));
+      if (hintedItems.length === 0) showToast('Верхний пока не оставил намёков', 'info');
+      else showToast(`Верхний намекает на: ${hintedItems.map(i => i.title).join(', ')}`, 'info');
     }
 
-    // ========================================================
-    // СУДЬБА & ЖРЕБИЙ: 3D МОНЕТКА, ЧИСЛА И САЛЮТ
-    // ========================================================
+    // 5. СУДЬБА & ЖРЕБИЙ
     function switchRandomMode(mode) {
       document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#tab-randomizer .tab-section').forEach(s => s.classList.remove('active'));
@@ -2868,13 +2820,10 @@
       isTossing = true;
       const stage = document.getElementById('coin-stage');
       const coin = document.getElementById('coin-3d');
-      const resultLbl = document.getElementById('coin-result-lbl');
       const isMale = Math.random() < 0.5;
 
       stage?.classList.add('toss-flying');
       tg?.HapticFeedback?.impactOccurred?.('medium');
-      if (resultLbl) resultLbl.innerText = 'Монетка летит...';
-
       coinRot += 360 * 5 + (isMale ? 0 : 180);
 
       if (coin) {
@@ -2886,12 +2835,6 @@
         stage?.classList.remove('toss-flying');
         isTossing = false;
         tg?.HapticFeedback?.impactOccurred?.('heavy');
-
-        if (resultLbl) {
-          resultLbl.innerHTML = isMale 
-            ? '<span style="color:#7DD3FC;">👑 Выпал Марс ♂ (Слово Верхнего)</span>' 
-            : '<span style="color:#FF8599;">🗝️ Выпала Венера ♀ (Желание Нижней)</span>';
-        }
         launchCelebration();
       }, 1350);
     }
@@ -2899,9 +2842,6 @@
     function rollRandomNumber() {
       const input = document.getElementById('dice-max-input');
       let max = parseInt(input?.value) || 10;
-      if (max < 2) max = 2;
-      if (input) input.value = max;
-
       const display = document.getElementById('dice-display-num');
       const status = document.getElementById('dice-status-lbl');
       if (status) status.innerText = `Вращение от 1 до ${max}...`;
@@ -2914,8 +2854,7 @@
           clearInterval(interval);
           const finalVal = Math.floor(Math.random() * max) + 1;
           if (display) display.innerText = finalVal;
-          if (status) status.innerText = `Выпало число: ${finalVal} ✨`;
-          tg?.HapticFeedback?.notificationOccurred?.('success');
+          if (status) status.innerText = `Выпало число: ${finalVal}`;
           launchCelebration();
         }
       }, 70);
@@ -2924,23 +2863,19 @@
     function launchCelebration() {
       const canvas = document.getElementById('burst-canvas');
       if (!canvas) return;
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
       const ctx = canvas.getContext('2d');
       let particles = [];
-      const colors = ['#E63956', '#FFB703', '#FFFFFF', '#00D2FF', '#9B51E0', '#FF8599'];
+      const colors = ['#E63956', '#FFB703', '#FFFFFF', '#00D2FF', '#9B51E0'];
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 40; i++) {
         const ang = Math.random() * Math.PI * 2;
-        const spd = Math.random() * 7 + 3;
+        const spd = Math.random() * 6 + 3;
         particles.push({
-          x: canvas.width / 2,
-          y: canvas.height * 0.45,
-          vx: Math.cos(ang) * spd,
-          vy: Math.sin(ang) * spd - 2,
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
           color: colors[Math.floor(Math.random() * colors.length)],
-          radius: Math.random() * 3 + 1.5,
           alpha: 1
         });
       }
@@ -2948,15 +2883,10 @@
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.14;
-          p.alpha -= 0.02;
+          p.x += p.vx; p.y += p.vy; p.alpha -= 0.02;
           ctx.globalAlpha = Math.max(0, p.alpha);
           ctx.fillStyle = p.color;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2); ctx.fill();
         });
         particles = particles.filter(p => p.alpha > 0);
         if (particles.length > 0) requestAnimationFrame(draw);
@@ -2964,122 +2894,14 @@
       draw();
     }
 
-    const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
-    const DEFAULT_AVATAR_FEMALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
-
-    function triggerAvatarUpload() {
-      document.getElementById('avatar-file-input')?.click();
-    }
-
-    function handleAvatarFileSelect(event) {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const size = 300;
-          canvas.width = size; canvas.height = size;
-          const ctx = canvas.getContext('2d');
-          const minDim = Math.min(img.width, img.height);
-          const startX = (img.width - minDim) / 2;
-          const startY = (img.height - minDim) / 2;
-          ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
-
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-          if (currentAvatarRole === 'male') {
-            localStorage.setItem('pact_avatar_male', compressedBase64);
-          } else {
-            localStorage.setItem('pact_avatar_female', compressedBase64);
-          }
-
-          updateAllAvatarsUI();
-          showToast('Аватарка обновлена ✨', 'success');
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      event.target.value = '';
-    }
-
-    function updateAllAvatarsUI() {
-      const maleAvatar = localStorage.getItem('pact_avatar_male') || DEFAULT_AVATAR_MALE;
-      const femaleAvatar = localStorage.getItem('pact_avatar_female') || DEFAULT_AVATAR_FEMALE;
-
-      const myAvatar = currentAvatarRole === 'male' ? maleAvatar : femaleAvatar;
-      const partnerAvatar = currentAvatarRole === 'male' ? femaleAvatar : maleAvatar;
-
-      const prof = document.getElementById('avatar-img-view');
-      if (prof) prof.src = myAvatar;
-
-      const nav = document.getElementById('nav-bar-avatar');
-      if (nav) nav.src = myAvatar;
-
-      const chatPart = document.getElementById('pair-chat-partner-avatar');
-      if (chatPart) chatPart.src = partnerAvatar;
-
-      if (typeof window.renderPairChat === 'function') {
-        window.renderPairChat();
-      }
-    }
-
-    function toggleRoleByEmoji() {
-      currentAvatarRole = (currentAvatarRole === 'male') ? 'female' : 'male';
-      localStorage.setItem('pact_current_role', currentAvatarRole);
-      const emo = document.getElementById('role-toggle-emoji');
-      if (emo) emo.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
-      updateAllAvatarsUI();
-      renderDesktop();
-      renderProducts();
-      renderWardrobe();
-      showToast(`Роль переключена: ${currentAvatarRole === 'male' ? 'Верхний ♂' : 'Нижняя ♀'}`, 'info');
-    }
-
-    function handleContractButtonClick() {
-      showToast('Контракт D/S скреплен узами пары ✨', 'success');
-    }
-
-    function renderBankScreen() {
-      const fp = document.getElementById('bank-f-ptc'), fo = document.getElementById('bank-f-otc'), fs = document.getElementById('bank-f-stc');
-      const ma = document.getElementById('bank-m-atc'), mc = document.getElementById('bank-m-ctc'), ms = document.getElementById('bank-m-stc');
-      if (fp) fp.innerText = femaleBalances.ptc;
-      if (fo) fo.innerText = femaleBalances.otc;
-      if (fs) fs.innerText = femaleBalances.stc;
-      if (ma) ma.innerText = maleBalances.atc;
-      if (mc) mc.innerText = maleBalances.ctc;
-      if (ms) ms.innerText = maleBalances.stc;
-    }
-
-    function renderCycleInfo() {
-      const pVal = document.getElementById('box-period-val');
-      const oVal = document.getElementById('box-ovulation-val');
-      if (pVal) pVal.innerText = '12 дн.';
-      if (oVal) oVal.innerText = '2 дн.';
-
-      const grid = document.getElementById('calendar-grid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-      daysOfWeek.forEach(d => { grid.innerHTML += `<div class="calendar-weekday">${d}</div>`; });
-
-      for (let i = 1; i <= 28; i++) {
-        let cls = 'cal-day';
-        if (i <= 4) cls += ' period';
-        if (i === 14) cls += ' ovulation';
-        if (i === 12) cls += ' today';
-        grid.innerHTML += `<div class="${cls}">${i}</div>`;
-      }
-    }
-
+    // 6. ТУТОРИАЛ
     const tutorialsData = {
       randomizer: {
         icon: '🎲',
         title: 'Судьба & Жребий',
         bullets: [
-          '3D-монетка: Марс ♂ и Венера ♀ для мгновенного разрешения споров пары.',
-          'Числовой кубик: задайте любой предел от 1 до N и испытайте волю случая.'
+          '3D-монетка: Марс ♂ и Венера ♀ для мгновенного и бесспорного разрешения споров пары.',
+          'Числовой кубик: задайте любой предел от 1 до N и испытайте волю случая для выбора заданий.'
         ]
       },
       shop: {
@@ -3113,30 +2935,156 @@
     }
     function closeTutorial() { document.getElementById('tutorial-modal')?.classList.remove('active'); }
 
-    function openWallpaperModalDirect() {
-      closeCapsuleToolbar();
-      document.getElementById('wallpaper-modal')?.classList.add('active');
+    // Профиль и смена ролей
+    function toggleRoleByEmoji() {
+      currentAvatarRole = (currentAvatarRole === 'male') ? 'female' : 'male';
+      window.currentAvatarRole = currentAvatarRole;
+      localStorage.setItem('pact_current_role', currentAvatarRole);
+      updateRoleEmojiUI();
+      updateAllAvatarsUI()
+      renderDesktop();
+      if (typeof window.renderPairChat === 'function') window.renderPairChat();
+      showToast(`Активная роль: ${currentAvatarRole === 'male' ? 'Верхний ' : 'Нижняя '}`, 'info');
     }
-    function closeWallpaperModal() { document.getElementById('wallpaper-modal')?.classList.remove('active'); }
-    function openAddWidgetModalDirect() {
-      closeCapsuleToolbar();
-      document.getElementById('customization-modal')?.classList.add('active');
+    function updateRoleEmojiUI() {
+      const el = document.getElementById('role-toggle-emoji');
+      if (el) el.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
     }
-    function closeCustomizationModal() { document.getElementById('customization-modal')?.classList.remove('active'); }
 
+   // Стандартные аватарки по умолчанию
+const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
+const DEFAULT_AVATAR_FEMALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
+
+// 1. Открытие диалога выбора фото при тапе по аватарке
+function triggerAvatarUpload() {
+  const input = document.getElementById('avatar-file-input');
+  if (input) input.click();
+}
+
+// Заглушка, если где-то вызывается старое имя openAvatarModal
+function openAvatarModal() {
+  triggerAvatarUpload();
+}
+
+// 2. Обработка, сжатие и сохранение выбранного фото
+function handleAvatarFileSelect(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      // Сжимаем фото до аккуратного квадрата 300x300 с центрированием
+      const canvas = document.createElement('canvas');
+      const size = 300;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      const minDim = Math.min(img.width, img.height);
+      const startX = (img.width - minDim) / 2;
+      const startY = (img.height - minDim) / 2;
+
+      ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
+
+      // Конвертируем в компактный Base64 JPEG (качество 0.85)
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+      // Сохраняем в localStorage под активную роль
+      const role = currentAvatarRole || 'female';
+      if (role === 'male') {
+        localStorage.setItem('pact_avatar_male', compressedBase64);
+      } else {
+        localStorage.setItem('pact_avatar_female', compressedBase64);
+      }
+
+      // Обновляем аватарки во всем интерфейсе
+      updateAllAvatarsUI();
+
+      if (typeof showToast === 'function') {
+        showToast('Аватарка успешно обновлена ✨', 'success');
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  // Сбрасываем значение, чтобы можно было загрузить то же фото снова
+  event.target.value = '';
+}
+
+// 3. Синхронизация аватарок во всех разделах
+function updateAllAvatarsUI() {
+  const role = currentAvatarRole || 'female';
+  const maleAvatar = localStorage.getItem('pact_avatar_male') || DEFAULT_AVATAR_MALE;
+  const femaleAvatar = localStorage.getItem('pact_avatar_female') || DEFAULT_AVATAR_FEMALE;
+
+  const myAvatar = role === 'male' ? maleAvatar : femaleAvatar;
+  const partnerAvatar = role === 'male' ? femaleAvatar : maleAvatar;
+
+  // Аватарка в профиле
+  const profileImg = document.getElementById('avatar-img-view');
+  if (profileImg) profileImg.src = myAvatar;
+
+  // Аватарка в нижнем навбаре
+  const navImg = document.getElementById('nav-bar-avatar');
+  if (navImg) navImg.src = myAvatar;
+
+  // Аватарка собеседника в шапке мессенджера
+  const chatPartnerImg = document.getElementById('pair-chat-partner-avatar');
+  if (chatPartnerImg) chatPartnerImg.src = partnerAvatar;
+
+  // Перерисовка сообщений чата, если открыт диалог
+  if (typeof renderLiveMessagesUI === 'function') {
+    renderLiveMessagesUI();
+  }
+}
+    
+    // Баланс
+    function renderBankScreen() {
+      const fp = document.getElementById('bank-f-ptc'), fo = document.getElementById('bank-f-otc'), fs = document.getElementById('bank-f-stc');
+      const ma = document.getElementById('bank-m-atc'), mc = document.getElementById('bank-m-ctc'), ms = document.getElementById('bank-m-stc');
+      if (fp) fp.innerText = femaleBalances.ptc;
+      if (fo) fo.innerText = femaleBalances.otc;
+      if (fs) fs.innerText = femaleBalances.stc;
+      if (ma) ma.innerText = maleBalances.atc;
+      if (mc) mc.innerText = maleBalances.ctc;
+      if (ms) ms.innerText = maleBalances.stc;
+    }
+
+    // Обои
+    const WALLPAPER_PRESETS = {
+      ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), #0C0A10',
+      neon_velvet: 'radial-gradient(at 20% 20%, #6E0F48 0%, transparent 50%), #0C0A10',
+      wine_sunset: 'radial-gradient(at 80% 15%, #6B172B 0%, transparent 50%), #0C0A10',
+      gold: 'radial-gradient(circle at 50% 25%, #382407 0%, #080500 100%)'
+    };
+
+    function setWallpaper(key) {
+      document.body.style.background = WALLPAPER_PRESETS[key] || WALLPAPER_PRESETS.ruby_opal;
+      localStorage.setItem('pact_wallpaper_key', key);
+      closeWallpaperModal();
+    }
+
+    function renderWallpaperGrid() {
+      const slot = document.getElementById('wallpaper-grid-slot');
+      if (!slot) return;
+      slot.innerHTML = Object.keys(WALLPAPER_PRESETS).map(k => `
+        <div class="wallpaper-thumb" style="background:${WALLPAPER_PRESETS[k]};" onclick="setWallpaper('${k}')">
+          <span>${k}</span>
+        </div>
+      `).join('');
+    }
+
+    // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
-      const emo = document.getElementById('role-toggle-emoji');
-      if (emo) emo.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
-
-      const savedTheme = localStorage.getItem('pact_selected_chat_theme') || 'theme_im1';
-      applyChatTheme(savedTheme);
-
+      window.currentAvatarRole = currentAvatarRole;
+      updateRoleEmojiUI();
       updateAllAvatarsUI();
       renderDesktop();
-      renderProducts();
-      renderWardrobe();
-      renderBankScreen();
-      renderCycleInfo();
+      initSwipeGestures();
+      setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
     });
   </script>
 </body>
