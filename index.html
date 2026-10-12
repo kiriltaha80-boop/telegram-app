@@ -1499,6 +1499,131 @@
     .pair-send-btn:active {
       transform: scale(0.92);
     }
+
+    /* ========================================================
+       ТЕМЫ ЧАТА (IM1 / mp2 / mp3) + ПРОЗРАЧНЫЙ СТИЛЬ
+       ======================================================== */
+    :root {
+      --chat-overlay: rgba(0, 0, 0, 0.12);
+      --chat-blur: 0px;
+      --bubble-male-bg: linear-gradient(135deg, rgba(24, 40, 62, 0.88) 0%, rgba(13, 22, 36, 0.92) 100%);
+      --bubble-male-border: rgba(74, 144, 226, 0.65);
+      --bubble-male-text: #f0f6ff;
+      --bubble-male-tag: #7DD3FC;
+      --bubble-male-shadow: rgba(74, 144, 226, 0.3);
+      --bubble-female-bg: linear-gradient(135deg, rgba(72, 18, 36, 0.88) 0%, rgba(36, 7, 17, 0.92) 100%);
+      --bubble-female-border: rgba(230, 57, 86, 0.65);
+      --bubble-female-text: #fff0f3;
+      --bubble-female-tag: #FF8599;
+      --bubble-female-shadow: rgba(230, 57, 86, 0.35);
+    }
+
+    #tab-chat-pair {
+      background-size: cover !important;
+      background-position: center center !important;
+      background-repeat: no-repeat !important;
+      transition: background-image 0.5s ease;
+    }
+    .pair-chat-overlay-dim {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--chat-overlay);
+      backdrop-filter: blur(var(--chat-blur));
+      -webkit-backdrop-filter: blur(var(--chat-blur));
+      z-index: 1;
+      pointer-events: none;
+      transition: background 0.4s ease;
+    }
+    #tab-chat-pair .pair-chat-card-layout {
+      position: relative;
+      z-index: 2;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    /* Прозрачная шапка и строка ввода: без чёрных полос */
+    #tab-chat-pair .pair-chat-fixed-header {
+      background: transparent !important;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding: 6px 4px 10px 4px;
+    }
+    #tab-chat-pair .pair-input-bar-row {
+      background: transparent !important;
+      border-top: none !important;
+      box-shadow: none !important;
+      padding: 10px 2px 4px 2px;
+    }
+    #tab-chat-pair .pair-chat-fixed-header .back-action-btn,
+    #tab-chat-pair .pair-chat-fixed-header .small-btn,
+    #tab-chat-pair .pair-attach-btn,
+    #tab-chat-pair .pair-text-input {
+      background: rgba(0, 0, 0, 0.32) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #fff;
+    }
+    #tab-chat-pair .pair-text-input:focus {
+      border-color: var(--accent-color) !important;
+      background: rgba(0, 0, 0, 0.48) !important;
+      box-shadow: 0 0 12px rgba(230, 57, 86, 0.35) !important;
+    }
+    #tab-chat-pair .partner-name-text { text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
+
+    /* Пузырьки берут цвета из выбранной темы */
+    .pair-msg-bubble.role-male {
+      background: var(--bubble-male-bg) !important;
+      border: 1px solid var(--bubble-male-border) !important;
+      color: var(--bubble-male-text) !important;
+      box-shadow: 0 4px 14px var(--bubble-male-shadow) !important;
+      border-bottom-right-radius: 4px;
+    }
+    .pair-msg-bubble.role-male .pair-msg-author-tag { color: var(--bubble-male-tag) !important; }
+    .pair-msg-bubble.role-female {
+      background: var(--bubble-female-bg) !important;
+      border: 1px solid var(--bubble-female-border) !important;
+      color: var(--bubble-female-text) !important;
+      box-shadow: 0 4px 14px var(--bubble-female-shadow) !important;
+      border-bottom-left-radius: 4px;
+    }
+    .pair-msg-bubble.role-female .pair-msg-author-tag { color: var(--bubble-female-tag) !important; }
+
+    /* Модалка выбора темы */
+    .theme-presets-grid { display: grid; grid-template-columns: 1fr; gap: 12px; overflow-y: auto; padding: 4px; }
+    .theme-card-preview {
+      position: relative;
+      height: 120px;
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      background-color: #14101c;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .theme-card-preview:active { transform: scale(0.97); }
+    .theme-card-preview.active { border-color: var(--accent-color); box-shadow: 0 0 18px var(--accent-color); }
+    .theme-title-tag {
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      align-self: flex-start;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .theme-bubbles-demo { display: flex; gap: 6px; align-self: flex-end; }
+    .theme-bubble-dot { width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.85); }
+    .partner-name-text { font-size: 12px; font-weight: 800; color: #fff; line-height: 1.2; }
   </style>
 </head>
 <body>
@@ -1570,21 +1695,19 @@
 
       const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
       const isMale = (currentRole === 'male');
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      const isMale = currentRole === 'male';
       const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
       const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
 
       // Обновляем шапку: показываем аватарку и имя собеседника-партнёра
       if (partnerAvatarImg) {
         partnerAvatarImg.src = isMale ? femaleAvatar : maleAvatar;
+        partnerAvatarImg.style.borderColor = isMale ? '#E63956' : '#7DD3FC';
       }
-     if (roleIndicator) {
-      roleIndicator.innerText = 'В сети';
-    }
+      if (partnerNameLabel) {
+        partnerNameLabel.textContent = isMale ? CHAT_NAME_FEMALE.trim() : CHAT_NAME_MALE.trim();
+      }
       if (roleIndicator) {
-        // Убрали надпись «Пишешь как...» — теперь здесь аккуратный статус «В сети»
-        roleIndicator.innerText = 'В сети';
+        roleIndicator.textContent = 'В сети';
         roleIndicator.style.color = '#27ae60';
       }
 
@@ -1596,22 +1719,26 @@
         return;
       }
 
+      const safeSrc = (u) => (typeof u === 'string' && /^(data:image\/|https:\/\/)/.test(u)) ? escapeHtml(u).replace(/"/g, '&quot;') : '';
+
       box.innerHTML = livePairMessages.map(m => {
         const isMine = (m.role === currentRole);
-        const avatarSrc = (m.role === 'male') ? maleAvatar : femaleAvatar;
-        const roleClass = (m.role === 'male') ? 'role-male' : 'role-female';
+        const isMaleMsg = (m.role === 'male');
+        const avatarSrc = safeSrc(isMaleMsg ? maleAvatar : femaleAvatar);
+        const roleClass = isMaleMsg ? 'role-male' : 'role-female';
+        const photoSrc = safeSrc(m.photo);
 
-        const photoHtml = m.photo ? `<img class="pair-msg-photo-attachment" src="${m.photo}" alt="Фото" onclick="openFullscreenPhoto('${m.photo}')">` : '';
+        const photoHtml = photoSrc ? `<img class="pair-msg-photo-attachment" src="${photoSrc}" alt="Фото" data-fullscreen="1">` : '';
         const textHtml = m.text ? `<div class="pair-msg-text">${escapeHtml(m.text)}</div>` : '';
 
         return `
           <div class="pair-msg-row ${isMine ? 'outgoing' : 'incoming'}">
-            <img class="pair-msg-avatar" src="${avatarSrc}" alt="${m.author}">
+            <img class="pair-msg-avatar" src="${avatarSrc}" alt="">
             <div class="pair-msg-bubble ${roleClass}">
-              <div class="pair-msg-author-tag">${m.author}</div>
+              <div class="pair-msg-author-tag">${escapeHtml(m.author || '')}</div>
               ${photoHtml}
               ${textHtml}
-              <div class="pair-msg-time">${m.time || ''}</div>
+              <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
             </div>
           </div>
         `;
@@ -1624,15 +1751,36 @@
       const lastPreview = document.getElementById('pair-chat-last-preview');
       if (lastPreview && livePairMessages.length > 0) {
         const last = livePairMessages[livePairMessages.length - 1];
-        lastPreview.innerText = `${last.author}: ${last.photo ? '📷 Фото' : last.text}`;
+        lastPreview.textContent = `${(last.author || '').trim()}: ${last.photo ? '📷 Фото' : (last.text || '')}`;
       }
     }
 
     function escapeHtml(text) {
       const div = document.createElement('div');
-      div.innerText = text;
+      div.textContent = String(text ?? '');
       return div.innerHTML;
     }
+
+    // Полноэкранный просмотр фото из чата (раньше функция вызывалась, но не существовала)
+    function openFullscreenPhoto(src) {
+      if (!src) return;
+      const ov = document.createElement('div');
+      ov.style.cssText = 'position:absolute;inset:0;z-index:100001;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:12px;';
+      const im = document.createElement('img');
+      im.src = src;
+      im.style.cssText = 'max-width:100%;max-height:100%;border-radius:12px;object-fit:contain;';
+      ov.appendChild(im);
+      ov.addEventListener('click', () => ov.remove());
+      document.body.appendChild(ov);
+    }
+
+    document.addEventListener('click', (e) => {
+      const t = e.target;
+      if (t && t.matches && t.matches('img[data-fullscreen]')) openFullscreenPhoto(t.src);
+    });
+
+    // tg объявлен в обычном скрипте через const и не попадает в window, поэтому берём SDK напрямую
+    const tgHaptic = () => window.Telegram?.WebApp?.HapticFeedback;
 
     // Мгновенная отправка нового сообщения в чат (0 мс задержки)
     window.sendPairChatMessage = function() {
@@ -1659,7 +1807,7 @@
 
       // 1. Мгновенно отображаем в интерфейсе и очищаем поле ввода
       if (input) input.value = '';
-      window.tg?.HapticFeedback?.impactOccurred?.('light');
+      tgHaptic()?.impactOccurred?.('light');
 
       livePairMessages.push({ docId: clientMsgId, pending: true, ...newMsgData });
       renderLiveMessagesUI();
@@ -1723,7 +1871,7 @@
             createdAt: Date.now()
           };
 
-          window.tg?.HapticFeedback?.notificationOccurred?.('success');
+          tgHaptic()?.notificationOccurred?.('success');
           livePairMessages.push({ docId: clientMsgId, pending: true, ...photoMsgData });
           renderLiveMessagesUI();
           updateLastMessagePreview();
@@ -1749,9 +1897,10 @@
     // Очистка переписки в базе данных
     window.clearLiveChatHistory = async function() {
       if (livePairMessages.length === 0) return;
+      if (!window.confirm('Удалить всю переписку пары? Это действие нельзя отменить.')) return;
       try {
         for (const m of livePairMessages) {
-          if (m.docId) {
+          if (m.docId && !m.pending) {
             await deleteDoc(doc(db, 'pair_messages', m.docId));
           }
         }
@@ -1760,6 +1909,7 @@
         if (typeof showToast === 'function') showToast('Диалог пары очищен', 'info');
       } catch (e) {
         console.error('Ошибка очистки:', e);
+        if (typeof showToast === 'function') showToast('Не удалось очистить диалог', 'error');
       }
     };
 
@@ -1989,21 +2139,25 @@
 
   <!-- ЭКРАН МЕССЕНДЖЕРА ПАРЫ (ЖИВОЙ ОНЛАЙН-ЧАТ) -->
   <div id="tab-chat-pair" class="tab-content pair-chat-screen-container">
+    <div class="pair-chat-overlay-dim"></div>
     <div class="card pair-chat-card-layout">
-      <!-- Шапка мессенджера (НЕПОДВИЖНАЯ) -->
-      <div class="pair-chat-fixed-header"style="margin-top: 20px;">
+      <!-- Шапка мессенджера (НЕПОДВИЖНАЯ, ПРОЗРАЧНАЯ) -->
+      <div class="pair-chat-fixed-header" style="margin-top: 20px;">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
         <div class="pair-partner-identity">
           <img id="pair-chat-partner-avatar" class="pair-partner-header-avatar" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png" alt="Партнёр">
           <div>
-            <div id="pair-chat-partner-name" style="font-size: 12px; font-weight: 800; color: #fff; line-height: 1.2;">Собеседник</div>
+            <div id="pair-chat-partner-name" class="partner-name-text">Собеседник</div>
             <div style="display: flex; align-items: center; gap: 4px; margin-top: 1px;">
               <span class="live-dot-pulse"></span>
               <span id="pair-chat-role-indicator" style="font-size: 8.5px; font-weight: 700; color: #27ae60;">В сети</span>
             </div>
           </div>
         </div>
-        <button class="small-btn" onclick="clearLiveChatHistory()" style="background: rgba(255,255,255,0.08); font-size: 9px; padding: 5px 8px;">Очистить</button>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button class="small-btn" onclick="openChatThemeModal()" style="font-size: 13px; padding: 5px 8px;" title="Сменить стиль чата">🎨</button>
+          <button class="small-btn" onclick="clearLiveChatHistory()" style="font-size: 9px; padding: 5px 8px;">Очистить</button>
+        </div>
       </div>
 
       <!-- Лента сообщений (ЕДИНСТВЕННЫЙ СКРОЛЛЯЩИЙСЯ БЛОК) -->
@@ -2194,6 +2348,17 @@
   </div>
 
   <!-- МОДАЛКА: ТУТОРИАЛ (?) -->
+  <!-- МОДАЛКА: ТЕМЫ ОФОРМЛЕНИЯ ЧАТА -->
+  <div id="chat-theme-modal" class="modal-overlay" onclick="if(event.target === this) closeChatThemeModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Темы оформления чата</h3>
+        <span class="modal-close-btn" onclick="closeChatThemeModal()">✕</span>
+      </div>
+      <div id="theme-presets-container" class="theme-presets-grid"></div>
+    </div>
+  </div>
+
   <div id="tutorial-modal" class="modal-overlay" onclick="closeTutorial()">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -3036,8 +3201,8 @@ function updateAllAvatarsUI() {
   if (chatPartnerImg) chatPartnerImg.src = partnerAvatar;
 
   // Перерисовка сообщений чата, если открыт диалог
-  if (typeof renderLiveMessagesUI === 'function') {
-    renderLiveMessagesUI();
+  if (typeof window.renderPairChat === 'function') {
+    window.renderPairChat();
   }
 }
     
@@ -3077,9 +3242,134 @@ function updateAllAvatarsUI() {
       `).join('');
     }
 
+    // ========================================================
+    // ТЕМЫ ЧАТА: IM1.jpeg, mp2.jpeg, mp3.jpeg (ing/incon chat/)
+    // ========================================================
+    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/ing/incon%20chat/';
+
+    const CHAT_PRESETS = [
+      {
+        id: 'theme_im1',
+        title: 'Тема I • IM1',
+        // варианты имени файла: GitHub различает регистр, поэтому пробуем по очереди
+        images: [GITHUB_IMG_BASE + 'IM1.jpeg', GITHUB_IMG_BASE + 'im1.jpeg', GITHUB_IMG_BASE + 'IM1.jpg'],
+        overlay: 'rgba(0, 0, 0, 0.12)',
+        blur: '0px',
+        male:   { bg: 'linear-gradient(135deg, rgba(24, 40, 62, 0.88) 0%, rgba(13, 22, 36, 0.92) 100%)', border: 'rgba(74, 144, 226, 0.65)', text: '#f0f6ff', tag: '#7DD3FC', shadow: 'rgba(74, 144, 226, 0.3)' },
+        female: { bg: 'linear-gradient(135deg, rgba(72, 18, 36, 0.88) 0%, rgba(36, 7, 17, 0.92) 100%)', border: 'rgba(230, 57, 86, 0.65)', text: '#fff0f3', tag: '#FF8599', shadow: 'rgba(230, 57, 86, 0.35)' }
+      },
+      {
+        id: 'theme_mp2',
+        title: 'Тема II • mp2',
+        images: [GITHUB_IMG_BASE + 'mp2.jpeg', GITHUB_IMG_BASE + 'MP2.jpeg', GITHUB_IMG_BASE + 'IM2.jpeg'],
+        overlay: 'rgba(0, 0, 0, 0.12)',
+        blur: '0px',
+        male:   { bg: 'linear-gradient(135deg, rgba(36, 39, 48, 0.88) 0%, rgba(17, 19, 23, 0.92) 100%)', border: 'rgba(148, 163, 184, 0.55)', text: '#f8fafc', tag: '#cbd5e1', shadow: 'rgba(0, 0, 0, 0.6)' },
+        female: { bg: 'linear-gradient(135deg, rgba(61, 20, 58, 0.88) 0%, rgba(28, 5, 26, 0.92) 100%)', border: 'rgba(217, 70, 239, 0.65)', text: '#fdf4ff', tag: '#f0abfc', shadow: 'rgba(217, 70, 239, 0.35)' }
+      },
+      {
+        id: 'theme_mp3',
+        title: 'Тема III • mp3',
+        images: [GITHUB_IMG_BASE + 'mp3.jpeg', GITHUB_IMG_BASE + 'MP3.jpeg', GITHUB_IMG_BASE + 'IM3.jpeg'],
+        overlay: 'rgba(0, 0, 0, 0.12)',
+        blur: '0px',
+        male:   { bg: 'linear-gradient(135deg, rgba(26, 35, 58, 0.88) 0%, rgba(12, 18, 32, 0.92) 100%)', border: 'rgba(99, 102, 241, 0.65)', text: '#eef2ff', tag: '#a5b4fc', shadow: 'rgba(99, 102, 241, 0.35)' },
+        female: { bg: 'linear-gradient(135deg, rgba(59, 37, 8, 0.88) 0%, rgba(28, 17, 2, 0.92) 100%)', border: 'rgba(212, 175, 55, 0.65)', text: '#fffbeb', tag: '#fde68a', shadow: 'rgba(212, 175, 55, 0.35)' }
+      }
+    ];
+
+    // Загружаем первый доступный вариант картинки (CSS-слои не работают как запасные варианты: рисуются все сразу)
+    const themeImageCache = {};
+    function resolveThemeImage(preset) {
+      if (themeImageCache[preset.id]) return Promise.resolve(themeImageCache[preset.id]);
+      return new Promise((resolve) => {
+        let i = 0;
+        const tryNext = () => {
+          if (i >= preset.images.length) { resolve(''); return; }
+          const url = preset.images[i++];
+          const im = new Image();
+          im.onload = () => { themeImageCache[preset.id] = url; resolve(url); };
+          im.onerror = tryNext;
+          im.src = url;
+        };
+        tryNext();
+      });
+    }
+
+    function applyChatTheme(presetId) {
+      const preset = CHAT_PRESETS.find(p => p.id === presetId) || CHAT_PRESETS[0];
+      const chatScreen = document.getElementById('tab-chat-pair');
+      const root = document.documentElement;
+
+      root.style.setProperty('--chat-overlay', preset.overlay);
+      root.style.setProperty('--chat-blur', preset.blur);
+      ['male', 'female'].forEach(r => {
+        const c = preset[r];
+        root.style.setProperty(`--bubble-${r}-bg`, c.bg);
+        root.style.setProperty(`--bubble-${r}-border`, c.border);
+        root.style.setProperty(`--bubble-${r}-text`, c.text);
+        root.style.setProperty(`--bubble-${r}-tag`, c.tag);
+        root.style.setProperty(`--bubble-${r}-shadow`, c.shadow);
+      });
+
+      try { localStorage.setItem('pact_selected_chat_theme', preset.id); } catch (e) {}
+
+      resolveThemeImage(preset).then(url => {
+        if (!chatScreen) return;
+        // если картинка не нашлась, остаётся стандартный тёмный фон экрана
+        chatScreen.style.backgroundImage = url ? `url('${url}')` : '';
+      });
+    }
+
+    function openChatThemeModal() {
+      const container = document.getElementById('theme-presets-container');
+      let curId = 'theme_im1';
+      try { curId = localStorage.getItem('pact_selected_chat_theme') || curId; } catch (e) {}
+      if (!container) return;
+
+      container.innerHTML = CHAT_PRESETS.map(p => `
+        <div class="theme-card-preview ${p.id === curId ? 'active' : ''}" data-theme-id="${p.id}" onclick="selectThemeAndClose('${p.id}')">
+          <span class="theme-title-tag">${p.title}</span>
+          <div class="theme-bubbles-demo">
+            <div class="theme-bubble-dot" style="background: ${p.male.bg}; border-color: ${p.male.border};"></div>
+            <div class="theme-bubble-dot" style="background: ${p.female.bg}; border-color: ${p.female.border};"></div>
+          </div>
+        </div>
+      `).join('');
+
+      // превью подгружаем после отрисовки, чтобы не показывать битые картинки
+      CHAT_PRESETS.forEach(p => {
+        resolveThemeImage(p).then(url => {
+          const card = container.querySelector(`[data-theme-id="${p.id}"]`);
+          if (card && url) card.style.backgroundImage = `url('${url}')`;
+        });
+      });
+
+      document.getElementById('chat-theme-modal')?.classList.add('active');
+    }
+
+    function closeChatThemeModal() {
+      document.getElementById('chat-theme-modal')?.classList.remove('active');
+    }
+
+    function selectThemeAndClose(id) {
+      applyChatTheme(id);
+      closeChatThemeModal();
+      showToast('Тема оформления обновлена ✨', 'success');
+    }
+
+    // Заглушки для кнопок, которые вызывали несуществующие функции (раньше падали с ReferenceError)
+    function handleContractButtonClick() { showToast('Контракт D/S скреплен узами пары ✨', 'success'); }
+    function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
+    function openAddProductModal() { showToast('Добавление товаров появится в следующей версии', 'info'); }
+    function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
+
     // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
       window.currentAvatarRole = currentAvatarRole;
+      let savedTheme = 'theme_im1';
+      try { savedTheme = localStorage.getItem('pact_selected_chat_theme') || savedTheme; } catch (e) {}
+      applyChatTheme(savedTheme);
       updateRoleEmojiUI();
       updateAllAvatarsUI();
       renderDesktop();
