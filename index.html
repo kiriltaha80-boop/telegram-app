@@ -4,12 +4,1356 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>Pact & Passion</title>
+  <title>Pact &amp; Passion</title>
   
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    /* ===================== CSS ШЛЮЗА (из test.html) ===================== */
+
+    :root {
+      --bg-color: #0C0A10;
+      --card-bg: rgba(22, 18, 30, 0.95);
+      --card-border: rgba(230, 57, 86, 0.28);
+      --accent-color: #E63956;
+      --accent-gradient: linear-gradient(135deg, #E63956 0%, #B82342 100%);
+      --accent-soft: rgba(230, 57, 86, 0.15);
+      --passion-color: #9B51E0;
+      --text-main: #F5F3F7;
+      --text-muted: #9A91A5;
+      --border-color: rgba(255, 255, 255, 0.09);
+      --gold: #D4AF37;
+      --gold-gradient: linear-gradient(135deg, #F9E79F 0%, #D4AF37 50%, #9A7D0A 100%);
+
+      /* Палитра благородного вина */
+      --wine-rim: #FF4A6E;
+      --wine-luminous: #B81435;
+      --wine-body: #6E081D;
+      --wine-depth: #3A020E;
+      --wine-abyss: #180106;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: #050407 !important;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #0C0A10 !important;
+      color: #F5F3F7;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 428px;
+      height: 100%;
+      max-height: 926px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transform: translateZ(0);
+      overscroll-behavior: none;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 36px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+      }
+    }
+
+    .ambient-glow {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.22;
+    }
+    .glow-1 { top: -50px; left: -50px; background: #680C1F; }
+    .glow-2 { bottom: -40px; right: -40px; width: 280px; height: 280px; background: #2B040F; opacity: 0.35; filter: blur(110px); }
+
+    .toast-box {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-25px);
+      background: rgba(26, 17, 34, 0.96);
+      border: 1px solid rgba(230, 57, 86, 0.55);
+      border-radius: 16px;
+      padding: 10px 18px;
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 18px rgba(230, 57, 86, 0.35);
+      z-index: 99999;
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .toast-box.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .welcome-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 5000;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 16px; 
+      padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px calc(env(safe-area-inset-bottom, 0px) + 20px) 18px;
+      background: 
+        radial-gradient(ellipse 110% 40% at 50% 100%, #20040E 0%, rgba(16, 2, 7, 0.78) 45%, transparent 76%),
+        radial-gradient(circle at 50% 8%, #1C0510 0%, #0A080D 72%);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .welcome-screen.hidden {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .welcome-topbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      margin-top: 90px;
+    }
+
+    .lang-selector {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--accent-gradient);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(230, 57, 86, 0.45);
+    }
+
+    .welcome-hero {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      margin: 114px 0 12px 0;
+    }
+
+    .crest-icon-box {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 16px auto;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(45, 18, 32, 0.9) 0%, rgba(18, 12, 24, 0.95) 100%);
+      border: 2px solid rgba(230, 57, 86, 0.4);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 57, 86, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      animation: pulseCrest 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseCrest {
+      0% { transform: scale(1.02); box-shadow: 0 0 14px rgba(230, 57, 86, 0.25); }
+      100% { transform: scale(1.08); box-shadow: 0 0 26px rgba(230, 57, 86, 0.5); }
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(110deg, #B82342 0%, #E63956 22%, #FFFFFF 50%, #FFA3B5 68%, #B82342 100%);
+      background-size: 240% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: brandShimmer 3.5s ease-in-out infinite;
+      filter: drop-shadow(0 2px 8px rgba(230, 57, 86, 0.5));
+    }
+
+    @keyframes brandShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .welcome-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-create {
+      width: 100%;
+      height: 48px;
+      border-radius: 14px;
+      border: none;
+      background: var(--accent-gradient);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(230, 57, 86, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s ease;
+    }
+    .btn-create:active { transform: scale(0.97); }
+
+    .separator-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .separator-row::before, .separator-row::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .join-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .room-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 12.5px;
+      outline: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .room-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px rgba(230, 57, 86, 0.3);
+    }
+
+    .btn-join {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      color: #fff;
+      padding: 0 16px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-join:active { background: rgba(230, 57, 86, 0.3); }
+
+    .wine-loading-stage {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 4000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(ellipse 110% 45% at 50% 100%, rgba(36, 4, 14, 0.6) 0%, transparent 70%);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .wine-loading-stage.active { display: flex; }
+    .wine-loading-stage.dissolve {
+      opacity: 0;
+      transform: scale(0.92) translateY(-20px);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .glass-scene {
+      position: relative;
+      z-index: 2;
+      width: 170px;
+      height: 240px;
+      transform-origin: 50% 90%;
+      transform-style: preserve-3d;
+      animation: glassOrbitalMotion 2.8s linear infinite;
+    }
+
+    @keyframes glassOrbitalMotion {
+      0%   { transform: perspective(650px) rotateX(-12deg) rotateY(0deg) rotateZ(0deg) translate(0px, -4.5px); }
+      12.5%{ transform: perspective(650px) rotateX(-13.5deg) rotateY(3.5deg) rotateZ(4deg) translate(5px, -3px); }
+      25%  { transform: perspective(650px) rotateX(-15deg) rotateY(5deg) rotateZ(6deg) translate(7px, 0px); }
+      37.5%{ transform: perspective(650px) rotateX(-17deg) rotateY(3.5deg) rotateZ(4deg) translate(5px, 3px); }
+      50%  { transform: perspective(650px) rotateX(-18deg) rotateY(0deg) rotateZ(0deg) translate(0px, 4.5px); }
+      62.5%{ transform: perspective(650px) rotateX(-17deg) rotateY(-3.5deg) rotateZ(-4deg) translate(-5px, 3px); }
+      75%  { transform: perspective(650px) rotateX(-15deg) rotateY(-5deg) rotateZ(-6deg) translate(-7px, 0px); }
+      87.5%{ transform: perspective(650px) rotateX(-13.5deg) rotateY(-3.5deg) rotateZ(-4deg) translate(-5px, -3px); }
+      100% { transform: perspective(650px) rotateX(-12deg) rotateY(0deg) rotateZ(0deg) translate(0px, -4.5px); }
+    }
+
+    .wine-inertia-group {
+      transform-origin: 100px 145px;
+      animation: wineFluidInertia 2.8s linear infinite;
+    }
+
+    @keyframes wineFluidInertia {
+      0%   { transform: rotate(8deg) translate(-4px, -1px) scale(0.97, 1.03); }
+      12.5%{ transform: rotate(4deg) translate(-2px, -3px) scale(0.99, 1.01); }
+      25%  { transform: rotate(0deg) translate(0px, -4px) scale(1.04, 0.96); }
+      37.5%{ transform: rotate(-5deg) translate(2.5px, -2px) scale(1.01, 0.99); }
+      50%  { transform: rotate(-9deg) translate(5px, 0px) scale(0.96, 1.04); }
+      62.5%{ transform: rotate(-5deg) translate(3px, 3px) scale(0.99, 1.01); }
+      75%  { transform: rotate(0deg) translate(0px, 4px) scale(1.06, 0.94); }
+      87.5%{ transform: rotate(5deg) translate(-3px, 2px) scale(1.01, 0.99); }
+      100% { transform: rotate(8deg) translate(-4px, -1px) scale(0.97, 1.03); }
+    }
+
+    .wine-fill-level {
+      animation: fillRiseSmooth 5.8s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+    }
+
+    @keyframes fillRiseSmooth {
+      0%   { transform: translateY(48px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .shadow-under {
+      animation: shadowOrbitalFollow 2.8s linear infinite;
+      transform-origin: 100px 245px;
+    }
+
+    @keyframes shadowOrbitalFollow {
+      0%   { transform: translate(0px, -3px) scale(0.95); opacity: 0.65; }
+      25%  { transform: translate(5px, 0px) scale(0.92); opacity: 0.6; }
+      50%  { transform: translate(0px, 3px) scale(0.98); opacity: 0.72; }
+      75%  { transform: translate(-5px, 0px) scale(0.92); opacity: 0.6; }
+      100% { transform: translate(0px, -3px) scale(0.95); opacity: 0.65; }
+    }
+
+    .creator-hub-stage {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 3500;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 14px;
+      padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px calc(env(safe-area-inset-bottom, 0px) + 20px) 16px;
+      background: radial-gradient(circle at 50% 15%, #220512 0%, #0A080D 75%);
+      opacity: 0;
+      transform: scale(0.96) translateY(12px);
+      transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+    .creator-hub-stage.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    .creator-hub-stage.dissolve {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .creator-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 2;
+      margin-top: 90px;
+    }
+
+    .creator-hero {
+      text-align: center;
+      margin: 98px 0 6px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .creator-crest-box {
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 10px auto;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(50, 18, 34, 0.95) 0%, rgba(20, 12, 26, 0.98) 100%);
+      border: 2px solid rgba(230, 57, 86, 0.5);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 26px rgba(230, 57, 86, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 46px;
+      animation: pulseCrest 3s ease-in-out infinite alternate;
+    }
+
+    .creator-brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      background: linear-gradient(110deg, #B82342 0%, #E63956 22%, #FFFFFF 50%, #FFA3B5 68%, #B82342 100%);
+      background-size: 240% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: brandShimmer 3.5s ease-in-out infinite;
+      filter: drop-shadow(0 2px 10px rgba(230, 57, 86, 0.6));
+    }
+
+    .creator-code-banner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 36px 0 48px 0;
+    }
+
+    .creator-code-badge {
+      background: rgba(230, 57, 86, 0.12);
+      border: 1.5px dashed var(--accent-color);
+      border-radius: 14px;
+      padding: 9px 26px;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 2.5px;
+      color: #FFFFFF;
+      text-shadow: 0 0 12px rgba(230, 57, 86, 0.6);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65), 0 0 16px rgba(230, 57, 86, 0.25);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .creator-code-badge:active {
+      transform: scale(0.95);
+      background: rgba(230, 57, 86, 0.22);
+      border-color: #FFF;
+    }
+
+    .creator-actions-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 6px 0 0 0;
+    }
+
+    .menu-action-card {
+      background: linear-gradient(135deg, rgba(28, 20, 36, 0.95) 0%, rgba(18, 12, 24, 0.98) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-action-card:active { transform: scale(0.98); }
+    .menu-action-card.active-state {
+      border-color: rgba(230, 57, 86, 0.55);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 18px rgba(230, 57, 86, 0.25);
+    }
+    .menu-action-card.completed {
+      border-color: rgba(212, 175, 55, 0.55);
+    }
+
+    .menu-action-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .menu-action-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(230, 57, 86, 0.12) 100%);
+      border: 1.5px solid rgba(230, 57, 86, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(230, 57, 86, 0.2);
+    }
+    .menu-action-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+    }
+    .menu-action-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: 0.3px;
+    }
+    .menu-action-desc {
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .menu-action-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .badge-empty { background: rgba(255, 255, 255, 0.06); color: #9A91A5; }
+    .badge-selected { background: rgba(230, 57, 86, 0.22); color: #FFA3B5; border: 1px solid rgba(230, 57, 86, 0.45); }
+    .badge-sealed { background: rgba(212, 175, 55, 0.2); color: #F9E79F; border: 1px solid rgba(212, 175, 55, 0.45); }
+
+    .btn-enter-room-final {
+      width: 100%;
+      height: 52px;
+      border-radius: 16px;
+      border: none;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .btn-enter-room-final.disabled-state {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.35);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .btn-enter-room-final.disabled-state:active {
+      transform: scale(0.98);
+    }
+    .btn-enter-room-final.ready-state {
+      background: linear-gradient(135deg, #E63956 0%, #B82342 50%, #8C0F2A 100%);
+      border: 1px solid rgba(255, 215, 0, 0.45);
+      color: #FFFFFF;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8), 0 0 24px rgba(230, 57, 86, 0.6);
+      animation: enterPulse 2.4s infinite alternate;
+      cursor: pointer;
+    }
+    .btn-enter-room-final.ready-state:active {
+      transform: scale(0.96);
+    }
+    @keyframes enterPulse {
+      0% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(230, 57, 86, 0.45); }
+      100% { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9), 0 0 28px rgba(230, 57, 86, 0.85); }
+    }
+
+    /* Модальные контейнеры */
+    .scenario-picker-modal,
+    .contract-writer-modal,
+    .full-contract-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 8000;
+      background: rgba(4, 2, 7, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 6px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 36px;
+    }
+    .contract-writer-modal { z-index: 8500; }
+    .full-contract-modal { z-index: 9400; }
+
+    .scenario-picker-modal.active,
+    .contract-writer-modal.active,
+    .full-contract-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scenario-card-sheet,
+    .contract-writer-sheet,
+    .full-contract-sheet {
+      background: linear-gradient(180deg, rgba(28, 18, 34, 0.98) 0%, rgba(14, 9, 20, 0.99) 100%);
+      border: 1px solid rgba(230, 57, 86, 0.45);
+      border-radius: 24px;
+      padding: 18px 16px 16px 16px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(230, 57, 86, 0.25);
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scenario-picker-modal.active .scenario-card-sheet,
+    .contract-writer-modal.active .contract-writer-sheet,
+    .full-contract-modal.active .full-contract-sheet {
+      transform: scale(1) translateY(0);
+    }
+
+    .scenario-sheet-body {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+      margin: 8px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scenario-sheet-footer {
+      flex-shrink: 0;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: transparent;
+    }
+
+    .contract-writer-sheet {
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .scenario-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+    .scenario-sheet-title {
+      font-size: 13.5px;
+      font-weight: 900;
+      color: #FFF;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .scenario-sheet-close {
+      font-size: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .scenario-group-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scenario-group-label.male { color: #7DD3FC; }
+    .scenario-group-label.female { color: #FFA3B5; }
+    .scenario-group-label.custom { color: #D8B4FE; }
+
+    .scenario-items-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .scenario-item-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .scenario-item-btn:active { transform: scale(0.98); }
+    .scenario-item-btn.selected {
+      background: linear-gradient(135deg, rgba(230, 57, 86, 0.18) 0%, rgba(140, 15, 42, 0.28) 100%);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 16px rgba(230, 57, 86, 0.35);
+    }
+
+    .scenario-item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .scenario-name-main {
+      font-size: 13px;
+      font-weight: 900;
+      color: #FFF;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scenario-desc-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .scenario-check-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #FFF;
+      flex-shrink: 0;
+    }
+    .scenario-item-btn.selected .scenario-check-dot {
+      background: var(--accent-gradient);
+      border-color: var(--accent-color);
+    }
+
+    .custom-role-inputs-row {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .custom-role-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 8px 10px;
+      color: #FFF;
+      font-size: 11px;
+      font-weight: 700;
+      outline: none;
+    }
+    .custom-role-input:focus { border-color: var(--accent-color); }
+
+    .btn-confirm-scenario {
+      width: 100%;
+      height: 52px;
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: linear-gradient(135deg, #E63956 0%, #B82342 50%, #8C0F2A 100%);
+      color: #FFF;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 20px rgba(230, 57, 86, 0.55), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-confirm-scenario:active { transform: scale(0.97); }
+    .btn-confirm-scenario.disabled {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.35);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Кнопка Полного Просмотра Пакта */
+    .btn-preview-action {
+      height: 52px;
+      min-height: 52px;
+      border-radius: 16px;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1.5px solid rgba(212, 175, 55, 0.45);
+      color: #F9E79F;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      padding: 0 14px;
+      white-space: nowrap;
+    }
+    .btn-preview-action:active {
+      transform: scale(0.96);
+      background: rgba(212, 175, 55, 0.22);
+    }
+
+    .contract-mode-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .contract-mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .contract-mode-btn.active {
+      background: rgba(230, 57, 86, 0.25);
+      border: 1px solid rgba(230, 57, 86, 0.5);
+      color: #FFF;
+    }
+
+    .contract-title-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(230, 57, 86, 0.35);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #FFF;
+      font-size: 12.5px;
+      font-weight: 800;
+      outline: none;
+    }
+    .contract-title-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 12px rgba(230, 57, 86, 0.3);
+    }
+
+    .contract-sections-container {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .section-menu-card {
+      background: linear-gradient(135deg, rgba(28, 20, 36, 0.95) 0%, rgba(18, 12, 24, 0.98) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+      transition: all 0.22s ease;
+      position: relative;
+    }
+    .section-menu-card:active { transform: scale(0.98); }
+    .section-menu-card.filled {
+      border-color: rgba(230, 57, 86, 0.55);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65), 0 0 12px rgba(230, 57, 86, 0.2);
+    }
+
+    /* Модальное окно редактирования и чтения раздела */
+    .section-popup-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 9200;
+      background: rgba(3, 1, 6, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 6px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 36px;
+    }
+    .section-popup-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .section-popup-sheet {
+      background: linear-gradient(180deg, rgba(30, 18, 36, 0.99) 0%, rgba(14, 8, 18, 0.99) 100%);
+      border: 1.5px solid rgba(230, 57, 86, 0.55);
+      border-radius: 24px;
+      padding: 18px 16px 16px 16px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.35);
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .section-popup-modal.active .section-popup-sheet {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Увеличенный, комфортный для смартфона шрифт в поле редактирования (14px) */
+    .section-popup-textarea {
+      width: 100%;
+      height: 500px;
+      background: rgba(12, 7, 16, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 14px 14px;
+      color: #F8F3FA;
+      font-size: 14px;
+      line-height: 1.62;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+    .section-popup-textarea:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 16px rgba(230, 57, 86, 0.4);
+    }
+
+    .section-view-text-scroll {
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 14px;
+      background: rgba(12, 7, 16, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #F8F3FA;
+      white-space: pre-wrap;
+      word-break: break-word;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Элегантный предпросмотр всего манускрипта */
+    .manuscript-preview-scroll {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 16px 14px;
+      background: rgba(14, 8, 20, 0.95);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.75);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .manuscript-header-hero {
+      text-align: center;
+      border-bottom: 1px dashed rgba(212, 175, 55, 0.35);
+      padding-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .manuscript-crest-icon {
+      font-size: 32px;
+      margin-bottom: 2px;
+      filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+    }
+
+    .manuscript-main-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #F9E79F;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+    }
+
+    .manuscript-parties-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #E2D7EC;
+      margin-top: 4px;
+    }
+
+    .manuscript-section-card {
+      background: rgba(22, 14, 30, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-left: 3px solid var(--accent-color);
+      border-radius: 12px;
+      padding: 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .manuscript-section-card.gold-edge {
+      border-left-color: var(--gold);
+    }
+
+    .manuscript-section-heading {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: #FFF;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .manuscript-section-body {
+      font-size: 13px;
+      line-height: 1.62;
+      color: #EDE4F4;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .manuscript-actions-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+
+    .btn-download-doc {
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(154, 125, 10, 0.35) 100%);
+      color: #FFF;
+      font-size: 11.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    }
+    .btn-download-doc:active { transform: scale(0.97); }
+
+    .btn-close-preview {
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: #D6CEDF;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-close-preview:active { transform: scale(0.97); background: rgba(255, 255, 255, 0.12); }
+
+    .joiner-sections-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .joiner-gate-stage {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 3000;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 18px;
+      background: radial-gradient(circle at 50% 20%, #200512 0%, #0A080D 80%);
+      opacity: 0;
+      transform: scale(0.95) translateY(14px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+    .joiner-gate-stage.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    .joiner-gate-stage.dissolve {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .desktop-unlocked-stage {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 1000;
+      flex-direction: column;
+      padding: calc(env(safe-area-inset-top, 0px) + 20px) 14px calc(env(safe-area-inset-bottom, 0px) + 20px) 14px;
+      overflow-y: auto;
+      gap: 14px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .desktop-unlocked-stage.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .desktop-top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(22, 16, 28, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      backdrop-filter: blur(14px);
+    }
+    .room-header-pill {
+      font-size: 11px;
+      font-weight: 800;
+      color: #D4AF37;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .role-status-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(230, 57, 86, 0.2);
+      color: #FF8599;
+      border: 1px solid rgba(230, 57, 86, 0.4);
+    }
+
+    .stagger-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .grid-span-4 { grid-column: span 4; }
+    .grid-span-2 { grid-column: span 2; }
+
+    .cascade-item {
+      opacity: 0;
+      transform: translateY(20px) scale(0.92);
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cascade-item.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .passion-unlocked-card {
+      background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(22, 10, 20, 0.9) 100%);
+      border: 1px solid rgba(255, 90, 54, 0.4);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .passion-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 4px 0;
+    }
+    .passion-bar-fill {
+      width: 65%;
+      height: 100%;
+      background: linear-gradient(90deg, #E63956, #FF5A36, #FFB703);
+      border-radius: 6px;
+    }
+
+    .desktop-app-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: linear-gradient(180deg, rgba(38, 28, 50, 0.95) 0%, rgba(20, 14, 30, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-bottom-color: rgba(230, 57, 86, 0.5);
+      border-radius: 18px;
+      height: 78px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .desktop-app-tile:active { transform: scale(0.93); }
+    .tile-ico { font-size: 26px; }
+    .tile-lbl { font-size: 10px; font-weight: 800; color: #E7DFEF; }
+
+    .balance-unlocked-card {
+      background: linear-gradient(135deg, rgba(30, 22, 42, 0.92) 0%, rgba(15, 11, 22, 0.96) 100%);
+      border: 1px solid rgba(230, 57, 86, 0.35);
+      border-radius: 18px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .bal-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .gw-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      border-radius: inherit;
+    }
+    .gw-modal-overlay.active { opacity: 1; visibility: visible; }
+    .gw-modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .gw-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .gw-modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
+    .modal-close { font-size: 18px; color: var(--text-muted); cursor: pointer; }
+    .modal-body { font-size: 11.5px; color: #D6CEDF; line-height: 1.5; display: flex; flex-direction: column; gap: 8px; }
+
+    .room-created-badge {
+      background: rgba(230, 57, 86, 0.15);
+      border: 1px dashed var(--accent-color);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+  
+    /* ===================== CSS ЯДРА (основа 0.0.4) ===================== */
+
     /* ========================================================
        1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И БАЗОВЫЙ RESET
        ======================================================== */
@@ -1624,328 +2968,605 @@
     .theme-bubbles-demo { display: flex; gap: 6px; align-self: flex-end; }
     .theme-bubble-dot { width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.85); }
     .partner-name-text { font-size: 12px; font-weight: 800; color: #fff; line-height: 1.2; }
+  
+    /* ========================================================
+       ОБЪЕДИНЕНИЕ: ШЛЮЗ + ЯДРО БУДУАРА
+       ======================================================== */
+
+    /* Перевод отменён: интерфейс только на русском, переключатель RU/UA скрыт.
+       Чтобы вернуть, удалите это правило и верните определение языка в скрипте. */
+    .lang-selector { display: none !important; }
+
+    /* Пока проверяется сохранённая сессия, экран входа не мигает */
+    html.has-session #welcome-screen { visibility: hidden; }
+
+    /* Нейтральные пузырьки для «Свободного стиля» */
+    :root {
+      --bubble-custom-bg: linear-gradient(135deg, rgba(52, 30, 78, 0.88) 0%, rgba(26, 14, 42, 0.92) 100%);
+      --bubble-custom-border: rgba(192, 132, 252, 0.65);
+      --bubble-custom-text: #f7efff;
+      --bubble-custom-tag: #D8B4FE;
+      --bubble-custom-shadow: rgba(192, 132, 252, 0.3);
+    }
+    .pair-msg-bubble.role-custom {
+      background: var(--bubble-custom-bg) !important;
+      border: 1px solid var(--bubble-custom-border) !important;
+      color: var(--bubble-custom-text) !important;
+      box-shadow: 0 4px 14px var(--bubble-custom-shadow) !important;
+    }
+    .pair-msg-bubble.role-custom .pair-msg-author-tag { color: var(--bubble-custom-tag) !important; }
+
+    /* Информационная плашка комнаты на рабочем столе: роль, код, статус контракта, «в сети» */
+    .room-info-bar {
+      position: absolute;
+      top: 108px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 120;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      max-width: calc(100% - 20px);
+      padding: 2px 9px;
+      border-radius: 12px;
+      background: rgba(22, 16, 28, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      font-size: 9px;
+      font-weight: 800;
+      color: #D6CEDF;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .room-info-bar.visible.on-home { display: flex; }
+    .room-info-bar.attention { border-color: rgba(212, 175, 55, 0.55); box-shadow: 0 0 12px rgba(212, 175, 55, 0.25); }
+    .room-info-bar .rib-role { padding: 1px 7px; border-radius: 8px; border: 1px solid; }
+    .room-info-bar .rib-code { color: #D4AF37; letter-spacing: 0.3px; }
+    .room-info-bar .rib-status { overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+    .room-info-bar .rib-dot.on { color: #27ae60; }
+    .room-info-bar .rib-dot.off { color: #8b8296; }
+
+    /* Пересмотр контракта */
+    .manuscript-revision-actions {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 4px 0 2px;
+    }
+    .revision-note { font-size: 10.5px; color: #D6CEDF; line-height: 1.45; text-align: center; }
+    .revision-row { display: flex; gap: 8px; }
+    .btn-revision {
+      flex: 1;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(230, 57, 86, 0.55);
+      background: var(--accent-gradient);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-revision.ghost { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.2); color: #D6CEDF; }
+    .btn-revision:active { transform: scale(0.97); }
+
+    /* Кнопка выхода из комнаты в профиле */
+    .btn-leave-room {
+      width: 100%;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: #D6CEDF;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-leave-room:active { transform: scale(0.98); }
+
+    #joiner-wait-note {
+      display: none;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+      padding: 8px 4px;
+    }
+
+    /* Страница не должна «уезжать» вбок при фокусе в поле ввода внутри окон */
+    html, body { overflow: hidden !important; }
+    @supports (overflow: clip) {
+      html, body { overflow: clip !important; }
+    }
+
+    /* Подложка шлюза: ниже экранов шлюза (z 3000+), выше рабочего стола */
+    #gateway-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 2900;
+      background: #0C0A10;
+      pointer-events: none;
+    }
+    html.app-entered #gateway-backdrop { display: none; }
   </style>
 </head>
 <body>
+  <script>try{if(localStorage.getItem("pact_session"))document.documentElement.classList.add("has-session");}catch(e){}</script>
+
 
   <!-- ========================================================
        МОДУЛЬ ЖИВОГО МЕССЕНДЖЕРА ПАРЫ (FIREBASE REAL-TIME CLOUD)
        ======================================================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // Персональные ключи из вашего проекта Firebase Console
-    const firebaseConfig = {
-      apiKey: "AIzaSyAJa0xpj9YG5wib6G-P4TaeKz9No4Ee1eE",
-      authDomain: "pact-passion-chat.firebaseapp.com",
-      projectId: "pact-passion-chat",
-      storageBucket: "pact-passion-chat.firebasestorage.app",
-      messagingSenderId: "551917448504",
-      appId: "1:551917448504:web:433e4fc271adee0ac8e5cd"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Уникальный ID устройства
-    let currentDeviceUID = localStorage.getItem('pact_device_uid');
-    if (!currentDeviceUID) {
-      currentDeviceUID = 'dev_' + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem('pact_device_uid', currentDeviceUID);
-    }
-
-    // НАСТРОЙКА ИМЁН В ЧАТЕ: здесь вы можете вписать любые названия (например: 'Он' и 'Она', реальные имена или 'Господин' / 'Покорная')
-    const CHAT_NAME_MALE = 'Верхний ';
-    const CHAT_NAME_FEMALE = 'Нижняя ';
-
-    let livePairMessages = [];
-
-    // Слушатель онлайн-сообщений из базы данных
-    function listenLivePairMessages() {
-      const messagesCol = collection(db, 'pair_messages');
-
-      onSnapshot(messagesCol, (snapshot) => {
-        const list = [];
-        snapshot.forEach(docSnap => {
-          list.push({ docId: docSnap.id, ...docSnap.data() });
-        });
-
-        // Сортировка по времени создания
-        list.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-
-        // Сохраняем локальные оптимистичные сообщения, которые ещё отправляются
-        const pendingLocal = livePairMessages.filter(m => m.pending && !list.some(s => s.clientMsgId && s.clientMsgId === m.clientMsgId));
-        livePairMessages = [...list, ...pendingLocal];
-
-        renderLiveMessagesUI();
-        updateLastMessagePreview();
-      }, (error) => {
-        console.error('Ошибка синхронизации Firestore:', error);
-      });
-    }
-
-    // Отрисовка ленты диалога
-    function renderLiveMessagesUI() {
-      const box = document.getElementById('pair-chat-messages-box');
-      const partnerAvatarImg = document.getElementById('pair-chat-partner-avatar');
-      const partnerNameLabel = document.getElementById('pair-chat-partner-name');
-      const roleIndicator = document.getElementById('pair-chat-role-indicator');
-      if (!box) return;
-
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      const isMale = (currentRole === 'male');
-      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
-      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
-
-      // Обновляем шапку: показываем аватарку и имя собеседника-партнёра
-      if (partnerAvatarImg) {
-        partnerAvatarImg.src = isMale ? femaleAvatar : maleAvatar;
-        partnerAvatarImg.style.borderColor = isMale ? '#E63956' : '#7DD3FC';
-      }
-      if (partnerNameLabel) {
-        partnerNameLabel.textContent = isMale ? CHAT_NAME_FEMALE.trim() : CHAT_NAME_MALE.trim();
-      }
-      if (roleIndicator) {
-        roleIndicator.textContent = 'В сети';
-        roleIndicator.style.color = '#27ae60';
-      }
-
-      if (livePairMessages.length === 0) {
-        box.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 40px 10px;">
-            Сообщений пока нет.<br>Начните будуарный диалог с партнёром ✨
-          </div>`;
-        return;
-      }
-
-      const safeSrc = (u) => (typeof u === 'string' && /^(data:image\/|https:\/\/)/.test(u)) ? escapeHtml(u).replace(/"/g, '&quot;') : '';
-
-      box.innerHTML = livePairMessages.map(m => {
-        const isMine = (m.role === currentRole);
-        const isMaleMsg = (m.role === 'male');
-        const avatarSrc = safeSrc(isMaleMsg ? maleAvatar : femaleAvatar);
-        const roleClass = isMaleMsg ? 'role-male' : 'role-female';
-        const photoSrc = safeSrc(m.photo);
-
-        const photoHtml = photoSrc ? `<img class="pair-msg-photo-attachment" src="${photoSrc}" alt="Фото" data-fullscreen="1">` : '';
-        const textHtml = m.text ? `<div class="pair-msg-text">${escapeHtml(m.text)}</div>` : '';
-
-        return `
-          <div class="pair-msg-row ${isMine ? 'outgoing' : 'incoming'}">
-            <img class="pair-msg-avatar" src="${avatarSrc}" alt="">
-            <div class="pair-msg-bubble ${roleClass}">
-              <div class="pair-msg-author-tag">${escapeHtml(m.author || '')}</div>
-              ${photoHtml}
-              ${textHtml}
-              <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function updateLastMessagePreview() {
-      const lastPreview = document.getElementById('pair-chat-last-preview');
-      if (lastPreview && livePairMessages.length > 0) {
-        const last = livePairMessages[livePairMessages.length - 1];
-        lastPreview.textContent = `${(last.author || '').trim()}: ${last.photo ? '📷 Фото' : (last.text || '')}`;
-      }
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = String(text ?? '');
-      return div.innerHTML;
-    }
-
-    // Полноэкранный просмотр фото из чата (раньше функция вызывалась, но не существовала)
-    function openFullscreenPhoto(src) {
-      if (!src) return;
-      const ov = document.createElement('div');
-      ov.style.cssText = 'position:absolute;inset:0;z-index:100001;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:12px;';
-      const im = document.createElement('img');
-      im.src = src;
-      im.style.cssText = 'max-width:100%;max-height:100%;border-radius:12px;object-fit:contain;';
-      ov.appendChild(im);
-      ov.addEventListener('click', () => ov.remove());
-      document.body.appendChild(ov);
-    }
-
-    document.addEventListener('click', (e) => {
-      const t = e.target;
-      if (t && t.matches && t.matches('img[data-fullscreen]')) openFullscreenPhoto(t.src);
-    });
-
-    // tg объявлен в обычном скрипте через const и не попадает в window, поэтому берём SDK напрямую
-    const tgHaptic = () => window.Telegram?.WebApp?.HapticFeedback;
-
-    // Мгновенная отправка нового сообщения в чат (0 мс задержки)
-    window.sendPairChatMessage = function() {
-      const input = document.getElementById('pair-chat-input');
-      const text = input ? input.value.trim() : '';
-      if (!text) return;
-
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      const isMale = (currentRole === 'male');
-
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      const clientMsgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
-
-      const newMsgData = {
-        clientMsgId: clientMsgId,
-        role: currentRole,
-        author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
-        text: text,
-        time: timeStr,
-        senderId: currentDeviceUID,
-        createdAt: Date.now()
-      };
-
-      // 1. Мгновенно отображаем в интерфейсе и очищаем поле ввода
-      if (input) input.value = '';
-      tgHaptic()?.impactOccurred?.('light');
-
-      livePairMessages.push({ docId: clientMsgId, pending: true, ...newMsgData });
-      renderLiveMessagesUI();
-      updateLastMessagePreview();
-
-      // 2. Фоновая отправка в базу данных без ожидания
-      const messagesCol = collection(db, 'pair_messages');
-      addDoc(messagesCol, newMsgData).then((docRef) => {
-        const local = livePairMessages.find(m => m.clientMsgId === clientMsgId);
-        if (local) {
-          local.docId = docRef.id;
-          delete local.pending;
-        }
-      }).catch((e) => {
-        console.error('Ошибка сохранения в Firebase:', e);
-        if (typeof showToast === 'function') showToast('Ошибка отправки в базу', 'error');
-      });
-    };
-
-    // Отправка фотографий со сжатием через Canvas
-    window.handlePairPhotoUpload = function(event) {
-      const file = event.target?.files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800; // Оптимальный размер для быстрого облака
-          let w = img.width;
-          let h = img.height;
-
-          if (w > h && w > maxDim) {
-            h = Math.round((h * maxDim) / w);
-            w = maxDim;
-          } else if (h > maxDim) {
-            w = Math.round((w * maxDim) / h);
-            h = maxDim;
-          }
-
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
-
-          const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-          const isMale = (currentRole === 'male');
-          const now = new Date();
-          const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-          const clientMsgId = 'photo_' + Date.now();
-
-          const photoMsgData = {
-            clientMsgId: clientMsgId,
-            role: currentRole,
-            author: isMale ? CHAT_NAME_MALE : CHAT_NAME_FEMALE,
-            photo: compressedDataUrl,
-            time: timeStr,
-            senderId: currentDeviceUID,
-            createdAt: Date.now()
-          };
-
-          tgHaptic()?.notificationOccurred?.('success');
-          livePairMessages.push({ docId: clientMsgId, pending: true, ...photoMsgData });
-          renderLiveMessagesUI();
-          updateLastMessagePreview();
-
-          const messagesCol = collection(db, 'pair_messages');
-          addDoc(messagesCol, photoMsgData).then(docRef => {
-            const local = livePairMessages.find(m => m.clientMsgId === clientMsgId);
-            if (local) {
-              local.docId = docRef.id;
-              delete local.pending;
-            }
-          }).catch(err => {
-            console.error('Ошибка отправки фото:', err);
-            if (typeof showToast === 'function') showToast('Не удалось отправить фото', 'error');
-          });
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      event.target.value = ''; // Сброс инпута
-    };
-
-    // Очистка переписки в базе данных
-    window.clearLiveChatHistory = async function() {
-      if (livePairMessages.length === 0) return;
-      if (!window.confirm('Удалить всю переписку пары? Это действие нельзя отменить.')) return;
-      try {
-        for (const m of livePairMessages) {
-          if (m.docId && !m.pending) {
-            await deleteDoc(doc(db, 'pair_messages', m.docId));
-          }
-        }
-        livePairMessages = [];
-        renderLiveMessagesUI();
-        if (typeof showToast === 'function') showToast('Диалог пары очищен', 'info');
-      } catch (e) {
-        console.error('Ошибка очистки:', e);
-        if (typeof showToast === 'function') showToast('Не удалось очистить диалог', 'error');
-      }
-    };
-
-    window.renderPairChat = function() {
-      renderLiveMessagesUI();
-    };
-
-    // Автоматическая прокрутка к последнему сообщению при открытии мобильной клавиатуры
-    function initKeyboardAutoScroll() {
-      const input = document.getElementById('pair-chat-input');
-      const box = document.getElementById('pair-chat-messages-box');
-      if (input && box) {
-        input.addEventListener('focus', () => {
-          setTimeout(() => { box.scrollTop = box.scrollHeight; }, 280);
-        });
-      }
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', () => {
-          const tab = document.getElementById('tab-chat-pair');
-          if (tab && tab.classList.contains('active')) {
-            setTimeout(() => {
-              const b = document.getElementById('pair-chat-messages-box');
-              if (b) b.scrollTop = b.scrollHeight;
-            }, 80);
-          }
-        });
-      }
-    }
-
-    // Старт прослушивания живого потока сообщений
-    listenLivePairMessages();
-    document.addEventListener('DOMContentLoaded', initKeyboardAutoScroll);
-  </script>
+  
 
   <!-- Всплывающие уведомления -->
   <div id="toast-container" class="toast-container"></div>
+
+  <!-- ===== ШЛЮЗ: ВХОД, АНИМАЦИЯ, КАБИНЕТ СОЗДАТЕЛЯ, ПРИНЯТИЕ ПАКТА ===== -->
+<div id="app-toast" class="toast-box"></div>
+
+  <div id="welcome-screen" class="welcome-screen">
+    <div class="welcome-topbar">
+      <div class="lang-selector">
+        <button class="lang-btn active" onclick="changeLang('ru', this)">RU</button>
+        <button class="lang-btn" onclick="changeLang('ua', this)">UA</button>
+      </div>
+    </div>
+
+    <div class="welcome-hero">
+      <div class="crest-icon-box">🗝️</div>
+      <h1 class="welcome-title">Pact & Passion</h1>
+    </div>
+
+    <div class="welcome-box">
+      <button class="btn-create" onclick="handleCreateRoom()">
+        <span>✨</span> <span data-i18n="createBtn">Создать комнату пары</span>
+      </button>
+
+      <div class="separator-row">
+        <span data-i18n="orText">или</span>
+      </div>
+
+      <div class="join-input-group">
+        <input type="text" id="input-room-code" class="room-input" placeholder="Код: PACT-XXXXXX" data-i18n-placeholder="roomInputPlaceholder" maxlength="12">
+        <button class="btn-join" onclick="handleJoinRoom()" data-i18n="joinBtn">Войти</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wine-loading-stage" id="wine-loading-stage">
+    <div class="glass-scene" id="glassScene">
+      <svg viewBox="0 0 200 270" width="100%" height="100%" style="overflow: visible;">
+        <defs>
+          <clipPath id="bowlCut">
+            <path d="M 70 85 C 60 115, 58 148, 76 172 C 86 186, 96 190, 100 190 C 104 190, 114 186, 124 172 C 142 148, 140 115, 130 85 Z" />
+          </clipPath>
+          <linearGradient id="wineLuxuryGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#A51230" />
+            <stop offset="28%" stop-color="#73081E" />
+            <stop offset="65%" stop-color="#3D030F" />
+            <stop offset="100%" stop-color="#180106" />
+          </linearGradient>
+          <linearGradient id="meniscusLuxury" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#6E091E" stop-opacity="0.9" />
+            <stop offset="35%" stop-color="#D92047" />
+            <stop offset="65%" stop-color="#FF5277" />
+            <stop offset="100%" stop-color="#7A0B22" stop-opacity="0.95" />
+          </linearGradient>
+          <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(0, 0, 0, 0.85)" />
+            <stop offset="100%" stop-color="transparent" />
+          </radialGradient>
+        </defs>
+        <g class="shadow-under">
+          <ellipse cx="100" cy="245" rx="34" ry="7" fill="url(#shadowGrad)" />
+        </g>
+        <g clip-path="url(#bowlCut)">
+          <g class="wine-fill-level" id="wineFillGroup">
+            <g class="wine-inertia-group">
+              <path d="M 40 130 C 60 133, 140 133, 160 130 L 160 205 L 40 205 Z" fill="url(#wineLuxuryGrad)" />
+              <ellipse cx="100" cy="130" rx="34" ry="7" fill="url(#meniscusLuxury)" />
+              <ellipse cx="100" cy="130" rx="34" ry="7" fill="none" stroke="var(--wine-rim)" stroke-width="1.2" opacity="0.75" />
+            </g>
+          </g>
+        </g>
+        <rect x="98" y="188" width="4" height="48" rx="2" fill="rgba(240, 235, 248, 0.45)" />
+        <line x1="99.5" y1="190" x2="99.5" y2="234" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.8" stroke-linecap="round" />
+        <ellipse cx="100" cy="237" rx="28" ry="7" fill="rgba(255, 255, 255, 0.08)" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.8" />
+        <path d="M 80 237 Q 100 239.5 120 237" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-opacity="0.8" />
+        <path d="M 70 85 C 60 115, 58 148, 76 172 C 86 186, 96 190, 100 190 C 104 190, 114 186, 124 172 C 142 148, 140 115, 130 85 Z" fill="none" stroke="rgba(255, 255, 255, 0.38)" stroke-width="1.8" />
+        <ellipse cx="100" cy="85" rx="30" ry="6" fill="rgba(255, 255, 255, 0.04)" stroke="rgba(255, 255, 255, 0.55)" stroke-width="1.6" />
+        <path d="M 74 85 Q 100 89 126 85" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-opacity="0.9" />
+        <path d="M 72 92 C 64 116, 63 145, 78 166" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-opacity="0.65" />
+        <path d="M 76 100 C 69 120, 68 142, 80 158" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-opacity="0.3" />
+        <path d="M 127 94 C 133 115, 132 142, 120 162" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.35" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="creator-hub-stage" id="creator-hub-stage">
+    
+    <div class="creator-top-bar">
+      <div class="lang-selector">
+        <button class="lang-btn active" onclick="changeLang('ru', this)">RU</button>
+        <button class="lang-btn" onclick="changeLang('ua', this)">UA</button>
+      </div>
+    </div>
+
+    <!-- ГЕРОИЧЕСКИЙ БЛОК: КРУПНАЯ КОРОНА И НАЗВАНИЕ -->
+    <div class="creator-hero">
+      <div class="creator-crest-box">👑</div>
+      <h2 class="creator-brand-title">Pact & Passion</h2>
+    </div>
+
+    <!-- ЗНАЧОК НОМЕРА КОМНАТЫ -->
+    <div class="creator-code-banner">
+      <div class="creator-code-badge" id="creator-hub-code-badge" onclick="copyCurrentRoomCode()">PACT-K7M4X2</div>
+    </div>
+
+    <!-- ТРИ ГЛАВНЫХ ПУНКТА МЕНЮ СОЗДАТЕЛЯ -->
+    <div class="creator-actions-menu">
+      
+      <!-- ВЫБОР СЦЕНАРИЯ -->
+      <div class="menu-action-card" id="menu-card-scenario" onclick="openScenarioPicker()">
+        <div class="menu-action-left">
+          <div class="menu-action-icon" id="menu-icon-scenario">🎭</div>
+          <div class="menu-action-texts">
+            <span class="menu-action-title" data-i18n="menu1Title">Выбор сценария</span>
+            <span class="menu-action-desc" id="menu-desc-scenario" data-i18n="menu1Desc">Определите архетип власти и динамику пары</span>
+          </div>
+        </div>
+        <span class="menu-action-badge badge-empty" id="menu-badge-scenario" data-i18n="badgeNotSelected">Не выбран</span>
+      </div>
+
+      <!-- НАПИСАТЬ КОНТРАКТ -->
+      <div class="menu-action-card" id="menu-card-contract" onclick="openContractWriter()">
+        <div class="menu-action-left">
+          <div class="menu-action-icon">📜</div>
+          <div class="menu-action-texts">
+            <span class="menu-action-title" data-i18n="menu2Title">Написать контракт</span>
+            <span class="menu-action-desc" id="menu-desc-contract" data-i18n="menu2Desc">Свой текст или готовый сюжет с правками</span>
+          </div>
+        </div>
+        <span class="menu-action-badge badge-empty" id="menu-badge-contract" data-i18n="badgeNotSealed">Не составлен</span>
+      </div>
+
+      <!-- ВОЙТИ В КОМНАТУ -->
+      <button class="btn-enter-room-final disabled-state" id="btn-enter-room" onclick="handleEnterRoomFinalClick()">
+        <span id="btn-enter-icon">🔒</span>
+        <span data-i18n="enterRoomLockedText" id="btn-enter-text">Войти в комнату</span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ОКНО ВЫБОРА СЦЕНАРИЯ -->
+  <div class="scenario-picker-modal" id="modal-scenario-picker" onclick="if(event.target===this) closeScenarioPicker()">
+    <div class="scenario-card-sheet">
+      <div class="scenario-sheet-header">
+        <span class="scenario-sheet-title" data-i18n="scenarioSheetTitle">Выберите сценарий союза</span>
+        <span class="scenario-sheet-close" onclick="closeScenarioPicker()">✕</span>
+      </div>
+
+      <div class="scenario-sheet-body">
+        <!-- ГРУППА 1: МУЖСКОЕ ГЛАВЕНСТВО (МАРС ♂) -->
+        <div class="scenario-group-label male">
+          <span>♂</span> <span data-i18n="groupMaleTitle">Мужское главенство (Марс ♂)</span>
+        </div>
+        <div class="scenario-items-grid">
+          
+          <div class="scenario-item-btn" onclick="highlightScenario('master_sub', this)">
+            <div class="scenario-item-left">
+              <div class="scenario-name-main">
+                <span>♂</span> <span data-i18n="scen1Title">ВЕРХНИЙ & НИЖНЯЯ</span>
+              </div>
+              <div class="scenario-desc-sub" data-i18n="scen1Desc">Классический D/s. Слово мужчины — абсолютный закон, повиновение и верность.</div>
+            </div>
+            <div class="scenario-check-dot">✓</div>
+          </div>
+
+          <div class="scenario-item-btn" onclick="highlightScenario('tempter_captive', this)">
+            <div class="scenario-item-left">
+              <div class="scenario-name-main">
+                <span>♂</span> <span data-i18n="scen4Title">ИСКУСИТЕЛЬ & ПЛЕННИЦА</span>
+              </div>
+              <div class="scenario-desc-sub" data-i18n="scen4Desc">Чувственная охота, дерзкие испытания, сладкий плен и покорение страсти.</div>
+            </div>
+            <div class="scenario-check-dot">✓</div>
+          </div>
+        </div>
+
+        <!-- ГРУППА 2: ЖЕНСКОЕ ГЛАВЕНСТВО (ВЕНЕРА ♀) -->
+        <div class="scenario-group-label female">
+          <span>♀</span> <span data-i18n="groupFemaleTitle">Женское главенство (Венера ♀)</span>
+        </div>
+        <div class="scenario-items-grid">
+          
+          <div class="scenario-item-btn" onclick="highlightScenario('mistress_sub', this)">
+            <div class="scenario-item-left">
+              <div class="scenario-name-main">
+                <span>♀</span> <span data-i18n="scen2Title">ГОСПОЖА & ПОКОРНЫЙ</span>
+              </div>
+              <div class="scenario-desc-sub" data-i18n="scen2Desc">Королевская власть женщины, преклонение, исполнение её капризов и воли.</div>
+            </div>
+            <div class="scenario-check-dot">✓</div>
+          </div>
+
+          <div class="scenario-item-btn" onclick="highlightScenario('muse_devotee', this)">
+            <div class="scenario-item-left">
+              <div class="scenario-name-main">
+                <span>♀</span> <span data-i18n="scen3Title">МУЗА & ПОКЛОННИК</span>
+              </div>
+              <div class="scenario-desc-sub" data-i18n="scen3Desc">Рыцарское служение, эстетическое восхищение, поклонение красоте и вдохновению.</div>
+            </div>
+            <div class="scenario-check-dot">✓</div>
+          </div>
+        </div>
+
+        <!-- ГРУППА 3: СВОБОДНЫЙ СТИЛЬ ✨ -->
+        <div class="scenario-group-label custom">
+          <span>✨</span> <span data-i18n="groupFreeTitle">Свободный стиль</span>
+        </div>
+        <div class="scenario-items-grid">
+          <div class="scenario-item-btn" onclick="highlightScenario('custom_role', this)">
+            <div class="scenario-item-left">
+              <div class="scenario-name-main">
+                <span>✨</span> <span data-i18n="scen5Title">СВОЙ ВАРИАНТ</span>
+              </div>
+              <div class="scenario-desc-sub" data-i18n="scen5Desc">Укажите собственные уникальные имена или титулы для вашей пары.</div>
+            </div>
+            <div class="scenario-check-dot">✓</div>
+          </div>
+
+          <div class="custom-role-inputs-row" id="custom-role-inputs-box">
+            <input type="text" id="custom-role-male" class="custom-role-input" placeholder="Роль Он (напр. Охотник)">
+            <input type="text" id="custom-role-female" class="custom-role-input" placeholder="Роль Она (напр. Лисичка)">
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-sheet-footer">
+        <button class="btn-confirm-scenario disabled" id="btn-confirm-scenario-btn" onclick="applyScenarioSelection()">
+          <span data-i18n="confirmScenarioBtn">Выбрать этот сценарий ✨</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ОКНО НАПИСАНИЯ ПАКТА СОЮЗА -->
+  <div class="contract-writer-modal" id="modal-contract-writer" onclick="if(event.target===this) closeContractWriter()">
+    <div class="contract-writer-sheet">
+      <div class="scenario-sheet-header">
+        <span class="scenario-sheet-title" data-i18n="contractWriterTitle">Написание Пакта союза</span>
+        <span class="scenario-sheet-close" onclick="closeContractWriter()">✕</span>
+      </div>
+
+      <!-- ПЕРЕКЛЮЧАТЕЛЬ: СЮЖЕТ / СВОЙ КОНТРАКТ -->
+      <div class="contract-mode-toggle">
+        <button class="contract-mode-btn active" id="btn-mode-preset" onclick="setContractMode('preset')">
+          📖 <span data-i18n="modePreset">Сюжет (с правками)</span>
+        </button>
+        <button class="contract-mode-btn" id="btn-mode-custom" onclick="setContractMode('custom')">
+          ✍️ <span data-i18n="modeCustom">Свой контракт</span>
+        </button>
+      </div>
+
+      <input type="text" id="writer-pact-title" class="contract-title-input" placeholder="Название Пакта">
+
+      <!-- МЕНЮ ИЗ ПЯТИ РАЗДЕЛОВ ПАКТА -->
+      <div class="contract-sections-container">
+        
+        <!-- 1. Обязанности подчиняющейся стороны -->
+        <div class="section-menu-card filled" id="card-sec-sub" onclick="openSectionEditor('subDuties')">
+          <div class="menu-action-left">
+            <div class="menu-action-icon" id="icon-sec-sub-duties">🗝️</div>
+            <div class="menu-action-texts">
+              <span class="menu-action-title" id="lbl-sec-sub-duties">Обязанности Нижней</span>
+              <span class="menu-action-desc" data-i18n="tapToOpenPopupHint">Нажмите, чтобы открыть окно раздела</span>
+            </div>
+          </div>
+          <span class="menu-action-badge badge-selected" data-i18n="badgeConfigure">Открыть ›</span>
+        </div>
+
+        <!-- 2. Обязанности доминирующей стороны -->
+        <div class="section-menu-card filled" id="card-sec-dom" onclick="openSectionEditor('domDuties')">
+          <div class="menu-action-left">
+            <div class="menu-action-icon" id="icon-sec-dom-duties">👑</div>
+            <div class="menu-action-texts">
+              <span class="menu-action-title" id="lbl-sec-dom-duties">Обязанности Верхнего</span>
+              <span class="menu-action-desc" data-i18n="tapToOpenPopupHint">Нажмите, чтобы открыть окно раздела</span>
+            </div>
+          </div>
+          <span class="menu-action-badge badge-selected" data-i18n="badgeConfigure">Открыть ›</span>
+        </div>
+
+        <!-- 3. Общие правила союза -->
+        <div class="section-menu-card filled" id="card-sec-rules" onclick="openSectionEditor('generalRules')">
+          <div class="menu-action-left">
+            <div class="menu-action-icon">⚖️</div>
+            <div class="menu-action-texts">
+              <span class="menu-action-title" data-i18n="secGeneralRules">Общие правила союза</span>
+              <span class="menu-action-desc" data-i18n="tapToOpenPopupHint">Нажмите, чтобы открыть окно раздела</span>
+            </div>
+          </div>
+          <span class="menu-action-badge badge-selected" data-i18n="badgeConfigure">Открыть ›</span>
+        </div>
+
+        <!-- 4. Привилегии доминирующей стороны -->
+        <div class="section-menu-card filled" id="card-sec-priv" onclick="openSectionEditor('domPrivileges')">
+          <div class="menu-action-left">
+            <div class="menu-action-icon" id="icon-sec-dom-privileges">👑</div>
+            <div class="menu-action-texts">
+              <span class="menu-action-title" id="lbl-sec-dom-privileges">Привилегии Верхнего</span>
+              <span class="menu-action-desc" data-i18n="tapToOpenPopupHint">Нажмите, чтобы открыть окно раздела</span>
+            </div>
+          </div>
+          <span class="menu-action-badge badge-selected" data-i18n="badgeConfigure">Открыть ›</span>
+        </div>
+
+        <!-- 5. Бонусы и поощрения подчиняющейся стороны -->
+        <div class="section-menu-card filled" id="card-sec-rewards" onclick="openSectionEditor('subRewards')">
+          <div class="menu-action-left">
+            <div class="menu-action-icon" id="icon-sec-sub-rewards">🎁</div>
+            <div class="menu-action-texts">
+              <span class="menu-action-title" id="lbl-sec-sub-rewards">Бонусы и дары Нижней</span>
+              <span class="menu-action-desc" data-i18n="tapToOpenPopupHint">Нажмите, чтобы открыть окно раздела</span>
+            </div>
+          </div>
+          <span class="menu-action-badge badge-selected" data-i18n="badgeConfigure">Открыть ›</span>
+        </div>
+
+      </div>
+
+      <!-- КНОПКИ ДЕЙСТВИЯ: ПРЕДПРОСМОТР + СОЗДАТЬ КОНТРАКТ -->
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <button class="btn-preview-action" onclick="openFullContractPreview()">
+          <span>👁️</span> <span data-i18n="previewContractBtn">Полный просмотр</span>
+        </button>
+        <button class="btn-confirm-scenario" style="flex: 1.3;" onclick="saveContractFromWriter()">
+          <span data-i18n="createContractActionBtn">Создать контракт ✨</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ОТДЕЛЬНОЕ ВСПЛЫВАЮЩЕЕ ОКНО РЕДАКТИРОВАНИЯ РАЗДЕЛА (ШРИФТ 14px) -->
+  <div class="section-popup-modal" id="modal-section-editor" onclick="if(event.target===this) closeSectionEditor()">
+    <div class="section-popup-sheet">
+      <div class="scenario-sheet-header">
+        <span class="scenario-sheet-title" id="editor-popup-title">Редактирование раздела</span>
+        <span class="scenario-sheet-close" onclick="closeSectionEditor()">✕</span>
+      </div>
+      <div style="font-size: 11px; color: var(--text-muted);" id="editor-popup-hint" data-i18n="editorPopupHint">
+        Отредактируйте положения этого раздела союза при необходимости
+      </div>
+      <textarea id="section-editor-textarea" class="section-popup-textarea" placeholder="Укажите правила и формулировки..."></textarea>
+      <button class="btn-confirm-scenario" onclick="saveCurrentSectionEditor()">
+        <span data-i18n="saveSectionBtn">Сохранить раздел ✨</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ОТДЕЛЬНОЕ ВСПЛЫВАЮЩЕЕ ОКНО ДЛЯ ЧТЕНИЯ РАЗДЕЛА ПАРТНЁРОМ -->
+  <div class="section-popup-modal" id="modal-section-viewer" onclick="if(event.target===this) closeSectionViewer()">
+    <div class="section-popup-sheet">
+      <div class="scenario-sheet-header">
+        <span class="scenario-sheet-title" id="viewer-popup-title">Раздел союза</span>
+        <span class="scenario-sheet-close" onclick="closeSectionViewer()">✕</span>
+      </div>
+      <div id="viewer-popup-text-content" class="section-view-text-scroll"></div>
+      <button class="btn-confirm-scenario" onclick="closeSectionViewer()">
+        <span data-i18n="closeSectionBtn">Закрыть раздел ✓</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- РОСКОШНЫЙ ПОЛНЫЙ ПРЕДПРОСМОТР ПАКТА С ВЫГРУЗКОЙ В .TXT -->
+  <div class="full-contract-modal" id="modal-full-contract-preview" onclick="if(event.target===this) closeFullContractPreview()">
+    <div class="full-contract-sheet">
+      <div class="scenario-sheet-header">
+        <span class="scenario-sheet-title" data-i18n="fullPreviewTitle">Священный Пакт пары (Предпросмотр)</span>
+        <span class="scenario-sheet-close" onclick="closeFullContractPreview()">✕</span>
+      </div>
+
+      <div class="manuscript-preview-scroll" id="manuscript-preview-body">
+        <!-- Генерируется динамически функцией renderFullContractManuscript() -->
+      </div>
+
+      <div id="manuscript-revision-actions" class="manuscript-revision-actions"></div>
+      <div class="manuscript-actions-row">
+        <button class="btn-download-doc" onclick="downloadContractAsTxt()">
+          <span>📥</span> <span data-i18n="downloadDocBtn">Скачать (.txt)</span>
+        </button>
+        <button class="btn-close-preview" onclick="closeFullContractPreview()">
+          <span data-i18n="closePreviewBtn">Закрыть ✕</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН ПРИНЯТИЯ ПАКТА ПАРТНЁРОМ -->
+  <div class="joiner-gate-stage" id="joiner-gate-stage">
+    <div class="welcome-box" style="width: 100%; max-width: 380px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 800; color: var(--accent-color);" data-i18n="joinerHeaderBadge">Священный Пакт пары</span>
+        <span class="room-created-badge" id="joiner-room-tag" style="padding: 2px 8px; font-size: 10px;">PACT-K7M4X2</span>
+      </div>
+
+      <div id="joiner-author-role-pill" style="font-size: 10px; font-weight: 800; color: #7DD3FC; background: rgba(74, 144, 226, 0.15); border: 1px solid rgba(74, 144, 226, 0.35); padding: 4px 10px; border-radius: 8px; align-self: flex-start;">
+        Начертано партнёром
+      </div>
+
+      <div id="joiner-display-title" style="font-size: 13.5px; font-weight: 900; color: #FFF; text-align: center;">Пакт союза</div>
+      
+      <!-- СТРУКТУРИРОВАННЫЙ ВЫВОД РАЗДЕЛОВ ДЛЯ ПРИНЯТИЯ -->
+      <div id="joiner-sections-list" class="joiner-sections-scroll"></div>
+      <div id="joiner-wait-note"></div>
+
+      <!-- КНОПКА: ПРИНЯТЬ КОНТРАКТ -->
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <button class="btn-preview-action" onclick="openFullContractPreview(true)">
+          <span>👁️</span> <span data-i18n="previewContractBtn">Весь Пакт</span>
+        </button>
+        <button id="btn-joiner-accept" class="btn-confirm-scenario" style="flex: 1.3;" onclick="acceptJoinerContractAndUnlock()">
+          <span data-i18n="joinerAcceptSealBtn">Принять контракт 💍</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА: СОЗДАНА КОМНАТА -->
+  <div id="modal-created" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-created')">
+    <div class="gw-modal-card">
+      <div class="gw-modal-header">
+        <h3 data-i18n="createdModalTitle">Комната создана!</h3>
+        <span class="modal-close" onclick="closeModal('modal-created')">✕</span>
+      </div>
+      <div class="modal-body">
+        <p data-i18n="createdModalDesc">Отправьте этот код партнёру, чтобы войти в комнату:</p>
+        <div class="room-created-badge" id="badge-room-id">PACT-K7M4X2</div>
+        <p style="font-size: 9.5px; color: var(--text-muted);" data-i18n="createdModalCrypto">Ключ сквозного шифрования сгенерирован локально на вашем устройстве.</p>
+      </div>
+      <button class="btn-create" onclick="enterRoomFromModal()" data-i18n="enterRoomBtn">Войти в комнату ✨</button>
+    </div>
+  </div>
+
+  
+  <!-- Тёмная подложка шлюза: скрывает рабочий стол, пока идёт вход, бокал и написание контракта -->
+  <div id="gateway-backdrop"></div>
+
+  <!-- Плашка комнаты: роль, код, статус контракта, партнёр в сети -->
+  <div id="room-info-bar" class="room-info-bar" onclick="onRoomInfoBarTap()" title="Открыть контракт">
+    <span id="rib-role" class="rib-role">—</span>
+    <span id="rib-code" class="rib-code"></span>
+    <span id="rib-status" class="rib-status"></span>
+    <span id="rib-dot" class="rib-dot off">○ не в сети</span>
+  </div>
+
+  <!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
+  <div id="modal-revision-ask" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-revision-ask')">
+    <div class="gw-modal-card">
+      <div class="gw-modal-header">
+        <h3>Пересмотр контракта 🔁</h3>
+        <span class="modal-close" onclick="closeModal('modal-revision-ask')">✕</span>
+      </div>
+      <div class="modal-body">
+        <p id="revision-ask-text">Партнёр предлагает пересмотреть контракт.</p>
+      </div>
+      <div class="revision-row">
+        <button class="btn-revision" onclick="revisionAction('approve')">Согласиться</button>
+        <button class="btn-revision ghost" onclick="revisionAction('decline')">Отклонить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== КОНЕЦ ШЛЮЗА ===== -->
+
 
   <!-- Неоновые фоновые пятна -->
   <div class="ambient-glow glow-1"></div>
@@ -2006,7 +3627,7 @@
     <div class="card">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title" style="color: #4A90E2;">Верхний Сессия ♂</div>
+        <div id="session-title-male" class="screen-title" style="color: #4A90E2;">Сессия</div>
         <button class="tutorial-help-btn" onclick="openTutorial('session_male')">?</button>
       </div>
       <div id="male-tasks-container" class="contract-list"></div>
@@ -2018,7 +3639,7 @@
     <div class="card">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title" style="color: var(--accent-color);">Нижняя Сессия ♀</div>
+        <div id="session-title-female" class="screen-title" style="color: var(--accent-color);">Сессия</div>
         <button class="tutorial-help-btn" onclick="openTutorial('session_female')">?</button>
       </div>
       <div id="female-tasks-container" class="contract-list"></div>
@@ -2046,7 +3667,7 @@
         <button class="tutorial-help-btn" onclick="openTutorial('contract')">?</button>
       </div>
       <div style="padding: 20px 0; text-align: center; color: #c9c2d1; font-size: 12px; line-height: 1.6; font-style: italic;">
-        «Стороны соглашаются на добровольное подчинение, взаимное доверие и соблюдение правил. Слово Верхнего — закон. Желание Нижней — священно.»
+        «Стороны соглашаются на добровольное подчинение, взаимное доверие и соблюдение правил. Слово доминирующей стороны — закон. Желание подчиняющейся — священно.»
       </div>
       <button id="btn-contract-action" class="small-btn" style="width:100%; padding: 12px;" onclick="handleContractButtonClick()">Подписать</button>
     </div>
@@ -2269,6 +3890,7 @@
           <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
         </div>
       </div>
+      <button class="btn-leave-room" onclick="leaveRoom()">🚪 Сменить комнату / Расторгнуть союз</button>
     </div>
   </div>
 
@@ -2392,7 +4014,499 @@
   <!-- ========================================================
        ОСНОВНОЙ СЦЕНАРИЙ ПРИЛОЖЕНИЯ (JS)
        ======================================================== -->
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc, updateDoc, deleteDoc, deleteField
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Персональные ключи из вашего проекта Firebase Console
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJa0xpj9YG5wib6G-P4TaeKz9No4Ee1eE",
+      authDomain: "pact-passion-chat.firebaseapp.com",
+      projectId: "pact-passion-chat",
+      storageBucket: "pact-passion-chat.firebasestorage.app",
+      messagingSenderId: "551917448504",
+      appId: "1:551917448504:web:433e4fc271adee0ac8e5cd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    /* ====================================================================
+       АВТОРИЗАЦИЯ (анонимная). В Firebase Console должно быть включено:
+       Build → Authentication → Sign-in method → Anonymous
+       ==================================================================== */
+    let myUid = null;
+    let authError = null;
+    const ready = new Promise((resolve, reject) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) { myUid = user.uid; resolve(user.uid); }
+      });
+      if (!auth.currentUser) {
+        signInAnonymously(auth).catch((e) => { authError = e; reject(e); });
+      }
+    });
+    ready.catch((e) => console.error('Ошибка анонимной авторизации Firebase:', e));
+
+    /* ====================================================================
+       ПУТИ В БАЗЕ ДАННЫХ
+       rooms/{код}                    — документ комнаты и контракт
+       rooms/{код}/messages/{id}      — чат пары (изолирован по комнате)
+       rooms/{код}/state/shared       — гардероб, намёки, баланс, аватарки
+       rooms/{код}/state/presence     — «в сети»
+       ==================================================================== */
+    const roomRef = (code) => doc(db, 'rooms', code);
+    const msgsCol = (code) => collection(db, 'rooms', code, 'messages');
+    const stateRef = (code, id) => doc(db, 'rooms', code, 'state', id);
+
+    let currentCode = null;
+    let unsubs = [];
+    let presenceTimer = null;
+    let presenceHandler = null;
+    let livePairMessages = [];
+    let chatUnsub = null;
+
+    const fail = (e, fallbackReason = 'error') => {
+      console.error('PactCloud:', e);
+      const code = e && e.code;
+      if (authError) return { ok: false, reason: 'auth' };
+      if (code === 'permission-denied') return { ok: false, reason: 'denied' };
+      if (code === 'unavailable') return { ok: false, reason: 'offline' };
+      return { ok: false, reason: fallbackReason };
+    };
+
+    function trackUnsub(fn) { unsubs.push(fn); return fn; }
+
+    /* ====================================================================
+       ПУБЛИЧНЫЙ API ДЛЯ ОСТАЛЬНОГО ПРИЛОЖЕНИЯ
+       ==================================================================== */
+    const PactCloud = {
+      ready,
+      getUid: () => myUid,
+
+      async createRoom(code) {
+        try {
+          await ready;
+          const snap = await getDoc(roomRef(code));
+          if (snap.exists()) return { ok: false, reason: 'exists' };
+          await setDoc(roomRef(code), {
+            code, createdAt: Date.now(), creatorUid: myUid, partnerUid: null, status: 'draft'
+          });
+          return { ok: true };
+        } catch (e) { return fail(e); }
+      },
+
+      // Вход по коду: создатель возвращается в свою комнату, первый гость занимает место партнёра
+      async joinRoom(code) {
+        try {
+          await ready;
+          const ref = roomRef(code);
+          let snap;
+          try {
+            snap = await getDoc(ref);
+          } catch (e) {
+            // правила не отдают занятую комнату посторонним: для гостя это значит «уже двое»
+            if (e && e.code === 'permission-denied') return { ok: false, reason: 'full' };
+            throw e;
+          }
+          if (!snap.exists()) return { ok: false, reason: 'notfound' };
+          const d = snap.data();
+          if (d.creatorUid === myUid) return { ok: true, role: 'creator', data: d };
+          if (d.partnerUid === myUid) return { ok: true, role: 'partner', data: d };
+          if (d.partnerUid) return { ok: false, reason: 'full' };
+          try {
+            await updateDoc(ref, { partnerUid: myUid, joinedAt: Date.now() });
+          } catch (e) {
+            // кто-то успел раньше: правила не дают занять место второй раз
+            if (e && e.code === 'permission-denied') return { ok: false, reason: 'full' };
+            throw e;
+          }
+          const snap2 = await getDoc(ref);
+          return { ok: true, role: 'partner', data: snap2.data() };
+        } catch (e) { return fail(e, 'error'); }
+      },
+
+      // Проверка сохранённой сессии при запуске
+      async resumeRoom(code) {
+        try {
+          await ready;
+          const snap = await getDoc(roomRef(code));
+          if (!snap.exists()) return { ok: false, reason: 'notfound' };
+          const d = snap.data();
+          if (d.creatorUid === myUid) return { ok: true, role: 'creator', data: d };
+          if (d.partnerUid === myUid) return { ok: true, role: 'partner', data: d };
+          return { ok: false, reason: 'notmember' };
+        } catch (e) { return fail(e); }
+      },
+
+      async sealContract(code, fields) {
+        try {
+          await ready;
+          await updateDoc(roomRef(code), {
+            ...fields,
+            status: 'sealed',
+            sealedAt: Date.now(),
+            acceptedAt: deleteField(),
+            revision: deleteField()
+          });
+          return { ok: true };
+        } catch (e) { return fail(e); }
+      },
+
+      async acceptContract(code) {
+        try {
+          await ready;
+          await updateDoc(roomRef(code), { status: 'accepted', acceptedAt: Date.now() });
+          return { ok: true };
+        } catch (e) { return fail(e); }
+      },
+
+      // Любая из сторон может предложить пересмотреть принятый контракт
+      async requestRevision(code, roleKey) {
+        try {
+          await ready;
+          await updateDoc(roomRef(code), {
+            revision: { requestedBy: roleKey, requestedByUid: myUid, status: 'pending', at: Date.now() }
+          });
+          return { ok: true };
+        } catch (e) { return fail(e); }
+      },
+
+      // Вторая сторона соглашается (контракт открывается для правок) или отклоняет
+      async resolveRevision(code, approve, currentRevision) {
+        try {
+          await ready;
+          if (approve) {
+            await updateDoc(roomRef(code), {
+              revision: { ...currentRevision, status: 'approved', approvedAt: Date.now() },
+              status: 'draft',
+              acceptedAt: deleteField()
+            });
+          } else {
+            await updateDoc(roomRef(code), { revision: deleteField() });
+          }
+          return { ok: true };
+        } catch (e) { return fail(e); }
+      },
+
+      subscribeRoom(code, cb) {
+        currentCode = code;
+        return trackUnsub(onSnapshot(roomRef(code), (snap) => {
+          if (snap.exists()) cb(snap.data());
+        }, (e) => console.error('Ошибка подписки на комнату:', e)));
+      },
+
+      subscribeShared(code, cb) {
+        return trackUnsub(onSnapshot(stateRef(code, 'shared'), (snap) => {
+          cb(snap.exists() ? snap.data() : {});
+        }, (e) => console.error('Ошибка подписки на общее состояние:', e)));
+      },
+
+      subscribePresence(code, cb) {
+        return trackUnsub(onSnapshot(stateRef(code, 'presence'), (snap) => {
+          cb(snap.exists() ? snap.data() : {});
+        }, () => {}));
+      },
+
+      // Сохранение общего состояния (гардероб, намёки, баланс, аватарки)
+      async saveShared(partial) {
+        if (!currentCode) return { ok: false, reason: 'noroom' };
+        try {
+          await ready;
+          await setDoc(stateRef(currentCode, 'shared'), partial, { merge: true });
+          return { ok: true };
+        } catch (e) { return fail(e); }
+      },
+
+      // Отметка «в сети»: раз в 30 секунд, пока приложение открыто
+      startPresence(code, roleKey) {
+        if (presenceTimer) clearInterval(presenceTimer);
+        if (presenceHandler) document.removeEventListener('visibilitychange', presenceHandler);
+        const beat = () => {
+          if (document.visibilityState !== 'visible') return;
+          ready.then(() => setDoc(stateRef(code, 'presence'), { [roleKey]: Date.now() }, { merge: true })).catch(() => {});
+        };
+        presenceHandler = beat;
+        document.addEventListener('visibilitychange', presenceHandler);
+        beat();
+        presenceTimer = setInterval(beat, 30000);
+      },
+
+      startChat(code) { startChat(code); },
+
+      // Полный выход из комнаты: отписка от всех потоков
+      stopAll() {
+        unsubs.forEach((fn) => { try { fn(); } catch (e) {} });
+        unsubs = [];
+        if (chatUnsub) { try { chatUnsub(); } catch (e) {} chatUnsub = null; }
+        if (presenceTimer) { clearInterval(presenceTimer); presenceTimer = null; }
+        if (presenceHandler) { document.removeEventListener('visibilitychange', presenceHandler); presenceHandler = null; }
+        livePairMessages = [];
+        currentCode = null;
+      }
+    };
+    window.PactCloud = PactCloud;
+
+    /* ====================================================================
+       ЖИВОЙ ЧАТ ПАРЫ (внутри активной комнаты)
+       ==================================================================== */
+    const roleInfo = (k) => (typeof window.getRoleInfo === 'function')
+      ? window.getRoleInfo(k)
+      : { name: k === 'male' ? 'Верхний ♂' : 'Нижняя ♀', icon: '', tone: k };
+    const tgHaptic = () => window.Telegram?.WebApp?.HapticFeedback;
+    const myRoleKey = () => window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+    const nowTime = () => {
+      const now = new Date();
+      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    };
+
+    function startChat(code) {
+      if (chatUnsub) { try { chatUnsub(); } catch (e) {} chatUnsub = null; }
+      livePairMessages = [];
+      currentCode = code;
+      renderLiveMessagesUI();
+
+      chatUnsub = onSnapshot(msgsCol(code), (snapshot) => {
+        const list = [];
+        snapshot.forEach(docSnap => list.push({ docId: docSnap.id, ...docSnap.data() }));
+        list.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+        // Сохраняем локальные оптимистичные сообщения, которые ещё отправляются
+        const pendingLocal = livePairMessages.filter(m => m.pending && !list.some(s => s.clientMsgId && s.clientMsgId === m.clientMsgId));
+        livePairMessages = [...list, ...pendingLocal];
+
+        renderLiveMessagesUI();
+        updateLastMessagePreview();
+      }, (error) => {
+        console.error('Ошибка синхронизации чата:', error);
+        if (typeof showToast === 'function') showToast('Нет связи с чатом комнаты', 'error');
+      });
+    }
+
+    const safeSrc = (u) => (typeof u === 'string' && /^(data:image\/|https:\/\/)/.test(u))
+      ? escapeHtml(u).replace(/"/g, '&quot;') : '';
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = String(text ?? '');
+      return div.innerHTML;
+    }
+
+    function renderLiveMessagesUI() {
+      const box = document.getElementById('pair-chat-messages-box');
+      const partnerAvatarImg = document.getElementById('pair-chat-partner-avatar');
+      const partnerNameLabel = document.getElementById('pair-chat-partner-name');
+      const roleIndicator = document.getElementById('pair-chat-role-indicator');
+      if (!box) return;
+
+      const currentRole = myRoleKey();
+      const isMale = (currentRole === 'male');
+      const partnerKey = isMale ? 'female' : 'male';
+      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
+      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
+
+      const partner = roleInfo(partnerKey);
+      if (partnerAvatarImg) {
+        partnerAvatarImg.src = isMale ? femaleAvatar : maleAvatar;
+        partnerAvatarImg.style.borderColor = partner.color || '#E63956';
+      }
+      if (partnerNameLabel) partnerNameLabel.textContent = partner.name;
+      if (roleIndicator) {
+        const online = typeof window.isPartnerOnline === 'function' ? window.isPartnerOnline() : true;
+        roleIndicator.textContent = online ? 'В сети' : 'Не в сети';
+        roleIndicator.style.color = online ? '#27ae60' : '#8b8296';
+      }
+
+      if (livePairMessages.length === 0) {
+        box.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 40px 10px;">
+            Сообщений пока нет.<br>Начните будуарный диалог с партнёром ✨
+          </div>`;
+        return;
+      }
+
+      box.innerHTML = livePairMessages.map(m => {
+        const isMine = (m.role === currentRole);
+        const key = (m.role === 'male') ? 'male' : 'female';
+        const info = roleInfo(key);
+        const avatarSrc = safeSrc(key === 'male' ? maleAvatar : femaleAvatar);
+        const photoSrc = safeSrc(m.photo);
+
+        const photoHtml = photoSrc ? `<img class="pair-msg-photo-attachment" src="${photoSrc}" alt="Фото" data-fullscreen="1">` : '';
+        const textHtml = m.text ? `<div class="pair-msg-text">${escapeHtml(m.text)}</div>` : '';
+
+        return `
+          <div class="pair-msg-row ${isMine ? 'outgoing' : 'incoming'}">
+            <img class="pair-msg-avatar" src="${avatarSrc}" alt="">
+            <div class="pair-msg-bubble role-${info.tone}">
+              <div class="pair-msg-author-tag">${escapeHtml(info.name)}</div>
+              ${photoHtml}
+              ${textHtml}
+              <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function updateLastMessagePreview() {
+      const lastPreview = document.getElementById('pair-chat-last-preview');
+      if (lastPreview && livePairMessages.length > 0) {
+        const last = livePairMessages[livePairMessages.length - 1];
+        lastPreview.textContent = `${roleInfo(last.role === 'male' ? 'male' : 'female').name}: ${last.photo ? '📷 Фото' : (last.text || '')}`;
+      }
+    }
+
+    // Полноэкранный просмотр фото из чата
+    function openFullscreenPhoto(src) {
+      if (!src) return;
+      const ov = document.createElement('div');
+      ov.style.cssText = 'position:absolute;inset:0;z-index:100001;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:12px;';
+      const im = document.createElement('img');
+      im.src = src;
+      im.style.cssText = 'max-width:100%;max-height:100%;border-radius:12px;object-fit:contain;';
+      ov.appendChild(im);
+      ov.addEventListener('click', () => ov.remove());
+      document.body.appendChild(ov);
+    }
+    document.addEventListener('click', (e) => {
+      const t = e.target;
+      if (t && t.matches && t.matches('img[data-fullscreen]')) openFullscreenPhoto(t.src);
+    });
+
+    function pushOutgoing(data, errText) {
+      if (!currentCode) {
+        if (typeof showToast === 'function') showToast('Сначала войдите в комнату', 'error');
+        return;
+      }
+      livePairMessages.push({ docId: data.clientMsgId, pending: true, ...data });
+      renderLiveMessagesUI();
+      updateLastMessagePreview();
+
+      ready.then(() => addDoc(msgsCol(currentCode), data)).then((docRef) => {
+        const local = livePairMessages.find(m => m.clientMsgId === data.clientMsgId);
+        if (local) { local.docId = docRef.id; delete local.pending; }
+      }).catch((e) => {
+        console.error('Ошибка отправки:', e);
+        livePairMessages = livePairMessages.filter(m => m.clientMsgId !== data.clientMsgId);
+        renderLiveMessagesUI();
+        if (typeof showToast === 'function') showToast(errText, 'error');
+      });
+    }
+
+    // Мгновенная отправка текста: сообщение сразу появляется у отправителя
+    window.sendPairChatMessage = function() {
+      const input = document.getElementById('pair-chat-input');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+
+      const role = myRoleKey();
+      const data = {
+        clientMsgId: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+        role: role,
+        author: roleInfo(role).name,
+        text: text,
+        time: nowTime(),
+        senderId: myUid,
+        createdAt: Date.now()
+      };
+      if (input) input.value = '';
+      tgHaptic()?.impactOccurred?.('light');
+      pushOutgoing(data, 'Сообщение не отправлено');
+    };
+
+    // Отправка фотографий со сжатием через Canvas (800px, quality 0.72)
+    window.handlePairPhotoUpload = function(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800;
+          let w = img.width;
+          let h = img.height;
+          if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          else if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+
+          const role = myRoleKey();
+          tgHaptic()?.notificationOccurred?.('success');
+          pushOutgoing({
+            clientMsgId: 'photo_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+            role: role,
+            author: roleInfo(role).name,
+            photo: compressedDataUrl,
+            time: nowTime(),
+            senderId: myUid,
+            createdAt: Date.now()
+          }, 'Не удалось отправить фото');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    };
+
+    // Очистка переписки текущей комнаты
+    window.clearLiveChatHistory = async function() {
+      if (!currentCode || livePairMessages.length === 0) return;
+      if (!window.confirm('Удалить всю переписку пары? Это действие нельзя отменить.')) return;
+      try {
+        for (const m of livePairMessages) {
+          if (m.docId && !m.pending) {
+            await deleteDoc(doc(db, 'rooms', currentCode, 'messages', m.docId));
+          }
+        }
+        livePairMessages = [];
+        renderLiveMessagesUI();
+        if (typeof showToast === 'function') showToast('Диалог пары очищен', 'info');
+      } catch (e) {
+        console.error('Ошибка очистки:', e);
+        if (typeof showToast === 'function') showToast('Не удалось очистить диалог', 'error');
+      }
+    };
+
+    window.renderPairChat = function() { renderLiveMessagesUI(); };
+
+    // Прокрутка к последнему сообщению при открытии клавиатуры
+    function initKeyboardAutoScroll() {
+      const input = document.getElementById('pair-chat-input');
+      const box = document.getElementById('pair-chat-messages-box');
+      if (input && box) {
+        input.addEventListener('focus', () => { setTimeout(() => { box.scrollTop = box.scrollHeight; }, 280); });
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          const tab = document.getElementById('tab-chat-pair');
+          if (tab && tab.classList.contains('active')) {
+            setTimeout(() => {
+              const b = document.getElementById('pair-chat-messages-box');
+              if (b) b.scrollTop = b.scrollHeight;
+            }, 80);
+          }
+        });
+      }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initKeyboardAutoScroll);
+    else initKeyboardAutoScroll();
+
+    window.dispatchEvent(new Event('pactcloud-ready'));
+
+  </script>
   <script>
+
     const tg = window.Telegram?.WebApp;
     if (tg) {
       try {
@@ -2410,7 +4524,7 @@
     let femaleBalances = JSON.parse(localStorage.getItem('pact_female_balances')) || { ptc: 750, otc: 330, stc: 290 };
     let maleBalances = JSON.parse(localStorage.getItem('pact_male_balances')) || { atc: 850, ctc: 720, stc: 90 };
     let likedShopItemIds = JSON.parse(localStorage.getItem('pact_liked_shop_ids')) || [];
-    let partnerHintIds = JSON.parse(localStorage.getItem('pact_partner_hint_ids')) || [];
+    let partnerHintIds = [];
 
     // Уведомления Toast
     function showToast(message, type = 'info') {
@@ -2444,6 +4558,8 @@
     let navStack = ['tab-home'];
     function openSubScreen(tabId) {
       closeCapsuleToolbar();
+      // плитка «Контракт» сразу открывает манускрипт союза
+      if (tabId === 'tab-contract') { openFullContractPreview(true); return; }
       if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
       renderActiveTab(tabId);
     }
@@ -2464,6 +4580,7 @@
       document.querySelectorAll('.tab-content:not(#tab-home)').forEach(tab => tab.classList.remove('active'));
       const homeEl = document.getElementById('tab-home');
       const activeEl = document.getElementById(tabId);
+      document.getElementById('room-info-bar')?.classList.toggle('on-home', tabId === 'tab-home');
 
       if (tabId === 'tab-home') {
         if (homeEl) homeEl.style.filter = 'none';
@@ -2795,7 +4912,7 @@
             </div>`;
         } else {
           slot.innerHTML = `
-            <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Баланс Верхнего:</div>
+            <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Баланс: ${getRoleInfo('male').name}</div>
             <div class="shop-bal-chips-group">
               <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span>
               <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span>
@@ -2852,7 +4969,7 @@
 
     // 4. ГАРДЕРОБ
     let wardrobeFilterCat = 'Белье';
-    let selectedWardrobeIds = JSON.parse(localStorage.getItem('pact_selected_wardrobe_ids')) || [1];
+    let selectedWardrobeIds = [1];
 
     let wardrobeItems = [
       { id: 1, title: '«Винтажная Муза»', desc: 'Корсетный топ с кружевом', category: 'Белье', peppers: 1, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600' },
@@ -2872,7 +4989,7 @@
       const idx = partnerHintIds.indexOf(id);
       if (idx > -1) partnerHintIds.splice(idx, 1);
       else { partnerHintIds.push(id); tg?.HapticFeedback?.impactOccurred?.('heavy'); }
-      localStorage.setItem('pact_partner_hint_ids', JSON.stringify(partnerHintIds));
+      persistShared({ partnerHintIds: [...partnerHintIds] });
       renderWardrobe();
     }
 
@@ -2954,15 +5071,15 @@
       const idx = selectedWardrobeIds.indexOf(id);
       if (idx > -1) selectedWardrobeIds.splice(idx, 1);
       else selectedWardrobeIds.push(id);
-      localStorage.setItem('pact_selected_wardrobe_ids', JSON.stringify(selectedWardrobeIds));
+      persistShared({ selectedWardrobeIds: [...selectedWardrobeIds] });
       renderWardrobe();
       renderDesktop();
     }
 
     function showPartnerPreferencesModal() {
       const hintedItems = wardrobeItems.filter(i => partnerHintIds.includes(i.id));
-      if (hintedItems.length === 0) showToast('Верхний пока не оставил намёков', 'info');
-      else showToast(`Верхний намекает на: ${hintedItems.map(i => i.title).join(', ')}`, 'info');
+      if (hintedItems.length === 0) showToast(`Намёков от ${getRoleInfo('male').name} пока нет`, 'info');
+      else showToast(`${getRoleInfo('male').name} намекает на: ${hintedItems.map(i => i.title).join(', ')}`, 'info');
     }
 
     // 5. СУДЬБА & ЖРЕБИЙ
@@ -3083,7 +5200,7 @@
         title: 'Гардероб',
         bullets: [
           'Разделение 50/50: отдельно Белье и Игрушки на вечер.',
-          'Намёк Верхнего: метка, подсказывающая Нижней предпочтительный образ.'
+          'Намёк доминирующей стороны: метка, подсказывающая партнёру предпочтительный образ.'
         ]
       }
     };
@@ -3109,7 +5226,8 @@
       updateAllAvatarsUI()
       renderDesktop();
       if (typeof window.renderPairChat === 'function') window.renderPairChat();
-      showToast(`Активная роль: ${currentAvatarRole === 'male' ? 'Верхний ' : 'Нижняя '}`, 'info');
+      showToast(`Активная роль: ${getRoleInfo(currentAvatarRole).name}`, 'info');
+      updateRoomIndicator();
     }
     function updateRoleEmojiUI() {
       const el = document.getElementById('role-toggle-emoji');
@@ -3163,6 +5281,8 @@ function handleAvatarFileSelect(event) {
       } else {
         localStorage.setItem('pact_avatar_female', compressedBase64);
       }
+      // аватарка уходит партнёру через общее состояние комнаты
+      if (window.PactCloud) window.PactCloud.saveShared({ avatars: { [role === 'male' ? 'male' : 'female']: compressedBase64 } });
 
       // Обновляем аватарки во всем интерфейсе
       updateAllAvatarsUI();
@@ -3359,7 +5479,7 @@ function updateAllAvatarsUI() {
     }
 
     // Заглушки для кнопок, которые вызывали несуществующие функции (раньше падали с ReferenceError)
-    function handleContractButtonClick() { showToast('Контракт D/S скреплен узами пары ✨', 'success'); }
+
     function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
     function openAddProductModal() { showToast('Добавление товаров появится в следующей версии', 'info'); }
     function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
@@ -3376,6 +5496,1687 @@ function updateAllAvatarsUI() {
       initSwipeGestures();
       setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
     });
+  
+
+    /* ====================== ШЛЮЗ (из test.html) ====================== */
+
+    const haptic = (type = 'light') => tg?.HapticFeedback?.impactOccurred?.(type);
+
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playCrystalChime() {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2400, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 1.2);
+        gain.gain.setValueAtTime(0.28, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 1.2);
+      } catch (e) {}
+    }
+
+    function playSealStampSound() {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(140, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch (e) {}
+    }
+
+    const I18N = {
+      ru: {
+        createBtn: "Создать комнату пары",
+        orText: "или",
+        roomInputPlaceholder: "Код: PACT-XXXXXX",
+        joinBtn: "Войти",
+        createdModalTitle: "Комната создана!",
+        createdModalDesc: "Отправьте этот код партнёру, чтобы войти в комнату:",
+        createdModalCrypto: "Ключ сквозного шифрования сгенерирован локально на вашем устройстве.",
+        enterRoomBtn: "Войти в комнату ✨",
+        emptyCodeAlert: "Введите код комнаты (например: PACT-K7M4X2)",
+        menu1Title: "Выбор сценария",
+        menu1Desc: "Определите архетип власти и динамику пары",
+        badgeNotSelected: "Не выбран",
+        badgeSelected: "Выбран",
+        menu2Title: "Написать контракт",
+        menu2Desc: "Свой текст или готовый сюжет с правками",
+        badgeNotSealed: "Не составлен",
+        badgeSealed: "Запечатан",
+        enterRoomLockedText: "Войти в комнату",
+        enterRoomReadyText: "Войти в будуар союза ✨",
+        scenarioSheetTitle: "Выберите сценарий союза",
+        groupMaleTitle: "Мужское главенство (Марс ♂)",
+        groupFemaleTitle: "Женское главенство (Венера ♀)",
+        groupFreeTitle: "Свободный стиль",
+        scen1Title: "ВЕРХНИЙ & НИЖНЯЯ",
+        scen1Desc: "Классический D/s. Слово мужчины — абсолютный закон, повиновение и верность.",
+        scen4Title: "ИСКУСИТЕЛЬ & ПЛЕННИЦА",
+        scen4Desc: "Чувственная охота, дерзкие испытания, сладкий плен и покорение страсти.",
+        scen2Title: "ГОСПОЖА & ПОКОРНЫЙ",
+        scen2Desc: "Королевская власть женщины, преклонение, исполнение её капризов и воли.",
+        scen3Title: "МУЗА & ПОКЛОННИК",
+        scen3Desc: "Рыцарское служение, эстетическое восхищение, поклонение красоте и вдохновению.",
+        scen5Title: "СВОЙ ВАРИАНТ",
+        scen5Desc: "Укажите собственные уникальные имена или титулы для вашей пары.",
+        confirmScenarioBtn: "Выбрать этот сценарий ✨",
+        contractWriterTitle: "Написание Пакта союза",
+        modePreset: "Сюжет (с правками)",
+        modeCustom: "Свой контракт",
+        secGeneralRules: "Общие правила союза",
+        tapToOpenPopupHint: "Нажмите, чтобы открыть окно раздела",
+        badgeConfigure: "Открыть ›",
+        badgeRead: "Читать ›",
+        saveSectionBtn: "Сохранить раздел ✨",
+        closeSectionBtn: "Закрыть раздел ✓",
+        editorPopupHint: "Отредактируйте положения этого раздела союза при необходимости",
+        sectionSavedToast: "Раздел сохранён ✨",
+        previewContractBtn: "Полный просмотр",
+        createContractActionBtn: "Создать контракт ✨",
+        joinerHeaderBadge: "Священный Пакт пары",
+        joinerAcceptSealBtn: "Принять контракт 💍",
+        needScenarioToast: "⚠️ Сначала выберите сценарий союза (пункт 1)",
+        needContractToast: "⚠️ Создайте контракт союза перед входом (пункт 2)",
+        contractSealedToast: "Пакт успешно запечатан и сохранён ✨",
+        copiedToast: "Код комнаты скопирован: ",
+        fullPreviewTitle: "Священный Пакт пары (Предпросмотр)",
+        downloadDocBtn: "Скачать (.txt)",
+        closePreviewBtn: "Закрыть ✕",
+        downloadSuccessToast: "Документ Пакта успешно скачан 📥",
+        passionTitle: "🌶️ Градус Страсти",
+        tileWardrobe: "Гардероб",
+        tileShop: "Бутик",
+        tileChat: "Чат",
+        tileDice: "Жребий",
+        tileContract: "Контракт"
+      },
+      ua: {
+        createBtn: "Створити кімнату пари",
+        orText: "або",
+        roomInputPlaceholder: "Код: PACT-XXXXXX",
+        joinBtn: "Увійти",
+        createdModalTitle: "Кімнату створено!",
+        createdModalDesc: "Надішліть цей код партнеру, щоб увійти до кімнати:",
+        createdModalCrypto: "Ключ наскрізного шифрування згенеровано локально на вашому пристрої.",
+        enterRoomBtn: "Увійти до кімнати ✨",
+        emptyCodeAlert: "Введіть код кімнати (наприклад: PACT-K7M4X2)",
+        menu1Title: "Вибір сценарію",
+        menu1Desc: "Визначте архетип влади та динаміку пари",
+        badgeNotSelected: "Не обрано",
+        badgeSelected: "Обрано",
+        menu2Title: "Написати контракт",
+        menu2Desc: "Власний текст або готовий сюжет із правками",
+        badgeNotSealed: "Не складено",
+        badgeSealed: "Запечатано",
+        enterRoomLockedText: "Увійти до кімнати",
+        enterRoomReadyText: "Увійти до будуару союзу ✨",
+        scenarioSheetTitle: "Оберіть сценарій союзу",
+        groupMaleTitle: "Чоловіче верховенство (Марс ♂)",
+        groupFemaleTitle: "Жіноче верховенство (Венера ♀)",
+        groupFreeTitle: "Вільний стиль",
+        scen1Title: "ВЕРХНІЙ & НИЖНЯ",
+        scen1Desc: "Класичний D/s. Слово чоловіка — абсолютний закон, покірність та вірність.",
+        scen4Title: "СПОКУСНИК & ПОЛОНЯНКА",
+        scen4Desc: "Чуттєве полювання, зухвалі випробування, солодкий полон і підкорення пристрасті.",
+        scen2Title: "ПАНІ & ПОКІРНИЙ",
+        scen2Desc: "Королівська влада жінки, схиляння, здійснення її примх та волі.",
+        scen3Title: "МУЗА & ШАНУВАЛЬНИК",
+        scen3Desc: "Лицарське служіння, естетичне захоплення, поклоніння красі та натхненню.",
+        scen5Title: "ВЛАСНИЙ ВАРІАНТ",
+        scen5Desc: "Вкажіть власні унікальні імена або титули для вашої пари.",
+        confirmScenarioBtn: "Обрати цей сценарій ✨",
+        contractWriterTitle: "Складання Пакту союзу",
+        modePreset: "Сюжет (із правками)",
+        modeCustom: "Власний контракт",
+        secGeneralRules: "Загальні правила союзу",
+        tapToOpenPopupHint: "Натисніть, щоб відкрити вікно розділу",
+        badgeConfigure: "Відкрити ›",
+        badgeRead: "Читати ›",
+        saveSectionBtn: "Зберегти розділ ✨",
+        closeSectionBtn: "Закрити розділ ✓",
+        editorPopupHint: "Відредагуйте положення цього розділу союзу за потреби",
+        sectionSavedToast: "Розділ збережено ✨",
+        previewContractBtn: "Повний перегляд",
+        createContractActionBtn: "Створити контракт ✨",
+        joinerHeaderBadge: "Священний Пакт пари",
+        joinerAcceptSealBtn: "Прийняти контракт 💍",
+        needScenarioToast: "⚠️ Спочатку оберіть сценарій союзу (пункт 1)",
+        needContractToast: "⚠️ Створіть контракт союзу перед входом (пункт 2)",
+        contractSealedToast: "Пакт успішно запечатано та збережено ✨",
+        copiedToast: "Код кімнати скопійовано: ",
+        fullPreviewTitle: "Священний Пакт пари (Попередній перегляд)",
+        downloadDocBtn: "Завантажити (.txt)",
+        closePreviewBtn: "Закрити ✕",
+        downloadSuccessToast: "Документ Пакту успішно завантажено 📥",
+        passionTitle: "🌶️ Градус Пристрасті",
+        tileWardrobe: "Гардероб",
+        tileShop: "Бутик",
+        tileChat: "Чат",
+        tileDice: "Жереб",
+        tileContract: "Контракт"
+      }
+    };
+
+    const savedLang = localStorage.getItem('pact_app_lang');
+    const telegramUserLang = tg?.initDataUnsafe?.user?.language_code?.toLowerCase();
+    const detectedLang = savedLang || (telegramUserLang === 'uk' || telegramUserLang === 'ua' ? 'ua' : 'ru');
+    let currentLang = 'ru';   // перевод отменён: только русский
+
+    function t(key) {
+      return I18N[currentLang]?.[key] || key;
+    }
+
+    function applyLanguage(lang) {
+      if (!I18N[lang]) return;
+      currentLang = lang;
+      localStorage.setItem('pact_app_lang', lang);
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+      });
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[currentLang][key]) el.textContent = I18N[currentLang][key];
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(input => {
+        const key = input.getAttribute('data-i18n-placeholder');
+        if (I18N[currentLang][key]) input.setAttribute('placeholder', I18N[currentLang][key]);
+      });
+
+      updateCreatorHubUI();
+    }
+
+    function changeLang(lang, btn) {
+      haptic('light');
+      applyLanguage(lang);
+    }
+
+    function showToastMsg(msg) {
+      const toast = document.getElementById('app-toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2600);
+    }
+
+    const SCENARIOS = {
+      master_sub: {
+        id: 'master_sub',
+        type: 'male',
+        roleDom: 'Верхний ♂',
+        roleSub: 'Нижняя ♀',
+        roleMale: 'Верхний ♂',
+        roleFemale: 'Нижняя ♀',
+        title: { ru: 'Верхний & Нижняя', ua: 'Верхній & Нижня' },
+        icon: '👑',
+        domIcon: '👑',
+        subIcon: '🗝️',
+        preset: {
+          ru: {
+            title: 'Пакт Абсолютного Доверия & Власти Верхнего',
+            subDuties: '1. Безусловное повиновение слову и решениям Верхнего в будуаре.\n2. Искреннее открытие сокровенных фантазий и эмоциональных переживаний.\n3. Примерка и облачение в образы гардероба, выбранные Верхним.',
+            domDuties: '1. Обеспечение безусловной безопасности, тепла и защиты Нижней.\n2. Внимательность к физическому и эмоциональному комфорту партнёрши.\n3. Справедливое и заботливое ведение без унижения человеческого достоинства.',
+            generalRules: '1. Таинство и правила сессий остаются священной тайной пары.\n2. За пределами будуара действует взаимное партнёрское уважение.',
+            domPrivileges: '1. Исключительное право выбора образов белья, чулок и аксессуаров.\n2. Право отдавать будуарные распоряжения и устанавливать регламент вечера.',
+            subRewards: '1. Безграничная нежность, чувственный массаж и поцелуи за послушание.\n2. Начисление токенов Страсти (PTC) и Покорности (OTC) для Бутика.'
+          },
+          ua: {
+            title: 'Пакт Цілковитої Довіри & Влади Верхнього',
+            subDuties: '1. Беззаперечний послух слову та рішенням Верхнього в будуарі.\n2. Щире відкриття потаємних бажань та душевних переживань.\n3. Вдягання образів гардероба, обраних Верхнім на вечір.',
+            domDuties: '1. Забезпечення цілковитої безпеки, тепла та захисту Нижньої.\n2. Уважність до фізичного та емоційного комфорту обраниці.\n3. Справедливе та турботливе ведення без приниження гідності.',
+            generalRules: '1. Таїнство та правила сесій залишаються недоторканною таємницею пари.\n2. За межами будуару панує взаємна партнерська повага.',
+            domPrivileges: '1. Виключне право вибору образів білизни, панчіх та аксесуарів.\n2. Право віддавати будуарні розпорядження та встановлювати регламент вечора.',
+            subRewards: '1. Безмежна ніжність, чуттєвий масаж та пестощі за покірність.\n2. Нарахування токенів Пристрасті (PTC) та Покори (OTC) для Бутика.'
+          }
+        }
+      },
+      tempter_captive: {
+        id: 'tempter_captive',
+        type: 'male',
+        roleDom: 'Искуситель ♂',
+        roleSub: 'Пленница ♀',
+        roleMale: 'Искуситель ♂',
+        roleFemale: 'Пленница ♀',
+        title: { ru: 'Искуситель & Пленница', ua: 'Спокусник & Полонянка' },
+        icon: '🐺',
+        domIcon: '🐺',
+        subIcon: '🥀',
+        preset: {
+          ru: {
+            title: 'Пакт Сладкого Плена & Искушения',
+            subDuties: '1. Принятие дерзких вызовов и испытаний страсти от Искусителя.\n2. Согласие на будуарное ограничение взгляда (повязки, шёлковые ленты).\n3. Сладкое признание поражения в эротической охоте.',
+            domDuties: '1. Дозирование накала страсти и забота о чувственном комфорте Пленницы.\n2. Восхищение красотой партнёрши на каждом этапе испытаний.\n3. Немедленное освобождение при подаче стоп-сигнала.',
+            generalRules: '1. Игра ведётся добровольно с обоюдным предвкушением экстаза.\n2. Взаимное доверие и наслаждение процессом священны.',
+            domPrivileges: '1. Право определять время, место и правила чувственного плена.\n2. Выбор провокационных нарядов и девайсов вечера.',
+            subRewards: '1. Сладкое освобождение, объятия, шёлковые подарки и экстаз.\n2. Щедрое начисление будуарных токенов за смелость.'
+          },
+          ua: {
+            title: 'Пакт Солодкого Полону & Спокуси',
+            subDuties: '1. Прийняття зухвалих викликів та випробувань пристрасті від Спокусника.\n2. Згода на будуарне обмеження погляду (шовкові стрічки, пов’язки).\n3. Солодке визнання поразки у чуттєвому полюванні.',
+            domDuties: '1. Дозування напруги пристрасті та піклування про комфорт Полонянки.\n2. Захоплення красою обраниці на кожному етапі спокуси.\n3. Негайне звільнення за умови стоп-сигналу.',
+            generalRules: '1. Гра відбувається добровільно з обопільним передчуттям екстазу.\n2. Взаємна довіра та насолода процесом є непорушними.',
+            domPrivileges: '1. Право визначати час, місце та правила чуттєвого полону.\n2. Вибір провокаційних образів та девайсів вечора.',
+            subRewards: '1. Солодке звільнення, обійми, шовкові дарунки та екстаз.\n2. Щедре нарахування будуарних токенів за сміливість.'
+          }
+        }
+      },
+      mistress_sub: {
+        id: 'mistress_sub',
+        type: 'female',
+        roleDom: 'Госпожа ♀',
+        roleSub: 'Покорный ♂',
+        roleMale: 'Покорный ♂',
+        roleFemale: 'Госпожа ♀',
+        title: { ru: 'Госпожа & Покорный', ua: 'Пані & Покірний' },
+        icon: '👠',
+        domIcon: '👠',
+        subIcon: '🗝️',
+        preset: {
+          ru: {
+            title: 'Пакт Безоговорочной Власти Госпожи',
+            subDuties: '1. Исполнение капризов и распоряжений Госпожи без тени сомнений.\n2. Почитание, эстетическое служение и бережный массаж стоп.\n3. Обращение с трепетом и признание главенства женской воли.',
+            domDuties: '1. Справедливое и царственное руководство союзом.\n2. Оценка преданности Покорного и своевременное дарование милостей.\n3. Уважение пределов сил мужчины и забота о гармонии.',
+            generalRules: '1. Власть Госпожи в будуаре непререкаема.\n2. Отношения построены на искреннем поклонении женской красоте.',
+            domPrivileges: '1. Право единолично решать, когда и в каком образе явить наготу.\n2. Право назначать задания дня и наказывать за невнимательность.',
+            subRewards: '1. Благосклонный взгляд, поцелуй, прикосновение и будуарные награды.\n2. Право лицезреть красоту Госпожи в эксклюзивных нарядах.'
+          },
+          ua: {
+            title: 'Пакт Беззаперечної Влади Пані',
+            subDuties: '1. Виконання забаганок та наказів Пані без вагань та заперечень.\n2. Схиляння, естетичне служіння та ніжний масаж ніжок.\n3. Звернення з трепетом та визнання верховенства жіночої волі.',
+            domDuties: '1. Справедливе та королівське керування союзом.\n2. Оцінка відданості Покірного та вчасне дарування милості.\n3. Повага до меж сил чоловіка та турбота про гармонію.',
+            generalRules: '1. Влада Пані в будуарі є абсолютною та непорушною.\n2. Стосунки побудовані на щирому поклонінні жіночій красі.',
+            domPrivileges: '1. Право одноосібно вирішувати, коли і в якому образі явити красу.\n2. Право призначати завдання дня та вимагати слухняності.',
+            subRewards: '1. Прихильний погляд, поцілунок, пестощі та будуарні нагороди.\n2. Право споглядати красу Пані в ексклюзивному вбранні.'
+          }
+        }
+      },
+      muse_devotee: {
+        id: 'muse_devotee',
+        type: 'female',
+        roleDom: 'Муза ♀',
+        roleSub: 'Поклонник ♂',
+        roleMale: 'Поклонник ♂',
+        roleFemale: 'Муза ♀',
+        title: { ru: 'Муза & Поклонник', ua: 'Муза & Шанувальник' },
+        icon: '🕊️',
+        domIcon: '🕊️',
+        subIcon: '🕯️',
+        preset: {
+          ru: {
+            title: 'Пакт Преклонения & Вдохновения Музы',
+            subDuties: '1. Окружение Музы трепетным вниманием, цветами и шёлковыми дарами.\n2. Служение её вдохновению, исполнение желаний и создание уюта.\n3. Терпеливое ожидание её благосклонности и близости.',
+            domDuties: '1. Дарование нежности, улыбок и тепла за искреннюю преданность.\n2. Открытость к заботе Поклонника и вдохновляющее ведение пары.\n3. Поддержка гармонии и чуткое соблюдение границ комфорта.',
+            generalRules: '1. Отношения строятся на эстетике, романтике и взаимном трепете.\n2. Искренность и доверие являются основой союза.',
+            domPrivileges: '1. Право решать, когда надеть подаренные наряды из Бутика.\n2. Муза определяет атмосферу, музыку и сценарий вечера.',
+            subRewards: '1. Ласковые прикосновения, чувственные поцелуи и созерцание красоты.\n2. Благодарность и взаимная страсть вдохновлённой женщины.'
+          },
+          ua: {
+            title: 'Пакт Схиляння & Натхнення Музи',
+            subDuties: '1. Оточення Музи ніжністю, квітами та шовковими дарунками.\n2. Служіння її натхненню, здійснення мрій та турбота про затишок.\n3. Терпляче очікування її прихильності та насолоди близькістю.',
+            domDuties: '1. Дарування ніжності, посмішок та тепла за щиру вірність.\n2. Відкритість до турботи Шанувальника та надихаюче ведення пари.\n3. Підтримка гармонії та чуйне дотримання меж комфорту.',
+            generalRules: '1. Стосунки ґрунтуються на естетиці, романтиці та ніжному трепеті.\n2. Щирість і довіра є основою союзу.',
+            domPrivileges: '1. Право обирати, коли одягнути подаровані образи з Бутика.\n2. Муза визначає атмосферу, музику та настрій вечора.',
+            subRewards: '1. Лагідні дотики, чуттєві поцілунки та споглядання краси.\n2. Вдячність і палка пристрасть натхненної жінки.'
+          }
+        }
+      },
+      custom_role: {
+        id: 'custom_role',
+        type: 'custom',
+        roleDom: 'Доминирующий',
+        roleSub: 'Подчиняющаяся сторона',
+        roleMale: 'Он',
+        roleFemale: 'Она',
+        title: { ru: 'Свой вариант', ua: 'Власний варіант' },
+        icon: '✨',
+        domIcon: '✨',
+        subIcon: '💎',
+        preset: {
+          ru: {
+            title: 'Пакт Индивидуального Союза',
+            subDuties: '1. Соблюдение установленных индивидуальных правил союза.\n2. Открытый диалог о сокровенных фантазиях и доверии.\n3. Участие в будуарных играх пары по обоюдному согласию.',
+            domDuties: '1. Забота, эмоциональная поддержка и чуткость к партнёру.\n2. Уважение личных границ и поддержка атмосферы доверия.',
+            generalRules: '1. Свободный стиль и уникальные законы, созданные только для двоих.\n2. Взаимное согласие и гармония превыше всего.',
+            domPrivileges: '1. Право предлагать сценарии вечера и образы в Бутике.\n2. Инициатива в проведении чувственных ритуалов.',
+            subRewards: '1. Взаимное удовольствие, нежность, романтические сюрпризы.\n2. Начисление токенов за чуткость и доверие.'
+          },
+          ua: {
+            title: 'Пакт Індивідуального Союзу',
+            subDuties: '1. Дотримання встановлених індивідуальних правил союзу.\n2. Відкритий діалог про потаємні фантазії та довіру.\n3. Участь у будуарних іграх пари за взаємною згодою.',
+            domDuties: '1. Турбота, емоційна підтримка та чуйність до партнера.\n2. Повага до особистих меж та підтримка атмосфери довіри.',
+            generalRules: '1. Вільний стиль та унікальні закони, створені лише для двох.\n2. Взаємна згода та гармонія понад усе.',
+            domPrivileges: '1. Право пропонувати сценарії вечора та образи в Бутику.\n2. Ініціатива у проведенні чуттєвих ритуалів.',
+            subRewards: '1. Взаємне задоволення, ніжність, романтичні сюрпризи.\n2. Нарахування токенів за чуйність та довіру.'
+          }
+        }
+      }
+    };
+
+    let currentRoomCode = 'PACT-7429';
+    let isRoomCreator = true;
+    let selectedScenarioKey = null;
+    let isContractSaved = false;
+    let temporaryHighlightKey = null;
+    let customRoleNames = { male: '', female: '' };
+
+    let currentEditingSectionKey = null;
+    let contractDraft = {
+      title: '',
+      subDuties: '',
+      domDuties: '',
+      generalRules: '',
+      domPrivileges: '',
+      subRewards: ''
+    };
+
+    function copyCurrentRoomCode() {
+      haptic('light');
+      const tempInput = document.createElement('input');
+      tempInput.value = currentRoomCode;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showToastMsg(t('copiedToast') + currentRoomCode);
+    }
+
+
+
+
+
+
+
+
+
+    function updateCreatorHubUI() {
+      const scenarioBadge = document.getElementById('menu-badge-scenario');
+      const scenarioDesc = document.getElementById('menu-desc-scenario');
+      const scenarioIcon = document.getElementById('menu-icon-scenario');
+      const cardScenario = document.getElementById('menu-card-scenario');
+
+      const contractBadge = document.getElementById('menu-badge-contract');
+      const cardContract = document.getElementById('menu-card-contract');
+
+      const enterBtn = document.getElementById('btn-enter-room');
+      const enterIcon = document.getElementById('btn-enter-icon');
+      const enterText = document.getElementById('btn-enter-text');
+
+      if (selectedScenarioKey && SCENARIOS[selectedScenarioKey]) {
+        const scen = SCENARIOS[selectedScenarioKey];
+        const titleStr = selectedScenarioKey === 'custom_role' && customRoleNames.male 
+          ? `${customRoleNames.male} & ${customRoleNames.female}` 
+          : scen.title[currentLang];
+
+        let typeBadge = '';
+        if (scen.type === 'male') typeBadge = ' (Марс ♂)';
+        else if (scen.type === 'female') typeBadge = ' (Венера ♀)';
+        else typeBadge = currentLang === 'ua' ? ' (Вільний стиль ✨)' : ' (Свободный стиль ✨)';
+
+        scenarioBadge.className = 'menu-action-badge badge-selected';
+        scenarioBadge.textContent = titleStr;
+        scenarioDesc.textContent = scen.title[currentLang] + typeBadge;
+        scenarioIcon.textContent = scen.icon;
+        cardScenario.classList.add('completed');
+      } else {
+        scenarioBadge.className = 'menu-action-badge badge-empty';
+        scenarioBadge.textContent = t('badgeNotSelected');
+        scenarioDesc.textContent = t('menu1Desc');
+        scenarioIcon.textContent = '🎭';
+        cardScenario.classList.remove('completed');
+      }
+
+      if (isContractSaved) {
+        contractBadge.className = 'menu-action-badge badge-sealed';
+        contractBadge.textContent = '💍 ' + t('badgeSealed');
+        cardContract.classList.add('completed');
+      } else {
+        contractBadge.className = 'menu-action-badge badge-empty';
+        contractBadge.textContent = t('badgeNotSealed');
+        cardContract.classList.remove('completed');
+      }
+
+      if (selectedScenarioKey && isContractSaved) {
+        enterBtn.className = 'btn-enter-room-final ready-state';
+        enterIcon.textContent = '✨';
+        enterText.textContent = t('enterRoomReadyText');
+      } else {
+        enterBtn.className = 'btn-enter-room-final disabled-state';
+        enterIcon.textContent = '🔒';
+        enterText.textContent = t('enterRoomLockedText');
+      }
+    }
+
+    function openScenarioPicker() {
+      haptic('light');
+      const modal = document.getElementById('modal-scenario-picker');
+      modal.classList.add('active');
+
+      document.querySelectorAll('.scenario-item-btn').forEach(btn => btn.classList.remove('selected'));
+      temporaryHighlightKey = selectedScenarioKey;
+
+      if (temporaryHighlightKey) {
+        document.querySelectorAll('.scenario-item-btn').forEach(btn => {
+          if (btn.getAttribute('onclick')?.includes(temporaryHighlightKey)) {
+            btn.classList.add('selected');
+          }
+        });
+        updateConfirmBtnState(true);
+      } else {
+        updateConfirmBtnState(false);
+      }
+    }
+
+    function updateConfirmBtnState(isActive) {
+      const btn = document.getElementById('btn-confirm-scenario-btn');
+      if (!btn) return;
+      if (isActive) {
+        btn.classList.remove('disabled');
+        btn.innerHTML = `<span data-i18n="confirmScenarioBtn">${t('confirmScenarioBtn')}</span>`;
+      } else {
+        btn.classList.add('disabled');
+        const hintText = currentLang === 'ua' ? 'Оберіть сценарій вище 👆' : 'Выберите сценарий выше 👆';
+        btn.innerHTML = `<span>${hintText}</span>`;
+      }
+    }
+
+    function closeScenarioPicker() {
+      document.getElementById('modal-scenario-picker').classList.remove('active');
+    }
+
+    function highlightScenario(key, btnElement) {
+      haptic('selection');
+      temporaryHighlightKey = key;
+
+      document.querySelectorAll('.scenario-item-btn').forEach(b => b.classList.remove('selected'));
+      btnElement.classList.add('selected');
+
+      const customBox = document.getElementById('custom-role-inputs-box');
+      if (key === 'custom_role') {
+        customBox.style.display = 'grid';
+      } else {
+        customBox.style.display = 'none';
+      }
+
+      updateConfirmBtnState(true);
+    }
+
+    function applyScenarioSelection() {
+      if (!temporaryHighlightKey) return;
+      haptic('medium');
+      selectedScenarioKey = temporaryHighlightKey;
+
+      if (selectedScenarioKey === 'custom_role') {
+        const m = document.getElementById('custom-role-male')?.value.trim() || 'Он';
+        const f = document.getElementById('custom-role-female')?.value.trim() || 'Она';
+        customRoleNames = { male: m, female: f };
+      }
+
+      loadScenarioPresetsToWriter();
+
+      closeScenarioPicker();
+      updateCreatorHubUI();
+      const scen = SCENARIOS[selectedScenarioKey];
+      showToastMsg(`Сценарий выбран: ${scen.title[currentLang]} ✨`);
+    }
+
+    function getAdaptedRoleNames() {
+      const scen = SCENARIOS[selectedScenarioKey] || SCENARIOS.master_sub;
+      if (selectedScenarioKey === 'custom_role') {
+        return {
+          dom: customRoleNames.male || scen.roleDom,
+          sub: customRoleNames.female || scen.roleSub
+        };
+      }
+      return {
+        dom: scen.roleDom || scen.roleMale,
+        sub: scen.roleSub || scen.roleFemale
+      };
+    }
+
+    function getAdaptedRoleIcons() {
+      const scen = SCENARIOS[selectedScenarioKey] || SCENARIOS.master_sub;
+      return {
+        dom: scen.domIcon || scen.icon || '👑',
+        sub: scen.subIcon || '🗝️'
+      };
+    }
+
+    function loadScenarioPresetsToWriter() {
+      const scen = SCENARIOS[selectedScenarioKey] || SCENARIOS.master_sub;
+      const presetData = scen.preset[currentLang] || scen.preset.ru;
+      const roles = getAdaptedRoleNames();
+      const icons = getAdaptedRoleIcons();
+
+      const lblSubDuties = document.getElementById('lbl-sec-sub-duties');
+      const lblDomDuties = document.getElementById('lbl-sec-dom-duties');
+      const lblDomPriv = document.getElementById('lbl-sec-dom-privileges');
+      const lblSubRewards = document.getElementById('lbl-sec-sub-rewards');
+
+      const iconSubDuties = document.getElementById('icon-sec-sub-duties');
+      const iconDomDuties = document.getElementById('icon-sec-dom-duties');
+      const iconDomPriv = document.getElementById('icon-sec-dom-privileges');
+      const iconSubRewards = document.getElementById('icon-sec-sub-rewards');
+
+      const isUa = currentLang === 'ua';
+      if (lblSubDuties) lblSubDuties.textContent = `${isUa ? "Обов'язки" : 'Обязанности'} (${roles.sub})`;
+      if (lblDomDuties) lblDomDuties.textContent = `${isUa ? "Обов'язки" : 'Обязанности'} (${roles.dom})`;
+      if (lblDomPriv) lblDomPriv.textContent = `${isUa ? 'Привілеї' : 'Привилегии'} (${roles.dom})`;
+      if (lblSubRewards) lblSubRewards.textContent = `${isUa ? 'Бонуси та дарунки для' : 'Бонусы и дары для'} ${roles.sub}`;
+
+      if (iconSubDuties) iconSubDuties.textContent = icons.sub;
+      if (iconDomDuties) iconDomDuties.textContent = icons.dom;
+      if (iconDomPriv) iconDomPriv.textContent = icons.dom;
+      if (iconSubRewards) iconSubRewards.textContent = '🎁';
+
+      contractDraft.title = presetData.title;
+      contractDraft.subDuties = presetData.subDuties || '';
+      contractDraft.domDuties = presetData.domDuties || '';
+      contractDraft.generalRules = presetData.generalRules || '';
+      contractDraft.domPrivileges = presetData.domPrivileges || '';
+      contractDraft.subRewards = presetData.subRewards || '';
+
+      const titleInput = document.getElementById('writer-pact-title');
+      if (titleInput) titleInput.value = contractDraft.title;
+    }
+
+    function openContractWriter() {
+      haptic('light');
+      if (!selectedScenarioKey) {
+        showToastMsg(t('needScenarioToast'));
+        openScenarioPicker();
+        return;
+      }
+
+      loadScenarioPresetsToWriter();
+      const modeToggle = document.querySelector('.contract-mode-toggle');
+      if (modeToggle) modeToggle.style.display = '';
+      document.getElementById('modal-contract-writer').classList.add('active');
+    }
+
+    function closeContractWriter() {
+      document.getElementById('modal-contract-writer').classList.remove('active');
+    }
+
+    function openSectionEditor(key) {
+      haptic('light');
+      currentEditingSectionKey = key;
+      const roles = getAdaptedRoleNames();
+      const icons = getAdaptedRoleIcons();
+      const isUa = currentLang === 'ua';
+
+      const titlesMap = {
+        subDuties: `${icons.sub} ${isUa ? "Обов'язки" : 'Обязанности'} (${roles.sub})`,
+        domDuties: `${icons.dom} ${isUa ? "Обов'язки" : 'Обязанности'} (${roles.dom})`,
+        generalRules: `⚖️ ${isUa ? "Загальні правила союзу" : "Общие правила союза"}`,
+        domPrivileges: `${icons.dom} ${isUa ? 'Привілеї' : 'Привилегии'} (${roles.dom})`,
+        subRewards: `🎁 ${isUa ? 'Бонуси та дарунки для' : 'Бонусы и дары для'} ${roles.sub}`
+      };
+
+      const titleEl = document.getElementById('editor-popup-title');
+      if (titleEl) titleEl.textContent = titlesMap[key] || 'Раздел Пакта';
+
+      const textarea = document.getElementById('section-editor-textarea');
+      if (textarea) {
+        textarea.value = contractDraft[key] || '';
+      }
+
+      document.getElementById('modal-section-editor')?.classList.add('active');
+      setTimeout(() => textarea?.focus(), 180);
+    }
+
+    function saveCurrentSectionEditor() {
+      haptic('medium');
+      if (!currentEditingSectionKey) return;
+      const textarea = document.getElementById('section-editor-textarea');
+      if (textarea) {
+        contractDraft[currentEditingSectionKey] = textarea.value.trim();
+      }
+      closeSectionEditor();
+      showToastMsg(t('sectionSavedToast'));
+    }
+
+    function closeSectionEditor() {
+      document.getElementById('modal-section-editor')?.classList.remove('active');
+      currentEditingSectionKey = null;
+    }
+
+
+
+    function closeSectionViewer() {
+      document.getElementById('modal-section-viewer')?.classList.remove('active');
+    }
+
+    /* ПОЛНЫЙ ПРЕДПРОСМОТР ПАКТА И СКАЧИВАНИЕ .TXT */
+
+
+    function closeFullContractPreview() {
+      document.getElementById('modal-full-contract-preview')?.classList.remove('active');
+    }
+
+
+
+    function renderFullContractManuscript(isJoinerMode) {
+      const container = document.getElementById('manuscript-preview-body');
+      if (!container) return;
+
+      const c = getContractDataForDisplay(isJoinerMode);
+      const isUa = currentLang === 'ua';
+
+      container.innerHTML = `
+        <div class="manuscript-header-hero">
+          <div class="manuscript-crest-icon">${c.domIcon}</div>
+          <div class="manuscript-main-title">${escapeHtml(c.title)}</div>
+          <div class="manuscript-parties-pill">
+            <span>${c.domIcon} ${escapeHtml(c.domRole)}</span>
+            <span style="color: var(--accent-color);">✦</span>
+            <span>${c.subIcon} ${escapeHtml(c.subRole)}</span>
+          </div>
+          <div style="font-size: 10px; color: #D4AF37; margin-top: 4px; font-weight: 800;">
+            Код союза: ${c.code}
+          </div>
+        </div>
+
+        <!-- 1. Обязанности подчиняющейся стороны -->
+        <div class="manuscript-section-card">
+          <div class="manuscript-section-heading">
+            <span>${c.subIcon}</span>
+            <span>1. ${isUa ? "Обов'язки" : 'Обязанности'} (${escapeHtml(c.subRole)})</span>
+          </div>
+          <div class="manuscript-section-body">${escapeHtml(c.subDuties)}</div>
+        </div>
+
+        <!-- 2. Обязанности доминирующей стороны -->
+        <div class="manuscript-section-card gold-edge">
+          <div class="manuscript-section-heading" style="color: #F9E79F;">
+            <span>${c.domIcon}</span>
+            <span>2. ${isUa ? "Обов'язки" : 'Обязанности'} (${escapeHtml(c.domRole)})</span>
+          </div>
+          <div class="manuscript-section-body">${escapeHtml(c.domDuties)}</div>
+        </div>
+
+        <!-- 3. Общие правила союза -->
+        <div class="manuscript-section-card">
+          <div class="manuscript-section-heading">
+            <span>⚖️</span>
+            <span>3. ${isUa ? "Загальні правила союзу" : "Общие правила союза"}</span>
+          </div>
+          <div class="manuscript-section-body">${escapeHtml(c.generalRules)}</div>
+        </div>
+
+        <!-- 4. Привилегии доминирующей стороны -->
+        <div class="manuscript-section-card gold-edge">
+          <div class="manuscript-section-heading" style="color: #F9E79F;">
+            <span>${c.domIcon}</span>
+            <span>4. ${isUa ? 'Привілеї' : 'Привилегии'} (${escapeHtml(c.domRole)})</span>
+          </div>
+          <div class="manuscript-section-body">${escapeHtml(c.domPrivileges)}</div>
+        </div>
+
+        <!-- 5. Бонусы и дары -->
+        <div class="manuscript-section-card">
+          <div class="manuscript-section-heading">
+            <span>🎁</span>
+            <span>5. ${isUa ? 'Бонуси та дарунки для' : 'Бонусы и дары для'} ${escapeHtml(c.subRole)}</span>
+          </div>
+          <div class="manuscript-section-body">${escapeHtml(c.subRewards)}</div>
+        </div>
+
+        <div style="text-align: center; font-size: 10px; color: var(--text-muted); padding: 8px 0; font-style: italic;">
+          «Скреплено священным обетом пары в приложении Pact & Passion 💍»
+        </div>
+      `;
+    }
+
+    function downloadContractAsTxt() {
+      haptic('success');
+      playSealStampSound();
+
+      const c = getContractDataForDisplay(lastManuscriptUseRoom);
+      const isUa = currentLang === 'ua';
+      const dateStr = new Date(manuscriptDateMs()).toLocaleDateString(isUa ? 'uk-UA' : 'ru-RU', {
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      const line = '==================================================';
+      const subLine = '--------------------------------------------------';
+
+      const fileContent = 
+`${line}
+       PACT & PASSION — ${isUa ? 'СВЯЩЕННИЙ ПАКТ ПАРИ' : 'СВЯЩЕННЫЙ ПАКТ ПАРЫ'}
+                 ${isUa ? 'КОД КІМНАТИ' : 'КОД КОМНАТЫ'}: ${c.code}
+${line}
+
+${isUa ? 'НАЗВА ПАКТУ' : 'НАЗВАНИЕ ПАКТА'}: ${c.title}
+${isUa ? 'СЦЕНАРІЙ СОЮЗУ' : 'СЦЕНАРИЙ СОЮЗА'}: ${c.scenTitle}
+${isUa ? 'ДОМІНУЮЧА СТОРОНА' : 'ДОМИНИРУЮЩАЯ СТОРОНА'}: ${c.domRole}
+${isUa ? 'ПІДПОРЯДКОВАНА СТОРОНА' : 'ПОДЧИНЯЮЩАЯСЯ СТОРОНА'}: ${c.subRole}
+${isUa ? 'ДАТА СКРІПЛЕННЯ' : 'ДАТА СКРЕПЛЕНИЯ'}: ${dateStr}
+
+${line}
+I. ${isUa ? "ОБОВ'ЯЗКИ ПІДПОРЯДКОВАНОЇ СТОРОНИ" : 'ОБЯЗАННОСТИ ПОДЧИНЯЮЩЕЙСЯ СТОРОНЫ'} (${c.subRole})
+${subLine}
+${c.subDuties}
+
+${line}
+II. ${isUa ? "ОБОВ'ЯЗКИ ДОМІНУЮЧОЇ СТОРОНИ" : 'ОБЯЗАННОСТИ ДОМИНИРУЮЩЕЙ СТОРОНЫ'} (${c.domRole})
+${subLine}
+${c.domDuties}
+
+${line}
+III. ${isUa ? "ЗАГАЛЬНІ ПРАВИЛА СОЮЗУ" : "ОБЩИЕ ПРАВИЛА СОЮЗА"}
+${subLine}
+${c.generalRules}
+
+${line}
+IV. ${isUa ? "ПРИВІЛЕЇ ДОМІНУЮЧОЇ СТОРОНИ" : "ПРИВИЛЕГИИ ДОМИНИРУЮЩЕЙ СТОРОНЫ"} (${c.domRole})
+${subLine}
+${c.domPrivileges}
+
+${line}
+V. ${isUa ? "БОНУСИ ТА ДАРУНКИ ДЛЯ" : "БОНУСЫ И ДАРЫ ДЛЯ"} ${c.subRole}
+${subLine}
+${c.subRewards}
+
+${line}
+${isUa ? 'Скріплено священною обітницею пари в додатку Pact & Passion.' : 'Скреплено священным обетом пары в приложении Pact & Passion.'}
+${line}
+`;
+
+      const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = `Pact_and_Passion_${c.code}.txt`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(url);
+
+      showToastMsg(t('downloadSuccessToast'));
+    }
+
+    function setContractMode(mode) {
+      haptic('light');
+      document.getElementById('btn-mode-preset').classList.toggle('active', mode === 'preset');
+      document.getElementById('btn-mode-custom').classList.toggle('active', mode === 'custom');
+
+      const scen = SCENARIOS[selectedScenarioKey] || SCENARIOS.master_sub;
+      if (mode === 'preset') {
+        loadScenarioPresetsToWriter();
+      } else {
+        document.getElementById('writer-pact-title').value = `Пакт: ${scen.title[currentLang]}`;
+        contractDraft.subDuties = '';
+        contractDraft.domDuties = '';
+        contractDraft.generalRules = '';
+        contractDraft.domPrivileges = '';
+        contractDraft.subRewards = '';
+      }
+    }
+
+
+
+
+
+
+
+
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+
+
+    function openModal(id) {
+      haptic('light');
+      document.getElementById(id)?.classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id)?.classList.remove('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyLanguage(currentLang);
+    });
+  
+
+    /* ========================================================================
+       ШЛЮЗ + ОБЛАКО: комнаты, роли, ворота создателя и гостя, пересмотр контракта
+       Внутренние ключи ролей сохранены из ядра: 'male' = доминирующая сторона
+       (создатель комнаты), 'female' = подчиняющаяся сторона (гость).
+       Реальные названия и иконки берутся из сценария комнаты (getRoleInfo).
+       ======================================================================== */
+    window.PactRoom = null;               // актуальный документ комнаты из Firestore
+    let myMemberKey = null;               // 'male' (создатель) | 'female' (гость)
+    let gatewayBusy = false;
+    let presenceData = {};
+    let roomListenCode = null;            // для какой комнаты уже включена подписка на документ
+    let realtimeCode = null;              // для какой комнаты уже включены чат/состояние/присутствие
+    let lastManuscriptUseRoom = false;    // чей текст показан в окне манускрипта: комнаты или черновика
+    let askedRevisionAt = 0;              // чтобы окно пересмотра не всплывало повторно
+    let prevRoomStatus = null;
+    let prevRevisionStatus = null;
+    let enteredDesktop = false;
+
+    const ROOM_ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // без похожих символов: 0 O 1 I L
+    const ROOM_CODE_RE = /^PACT-[2-9A-HJKMNP-Z]{6}$/;
+    const TONE_COLORS = { male: '#7DD3FC', female: '#FF8599', custom: '#D8B4FE' };
+
+    function genRoomCode() {
+      const arr = new Uint32Array(6);
+      (window.crypto || window.msCrypto).getRandomValues(arr);
+      let s = '';
+      for (let i = 0; i < 6; i++) s += ROOM_ALPHABET[arr[i] % ROOM_ALPHABET.length];
+      return 'PACT-' + s;
+    }
+
+    function normalizeRoomCode(raw) {
+      let v = String(raw || '').trim().toUpperCase().replace(/\s+/g, '');
+      if (!v) return '';
+      if (!v.startsWith('PACT-')) v = 'PACT-' + v.replace(/^PACT/, '').replace(/^-/, '');
+      return v;
+    }
+
+    function explainCloudError(res) {
+      switch (res && res.reason) {
+        case 'auth': return 'Не удалось войти в облако. Включите Anonymous в Firebase → Authentication.';
+        case 'denied': return 'Доступ закрыт правилами базы. Проверьте Firestore Rules.';
+        case 'offline': return 'Нет связи. Проверьте интернет и повторите.';
+        case 'notfound': return 'Комната с таким кодом не найдена.';
+        case 'full': return 'В этой комнате уже есть двое участников.';
+        case 'notmember': return 'Эта комната вам не принадлежит.';
+        default: return 'Что-то пошло не так. Попробуйте ещё раз.';
+      }
+    }
+
+    function waitForCloud(ms) {
+      return new Promise((resolve) => {
+        if (window.PactCloud) return resolve(true);
+        const t = setTimeout(() => resolve(!!window.PactCloud), ms);
+        window.addEventListener('pactcloud-ready', () => { clearTimeout(t); resolve(true); }, { once: true });
+      });
+    }
+
+    /* ---------------- СЕССИЯ (чтобы не входить заново) ---------------- */
+    function readSession() {
+      try { return JSON.parse(localStorage.getItem('pact_session') || 'null'); } catch (e) { return null; }
+    }
+    function saveSession(obj) {
+      try { localStorage.setItem('pact_session', JSON.stringify(obj)); } catch (e) {}
+    }
+    function clearSession() {
+      try { localStorage.removeItem('pact_session'); } catch (e) {}
+    }
+
+    /* ---------------- РОЛИ ИЗ СЦЕНАРИЯ КОМНАТЫ ---------------- */
+    window.getRoleInfo = function(key) {
+      const d = window.PactRoom;
+      const isDom = key === 'male';
+      let name, icon, tone;
+      if (d && d.roleDom) {
+        const scen = SCENARIOS[d.scenarioKey] || null;
+        name = isDom ? d.roleDom : d.roleSub;
+        icon = isDom ? (d.domIcon || scen?.domIcon || '👑') : (d.subIcon || scen?.subIcon || '🗝️');
+        const type = d.scenarioType || scen?.type || 'male';
+        tone = type === 'custom' ? 'custom' : (isDom ? type : (type === 'male' ? 'female' : 'male'));
+      } else {
+        name = isDom ? 'Верхний ♂' : 'Нижняя ♀';
+        icon = isDom ? '👑' : '🗝️';
+        tone = isDom ? 'male' : 'female';
+      }
+      return { key, name, icon, tone, color: TONE_COLORS[tone] };
+    };
+
+    window.isPartnerOnline = function() {
+      if (!myMemberKey) return false;
+      const other = myMemberKey === 'male' ? 'female' : 'male';
+      const ts = presenceData[other];
+      return !!ts && (Date.now() - ts) < 75000;
+    };
+
+    function setText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function applyRoleLabelsToUI() {
+      const dom = window.getRoleInfo('male');
+      const sub = window.getRoleInfo('female');
+      setText('bank-title-male', `${dom.icon} ${dom.name}`);
+      setText('bank-title-female', `${sub.icon} ${sub.name}`);
+      setText('session-title-male', `${dom.name} — сессия`);
+      setText('session-title-female', `${sub.name} — сессия`);
+      const st1 = document.getElementById('session-title-male');
+      const st2 = document.getElementById('session-title-female');
+      if (st1) st1.style.color = dom.color;
+      if (st2) st2.style.color = sub.color;
+    }
+
+    function updateChatPresenceLabel() {
+      const el = document.getElementById('pair-chat-role-indicator');
+      if (!el) return;
+      const online = window.isPartnerOnline();
+      el.textContent = online ? 'В сети' : 'Не в сети';
+      el.style.color = online ? '#27ae60' : '#8b8296';
+    }
+
+    /* ---------------- ИНДИКАТОР КОМНАТЫ НА РАБОЧЕМ СТОЛЕ ---------------- */
+    function roomStatusText() {
+      const d = window.PactRoom;
+      if (!d) return { icon: '⏳', text: 'Подключение…' };
+      const iAmCreator = myMemberKey === 'male';
+      const rev = d.revision;
+      if (!d.partnerUid) return { icon: '⏳', text: 'Партнёр ещё не вошёл' };
+      if (d.status === 'draft') {
+        return rev && rev.status === 'approved'
+          ? { icon: '🔁', text: iAmCreator ? 'Пересмотр: можно править контракт' : 'Пересмотр: создатель правит контракт' }
+          : { icon: '✍️', text: 'Контракт ещё пишется' };
+      }
+      if (d.status === 'sealed') {
+        return iAmCreator
+          ? { icon: '📜', text: 'Партнёр ещё не принял контракт' }
+          : { icon: '📜', text: 'Контракт ждёт вашего принятия' };
+      }
+      if (rev && rev.status === 'pending') return { icon: '🔁', text: 'Предложен пересмотр контракта' };
+      return { icon: '✅', text: 'Контракт принят' };
+    }
+
+    function updateRoomIndicator() {
+      const bar = document.getElementById('room-info-bar');
+      if (!bar || !enteredDesktop) return;
+      const me = window.getRoleInfo(currentAvatarRole || myMemberKey || 'female');
+      const st = roomStatusText();
+      const online = window.isPartnerOnline();
+
+      const pill = document.getElementById('rib-role');
+      if (pill) {
+        pill.textContent = `${me.icon} ${me.name}`;
+        pill.style.color = me.color;
+        pill.style.borderColor = me.color + '66';
+        pill.style.background = me.color + '22';
+      }
+      setText('rib-code', currentRoomCode || '');
+      setText('rib-status', `${st.icon} ${st.text}`);
+      const dot = document.getElementById('rib-dot');
+      if (dot) {
+        dot.textContent = online ? '● в сети' : '○ не в сети';
+        dot.className = 'rib-dot ' + (online ? 'on' : 'off');
+      }
+      bar.classList.toggle('attention', st.icon === '📜' || st.icon === '🔁' || st.icon === '⏳');
+    }
+
+    function onRoomInfoBarTap() { openFullContractPreview(true); }
+
+    /* ---------------- ПОДПИСКА НА ДОКУМЕНТ КОМНАТЫ ---------------- */
+    function startRoomListener() {
+      if (!window.PactCloud || roomListenCode === currentRoomCode) return;
+      roomListenCode = currentRoomCode;
+      window.PactCloud.subscribeRoom(currentRoomCode, onRoomUpdate);
+    }
+
+    function startRoomRealtime() {
+      if (!window.PactCloud || realtimeCode === currentRoomCode) return;
+      realtimeCode = currentRoomCode;
+      window.PactCloud.subscribeShared(currentRoomCode, window.__applyShared);
+      window.PactCloud.subscribePresence(currentRoomCode, (p) => {
+        presenceData = p || {};
+        updateRoomIndicator();
+        updateChatPresenceLabel();
+      });
+      window.PactCloud.startPresence(currentRoomCode, myMemberKey);
+      window.PactCloud.startChat(currentRoomCode);
+      if (!window.__presenceTick) {
+        window.__presenceTick = setInterval(() => { updateRoomIndicator(); updateChatPresenceLabel(); }, 20000);
+      }
+    }
+
+    function onRoomUpdate(d) {
+      if (!d) return;
+      const prevStatus = prevRoomStatus;
+      const prevRev = prevRevisionStatus;
+      window.PactRoom = d;
+      prevRoomStatus = d.status;
+      prevRevisionStatus = d.revision ? d.revision.status : null;
+
+      applyRoleLabelsToUI();
+      updateRoomIndicator();
+      if (typeof window.renderPairChat === 'function' && enteredDesktop) window.renderPairChat();
+
+      // гость на экране принятия: перерисовываем свиток, пока создатель пишет или правит
+      if (isJoinerGateActive()) renderJoinerGate();
+
+      // окно манускрипта открыто: обновляем текст и кнопки пересмотра
+      const msModal = document.getElementById('modal-full-contract-preview');
+      if (msModal && msModal.classList.contains('active')) {
+        renderFullContractManuscript(lastManuscriptUseRoom);
+        renderManuscriptActions();
+      }
+
+      if (!enteredDesktop) return;
+      const iAmCreator = myMemberKey === 'male';
+      const partnerRole = window.getRoleInfo(iAmCreator ? 'female' : 'male').name;
+
+      // партнёр предлагает пересмотр
+      if (d.revision && d.revision.status === 'pending' && d.revision.requestedByUid !== window.PactCloud?.getUid()) {
+        if (askedRevisionAt !== d.revision.at) {
+          askedRevisionAt = d.revision.at;
+          setText('revision-ask-text', `${partnerRole} предлагает пересмотреть контракт. Если вы согласны, создатель сможет внести правки, а затем контракт нужно будет принять заново.`);
+          openModal('modal-revision-ask');
+        }
+      }
+      // ответ на наш запрос
+      if (prevRev === 'pending' && !d.revision && d.status === 'accepted') {
+        showToastMsg('Запрос на пересмотр контракта закрыт');
+        closeModal('modal-revision-ask');
+      }
+      if (prevRev === 'pending' && d.revision && d.revision.status === 'approved') {
+        showToastMsg(iAmCreator ? 'Пересмотр согласован. Можно править контракт ✍️' : 'Пересмотр согласован. Создатель вносит правки ✍️');
+        closeModal('modal-revision-ask');
+      }
+      // контракт переписан и запечатан заново: гость должен принять его снова
+      if (!iAmCreator && d.status === 'sealed' && prevStatus && prevStatus !== 'sealed' && !isJoinerGateActive()) {
+        showToastMsg('Контракт обновлён: прочитайте и примите его заново 📜');
+        openJoinerReviewStage();
+      }
+    }
+
+    /* ---------------- ОБЩЕЕ СОСТОЯНИЕ: гардероб, намёки, баланс, аватарки ---------------- */
+    function persistShared(partial) {
+      try {
+        localStorage.setItem(`pact_room_${currentRoomCode}_wardrobe`, JSON.stringify({ selectedWardrobeIds, partnerHintIds }));
+      } catch (e) {}
+      if (window.PactCloud) window.PactCloud.saveShared(partial);
+    }
+
+    function loadRoomLocalCache() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(`pact_room_${currentRoomCode}_wardrobe`) || 'null');
+        if (raw) {
+          if (Array.isArray(raw.selectedWardrobeIds)) selectedWardrobeIds = raw.selectedWardrobeIds;
+          if (Array.isArray(raw.partnerHintIds)) partnerHintIds = raw.partnerHintIds;
+        }
+      } catch (e) {}
+    }
+
+    window.__applyShared = function(d) {
+      try {
+        d = d || {};
+        if (Array.isArray(d.selectedWardrobeIds)) selectedWardrobeIds = d.selectedWardrobeIds;
+        if (Array.isArray(d.partnerHintIds)) partnerHintIds = d.partnerHintIds;
+        if (d.femaleBalances) femaleBalances = d.femaleBalances;
+        if (d.maleBalances) maleBalances = d.maleBalances;
+        if (d.avatars) {
+          if (typeof d.avatars.male === 'string') localStorage.setItem('pact_avatar_male', d.avatars.male);
+          if (typeof d.avatars.female === 'string') localStorage.setItem('pact_avatar_female', d.avatars.female);
+        }
+        try {
+          localStorage.setItem(`pact_room_${currentRoomCode}_wardrobe`, JSON.stringify({ selectedWardrobeIds, partnerHintIds }));
+        } catch (e) {}
+        updateAllAvatarsUI();
+        renderDesktop();
+        const active = navStack[navStack.length - 1];
+        if (active === 'tab-wardrobe') renderWardrobe();
+        if (active === 'tab-bank') renderBankScreen();
+        if (active === 'tab-shop') renderProducts();
+      } catch (e) { console.warn('Не удалось применить общее состояние:', e); }
+    };
+
+    /* ---------------- ЭКРАН ВХОДА: создание и вход по коду ---------------- */
+    async function handleCreateRoom() {
+      if (gatewayBusy) return;
+      haptic('medium');
+      if (!(await waitForCloud(4000))) { showToastMsg('Облако не загрузилось. Проверьте интернет.'); return; }
+
+      gatewayBusy = true;
+      try {
+        isRoomCreator = true;
+        selectedScenarioKey = null;
+        isContractSaved = false;
+        customRoleNames = { male: '', female: '' };
+        contractDraft = { title: '', subDuties: '', domDuties: '', generalRules: '', domPrivileges: '', subRewards: '' };
+        window.PactRoom = null;
+        prevRoomStatus = null;
+        prevRevisionStatus = null;
+
+        let code = '', res = null;
+        for (let i = 0; i < 5; i++) {
+          code = genRoomCode();
+          res = await window.PactCloud.createRoom(code);
+          if (res.ok || res.reason !== 'exists') break;
+        }
+        if (!res || !res.ok) { showToastMsg(explainCloudError(res)); return; }
+
+        currentRoomCode = code;
+        saveSession({ code, entered: false, memberKey: 'male' });
+        const badge = document.getElementById('badge-room-id');
+        if (badge) badge.textContent = code;
+        const hubBadge = document.getElementById('creator-hub-code-badge');
+        if (hubBadge) hubBadge.textContent = code;
+        startRoomListener();
+        openModal('modal-created');
+      } finally {
+        gatewayBusy = false;
+      }
+    }
+
+    async function handleJoinRoom() {
+      if (gatewayBusy) return;
+      const input = document.getElementById('input-room-code');
+      const code = normalizeRoomCode(input ? input.value : '');
+
+      if (!code) {
+        haptic('heavy');
+        showToastMsg(t('emptyCodeAlert'));
+        return;
+      }
+      if (!ROOM_CODE_RE.test(code)) {
+        haptic('heavy');
+        showToastMsg('Неверный формат кода. Пример: PACT-K7M4X2');
+        return;
+      }
+      if (!(await waitForCloud(4000))) { showToastMsg('Облако не загрузилось. Проверьте интернет.'); return; }
+
+      gatewayBusy = true;
+      try {
+        const res = await window.PactCloud.joinRoom(code);
+        if (!res.ok) { haptic('heavy'); showToastMsg(explainCloudError(res)); return; }
+
+        haptic('success');
+        currentRoomCode = code;
+        window.PactRoom = res.data;
+        prevRoomStatus = res.data.status;
+        prevRevisionStatus = res.data.revision ? res.data.revision.status : null;
+        isRoomCreator = (res.role === 'creator');
+        if (isRoomCreator) hydrateCreatorFromRoom(res.data);
+        const hubBadge = document.getElementById('creator-hub-code-badge');
+        if (hubBadge) hubBadge.textContent = code;
+        saveSession({ code, entered: false, memberKey: isRoomCreator ? 'male' : 'female' });
+        startRoomListener();
+        startWineTransition();
+      } finally {
+        gatewayBusy = false;
+      }
+    }
+
+    function hydrateCreatorFromRoom(d) {
+      selectedScenarioKey = d.scenarioKey || null;
+      if (d.customRoles) customRoleNames = { male: d.customRoles.dom || '', female: d.customRoles.sub || '' };
+      contractDraft = {
+        title: d.title || '',
+        subDuties: d.subDuties || '',
+        domDuties: d.domDuties || '',
+        generalRules: d.generalRules || '',
+        domPrivileges: d.domPrivileges || '',
+        subRewards: d.subRewards || ''
+      };
+      isContractSaved = (d.status === 'sealed' || d.status === 'accepted');
+    }
+
+    function enterRoomFromModal() {
+      closeModal('modal-created');
+      startWineTransition();
+    }
+
+    function startWineTransition() {
+      const welcome = document.getElementById('welcome-screen');
+      const wineStage = document.getElementById('wine-loading-stage');
+
+      welcome.classList.add('hidden');
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        wineStage.classList.add('active');
+      }, 450);
+
+      setTimeout(() => {
+        playCrystalChime();
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+        wineStage.classList.add('dissolve');
+
+        setTimeout(() => {
+          wineStage.style.display = 'none';
+          const d = window.PactRoom;
+
+          if (isRoomCreator) {
+            if (d && d.status === 'accepted' && readSession()?.entered) {
+              enterDesktop('male');
+              return;
+            }
+            const creatorHub = document.getElementById('creator-hub-stage');
+            creatorHub.classList.add('active');
+            updateCreatorHubUI();
+          } else if (d && d.status === 'accepted') {
+            enterDesktop('female');   // гость уже принял контракт раньше
+          } else {
+            openJoinerReviewStage();
+          }
+        }, 750);
+      }, 5800);
+    }
+
+    /* ---------------- ЗАПЕЧАТЫВАНИЕ КОНТРАКТА (создатель) ---------------- */
+    async function saveContractFromWriter() {
+      if (gatewayBusy) return;
+      const scen = SCENARIOS[selectedScenarioKey] || SCENARIOS.master_sub;
+      const roles = getAdaptedRoleNames();
+      const icons = getAdaptedRoleIcons();
+      const title = document.getElementById('writer-pact-title').value.trim() || contractDraft.title || scen.title.ru;
+
+      const tooLong = [contractDraft.subDuties, contractDraft.domDuties, contractDraft.generalRules, contractDraft.domPrivileges, contractDraft.subRewards]
+        .some(s => (s || '').length > 8000);
+      if (tooLong || title.length > 200) {
+        showToastMsg('Слишком длинный текст: раздел до 8000 символов, название до 200');
+        return;
+      }
+
+      const fields = {
+        scenarioKey: selectedScenarioKey,
+        scenarioType: scen.type,
+        roleDom: roles.dom,
+        roleSub: roles.sub,
+        domIcon: icons.dom,
+        subIcon: icons.sub,
+        customRoles: selectedScenarioKey === 'custom_role'
+          ? { dom: customRoleNames.male, sub: customRoleNames.female }
+          : { dom: '', sub: '' },
+        title: title,
+        subDuties: contractDraft.subDuties || '',
+        domDuties: contractDraft.domDuties || '',
+        generalRules: contractDraft.generalRules || '',
+        domPrivileges: contractDraft.domPrivileges || '',
+        subRewards: contractDraft.subRewards || ''
+      };
+
+      gatewayBusy = true;
+      try {
+        const res = await window.PactCloud.sealContract(currentRoomCode, fields);
+        if (!res.ok) { showToastMsg(explainCloudError(res)); return; }
+
+        playSealStampSound();
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+        window.PactRoom = { ...(window.PactRoom || {}), ...fields, status: 'sealed', sealedAt: Date.now() };
+        delete window.PactRoom.revision;
+        isContractSaved = true;
+        closeContractWriter();
+        updateCreatorHubUI();
+        applyRoleLabelsToUI();
+        updateRoomIndicator();
+        showToastMsg(t('contractSealedToast'));
+      } finally {
+        gatewayBusy = false;
+      }
+    }
+
+    function handleEnterRoomFinalClick() {
+      if (!selectedScenarioKey) { haptic('heavy'); showToastMsg(t('needScenarioToast')); return; }
+      if (!isContractSaved) { haptic('heavy'); showToastMsg(t('needContractToast')); return; }
+      enterBoudoirUnlocked();
+    }
+
+    function enterBoudoirUnlocked() {
+      playCrystalChime();
+      tg?.HapticFeedback?.notificationOccurred?.('success');
+      enterDesktop('male');
+    }
+
+    /* ---------------- ВХОД НА РАБОЧИЙ СТОЛ ---------------- */
+    function enterDesktop(memberKey, opts = {}) {
+      myMemberKey = memberKey;
+      enteredDesktop = true;
+      currentAvatarRole = memberKey;
+      window.currentAvatarRole = memberKey;
+      try { localStorage.setItem('pact_current_role', memberKey); } catch (e) {}
+      saveSession({ code: currentRoomCode, entered: true, memberKey });
+
+      loadRoomLocalCache();
+      startRoomListener();
+      startRoomRealtime();
+
+      updateRoleEmojiUI();
+      updateAllAvatarsUI();
+      renderDesktop();
+      applyRoleLabelsToUI();
+      navStack = ['tab-home'];
+      renderActiveTab('tab-home');
+      document.getElementById('room-info-bar')?.classList.add('visible');
+      updateRoomIndicator();
+      document.documentElement.classList.remove('has-session');
+      document.documentElement.classList.add('app-entered');
+
+      const ids = ['welcome-screen', 'wine-loading-stage', 'creator-hub-stage', 'joiner-gate-stage'];
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (opts.instant) {
+          el.classList.remove('active');
+          el.style.display = 'none';
+        } else if (el.classList.contains('active') || id === 'welcome-screen') {
+          el.classList.add('dissolve');
+          setTimeout(() => { el.classList.remove('active'); el.style.display = 'none'; }, 520);
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    }
+
+    /* ---------------- ЭКРАН ПРИНЯТИЯ ПАКТА (гость) ---------------- */
+    function isJoinerGateActive() {
+      const g = document.getElementById('joiner-gate-stage');
+      return !!g && g.classList.contains('active') && g.style.display !== 'none';
+    }
+
+    function openJoinerReviewStage() {
+      // окна поверх (манускрипт, чтение раздела) закрываем, иначе они перекроют экран принятия
+      closeFullContractPreview();
+      closeSectionViewer();
+      closeModal('modal-revision-ask');
+      const joinerStage = document.getElementById('joiner-gate-stage');
+      joinerStage.classList.remove('dissolve');
+      joinerStage.style.display = '';
+      renderJoinerGate();
+      joinerStage.classList.add('active');
+    }
+
+    function renderJoinerGate() {
+      const d = window.PactRoom || {};
+      const scen = SCENARIOS[d.scenarioKey] || SCENARIOS.master_sub;
+      const preset = scen.preset.ru;
+      const sealed = (d.status === 'sealed');
+
+      setText('joiner-room-tag', currentRoomCode);
+      const authorRole = d.roleDom || scen.roleDom;
+      const subRole = d.roleSub || scen.roleSub;
+      const domIcon = d.domIcon || scen.domIcon || '👑';
+      const subIcon = d.subIcon || scen.subIcon || '🗝️';
+
+      setText('joiner-display-title', sealed ? (d.title || preset.title) : 'Пакт ещё пишется…');
+      setText('joiner-author-role-pill', sealed ? `Начертано: ${authorRole}` : 'Создатель комнаты пишет контракт');
+
+      const note = document.getElementById('joiner-wait-note');
+      if (note) {
+        note.style.display = sealed ? 'none' : 'block';
+        note.textContent = 'Как только создатель запечатает контракт, он появится здесь, обновлять экран не нужно.';
+      }
+      const acceptBtn = document.getElementById('btn-joiner-accept');
+      if (acceptBtn) {
+        acceptBtn.disabled = !sealed;
+        acceptBtn.style.opacity = sealed ? '1' : '0.45';
+      }
+
+      const container = document.getElementById('joiner-sections-list');
+      if (!container) return;
+      if (!sealed) { container.innerHTML = ''; return; }
+
+      const card = (key, icon, title) => `
+        <div class="section-menu-card filled" onclick="openSectionViewer('${key}')">
+          <div class="menu-action-left">
+            <div class="menu-action-icon">${escapeHtml(icon)}</div>
+            <div class="menu-action-texts">
+              <span class="menu-action-title">${escapeHtml(title)}</span>
+              <span class="menu-action-desc">Нажмите для чтения раздела</span>
+            </div>
+          </div>
+          <span class="menu-action-badge badge-sealed">Читать ›</span>
+        </div>`;
+
+      container.innerHTML =
+        card('subDuties', subIcon, `Обязанности (${subRole})`) +
+        card('domDuties', domIcon, `Обязанности (${authorRole})`) +
+        card('generalRules', '⚖️', 'Общие правила союза') +
+        card('domPrivileges', domIcon, `Привилегии (${authorRole})`) +
+        card('subRewards', '🎁', `Бонусы и дары для ${subRole}`);
+    }
+
+    async function acceptJoinerContractAndUnlock() {
+      if (gatewayBusy) return;
+      if (!window.PactRoom || window.PactRoom.status !== 'sealed') { showToastMsg('Контракт ещё не запечатан'); return; }
+      gatewayBusy = true;
+      try {
+        const res = await window.PactCloud.acceptContract(currentRoomCode);
+        if (!res.ok) { showToastMsg(explainCloudError(res)); return; }
+        playSealStampSound();
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+        window.PactRoom = { ...window.PactRoom, status: 'accepted', acceptedAt: Date.now() };
+        const joinerStage = document.getElementById('joiner-gate-stage');
+        joinerStage.classList.add('dissolve');
+        setTimeout(() => { joinerStage.classList.remove('active'); joinerStage.style.display = 'none'; }, 520);
+        if (!enteredDesktop) enterDesktop('female');
+        else { updateRoomIndicator(); }
+      } finally {
+        gatewayBusy = false;
+      }
+    }
+
+    /* ---------------- ЧТЕНИЕ РАЗДЕЛОВ И МАНУСКРИПТ ---------------- */
+    function openSectionViewer(key) {
+      haptic('light');
+      const d = window.PactRoom || {};
+      const scen = SCENARIOS[d.scenarioKey] || SCENARIOS.master_sub;
+      const preset = scen.preset.ru;
+      const authorRole = d.roleDom || scen.roleDom;
+      const subRole = d.roleSub || scen.roleSub;
+      const domIcon = d.domIcon || scen.domIcon || '👑';
+      const subIcon = d.subIcon || scen.subIcon || '🗝️';
+
+      const titlesMap = {
+        subDuties: `${subIcon} Обязанности (${subRole})`,
+        domDuties: `${domIcon} Обязанности (${authorRole})`,
+        generalRules: '⚖️ Общие правила союза',
+        domPrivileges: `${domIcon} Привилегии (${authorRole})`,
+        subRewards: `🎁 Бонусы и дары для ${subRole}`
+      };
+      const textMap = {
+        subDuties: d.subDuties || preset.subDuties || '',
+        domDuties: d.domDuties || preset.domDuties || '',
+        generalRules: d.generalRules || preset.generalRules || '',
+        domPrivileges: d.domPrivileges || preset.domPrivileges || '',
+        subRewards: d.subRewards || preset.subRewards || ''
+      };
+
+      setText('viewer-popup-title', titlesMap[key] || 'Раздел Пакта');
+      setText('viewer-popup-text-content', textMap[key] || '');
+      document.getElementById('modal-section-viewer')?.classList.add('active');
+    }
+
+    function openFullContractPreview(useRoom = false) {
+      haptic('light');
+      lastManuscriptUseRoom = !!useRoom;
+      renderFullContractManuscript(useRoom);
+      renderManuscriptActions();
+      document.getElementById('modal-full-contract-preview')?.classList.add('active');
+    }
+
+    function getContractDataForDisplay(useRoom) {
+      const d = useRoom ? window.PactRoom : null;
+      const key = (d && d.scenarioKey) || selectedScenarioKey;
+      const scen = SCENARIOS[key] || SCENARIOS.master_sub;
+      const preset = scen.preset.ru;
+      const hasRoleData = !!(d && d.roleDom);
+      const roles = hasRoleData ? { dom: d.roleDom, sub: d.roleSub } : getAdaptedRoleNames();
+      const icons = hasRoleData
+        ? { dom: d.domIcon || scen.domIcon || '👑', sub: d.subIcon || scen.subIcon || '🗝️' }
+        : getAdaptedRoleIcons();
+      const titleInput = document.getElementById('writer-pact-title');
+      const pick = (roomVal, draftVal, presetVal) => (useRoom ? roomVal : draftVal) || presetVal || '';
+
+      return {
+        title: useRoom ? (d?.title || preset.title) : (titleInput?.value.trim() || contractDraft.title || preset.title),
+        code: currentRoomCode,
+        scenTitle: scen.title.ru,
+        domRole: roles.dom,
+        subRole: roles.sub,
+        domIcon: icons.dom,
+        subIcon: icons.sub,
+        subDuties: pick(d?.subDuties, contractDraft.subDuties, preset.subDuties),
+        domDuties: pick(d?.domDuties, contractDraft.domDuties, preset.domDuties),
+        generalRules: pick(d?.generalRules, contractDraft.generalRules, preset.generalRules),
+        domPrivileges: pick(d?.domPrivileges, contractDraft.domPrivileges, preset.domPrivileges),
+        subRewards: pick(d?.subRewards, contractDraft.subRewards, preset.subRewards)
+      };
+    }
+
+    function manuscriptDateMs() {
+      const d = window.PactRoom;
+      return (lastManuscriptUseRoom && d && (d.acceptedAt || d.sealedAt)) || Date.now();
+    }
+
+    /* ---------------- ПЕРЕСМОТР КОНТРАКТА ---------------- */
+    function renderManuscriptActions() {
+      const box = document.getElementById('manuscript-revision-actions');
+      if (!box) return;
+      const d = window.PactRoom;
+      if (!lastManuscriptUseRoom || !enteredDesktop || !d) { box.innerHTML = ''; box.style.display = 'none'; return; }
+
+      const iAmCreator = myMemberKey === 'male';
+      const rev = d.revision;
+      const myUid = window.PactCloud?.getUid();
+      let html = '';
+
+      if (d.status === 'accepted' && !rev) {
+        html = `<button class="btn-revision" onclick="revisionAction('request')">🔁 Предложить пересмотр контракта</button>`;
+      } else if (d.status === 'accepted' && rev && rev.status === 'pending') {
+        if (rev.requestedByUid === myUid) {
+          html = `<div class="revision-note">Запрос на пересмотр отправлен. Ждём ответа партнёра.</div>
+                  <button class="btn-revision ghost" onclick="revisionAction('withdraw')">Отозвать запрос</button>`;
+        } else {
+          html = `<div class="revision-note">Партнёр предлагает пересмотреть контракт.</div>
+                  <div class="revision-row">
+                    <button class="btn-revision" onclick="revisionAction('approve')">Согласиться</button>
+                    <button class="btn-revision ghost" onclick="revisionAction('decline')">Отклонить</button>
+                  </div>`;
+        }
+      } else if (d.status === 'draft' && iAmCreator) {
+        html = `<div class="revision-note">Пересмотр согласован. Внесите правки и запечатайте контракт заново.</div>
+                <button class="btn-revision" onclick="openContractWriterForRevision()">✍️ Редактировать контракт</button>`;
+      } else if (d.status === 'draft') {
+        html = `<div class="revision-note">Пересмотр согласован. Создатель вносит правки, потом контракт нужно принять заново.</div>`;
+      } else if (d.status === 'sealed' && !iAmCreator) {
+        html = `<button class="btn-revision" onclick="closeFullContractPreview(); openJoinerReviewStage();">Принять обновлённый контракт 💍</button>`;
+      } else if (d.status === 'sealed') {
+        html = `<div class="revision-note">Контракт запечатан. Ждём, пока партнёр его примет.</div>`;
+      }
+
+      box.innerHTML = html;
+      box.style.display = html ? 'flex' : 'none';
+    }
+
+    async function revisionAction(kind) {
+      const d = window.PactRoom;
+      if (!d || gatewayBusy) return;
+      gatewayBusy = true;
+      try {
+        let res;
+        if (kind === 'request') res = await window.PactCloud.requestRevision(currentRoomCode, myMemberKey);
+        else if (kind === 'approve') res = await window.PactCloud.resolveRevision(currentRoomCode, true, d.revision);
+        else res = await window.PactCloud.resolveRevision(currentRoomCode, false);
+
+        if (!res.ok) { showToastMsg(explainCloudError(res)); return; }
+        closeModal('modal-revision-ask');
+        if (kind === 'request') showToastMsg('Запрос на пересмотр отправлен партнёру 🔁');
+        if (kind === 'withdraw') showToastMsg('Запрос отозван');
+        if (kind === 'decline') showToastMsg('Пересмотр отклонён');
+      } finally {
+        gatewayBusy = false;
+      }
+    }
+
+    // Создатель правит текст в уже согласованном пересмотре (сценарий остаётся прежним)
+    function openContractWriterForRevision() {
+      const d = window.PactRoom;
+      if (!d || myMemberKey !== 'male' || d.status !== 'draft') return;
+      closeFullContractPreview();
+      hydrateCreatorFromRoom(d);
+
+      const roles = getAdaptedRoleNames();
+      const icons = getAdaptedRoleIcons();
+      setText('lbl-sec-sub-duties', `Обязанности (${roles.sub})`);
+      setText('lbl-sec-dom-duties', `Обязанности (${roles.dom})`);
+      setText('lbl-sec-dom-privileges', `Привилегии (${roles.dom})`);
+      setText('lbl-sec-sub-rewards', `Бонусы и дары для ${roles.sub}`);
+      setText('icon-sec-sub-duties', icons.sub);
+      setText('icon-sec-dom-duties', icons.dom);
+      setText('icon-sec-dom-privileges', icons.dom);
+      const titleInput = document.getElementById('writer-pact-title');
+      if (titleInput) titleInput.value = contractDraft.title;
+      const toggle = document.querySelector('.contract-mode-toggle');
+      if (toggle) toggle.style.display = 'none';
+      document.getElementById('modal-contract-writer').classList.add('active');
+    }
+
+    // кнопка старой вкладки «Соглашение D/S» теперь тоже открывает манускрипт
+    function handleContractButtonClick() { openFullContractPreview(true); }
+
+    /* ---------------- ВЫХОД ИЗ КОМНАТЫ ---------------- */
+    function leaveRoom() {
+      if (!window.confirm('Выйти из комнаты? Ваша связь с этой парой на этом устройстве будет разорвана. Вернуться можно только по коду, если вы создатель или уже участник.')) return;
+      try { window.PactCloud?.stopAll(); } catch (e) {}
+      clearSession();
+      location.reload();
+    }
+
+    /* ---------------- ЗАПУСК: возобновление сессии ---------------- */
+    async function bootSession() {
+      const finish = () => document.documentElement.classList.remove('has-session');
+      const s = readSession();
+      if (!s || !s.code || !s.entered) { finish(); return; }
+
+      try {
+        const ok = await waitForCloud(5000);
+        if (!ok) { finish(); showToastMsg('Нет связи с облаком. Войдите по коду, когда появится интернет.'); return; }
+        const res = await Promise.race([
+          window.PactCloud.resumeRoom(s.code),
+          new Promise((resolve) => setTimeout(() => resolve({ ok: false, reason: 'offline' }), 9000))
+        ]);
+
+        if (res.ok) {
+          currentRoomCode = s.code;
+          window.PactRoom = res.data;
+          prevRoomStatus = res.data.status;
+          prevRevisionStatus = res.data.revision ? res.data.revision.status : null;
+          isRoomCreator = (res.role === 'creator');
+          if (isRoomCreator) hydrateCreatorFromRoom(res.data);
+          const w = document.getElementById('welcome-screen');
+          if (w) w.style.display = 'none';
+          enterDesktop(isRoomCreator ? 'male' : 'female', { instant: true });
+          // гость, который не успел принять обновлённый контракт
+          if (!isRoomCreator && res.data.status === 'sealed') openJoinerReviewStage();
+          return;
+        }
+        if (res.reason === 'notfound' || res.reason === 'notmember') clearSession();
+        else showToastMsg(explainCloudError(res));
+      } catch (e) {
+        console.warn('Не удалось возобновить сессию:', e);
+      }
+      finish();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { bootSession(); });
   </script>
 </body>
 </html>
