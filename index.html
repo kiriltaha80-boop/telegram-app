@@ -5500,7 +5500,18 @@ function updateAllAvatarsUI() {
 
     /* ====================== ШЛЮЗ (из test.html) ====================== */
 
-    const haptic = (type = 'light') => tg?.HapticFeedback?.impactOccurred?.(type);
+    // Telegram SDK кидает исключение на неизвестный стиль (например 'selection', 'success'),
+    // из-за чего обработчики падали до выполнения основной логики. Здесь стили сопоставляются безопасно.
+    const haptic = (type = 'light') => {
+      try {
+        const h = tg?.HapticFeedback;
+        if (!h) return;
+        if (type === 'selection') { h.selectionChanged?.(); return; }
+        if (type === 'success' || type === 'warning' || type === 'error') { h.notificationOccurred?.(type); return; }
+        const ok = ['light', 'medium', 'heavy', 'rigid', 'soft'];
+        h.impactOccurred?.(ok.includes(type) ? type : 'light');
+      } catch (e) { /* вибро не критично */ }
+    };
 
     let audioCtx = null;
     function getAudioContext() {
