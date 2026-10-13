@@ -96,7 +96,7 @@
 
     .toast-box {
       position: absolute;
-      top: 18px;
+      top: 116px;
       left: 50%;
       transform: translateX(-50%) translateY(-25px);
       background: rgba(26, 17, 34, 0.96);
@@ -1478,7 +1478,7 @@
        ======================================================== */
     .toast-container {
       position: fixed;
-      top: 16px;
+      top: 116px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 100000;
@@ -1786,38 +1786,49 @@
     }
     .desktop-tile:active { transform: scale(0.92); }
 
+    /* Квадратная иконка с вертикальной компоновкой */
     .tile-icon {
-      width: 68px;
-      height: 68px;
-      border-radius: 20px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 30px;
-      background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      border-bottom-color: rgba(230, 57, 86, 0.6);
-      box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55), inset 0 -3px 5px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.5), 0 14px 28px rgba(0, 0, 0, 0.8), 0 0 18px rgba(230, 57, 86, 0.25);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      width: 70px;
+     height: 70px;
+     border-radius: 20px;
+     position: relative;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 3px;
+     padding: 6px 4px 4px 4px;
+     background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
+     border: 1px solid rgba(255, 255, 255, 0.24);
+     border-bottom-color: rgba(230, 57, 86, 0.6);
+     box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55), inset 0 -3px 5px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.5), 0 14px 28px rgba(0, 0, 0, 0.8), 0 0 18px rgba(230, 57, 86, 0.25);
+     backdrop-filter: blur(20px);
+     -webkit-backdrop-filter: blur(20px);
     }
 
+    /* Эмодзи внутри значка */
+    .tile-emoji {
+      font-size:  24px;
+     line-height: 1;
+     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+    }
+
+    /* Название внутри значка под эмодзи */
     .tile-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-top: 5px;
-      text-align: center;
-      line-height: 1.1;
-      max-width: 76px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+     font-size: 12px;
+     font-weight: 800;
+     letter-spacing: 0.2px;
+     color: #EDE4F4;
+     text-align: center;
+     line-height: 1.1;
+     max-width: 62px;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    } 
 
-    .edit-mode .desktop-tile, .edit-mode .desktop-widget {
+     .edit-mode .desktop-tile, .edit-mode .desktop-widget {
       animation: jiggle 0.28s infinite alternate ease-in-out;
     }
     @keyframes jiggle {
@@ -2548,6 +2559,25 @@
     .nav-icon-svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
     .nav-back-chevron { font-size: 32px; font-weight: 300; line-height: 1; color: #8A8197; }
 
+    /* Статус текущей роли в профиле над именем */
+.profile-role-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0 auto 6px auto;
+  padding: 4px 16px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border: 1px solid rgba(230, 57, 86, 0.4);
+  background: rgba(230, 57, 86, 0.15);
+  color: #FF8599;
+  box-shadow: 0 0 14px rgba(230, 57, 86, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
     /* Профиль без очков */
     .profile-card-header { text-align: center; padding: 20px 0 10px 0; }
     .profile-avatar-container {
@@ -2747,7 +2777,7 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* Оформление сообщений Верхнего ♂ */
+    /* Оформление сообщений Верхнего  */
     .pair-msg-bubble.role-male {
       background: linear-gradient(135deg, #1b2c45 0%, #0d1726 100%);
       border: 1px solid rgba(74, 144, 226, 0.5);
@@ -2996,61 +3026,6 @@
     }
     .pair-msg-bubble.role-custom .pair-msg-author-tag { color: var(--bubble-custom-tag) !important; }
 
-    /* Информационная плашка комнаты на рабочем столе: роль, код, статус контракта, «в сети» */
-    .room-info-bar {
-      position: absolute;
-      top: 108px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 120;
-      display: none;
-      align-items: center;
-      gap: 7px;
-      max-width: calc(100% - 20px);
-      padding: 2px 9px;
-      border-radius: 12px;
-      background: rgba(22, 16, 28, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      font-size: 9px;
-      font-weight: 800;
-      color: #D6CEDF;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .room-info-bar.visible.on-home { display: flex; }
-    .room-info-bar.attention { border-color: rgba(212, 175, 55, 0.55); box-shadow: 0 0 12px rgba(212, 175, 55, 0.25); }
-    .room-info-bar .rib-role { padding: 1px 7px; border-radius: 8px; border: 1px solid; }
-    .room-info-bar .rib-code { color: #D4AF37; letter-spacing: 0.3px; }
-    .room-info-bar .rib-status { overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
-    .room-info-bar .rib-dot.on { color: #27ae60; }
-    .room-info-bar .rib-dot.off { color: #8b8296; }
-
-    /* Пересмотр контракта */
-    .manuscript-revision-actions {
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-      padding: 4px 0 2px;
-    }
-    .revision-note { font-size: 10.5px; color: #D6CEDF; line-height: 1.45; text-align: center; }
-    .revision-row { display: flex; gap: 8px; }
-    .btn-revision {
-      flex: 1;
-      padding: 11px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(230, 57, 86, 0.55);
-      background: var(--accent-gradient);
-      color: #fff;
-      font-size: 11.5px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .btn-revision.ghost { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.2); color: #D6CEDF; }
-    .btn-revision:active { transform: scale(0.97); }
-
     /* Кнопка выхода из комнаты в профиле */
     .btn-leave-room {
       width: 100%;
@@ -3252,9 +3227,9 @@
       </div>
 
       <div class="scenario-sheet-body">
-        <!-- ГРУППА 1: МУЖСКОЕ ГЛАВЕНСТВО (МАРС ♂) -->
+        <!-- ГРУППА 1: МУЖСКОЕ ГЛАВЕНСТВО -->
         <div class="scenario-group-label male">
-          <span>♂</span> <span data-i18n="groupMaleTitle">Мужское главенство (Марс ♂)</span>
+          <span>♂</span> <span data-i18n="groupMaleTitle">Мужское главенство (Марс )</span>
         </div>
         <div class="scenario-items-grid">
           
@@ -3298,7 +3273,7 @@
           <div class="scenario-item-btn" onclick="highlightScenario('muse_devotee', this)">
             <div class="scenario-item-left">
               <div class="scenario-name-main">
-                <span>♀</span> <span data-i18n="scen3Title">МУЗА & ПОКЛОННИК</span>
+                <span></span> <span data-i18n="scen3Title">МУЗА & ПОКЛОННИК</span>
               </div>
               <div class="scenario-desc-sub" data-i18n="scen3Desc">Рыцарское служение, эстетическое восхищение, поклонение красоте и вдохновению.</div>
             </div>
@@ -3540,13 +3515,7 @@
   <!-- Тёмная подложка шлюза: скрывает рабочий стол, пока идёт вход, бокал и написание контракта -->
   <div id="gateway-backdrop"></div>
 
-  <!-- Плашка комнаты: роль, код, статус контракта, партнёр в сети -->
-  <div id="room-info-bar" class="room-info-bar" onclick="onRoomInfoBarTap()" title="Открыть контракт">
-    <span id="rib-role" class="rib-role">—</span>
-    <span id="rib-code" class="rib-code"></span>
-    <span id="rib-status" class="rib-status"></span>
-    <span id="rib-dot" class="rib-dot off">○ не в сети</span>
-  </div>
+
 
   <!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
   <div id="modal-revision-ask" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-revision-ask')">
@@ -3622,7 +3591,7 @@
     </button>
   </div>
 
-  <!-- 2. ВЕРХНИЙ СЕССИЯ ♂ -->
+  <!-- 2. ВЕРХНИЙ СЕССИЯ  -->
   <div id="tab-male-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
@@ -3885,9 +3854,15 @@
 
 <!-- Скрытый системный выбор файла -->
 <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
-        <div class="profile-name-row">
-          <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😇</span>
-          <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
+        <!-- Неоновый статус активной роли над именем -->
+          <div id="profile-role-badge" class="profile-role-badge">
+           <span id="profile-role-badge-text">🗝️ Нижняя </span>
+          </div>
+
+          <div class="profile-name-row">
+             <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😇</span>
+             <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
+           </div>
         </div>
       </div>
       <button class="btn-leave-room" onclick="leaveRoom()">🚪 Сменить комнату / Расторгнуть союз</button>
@@ -4256,7 +4231,7 @@
        ==================================================================== */
     const roleInfo = (k) => (typeof window.getRoleInfo === 'function')
       ? window.getRoleInfo(k)
-      : { name: k === 'male' ? 'Верхний ♂' : 'Нижняя ♀', icon: '', tone: k };
+      : { name: k === 'male' ? 'Верхний ' : 'Нижняя ', icon: '', tone: k };
     const tgHaptic = () => window.Telegram?.WebApp?.HapticFeedback;
     const myRoleKey = () => window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
     const nowTime = () => {
@@ -4697,13 +4672,15 @@
         let inner = '';
 
         if (item.type === 'tile') {
-          inner = `
-            ${deleteBtn}
-            <div class="desktop-tile">
-              <div class="tile-icon">${item.icon}</div>
-              <div class="tile-label">${item.title}</div>
-            </div>`;
-          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen(item.target); };
+         inner = `
+          ${deleteBtn}
+           <div class="desktop-tile">
+            <div class="tile-icon">
+              <span class="tile-emoji">${item.icon}</span>
+               <span class="tile-label">${item.title}</span>
+            </div>
+           </div>`;
+         wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen(item.target); };
         } else if (item.type === 'widget-passion') {
           inner = `
             ${deleteBtn}
@@ -5182,7 +5159,7 @@
         icon: '🎲',
         title: 'Судьба & Жребий',
         bullets: [
-          '3D-монетка: Марс ♂ и Венера ♀ для мгновенного и бесспорного разрешения споров пары.',
+          '3D-монетка: Марс  и Венера  для мгновенного и бесспорного разрешения споров пары.',
           'Числовой кубик: задайте любой предел от 1 до N и испытайте волю случая для выбора заданий.'
         ]
       },
@@ -5229,11 +5206,29 @@
       showToast(`Активная роль: ${getRoleInfo(currentAvatarRole).name}`, 'info');
       updateRoomIndicator();
     }
-    function updateRoleEmojiUI() {
-      const el = document.getElementById('role-toggle-emoji');
-      if (el) el.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
-    }
+  function updateRoleEmojiUI() {
+  const el = document.getElementById('role-toggle-emoji');
+  if (el) el.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
+  updateProfileRoleBadge();
+}
 
+    // Функция обновления плашки статуса роли над именем
+    function updateProfileRoleBadge() {
+      const badge = document.getElementById('profile-role-badge');
+      const textEl = document.getElementById('profile-role-badge-text');
+      if (!badge || !textEl) return;
+
+      const roleKey = currentAvatarRole || 'female';
+      const info = (typeof window.getRoleInfo === 'function')
+        ? window.getRoleInfo(roleKey)
+       : { name: roleKey === 'male' ? 'Верхний ' : 'Нижняя ', icon: roleKey === 'male' ? '👑' : '🗝️', color: roleKey === 'male' ? '#7DD3FC' : '#FF8599' };
+
+      textEl.textContent = `${info.icon} ${info.name}`;
+     badge.style.color = info.color;
+     badge.style.borderColor = info.color + '66';
+     badge.style.background = info.color + '22';
+     badge.style.boxShadow = `0 0 14px ${info.color}33`;
+    }
    // Стандартные аватарки по умолчанию
 const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
 const DEFAULT_AVATAR_FEMALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
@@ -5576,8 +5571,8 @@ function updateAllAvatarsUI() {
         enterRoomLockedText: "Войти в комнату",
         enterRoomReadyText: "Войти в будуар союза ✨",
         scenarioSheetTitle: "Выберите сценарий союза",
-        groupMaleTitle: "Мужское главенство (Марс ♂)",
-        groupFemaleTitle: "Женское главенство (Венера ♀)",
+        groupMaleTitle: "Мужское главенство (Марс )",
+        groupFemaleTitle: "Женское главенство (Венера )",
         groupFreeTitle: "Свободный стиль",
         scen1Title: "ВЕРХНИЙ & НИЖНЯЯ",
         scen1Desc: "Классический D/s. Слово мужчины — абсолютный закон, повиновение и верность.",
@@ -5641,8 +5636,8 @@ function updateAllAvatarsUI() {
         enterRoomLockedText: "Увійти до кімнати",
         enterRoomReadyText: "Увійти до будуару союзу ✨",
         scenarioSheetTitle: "Оберіть сценарій союзу",
-        groupMaleTitle: "Чоловіче верховенство (Марс ♂)",
-        groupFemaleTitle: "Жіноче верховенство (Венера ♀)",
+        groupMaleTitle: "Чоловіче верховенство (Марс )",
+        groupFemaleTitle: "Жіноче верховенство (Венера )",
         groupFreeTitle: "Вільний стиль",
         scen1Title: "ВЕРХНІЙ & НИЖНЯ",
         scen1Desc: "Класичний D/s. Слово чоловіка — абсолютний закон, покірність та вірність.",
@@ -5735,10 +5730,10 @@ function updateAllAvatarsUI() {
       master_sub: {
         id: 'master_sub',
         type: 'male',
-        roleDom: 'Верхний ♂',
-        roleSub: 'Нижняя ♀',
-        roleMale: 'Верхний ♂',
-        roleFemale: 'Нижняя ♀',
+        roleDom: 'Верхний ',
+        roleSub: 'Нижняя ',
+        roleMale: 'Верхний ',
+        roleFemale: 'Нижняя ',
         title: { ru: 'Верхний & Нижняя', ua: 'Верхній & Нижня' },
         icon: '👑',
         domIcon: '👑',
@@ -5765,10 +5760,10 @@ function updateAllAvatarsUI() {
       tempter_captive: {
         id: 'tempter_captive',
         type: 'male',
-        roleDom: 'Искуситель ♂',
-        roleSub: 'Пленница ♀',
-        roleMale: 'Искуситель ♂',
-        roleFemale: 'Пленница ♀',
+        roleDom: 'Искуситель ', 
+        roleSub: 'Пленница ',
+        roleMale: 'Искуситель ',
+        roleFemale: 'Пленница ',
         title: { ru: 'Искуситель & Пленница', ua: 'Спокусник & Полонянка' },
         icon: '🐺',
         domIcon: '🐺',
@@ -5795,10 +5790,10 @@ function updateAllAvatarsUI() {
       mistress_sub: {
         id: 'mistress_sub',
         type: 'female',
-        roleDom: 'Госпожа ♀',
-        roleSub: 'Покорный ♂',
-        roleMale: 'Покорный ♂',
-        roleFemale: 'Госпожа ♀',
+        roleDom: 'Госпожа ',
+        roleSub: 'Покорный ',
+        roleMale: 'Покорный ',
+        roleFemale: 'Госпожа ',
         title: { ru: 'Госпожа & Покорный', ua: 'Пані & Покірний' },
         icon: '👠',
         domIcon: '👠',
@@ -5825,10 +5820,10 @@ function updateAllAvatarsUI() {
       muse_devotee: {
         id: 'muse_devotee',
         type: 'female',
-        roleDom: 'Муза ♀',
-        roleSub: 'Поклонник ♂',
-        roleMale: 'Поклонник ♂',
-        roleFemale: 'Муза ♀',
+        roleDom: 'Муза ',
+        roleSub: 'Поклонник ',
+        roleMale: 'Поклонник ',
+        roleFemale: 'Муза ',
         title: { ru: 'Муза & Поклонник', ua: 'Муза & Шанувальник' },
         icon: '🕊️',
         domIcon: '🕊️',
@@ -5940,8 +5935,8 @@ function updateAllAvatarsUI() {
           : scen.title[currentLang];
 
         let typeBadge = '';
-        if (scen.type === 'male') typeBadge = ' (Марс ♂)';
-        else if (scen.type === 'female') typeBadge = ' (Венера ♀)';
+        if (scen.type === 'male') typeBadge = ' (Марс)';
+        else if (scen.type === 'female') typeBadge = ' (Венера)';
         else typeBadge = currentLang === 'ua' ? ' (Вільний стиль ✨)' : ' (Свободный стиль ✨)';
 
         scenarioBadge.className = 'menu-action-badge badge-selected';
@@ -6458,7 +6453,7 @@ ${line}
         const type = d.scenarioType || scen?.type || 'male';
         tone = type === 'custom' ? 'custom' : (isDom ? type : (type === 'male' ? 'female' : 'male'));
       } else {
-        name = isDom ? 'Верхний ♂' : 'Нижняя ♀';
+        name = isDom ? 'Верхний ' : 'Нижняя ';
         icon = isDom ? '👑' : '🗝️';
         tone = isDom ? 'male' : 'female';
       }
