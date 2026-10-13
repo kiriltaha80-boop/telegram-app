@@ -1815,17 +1815,17 @@
 
     /* Название внутри значка под эмодзи */
     .tile-label {
-     font-size: 12px;
-     font-weight: 800;
-     letter-spacing: 0.2px;
-     color: #EDE4F4;
+     font-size: 11px;
+     font-weight: 700;
+     letter-spacing: 0.3px;
+     color: #79809cd0;
      text-align: center;
      line-height: 1.1;
      max-width: 62px;
      white-space: nowrap;
      overflow: hidden;
      text-overflow: ellipsis;
-     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
     } 
 
      .edit-mode .desktop-tile, .edit-mode .desktop-widget {
@@ -1907,7 +1907,7 @@
 
     /* Квадратный виджет «Баланс Очков» (span 2) */
     .desktop-widget.widget-balance-square {
-      min-height: 124px;
+      min-height: 77px;
       padding: 10px;
       display: flex;
       flex-direction: column;
@@ -3065,6 +3065,271 @@
       pointer-events: none;
     }
     html.app-entered #gateway-backdrop { display: none; }
+  
+  .cycle-tab-screen {
+      padding: 10px 10px 24px 10px !important;
+    }
+
+    .cycle-main-card {
+      padding: 12px !important;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Два виджета статуса */
+    .cycle-widgets-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .cycle-status-card {
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.2s ease;
+    }
+    .cycle-status-card:active { transform: scale(0.97); }
+
+    .cycle-status-card.period-card {
+      background: linear-gradient(135deg, rgba(62, 12, 28, 0.95) 0%, rgba(26, 8, 16, 0.98) 100%);
+      border-color: rgba(230, 57, 86, 0.45);
+      box-shadow: 0 0 16px rgba(230, 57, 86, 0.2);
+    }
+
+    .cycle-status-card.ovulation-card {
+      background: linear-gradient(135deg, rgba(46, 18, 48, 0.95) 0%, rgba(20, 10, 26, 0.98) 100%);
+      border-color: rgba(232, 160, 191, 0.45);
+      box-shadow: 0 0 16px rgba(232, 160, 191, 0.2);
+    }
+
+    .cycle-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cycle-card-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #EDE4F4;
+    }
+
+    .cycle-day-count {
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .period-card .cycle-day-count { background: rgba(230, 57, 86, 0.35); color: #FFA3B5; }
+    .ovulation-card .cycle-day-count { background: rgba(232, 160, 191, 0.35); color: #F9D2E5; }
+
+    .cycle-card-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .cycle-card-sub {
+      font-size: 9px;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    /* Навигация по месяцам */
+    .calendar-month-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 8, 16, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 4px 8px;
+      margin-top: 2px;
+    }
+
+    .month-nav-arrow {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .month-nav-arrow:active { background: rgba(230, 57, 86, 0.25); }
+    .month-nav-arrow:disabled { opacity: 0.25; cursor: not-allowed; }
+
+    .calendar-month-label {
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #F8F3FA;
+    }
+
+    /* Дни недели */
+    .calendar-weekdays-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      padding: 4px 0;
+    }
+
+    /* Сетка дней */
+    .calendar-days-matrix {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .cal-day-cell {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      color: #DDD4E5;
+      transition: all 0.18s ease;
+    }
+    .cal-day-cell:active { transform: scale(0.92); }
+    .cal-day-cell.other-month { opacity: 0.18; pointer-events: none; }
+
+    /* Сегодняшний день */
+    .cal-day-cell.is-today {
+      border-color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      font-weight: 900;
+    }
+
+    /* Выбранная ячейка */
+    .cal-day-cell.is-selected {
+      border-color: var(--accent-color) !important;
+      background: rgba(230, 57, 86, 0.25) !important;
+      box-shadow: 0 0 14px rgba(230, 57, 86, 0.6);
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    /* Фаза месячных */
+    .cal-day-cell.phase-period {
+      background: rgba(230, 57, 86, 0.28);
+      border-color: rgba(230, 57, 86, 0.65);
+      color: #FFA3B5;
+    }
+
+    /* Фаза овуляции / фертильное окно */
+    .cal-day-cell.phase-ovulation {
+      background: rgba(232, 160, 191, 0.32);
+      border-color: rgba(232, 160, 191, 0.7);
+      color: #FFE6F2;
+      box-shadow: 0 0 10px rgba(232, 160, 191, 0.3);
+    }
+    .cal-day-cell.phase-fertile {
+      background: rgba(232, 160, 191, 0.14);
+      border-color: rgba(232, 160, 191, 0.35);
+      color: #F8D7E8;
+    }
+
+    /* Золотая точка-маркер события */
+    .event-gold-dot {
+      position: absolute;
+      bottom: 3px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #FFB703;
+      box-shadow: 0 0 6px #FFB703;
+    }
+
+    /* Панель выбранного дня */
+    .selected-day-panel {
+      background: rgba(14, 10, 20, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .selected-day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 6px;
+    }
+
+    .selected-day-date {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .selected-day-phase {
+      font-size: 10px;
+      color: #FFA3B5;
+      font-weight: 700;
+    }
+
+    .day-events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .event-item-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 183, 3, 0.35);
+      border-radius: 10px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: #FFF;
+    }
+
+    .no-events-hint {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2px 0;
+    }
+
   </style>
 </head>
 <body>
@@ -3615,15 +3880,140 @@
     </div>
   </div>
 
-  <!-- 4. ЖЕНСКИЙ КАЛЕНДАРЬ -->
-  <div id="tab-cycle" class="tab-content">
-    <div class="card">
+ <!-- 4. ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ -->
+  <div id="tab-cycle" class="tab-content cycle-tab-screen">
+    <div class="card cycle-main-card">
+      <!-- Шапка экрана -->
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Женский Календарь</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('cycle')">?</button>
+        <div class="screen-title">Календарь Союза</div>
+        <div style="display: flex; gap: 6px;">
+         <button id="btn-cycle-settings" class="small-btn" onclick="openCycleSettingsModal()" title="Настройки цикла">⚙️ Настройки</button>
+         <button class="tutorial-help-btn" onclick="openTutorial('cycle')">?</button>
+        </div>
       </div>
-      <div class="calendar-grid" id="calendar-grid"></div>
+      <!-- Два виджета статуса цикла -->
+      <div class="cycle-widgets-row">
+        <!-- Виджет месячных -->
+        <div class="cycle-status-card period-card">
+          <div class="cycle-card-top">
+            <span class="cycle-card-badge">🩸 Цикл</span>
+            <span class="cycle-day-count" id="cycle-period-days-badge">—</span>
+          </div>
+          <div class="cycle-card-title" id="cycle-period-status-text">Настройте даты цикла</div>
+          <div class="cycle-card-sub" id="cycle-period-sub-text">Нажмите ⚙️ Настройки вверху</div>
+        </div>
+
+        <!-- Виджет овуляции -->
+        <div class="cycle-status-card ovulation-card">
+          <div class="cycle-card-top">
+            <span class="cycle-card-badge">🌸 Овуляция</span>
+            <span class="cycle-day-count" id="cycle-ovul-days-badge">—</span>
+          </div>
+          <div class="cycle-card-title" id="cycle-ovul-status-text">Фертильное окно</div>
+          <div class="cycle-card-sub" id="cycle-ovul-sub-text">Прогноз вероятности</div>
+        </div>
+      </div>
+
+      <!-- Панель переключения месяцев (+- 1 год) -->
+      <div class="calendar-month-nav">
+        <button class="month-nav-arrow" id="btn-prev-month" onclick="changeCalendarMonth(-1)">‹</button>
+        <div class="calendar-month-label" id="calendar-current-month-lbl">Октябрь 2026</div>
+        <button class="month-nav-arrow" id="btn-next-month" onclick="changeCalendarMonth(1)">›</button>
+      </div>
+
+      <!-- Дни недели -->
+      <div class="calendar-weekdays-row">
+        <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+      </div>
+
+      <!-- Сетка дней месяца -->
+      <div class="calendar-days-matrix" id="calendar-days-matrix"></div>
+
+      <!-- Панель выбранного дня: описание фазы и события -->
+      <div class="selected-day-panel" id="selected-day-panel">
+        <div class="selected-day-header">
+          <div>
+            <div class="selected-day-date" id="selected-day-date-str">Выберите день</div>
+            <div class="selected-day-phase" id="selected-day-phase-str">—</div>
+          </div>
+          <button class="small-btn" onclick="openAddEventModal()">+ Событие ✨</button>
+        </div>
+
+        <!-- Список событий на выбранный день -->
+        <div class="day-events-list" id="day-events-list">
+          <div class="no-events-hint">Событий на этот день пока нет</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА: НАСТРОЙКИ ЦИКЛА -->
+  <div id="cycle-settings-modal" class="modal-overlay" onclick="if(event.target===this) closeCycleSettingsModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Настройки цикла ⚙️</h3>
+        <span class="modal-close-btn" onclick="closeCycleSettingsModal()">✕</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <div class="form-group">
+          <label style="font-size:10.5px; font-weight:700; color:var(--text-muted);">Дата начала последних месячных:</label>
+          <input type="date" id="cycle-input-last-date" class="form-control" style="font-size:13px; padding:10px;">
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:700; color:var(--text-muted);">
+            <span>Длительность цикла:</span>
+            <b id="cycle-val-length-lbl" style="color:#FF8599;">28 дней</b>
+          </div>
+          <input type="range" id="cycle-input-cycle-len" min="21" max="40" value="28" style="accent-color:var(--accent-color);" oninput="document.getElementById('cycle-val-length-lbl').textContent = this.value + ' дней'">
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:700; color:var(--text-muted);">
+            <span>Длительность месячных:</span>
+            <b id="cycle-val-period-lbl" style="color:#FF8599;">5 дней</b>
+          </div>
+          <input type="range" id="cycle-input-period-len" min="3" max="10" value="5" style="accent-color:var(--accent-color);" oninput="document.getElementById('cycle-val-period-lbl').textContent = this.value + ' дней'">
+        </div>
+
+        <p style="font-size:9.5px; color:var(--text-muted); line-height:1.4;">
+          Данные автоматически синхронизируются в комнате пары, чтобы оба партнёра понимали фазы тела и настроение.
+        </p>
+
+        <button class="action-roll-btn" onclick="saveCycleSettings()">Сохранить настройки ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА: ДОБАВЛЕНИЕ ЛИЧНОГО СОБЫТИЯ / ПРАЗДНИКА -->
+  <div id="cycle-event-modal" class="modal-overlay" onclick="if(event.target===this) closeCycleEventModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Событие на дату 📅</h3>
+        <span class="modal-close-btn" onclick="closeCycleEventModal()">✕</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <div id="event-modal-target-date" style="font-size:12px; font-weight:800; color:#FFB703;">15 октября 2026</div>
+
+        <div class="form-group">
+          <label style="font-size:10.5px; font-weight:700; color:var(--text-muted);">Название события / пометка:</label>
+          <input type="text" id="cycle-event-title-input" class="form-control" placeholder="Напр.: Годовщина союза 🥂, Свидание в кружеве 💋">
+        </div>
+
+        <!-- Быстрые иконки-пресеты -->
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button type="button" class="chip-btn" onclick="setQuickEventPreset('🥂 Годовщина / Праздник')">🥂 Праздник</button>
+          <button type="button" class="chip-btn" onclick="setQuickEventPreset('💋 Особое свидание')">💋 Свидание</button>
+          <button type="button" class="chip-btn" onclick="setQuickEventPreset('⛓️ Будуарная сессия')">⛓️ Сессия</button>
+          <button type="button" class="chip-btn" onclick="setQuickEventPreset('🛁 Вечер релакса и массажа')">🛁 Релакс</button>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <button class="action-roll-btn" style="flex:1;" onclick="saveCalendarEvent()">Сохранить ✨</button>
+          <button id="btn-delete-event" class="back-action-btn" style="display:none;" onclick="deleteSelectedCalendarEvent()">Удалить ✕</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3903,16 +4293,12 @@
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
         <div id="bank-box-female" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
-          <div id="bank-title-female" style="font-size:11px; font-weight:800; color:#fff; margin-bottom:6px;">🗝️ Нижняя</div>
-          <div style="display:flex; flex-direction:column; gap:4px; font-size:10px;">
             <span>💜 Страсть: <b id="bank-f-ptc">0</b></span>
             <span>🖤 Покорность: <b id="bank-f-otc">0</b></span>
             <span>❤️ Секс-токены: <b id="bank-f-stc">0</b></span>
           </div>
         </div>
         <div id="bank-box-male" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
-          <div id="bank-title-male" style="font-size:11px; font-weight:800; color:#fff; margin-bottom:6px;">👑 Верхний</div>
-          <div style="display:flex; flex-direction:column; gap:4px; font-size:10px;">
             <span>💙 Внимание: <b id="bank-m-atc">0</b></span>
             <span>💚 Забота: <b id="bank-m-ctc">0</b></span>
             <span>❤️ Секс-токены: <b id="bank-m-stc">0</b></span>
@@ -4573,6 +4959,7 @@
       if (tabId === 'tab-shop') renderProducts();
       if (tabId === 'tab-bank') renderBankScreen();
       if (tabId === 'tab-chat-pair' && typeof window.renderPairChat === 'function') window.renderPairChat();
+      if (tabId === 'tab-cycle') window.renderInteractiveCalendar();
     }
 
     // 1. РАБОЧИЙ СТОЛ
@@ -4588,9 +4975,9 @@
   { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
   { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
   { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
-  { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '🌸', target: 'tab-cycle', page: 0 },
-  { id: 'tile-chat', type: 'tile', title: 'Чат', icon: '💬', target: 'tab-messenger', page: 0 }
-];
+  { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '📅', target: 'tab-cycle', page: 0 },
+  
+  ];
     function saveDesktopItems() {
       localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
     }
@@ -4623,32 +5010,412 @@
       const viewport = document.getElementById('desktop-viewport');
       if (!viewport) return;
 
-      viewport.addEventListener('touchstart', (e) => {
-        if (isDesktopEditMode) return;
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        touchDeltaX = 0;
-        isSwiping = true;
-      }, { passive: true });
+     /* ========================================================
+       УМНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ (БЕЗОПАСНАЯ ВЕРСИЯ)
+       ======================================================== */
 
-      viewport.addEventListener('touchmove', (e) => {
-        if (!isSwiping || isDesktopEditMode) return;
-        const diffX = e.touches[0].clientX - touchStartX;
-        const diffY = e.touches[0].clientY - touchStartY;
-        if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 10) {
-          isSwiping = false;
-          return;
-        }
-        touchDeltaX = diffX;
-      }, { passive: true });
-
-      viewport.addEventListener('touchend', () => {
-        if (!isSwiping || isDesktopEditMode) return;
-        isSwiping = false;
-        if (touchDeltaX < -40 && currentDesktopPage < 2) goToDesktopPage(currentDesktopPage + 1);
-        else if (touchDeltaX > 40 && currentDesktopPage > 0) goToDesktopPage(currentDesktopPage - 1);
-      });
+    // Безопасная вибрация (работает даже если tg не подключен)
+    function safeHaptic(type = 'light') {
+      try {
+        if (typeof window.haptic === 'function') window.haptic(type);
+        else window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light');
+      } catch (e) {}
     }
+
+    function safeEscape(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function toDateKey(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    const MONTH_NAMES_RU = [
+      'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+      'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+    ];
+
+    let cycleSettings = {
+      lastPeriodDate: '',
+      cycleLength: 28,
+      periodLength: 5
+    };
+
+    let calendarEvents = {};
+    let calCurrentDate = new Date();
+    let calViewYear = calCurrentDate.getFullYear();
+    let calViewMonth = calCurrentDate.getMonth();
+    let calSelectedDateStr = toDateKey(calCurrentDate);
+
+    function loadCalendarDataFromStorage() {
+      try {
+        const localCycle = localStorage.getItem('pact_cycle_settings');
+        if (localCycle) cycleSettings = { ...cycleSettings, ...JSON.parse(localCycle) };
+        const localEv = localStorage.getItem('pact_calendar_events');
+        if (localEv) calendarEvents = JSON.parse(localEv) || {};
+      } catch (e) {}
+
+      if (!cycleSettings.lastPeriodDate) {
+        const d = new Date();
+        d.setDate(d.getDate() - 14);
+        cycleSettings.lastPeriodDate = toDateKey(d);
+      }
+    }
+
+    function changeCalendarMonth(offset) {
+      safeHaptic('selection');
+      const now = new Date();
+      const minDate = new Date(now.getFullYear(), now.getMonth() - 12, 1);
+      const maxDate = new Date(now.getFullYear(), now.getMonth() + 12, 1);
+
+      const target = new Date(calViewYear, calViewMonth + offset, 1);
+      if (target < minDate || target > maxDate) return;
+
+      calViewYear = target.getFullYear();
+      calViewMonth = target.getMonth();
+      renderInteractiveCalendar();
+    }
+
+    function getCyclePhaseForDate(targetDate) {
+      if (!cycleSettings.lastPeriodDate) return { phase: 'unknown', cycleDay: 0 };
+
+      const parts = cycleSettings.lastPeriodDate.split('-').map(Number);
+      if (parts.length < 3 || isNaN(parts[0])) return { phase: 'unknown', cycleDay: 0 };
+
+      const start = new Date(parts[0], parts[1] - 1, parts[2]);
+      start.setHours(0, 0, 0, 0);
+
+      const current = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+      current.setHours(0, 0, 0, 0);
+
+      const diffTime = current.getTime() - start.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      const cLen = Number(cycleSettings.cycleLength) || 28;
+      const pLen = Number(cycleSettings.periodLength) || 5;
+
+      let cycleDay = (diffDays % cLen);
+      if (cycleDay < 0) cycleDay += cLen;
+      cycleDay += 1;
+
+      const ovulationDay = Math.max(1, cLen - 14);
+
+      if (cycleDay <= pLen) {
+        return { phase: 'period', cycleDay, dayOfPeriod: cycleDay, totalPeriod: pLen };
+      } else if (cycleDay === ovulationDay) {
+        return { phase: 'ovulation', cycleDay };
+      } else if (cycleDay >= ovulationDay - 4 && cycleDay <= ovulationDay + 1) {
+        return { phase: 'fertile', cycleDay };
+      } else {
+        return { phase: 'regular', cycleDay, daysToPeriod: (cLen - cycleDay + 1) };
+      }
+    }
+
+    function getDaysWord(num) {
+      if (num % 10 === 1 && num % 100 !== 11) return 'день';
+      if ([2, 3, 4].includes(num % 10) && ![12, 13, 14].includes(num % 100)) return 'дня';
+      return 'дней';
+    }
+
+    function updateCycleSummaryCards() {
+      const today = new Date();
+      const info = getCyclePhaseForDate(today);
+
+      const periodDaysBadge = document.getElementById('cycle-period-days-badge');
+      const periodStatusText = document.getElementById('cycle-period-status-text');
+      const periodSubText = document.getElementById('cycle-period-sub-text');
+
+      const ovulDaysBadge = document.getElementById('cycle-ovul-days-badge');
+      const ovulStatusText = document.getElementById('cycle-ovul-status-text');
+      const ovulSubText = document.getElementById('cycle-ovul-sub-text');
+
+      const cLen = Number(cycleSettings.cycleLength) || 28;
+      const ovulationDay = Math.max(1, cLen - 14);
+
+      if (info.phase === 'period') {
+        if (periodDaysBadge) periodDaysBadge.textContent = `День ${info.cycleDay}`;
+        if (periodStatusText) periodStatusText.textContent = `Идут месячные: День ${info.dayOfPeriod} из ${info.totalPeriod} 🩸`;
+        if (periodSubText) periodSubText.textContent = `Окружите избранницу максимальным теплом и заботой`;
+      } else {
+        const daysLeft = (cLen - info.cycleDay + 1);
+        if (periodDaysBadge) periodDaysBadge.textContent = `${daysLeft} дн.`;
+        if (periodStatusText) periodStatusText.textContent = `До месячных: ${daysLeft} ${getDaysWord(daysLeft)}`;
+        if (periodSubText) periodSubText.textContent = `Текущий день цикла: ${info.cycleDay} из ${cLen}`;
+      }
+
+      if (info.phase === 'ovulation') {
+        if (ovulDaysBadge) ovulDaysBadge.textContent = `Пик 🌸`;
+        if (ovulStatusText) ovulStatusText.textContent = `Овуляция (Пик фертильности & страсти)`;
+        if (ovulSubText) ovulSubText.textContent = `Максимальная чувственность и влечение`;
+      } else if (info.phase === 'fertile') {
+        if (ovulDaysBadge) ovulDaysBadge.textContent = `Фертильно ✨`;
+        if (ovulStatusText) ovulStatusText.textContent = `Благоприятные дни (Фертильное окно)`;
+        if (ovulSubText) ovulSubText.textContent = `Повышенный тонус и сексуальная энергия`;
+      } else {
+        let daysToOvul = ovulationDay - info.cycleDay;
+        if (daysToOvul < 0) daysToOvul += cLen;
+        if (ovulDaysBadge) ovulDaysBadge.textContent = `${daysToOvul} дн.`;
+        if (ovulStatusText) ovulStatusText.textContent = `До овуляции: ${daysToOvul} ${getDaysWord(daysToOvul)}`;
+        if (ovulSubText) ovulSubText.textContent = `Пик цикла прогнозируется на ${ovulationDay}-й день`;
+      }
+    }
+
+    function renderInteractiveCalendar() {
+      loadCalendarDataFromStorage();
+      updateCycleSummaryCards();
+
+      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+      const settingsBtn = document.getElementById('btn-cycle-settings');
+      if (settingsBtn) {
+        settingsBtn.style.display = (currentRole === 'male') ? 'none' : 'inline-block';
+      }
+
+      const monthLbl = document.getElementById('calendar-current-month-lbl');
+      if (monthLbl) monthLbl.textContent = `${MONTH_NAMES_RU[calViewMonth]} ${calViewYear}`;
+
+      const matrix = document.getElementById('calendar-days-matrix');
+      if (!matrix) return;
+      matrix.innerHTML = '';
+
+      const firstDayOfMonth = new Date(calViewYear, calViewMonth, 1);
+      const lastDayOfMonth = new Date(calViewYear, calViewMonth + 1, 0);
+
+      let startDayOfWeek = firstDayOfMonth.getDay() - 1;
+      if (startDayOfWeek === -1) startDayOfWeek = 6;
+
+      const prevMonthLastDay = new Date(calViewYear, calViewMonth, 0).getDate();
+      for (let i = startDayOfWeek - 1; i >= 0; i--) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell other-month';
+        cell.textContent = prevMonthLastDay - i;
+        matrix.appendChild(cell);
+      }
+
+      const todayStr = toDateKey(new Date());
+
+      for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
+        const thisDate = new Date(calViewYear, calViewMonth, day);
+        const dateKey = toDateKey(thisDate);
+        const phaseInfo = getCyclePhaseForDate(thisDate);
+
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell';
+        cell.textContent = day;
+
+        if (dateKey === todayStr) cell.classList.add('is-today');
+        if (dateKey === calSelectedDateStr) cell.classList.add('is-selected');
+
+        if (phaseInfo.phase === 'period') cell.classList.add('phase-period');
+        else if (phaseInfo.phase === 'ovulation') cell.classList.add('phase-ovulation');
+        else if (phaseInfo.phase === 'fertile') cell.classList.add('phase-fertile');
+
+        if (calendarEvents[dateKey] && calendarEvents[dateKey].length > 0) {
+          const dot = document.createElement('div');
+          dot.className = 'event-gold-dot';
+          cell.appendChild(dot);
+        }
+
+        cell.onclick = () => selectCalendarDay(dateKey);
+        matrix.appendChild(cell);
+      }
+
+      renderSelectedDayDetails();
+    }
+
+    function selectCalendarDay(dateKey) {
+      safeHaptic('light');
+      calSelectedDateStr = dateKey;
+      renderInteractiveCalendar();
+    }
+
+    function renderSelectedDayDetails() {
+      const parts = calSelectedDateStr.split('-').map(Number);
+      if (parts.length < 3) return;
+      const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+
+      const dateStrEl = document.getElementById('selected-day-date-str');
+      const phaseStrEl = document.getElementById('selected-day-phase-str');
+      const eventsList = document.getElementById('day-events-list');
+
+      const options = { day: 'numeric', month: 'long', weekday: 'long' };
+      if (dateStrEl) dateStrEl.textContent = dateObj.toLocaleDateString('ru-RU', options);
+
+      const info = getCyclePhaseForDate(dateObj);
+      if (phaseStrEl) {
+        if (info.phase === 'period') phaseStrEl.textContent = `🩸 Месячные (День ${info.dayOfPeriod} из ${info.totalPeriod})`;
+        else if (info.phase === 'ovulation') phaseStrEl.textContent = `🌸 Пик овуляции`;
+        else if (info.phase === 'fertile') phaseStrEl.textContent = `✨ Благоприятные дни (фертильность)`;
+        else phaseStrEl.textContent = `День цикла: ${info.cycleDay}`;
+      }
+
+      if (!eventsList) return;
+      const events = calendarEvents[calSelectedDateStr] || [];
+
+      if (events.length === 0) {
+        eventsList.innerHTML = `<div class="no-events-hint">Событий на этот день пока нет</div>`;
+      } else {
+        eventsList.innerHTML = events.map(ev => `
+          <div class="event-item-card">
+            <span>${safeEscape(ev.text)}</span>
+            <span style="cursor:pointer; color:#FFA3B5; font-size:14px; padding:2px 6px;" onclick="event.stopPropagation(); deleteCalendarEventById('${calSelectedDateStr}', '${ev.id}')">✕</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openCycleSettingsModal() {
+      safeHaptic('light');
+      loadCalendarDataFromStorage();
+
+      const dateInput = document.getElementById('cycle-input-last-date');
+      const cLenInput = document.getElementById('cycle-input-cycle-len');
+      const pLenInput = document.getElementById('cycle-input-period-len');
+
+      if (dateInput) dateInput.value = cycleSettings.lastPeriodDate || toDateKey(new Date());
+      if (cLenInput) {
+        cLenInput.value = cycleSettings.cycleLength || 28;
+        const lbl = document.getElementById('cycle-val-length-lbl');
+        if (lbl) lbl.textContent = cLenInput.value + ' дней';
+      }
+      if (pLenInput) {
+        pLenInput.value = cycleSettings.periodLength || 5;
+        const lbl = document.getElementById('cycle-val-period-lbl');
+        if (lbl) lbl.textContent = pLenInput.value + ' дней';
+      }
+
+      document.getElementById('cycle-settings-modal')?.classList.add('active');
+    }
+
+    function closeCycleSettingsModal() {
+      document.getElementById('cycle-settings-modal')?.classList.remove('active');
+    }
+
+    function saveCycleSettings() {
+        const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
+      if (currentRole === 'male') {
+        safeHaptic('warning');
+        if (typeof showToast === 'function') {
+          showToast('Только избранница может сохранять настройки цикла 🌸', 'error');
+        }
+        closeCycleSettingsModal();
+        return;
+      }
+      
+      safeHaptic('medium');
+      const dateVal = document.getElementById('cycle-input-last-date')?.value;
+      const cLenVal = Number(document.getElementById('cycle-input-cycle-len')?.value) || 28;
+      const pLenVal = Number(document.getElementById('cycle-input-period-len')?.value) || 5;
+
+      if (!dateVal) {
+        if (typeof showToast === 'function') showToast('Укажите дату последних месячных', 'error');
+        return;
+      }
+
+      cycleSettings = {
+        lastPeriodDate: dateVal,
+        cycleLength: cLenVal,
+        periodLength: pLenVal
+      };
+
+      localStorage.setItem('pact_cycle_settings', JSON.stringify(cycleSettings));
+
+      if (window.PactCloud) {
+        window.PactCloud.saveShared({ cycleSettings });
+      }
+
+      closeCycleSettingsModal();
+      renderInteractiveCalendar();
+      if (typeof showToast === 'function') showToast('Настройки цикла обновлены ✨', 'success');
+    }
+
+    function openAddEventModal() {
+      safeHaptic('light');
+      const parts = calSelectedDateStr.split('-').map(Number);
+      const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+      const dateHeader = document.getElementById('event-modal-target-date');
+      if (dateHeader) dateHeader.textContent = dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      const input = document.getElementById('cycle-event-title-input');
+      if (input) input.value = '';
+
+      document.getElementById('cycle-event-modal')?.classList.add('active');
+      setTimeout(() => input?.focus(), 150);
+    }
+
+    function closeCycleEventModal() {
+      document.getElementById('cycle-event-modal')?.classList.remove('active');
+    }
+
+    function setQuickEventPreset(presetText) {
+      safeHaptic('light');
+      const input = document.getElementById('cycle-event-title-input');
+      if (input) input.value = presetText;
+    }
+
+    function saveCalendarEvent() {
+      safeHaptic('medium');
+      const input = document.getElementById('cycle-event-title-input');
+      const text = input ? input.value.trim() : '';
+      if (!text) {
+        if (typeof showToast === 'function') showToast('Введите название события', 'error');
+        return;
+      }
+
+      if (!calendarEvents[calSelectedDateStr]) calendarEvents[calSelectedDateStr] = [];
+      calendarEvents[calSelectedDateStr].push({
+        id: 'ev_' + Date.now(),
+        text: text,
+        createdAt: Date.now()
+      });
+
+      localStorage.setItem('pact_calendar_events', JSON.stringify(calendarEvents));
+
+      if (window.PactCloud) {
+        window.PactCloud.saveShared({ calendarEvents });
+      }
+
+      closeCycleEventModal();
+      renderInteractiveCalendar();
+      if (typeof showToast === 'function') showToast('Событие добавлено в календарь ✨', 'success');
+    }
+
+    function deleteCalendarEventById(dateKey, eventId) {
+      safeHaptic('light');
+      if (!calendarEvents[dateKey]) return;
+      calendarEvents[dateKey] = calendarEvents[dateKey].filter(e => e.id !== eventId);
+      if (calendarEvents[dateKey].length === 0) delete calendarEvents[dateKey];
+
+      localStorage.setItem('pact_calendar_events', JSON.stringify(calendarEvents));
+      if (window.PactCloud) {
+        window.PactCloud.saveShared({ calendarEvents });
+      }
+
+      renderInteractiveCalendar();
+      if (typeof showToast === 'function') showToast('Событие удалено', 'info');
+    }
+
+    // Привязываем все функции строго к window, чтобы onclick в HTML срабатывал всегда
+    window.renderInteractiveCalendar = renderInteractiveCalendar;
+    window.changeCalendarMonth = changeCalendarMonth;
+    window.selectCalendarDay = selectCalendarDay;
+    window.openCycleSettingsModal = openCycleSettingsModal;
+    window.closeCycleSettingsModal = closeCycleSettingsModal;
+    window.saveCycleSettings = saveCycleSettings;
+    window.openAddEventModal = openAddEventModal;
+    window.closeCycleEventModal = closeCycleEventModal;
+    window.setQuickEventPreset = setQuickEventPreset;
+    window.saveCalendarEvent = saveCalendarEvent;
+    window.deleteCalendarEventById = deleteCalendarEventById;
+  }
 
     // Отрисовка рабочего стола
     function renderDesktop() {
@@ -6651,6 +7418,8 @@ ${line}
         if (active === 'tab-wardrobe') renderWardrobe();
         if (active === 'tab-bank') renderBankScreen();
         if (active === 'tab-shop') renderProducts();
+        if (d.cycleSettings) { cycleSettings = d.cycleSettings; localStorage.setItem('pact_cycle_settings', JSON.stringify(cycleSettings)); }
+        if (d.calendarEvents) { calendarEvents = d.calendarEvents; localStorage.setItem('pact_calendar_events', JSON.stringify(calendarEvents)); }
       } catch (e) { console.warn('Не удалось применить общее состояние:', e); }
     };
 
