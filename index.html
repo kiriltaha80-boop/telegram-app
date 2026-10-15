@@ -232,8 +232,8 @@
       flex-direction: column;
       gap: 12px;
       box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       position: relative;
       z-index: 2;
     }
@@ -2892,29 +2892,47 @@
       --bubble-female-shadow: rgba(230, 57, 86, 0.35);
     }
 
-    #tab-chat-pair {
+    #tab-chat-ai {
       background-size: cover !important;
       background-position: center center !important;
       background-repeat: no-repeat !important;
       transition: background-image 0.5s ease;
     }
-    .pair-chat-overlay-dim {
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: var(--chat-overlay);
-      backdrop-filter: blur(var(--chat-blur));
-      -webkit-backdrop-filter: blur(var(--chat-blur));
-      z-index: 1;
-      pointer-events: none;
-      transition: background 0.4s ease;
+    #tab-chat-ai .pair-chat-fixed-header {
+      background: transparent !important;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      padding: 6px 4px 10px 4px;
     }
-    #tab-chat-pair .pair-chat-card-layout {
+    #tab-chat-ai .pair-input-bar-row {
+      background: transparent !important;
+      border-top: none !important;
+      box-shadow: none !important;
+      padding: 8px 2px 4px 2px;
+    }
+    /* Полностью убираем мутную плёнку */
+    .pair-chat-overlay-dim {
+      display: none !important;
+    }
+
+    /* Задаём обоим чатам плотный тёмный фон, чтобы рабочий стол не просвечивал пятнами */
+    #tab-chat-pair,
+    #tab-chat-ai {
+      background-color: #0c0914 !important;
+      background-size: 100% auto !important;
+      background-position: center center !important;
+      background-repeat: no-repeat !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    /* Отключаем размытие внутри карточек обоих мессенджеров */
+    #tab-chat-pair .pair-chat-card-layout,
+    #tab-chat-ai .pair-chat-card-layout {
       position: relative;
       z-index: 2;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-    }
+    } 
     /* Прозрачная шапка и строка ввода: без чёрных полос */
     #tab-chat-pair .pair-chat-fixed-header {
       background: transparent !important;
@@ -3329,7 +3347,299 @@
       font-style: italic;
       padding: 2px 0;
     }
+/* ========================================================
+       СТИЛИ ИИ-СОВЕТНИКА И 3D-ЗНАЧКА AI-STAR
+       ======================================================== */
+    /* Контейнер и сияние объемного 3D-значка */
+    .ai-star-3d-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 10px rgba(17, 184, 40, 0.45));
+      transition: transform 0.18s ease;
+    }
+    .desktop-tile:active .ai-star-3d-box {
+      transform: scale(0.92);
+    }
 
+    /* Модальные контейнеры для настройки ИИ и чата */
+    .ai-persona-modal,
+    .ai-chat-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 10005;
+      background: rgba(4, 2, 7, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 8px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 36px;
+    }
+    .ai-persona-modal.active,
+    .ai-chat-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .ai-persona-sheet,
+    .ai-chat-card-sheet {
+      background: linear-gradient(180deg, rgba(28, 16, 34, 0.98) 0%, rgba(13, 8, 18, 0.99) 100%);
+      border: 1.5px solid rgba(230, 57, 86, 0.45);
+      border-radius: 24px;
+      padding: 16px 14px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.95), 0 0 25px rgba(230, 57, 86, 0.3);
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .ai-persona-modal.active .ai-persona-sheet,
+    .ai-chat-modal.active .ai-chat-card-sheet {
+      transform: scale(1) translateY(0);
+    }
+
+    .ai-scroll-content {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 2px;
+      margin: 10px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Быстрый выбор имени */
+    .ai-name-chips-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .ai-name-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 6px 12px;
+      color: #EDE4F4;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .ai-name-chip.active {
+      background: rgba(230, 57, 86, 0.25);
+      border-color: var(--accent-color);
+      color: #FFF;
+      box-shadow: 0 0 10px rgba(230, 57, 86, 0.35);
+    }
+
+    /* Карточки архетипов */
+   * 1. Общий список карточек (отступы и расстояние между ними) */
+    .ai-archetypes-list {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;     /* Центрирует карточки в окне */
+      width: 100% !important;
+      box-sizing: border-box !important;
+      gap: 8px !important;                /* РАССТОЯНИЕ МЕЖДУ КАРТОЧКАМИ (было 8px, можно 6px / 10px) */
+      margin: 0 0 14px 0 !important;
+      padding: 0 !important;
+    }
+
+    /* 2. Сама карточка (ширина, высота, отступы) */
+    .ai-archetype-card {
+      box-sizing: border-box !important;
+      
+      /* ШИРИНА: поставьте любое значение (например 100%, 92%, 95% или 320px) */
+      width:  97% !important;
+      max-width: 380px !important;        /* Предел ширины, чтобы не вылезало за экран */
+      
+      /* ОТСТУПЫ ВНУТРИ: первое число — сверху/снизу, второе — по бокам */
+      padding: 12px 20px !important;       /* Уменьшите до 6px 10px, если карточки слишком толстые */
+      
+      /* СКРУГЛЕНИЕ УГЛОВ */
+      border-radius: 12px !important;     /* 10px, 12px, 14px или 16px */
+      
+      /* ВЫРАВНИВАНИЕ */
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;               /* Расстояние между эмодзи и текстом */
+      cursor: pointer;
+      margin: 0 auto !important;
+    }
+
+    /* 3. Размер эмодзи-значка слева */
+    .ai-archetype-card > div:first-child {
+      font-size: 20px !important;         /* РАЗМЕР ИКОНКИ (18px, 20px, 24px) */
+      flex-shrink: 0 !important;
+    }
+
+    /* 4. Название характера (жирный заголовок) */
+    .ai-archetype-card .arch-name {
+      font-size: 11px !important;         /* РАЗМЕР ШРИФТА ЗАГОЛОВКА */
+      font-weight: 700 !important;
+      line-height: 1.2 !important;
+      margin-bottom: 2px !important;
+    }
+
+    /* 5. Описание характера под заголовком */
+    .ai-archetype-card .arch-desc {
+      font-size: 9.5px !important;        /* РАЗМЕР ШРИФТА ОПИСАНИЯ */
+      line-height: 1.25 !important;
+      color: var(--text-muted) !important;
+    }
+    /* ПОДСВЕТКА ВЫБРАННОГО ХАРАКТЕРА (Сияющий сине-бирюзовый неон) */
+    .ai-archetype-card.active {
+      border: 1.5px solid #00F5D4 !important;
+      background: linear-gradient(135deg, rgba(0, 168, 255, 0.22) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+      box-shadow: 0 0 16px rgba(0, 245, 212, 0.4), inset 0 0 10px rgba(0, 168, 255, 0.25) !important;
+      transform: scale(1.015);
+    }
+    .ai-archetype-card.active .arch-name {
+      color: #00F5D4 !important;
+    }
+
+    .ai-archetype-card.selected {
+      background: linear-gradient(135deg, rgba(230, 57, 86, 0.2) 0%, rgba(140, 15, 42, 0.25) 100%);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 14px rgba(230, 57, 86, 0.35);
+    }
+    .ai-arch-icon { font-size: 24px; line-height: 1; padding-top: 2px; }
+    .ai-arch-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .ai-arch-title { font-size: 12px; font-weight: 900; color: #FFF; }
+    .ai-arch-desc { font-size: 9.5px; color: var(--text-muted); line-height: 1.35; }
+
+    /* Чат */
+    .ai-chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+      flex-shrink: 0;
+    }
+    .ai-avatar-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-messages-container {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 2px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .ai-bubble {
+      max-width: 86%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-word;
+      animation: fadeInMsg 0.25s ease forwards;
+    }
+    @keyframes fadeInMsg {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ai-bubble.assistant {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-left: 3px solid var(--accent-color);
+      color: #F5EDFA;
+    }
+    .ai-bubble.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, rgba(230, 57, 86, 0.45) 0%, rgba(184, 35, 66, 0.45) 100%);
+      border: 1px solid rgba(230, 57, 86, 0.65);
+      color: #FFF;
+    }
+    .ai-quick-prompts-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 0;
+      flex-shrink: 0;
+      scrollbar-width: none;
+    }
+    .ai-quick-prompts-scroll::-webkit-scrollbar { display: none; }
+    .ai-quick-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #E2D7EC;
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .ai-quick-chip:active {
+      background: rgba(230, 57, 86, 0.25);
+      border-color: var(--accent-color);
+      color: #FFF;
+    }
+    .ai-input-bar {
+      display: flex;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+    .ai-text-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 10px 14px;
+      color: #FFF;
+      font-size: 12.5px;
+      outline: none;
+    }
+    .ai-text-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 12px rgba(230, 57, 86, 0.35);
+    }
+    .ai-send-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: none;
+      background: var(--accent-gradient);
+      color: #FFF;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(230, 57, 86, 0.45);
+    }
+    .ai-send-btn:active { transform: scale(0.92); }
+  
   </style>
 </head>
 <body>
@@ -3383,11 +3693,10 @@
           <clipPath id="bowlCut">
             <path d="M 70 85 C 60 115, 58 148, 76 172 C 86 186, 96 190, 100 190 C 104 190, 114 186, 124 172 C 142 148, 140 115, 130 85 Z" />
           </clipPath>
-          <linearGradient id="wineLuxuryGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#A51230" />
-            <stop offset="28%" stop-color="#73081E" />
-            <stop offset="65%" stop-color="#3D030F" />
-            <stop offset="100%" stop-color="#180106" />
+          <linearGradient id="aiBlueTurqList" x1="0%" y1="0%" x2="0%" y2="100%">
+             <stop offset="0%" stop-color="#0284c7" />
+             <stop offset="45%" stop-color="#0369a1" />
+             <stop offset="100%" stop-color="#0f172a" />
           </linearGradient>
           <linearGradient id="meniscusLuxury" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="#6E091E" stop-opacity="0.9" />
@@ -3860,7 +4169,7 @@
   <div id="tab-male-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div id="session-title-male" class="screen-title" style="color: #4A90E2;">Сессия</div>
         <button class="tutorial-help-btn" onclick="openTutorial('session_male')">?</button>
       </div>
@@ -3872,7 +4181,7 @@
   <div id="tab-female-session" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div id="session-title-female" class="screen-title" style="color: var(--accent-color);">Сессия</div>
         <button class="tutorial-help-btn" onclick="openTutorial('session_female')">?</button>
       </div>
@@ -3885,7 +4194,7 @@
     <div class="card cycle-main-card">
       <!-- Шапка экрана -->
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div class="screen-title">Календарь Союза</div>
         <div style="display: flex; gap: 6px;">
          <button id="btn-cycle-settings" class="small-btn" onclick="openCycleSettingsModal()" title="Настройки цикла">⚙️ Настройки</button>
@@ -4021,7 +4330,7 @@
   <div id="tab-contract" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
         <div class="screen-title">Соглашение D/S</div>
         <button class="tutorial-help-btn" onclick="openTutorial('contract')">?</button>
       </div>
@@ -4037,7 +4346,7 @@
     <div class="card shop-layout-card">
       <div class="shop-fixed-header-block">
         <div class="sub-screen-header">
-          <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+          <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
           <div class="screen-title">Бутик Искушения</div>
           <div style="display: flex; gap: 6px;">
             <button id="shop-add-btn-master" class="small-btn" onclick="openAddProductModal()" style="display: none;">+ Добавить</button>
@@ -4079,7 +4388,7 @@
   <div id="tab-messenger" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div class="screen-title">Сообщения</div>
         <button class="tutorial-help-btn" onclick="openTutorial('messenger')">?</button>
       </div>
@@ -4088,8 +4397,8 @@
         <div class="contract-item pair-chat-card-btn" onclick="openSubScreen('tab-chat-pair')" style="cursor: pointer; border-color: rgba(230, 57, 86, 0.45); background: linear-gradient(135deg, rgba(38, 14, 28, 0.85) 0%, rgba(18, 11, 24, 0.95) 100%);">
           <div style="display: flex; align-items: center; gap: 10px;">
             <div class="pair-chat-avatars-bubble">
-              <span style="font-size: 16px;"></span>
-              <span style="font-size: 14px; margin-left: -6px;"></span>
+              <span style="font-size: 16px;">👑</span>
+              <span style="font-size: 14px; margin-left: -6px;">🗝️</span>
             </div>
             <div>
               <div style="font-weight: 800; color: #fff; font-size: 12px; display: flex; align-items: center; gap: 6px;">
@@ -4102,17 +4411,73 @@
           <span style="font-size: 18px;">💬</span>
         </div>
 
-        <!-- Системный бот -->
-        <div class="contract-item" onclick="openSubScreen('tab-chat-1')" style="cursor: pointer;">
+  
+
+        <!-- Будуарный ИИ-Советник -->
+        <div class="contract-item" id="messenger-ai-item" onclick="handleAiAdvisorTileClick()" style="cursor: pointer; border-color: rgba(34, 197, 94, 0.4); background: linear-gradient(135deg, rgba(16, 36, 24, 0.85) 0%, rgba(14, 20, 16, 0.95) 100%);">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="font-size: 20px;">🤖</div>
-            <div>
-              <div style="font-weight: 700; color: #fff; font-size: 12px;">Pact Bot</div>
-              <div style="font-size: 10px; color: var(--text-muted);">Протокол правил и уведомлений</div>
+            <div style="width: 34px; height: 34px; border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 0 10px rgba(0, 210, 255, 0.45); display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 100 100" width="100%" height="100%" style="display: block;">
+              <defs>
+                <linearGradient id="aiBlueTurqHeader" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#00F5D4" />
+                  <stop offset="38%" stop-color="#00A8FF" />
+                  <stop offset="100%" stop-color="#0048DE" />
+                </linearGradient>
+              </defs>
+              <rect width="100" height="100" rx="28" fill="url(#aiBlueTurqHeader)" />
+              <path d="M 50 16 Q 50 50 16 50 Q 50 50 50 84 Q 50 50 84 50 Q 50 50 50 16 Z" fill="#ffffff" />
+            </svg>
+          </div>
+              <div style="font-weight: 800; color: #fff; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                <span id="messenger-ai-name">Советник Лилит</span>
+                <span class="live-dot-pulse" style="background: #22c55e; box-shadow: 0 0 8px #22c55e;" title="ИИ на связи"></span>
+              </div>
+              <div id="messenger-ai-preview" style="font-size: 10px; color: #86efac; margin-top: 2px;">Личный советник пары (ИИ)...</div>
             </div>
           </div>
-          <span>💬</span>
+          <span style="font-size: 18px;">✨</span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН МЕССЕНДЖЕРА ПАРЫ (ЖИВОЙ ОНЛАЙН-ЧАТ) -->
+  <div id="tab-chat-pair" class="tab-content pair-chat-screen-container">
+    <div class="pair-chat-overlay-dim"></div>
+    <div class="card pair-chat-card-layout">
+      <!-- Шапка мессенджера -->
+      <div class="pair-chat-fixed-header" style="margin-top: 20px;">
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
+        <div class="pair-partner-identity">
+          <img id="pair-chat-partner-avatar" class="pair-partner-header-avatar" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png" alt="Партнёр">
+          <div>
+            <div id="pair-chat-partner-name" class="partner-name-text">Собеседник</div>
+            <div style="display: flex; align-items: center; gap: 4px; margin-top: 1px;">
+              <span class="live-dot-pulse"></span>
+              <span id="pair-chat-role-indicator" style="font-size: 8.5px; font-weight: 700; color: #27ae60;">В сети</span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button class="small-btn" onclick="openChatThemeModal()" style="font-size: 13px; padding: 5px 8px;" title="Сменить стиль чата">🎨</button>
+          <button class="small-btn" onclick="clearLiveChatHistory()" style="font-size: 9px; padding: 5px 8px;">Очистить</button>
+        </div>
+      </div>
+
+      <!-- Лента сообщений -->
+      <div id="pair-chat-messages-box" class="pair-messages-stream">
+        <div style="text-align: center; color: var(--text-muted); font-size: 10.5px; padding: 30px 10px;">Загрузка сообщений...</div>
+      </div>
+
+      <!-- Строка ввода -->
+      <div class="pair-input-bar-row">
+        <input type="file" id="pair-chat-file-input" accept="image/*" style="display: none;" onchange="handlePairPhotoUpload(event)">
+        <button type="button" class="pair-attach-btn" title="Прикрепить фото" onclick="document.getElementById('pair-chat-file-input').click()">📎</button>
+        <input type="text" id="pair-chat-input" class="form-control pair-text-input" placeholder="Сообщение..." onkeydown="if(event.key==='Enter') sendPairChatMessage()">
+        <button id="pair-chat-send-btn" class="pair-send-btn" onclick="sendPairChatMessage()">
+          <span>➤</span>
+        </button>
       </div>
     </div>
   </div>
@@ -4123,7 +4488,7 @@
     <div class="card pair-chat-card-layout">
       <!-- Шапка мессенджера (НЕПОДВИЖНАЯ, ПРОЗРАЧНАЯ) -->
       <div class="pair-chat-fixed-header" style="margin-top: 20px;">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div class="pair-partner-identity">
           <img id="pair-chat-partner-avatar" class="pair-partner-header-avatar" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png" alt="Партнёр">
           <div>
@@ -4161,7 +4526,7 @@
   <div id="tab-chat-1" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
         <div class="screen-title">Чат с Pact Bot</div>
       </div>
       <div id="chat-messages" style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; margin-bottom:10px;"></div>
@@ -4178,7 +4543,7 @@
       <canvas id="burst-canvas"></canvas>
 
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
         <div class="screen-title">Судьба & Жребий</div>
         <button class="tutorial-help-btn" onclick="openTutorial('randomizer')">?</button>
       </div>
@@ -4230,7 +4595,7 @@
   <div id="tab-profile" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div class="screen-title">Личный Профиль</div>
       </div>
       <div class="profile-card-header">
@@ -4264,7 +4629,7 @@
     <div class="card wardrobe-layout-card">
       <div class="wardrobe-fixed-header-block">
         <div class="sub-screen-header">
-          <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+          <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
           <div class="screen-title">Гардероб</div>
           <button class="tutorial-help-btn" onclick="openTutorial('wardrobe')">?</button>
         </div>
@@ -4286,7 +4651,7 @@
   <div id="tab-bank" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
         <div class="screen-title">БАЛАНС</div>
         <button class="tutorial-help-btn" onclick="openTutorial('bank')">?</button>
       </div>
@@ -4356,6 +4721,172 @@
     </div>
   </div>
 
+ <!-- МОДАЛЬНОЕ ОКНО 1: ВЫБОР ИМЕНИ И ХАРАКТЕРА ИИ -->
+  <div class="ai-persona-modal" id="modal-ai-persona-setup" onclick="if(event.target===this) closeAiPersonaSetupModal()">
+    <div class="ai-persona-sheet">
+      <div class="scenario-sheet-header">
+        <span class="scenario-sheet-title">Личность Советника ✨</span>
+        <span class="scenario-sheet-close" onclick="closeAiPersonaSetupModal()">✕</span>
+      </div>
+
+      <div class="ai-scroll-content">
+        <!-- ВЫБОР ИМЕНИ -->
+        <div style="font-size: 11px; font-weight: 800; color: #FFA3B5; text-transform: uppercase; letter-spacing: 0.8px;">
+          Имя вашей будуарной советницы:
+        </div>
+
+        <div class="ai-name-chips-row">
+          <!-- Первый пресет сразу привязан к значку ai-star -->
+          <button type="button" class="ai-name-chip active" onclick="selectAiNamePreset('Лилит', 'ai-star', this)">
+            <span style="display:inline-flex; width:16px; height:16px; align-items:center;">
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <rect x="5" y="5" width="90" height="90" rx="28" fill="#11B828"/>
+                <path d="M 50 16 C 50 37, 63 50, 84 50 C 63 50, 50 63, 50 84 C 50 63, 37 50, 16 50 C 37 50, 50 37, 50 16 Z" fill="#FFFFFF"/>
+              </svg>
+            </span>
+            <span>Лилит</span>
+          </button>
+          <button type="button" class="ai-name-chip" onclick="selectAiNamePreset('Ева', '🍷', this)">🍷 Ева</button>
+          <button type="button" class="ai-name-chip" onclick="selectAiNamePreset('Аврора', '🗝️', this)">🗝️ Аврора</button>
+          <button type="button" class="ai-name-chip" onclick="selectAiNamePreset('Камилла', '🥀', this)">🥀 Камилла</button>
+        </div>
+
+        <input type="text" id="ai-custom-name-input" class="form-control" style="font-size: 12.5px; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #FFF; outline: none;" placeholder="Или введите своё имя советника...">
+
+        <!-- ВЫБОР ХАРАКТЕРА -->
+       <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">
+        Выберите характер и темперамент:
+      </div>
+
+      <div class="ai-archetypes-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+        <!-- 1. Наставница (mentor) -->
+        <div class="ai-archetype-card" data-archetype="mentor" onclick="selectAiArchetypePreset('mentor')">
+          <div style="font-size: 22px;">💋</div>
+          <div style="flex: 1;">
+            <div class="arch-name">Искушённая наставница (Консильери)</div>
+            <div class="arch-desc">Бархатный тон, глубокое знание эротической психологии. Подсказывает фразы и дерзкие сценарии.</div>
+          </div>
+        </div>
+
+        <!-- 2. Покорная (submissive) -->
+        <div class="ai-archetype-card" data-archetype="submissive" onclick="selectAiArchetypePreset('submissive')">
+          <div style="font-size: 22px;">🕊️</div>
+          <div style="flex: 1;">
+            <div class="arch-name">Нежная и покорная спутница</div>
+            <div class="arch-desc">Робкая, трепетная и ласковая речь. Внимает каждому слову с преданностью и мягкой чувствительностью.</div>
+          </div>
+        </div>
+
+        <!-- 3. Госпожа (dominant) -->
+        <div class="ai-archetype-card" data-archetype="dominant" onclick="selectAiArchetypePreset('dominant')">
+          <div style="font-size: 22px;">👑</div>
+          <div style="flex: 1;">
+            <div class="arch-name">Властная и насмешливая Госпожа</div>
+            <div class="arch-desc">Царственный, дерзкий характер. Дразнит, раздаёт задания и испытывает на стойкость.</div>
+          </div>
+        </div>
+
+        <!-- 4. Психолог (psychologist) -->
+        <div class="ai-archetype-card" data-archetype="psychologist" onclick="selectAiArchetypePreset('psychologist')">
+          <div style="font-size: 22px;">⚖️</div>
+          <div style="flex: 1;">
+            <div class="arch-name">Чуткий будуарный психолог</div>
+            <div class="arch-desc">Тёплая, деликатная поддержка. Помогает партнёрам бережно открыть тайные желания и преодолеть стеснение.</div>
+          </div>
+        </div>
+
+        <!-- 5. Свой характер (custom) -->
+        <div class="ai-archetype-card" data-archetype="custom" onclick="selectAiArchetypePreset('custom')">
+          <div style="font-size: 22px;">📝</div>
+          <div style="flex: 1;">
+            <div class="arch-name">Свой характер (Индивидуальный)</div>
+            <div class="arch-desc">Опишите манеру речи, эмоции и стиль своими словами.</div>
+          </div>
+        </div>
+      </div>
+
+        <textarea id="ai-custom-persona-textarea" style="display: none; width: 100%; height: 85px; background: rgba(255,255,255,0.05); border: 1px solid rgba(230,57,86,0.35); border-radius: 12px; padding: 10px; color: #FFF; font-size: 11.5px; resize: none; outline: none;" placeholder="Опишите желаемый характер: например, дерзкая парижанка, обожающая сухое вино и шёлк..."></textarea>
+      </div>
+
+      <div style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08);">
+        <button class="btn-confirm-scenario" onclick="saveAiPersonaSettings()">
+          <span>Сохранить личность ✨</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН ИИ-СОВЕТНИКА (ЕДИНЫЙ СТИЛЬ БУДУАРНОГО МЕССЕНДЖЕРА) -->
+  <div id="tab-chat-ai" class="tab-content pair-chat-screen-container">
+    <div class="pair-chat-overlay-dim"></div>
+    <div class="card pair-chat-card-layout">
+      <!-- Неподвижная шапка мессенджера -->
+      <div class="pair-chat-fixed-header" style="margin-top: 20px;">
+        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
+        <div class="pair-partner-identity" onclick="openAiPersonaSetupModal()" style="cursor: pointer;">
+          <!-- Зеленый значок-аватарка -->
+          <div style="width: 34px; height: 34px; border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 0 10px rgba(34, 197, 94, 0.45); display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 100 100" width="100%" height="100%" style="display: block;">
+              <defs>
+                <linearGradient id="aiGTab" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#2fe04e" />
+                  <stop offset="100%" stop-color="#0a8024" />
+                </linearGradient>
+              </defs>
+              <rect width="100" height="100" rx="28" fill="url(#aiGTab)" />
+              <path d="M 50 16 Q 50 50 16 50 Q 50 50 50 84 Q 50 50 84 50 Q 50 50 50 16 Z" fill="#ffffff" />
+            </svg>
+          </div>
+          <div>
+            <div id="ai-chat-header-name" class="partner-name-text">Советник Лилит</div>
+            <div style="display: flex; align-items: center; gap: 4px; margin-top: 1px;">
+              <span class="live-dot-pulse" style="background: #27ae60; box-shadow: 0 0 6px #27ae60;"></span>
+              <span id="ai-chat-archetype-label" style="font-size: 8.5px; font-weight: 700; color: #27ae60;">ИИ на связи</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопки: смена обоев (🎨), смена персонажа (🎭), очистка -->
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button class="small-btn" onclick="openAiChatThemeModal()" style="font-size: 13px; padding: 5px 8px;" title="Сменить обои этого чата">🎨</button>
+          <button class="small-btn" onclick="openAiPersonaSetupModal()" style="font-size: 11px; padding: 5px 8px;" title="Сменить характер">🎭</button>
+          <button class="small-btn" onclick="clearAiChatHistory()" style="font-size: 9px; padding: 5px 8px;">Очистить</button>
+        </div>
+      </div>
+
+      <!-- Лента сообщений со стилями пузырей пары -->
+      <div id="ai-chat-messages-stream" class="pair-messages-stream"></div>
+
+      <!-- Быстрые вопросы-чипы над строкой ввода -->
+      <div class="ai-quick-prompts-scroll" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px; padding: 6px 8px 6px 8px; flex-shrink: 0;">
+        <button class="ai-quick-chip" onclick="sendAiQuickPrompt('Что мужчине больше всего хочется услышать перед ночью?')">🔥 Тайны мужчин</button>
+        <button class="ai-quick-chip" onclick="sendAiQuickPrompt('Оцени мой текущий наряд и градус страсти')">🌶️ По образу</button>
+        <button class="ai-quick-chip" onclick="sendAiQuickPrompt('Придумай дерзкое задание на проверку послушания')">🗝️ Задание</button>
+      </div>
+
+      <!-- Неподвижная строка ввода -->
+      <div class="pair-input-bar-row">
+        <input type="text" id="ai-chat-input" class="form-control pair-text-input" placeholder="Спросить у советника..." onkeydown="if(event.key==='Enter') submitAiChatMessage()">
+        <button id="ai-chat-send-btn" class="pair-send-btn" onclick="submitAiChatMessage()">
+          <span>➤</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА ВЫБОРА ОБОЕВ ДЛЯ ЧАТА СОВЕТНИКА -->
+  <div id="ai-chat-theme-modal" class="modal-overlay" onclick="if(event.target===this) closeAiChatThemeModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Обои чата советника</h3>
+        <span class="modal-close-btn" onclick="closeAiChatThemeModal()">✕</span>
+      </div>
+      <div id="ai-theme-presets-container" class="theme-presets-grid"></div>
+    </div>
+  </div>
+ 
+ 
+ 
   <!-- НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ -->
   <nav class="nav-bar">
     <div class="nav-item" id="nav-profile" onclick="openSubScreen('tab-profile')">
@@ -4921,6 +5452,7 @@
       closeCapsuleToolbar();
       // плитка «Контракт» сразу открывает манускрипт союза
       if (tabId === 'tab-contract') { openFullContractPreview(true); return; }
+      if (tabId === 'tab-ai-advisor') { handleAiAdvisorTileClick(); return; }
       if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
       renderActiveTab(tabId);
     }
@@ -4967,17 +5499,17 @@
     let currentDesktopPage = 0;
 
     let desktopItems = [
-  { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
-  { id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
-  { id: 'tile-bank', type: 'tile', title: 'Баланс', icon: '💖', target: 'tab-bank', page: 0 },
-  { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🩱', target: 'tab-wardrobe', page: 0 },
-  { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
-  { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
-  { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
-  { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
-  { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '📅', target: 'tab-cycle', page: 0 },
-  
-  ];
+      { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
+      { id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
+      { id: 'tile-bank', type: 'tile', title: 'Баланс', icon: '💖', target: 'tab-bank', page: 0 },
+      { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🩱', target: 'tab-wardrobe', page: 0 },
+      { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
+      { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
+      { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
+      { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
+      { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '📅', target: 'tab-cycle', page: 0 },
+      { id: 'tile-ai-advisor', type: 'tile', title: 'Советник', icon: 'ai-star', target: 'tab-ai-advisor', page: 0 }
+    ];
     function saveDesktopItems() {
       localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
     }
@@ -5439,14 +5971,41 @@
         let inner = '';
 
         if (item.type === 'tile') {
-         inner = `
-          ${deleteBtn}
-           <div class="desktop-tile">
-            <div class="tile-icon">
-              <span class="tile-emoji">${item.icon}</span>
-               <span class="tile-label">${item.title}</span>
-            </div>
-           </div>`;
+          let iconHtml = `<span class="tile-emoji">${item.icon}</span>`;
+          
+          // Для советника (ai-star или tile-ai-advisor) рисуем наш сине-бирюзовый 3D-значок
+          if (item.icon === 'ai-star' || item.id === 'tile-ai-advisor') {
+            iconHtml = `
+              <svg viewBox="0 0 100 100" style="width: 28px; height: 28px; border-radius: 10px; display: block; filter: drop-shadow(0 2px 6px rgba(0, 120, 180, 0.25));">
+                <defs>
+                  <!-- Приглушённый, глубокий сапфирово-бирюзовый градиент -->
+                  <linearGradient id="aiBlueTurquoiseGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0284c7" />   <!-- Спокойная лазурь -->
+                    <stop offset="45%" stop-color="#0369a1" />  <!-- Океанический синий -->
+                    <stop offset="100%" stop-color="#0f172a" /> <!-- Глубокий ночной цвет -->
+                  </linearGradient>
+                  <!-- Мягкий полупрозрачный блик (без резкой белизны) -->
+                  <linearGradient id="aiGlassReflectionBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <rect width="100" height="100" rx="26" fill="url(#aiBlueTurquoiseGloss)" />
+                <rect x="4" y="3" width="92" height="46" rx="22" fill="url(#aiGlassReflectionBlue)" />
+                <rect width="100" height="100" rx="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                <!-- Звезда с мягким матовым сиянием -->
+                <path d="M 50 16 Q 50 50 84 50 Q 50 50 50 84 Q 50 50 16 50 Q 50 50 50 16 Z" fill="#E2E8F0" filter="drop-shadow(0 0 2px rgba(255,255,255,0.4))" />
+              </svg>`;
+          }
+
+          inner = `
+            ${deleteBtn}
+            <div class="desktop-tile">
+              <div class="tile-icon">
+                ${iconHtml}
+                <span class="tile-label">${item.title}</span>
+              </div>
+            </div>`;
          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen(item.target); };
         } else if (item.type === 'widget-passion') {
           inner = `
@@ -6100,6 +6659,8 @@ function updateAllAvatarsUI() {
       if (ms) ms.innerText = maleBalances.stc;
     }
 
+    
+    
     // Обои
     const WALLPAPER_PRESETS = {
       ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), #0C0A10',
@@ -7951,7 +8512,563 @@ ${line}
       finish();
     }
 
-    document.addEventListener('DOMContentLoaded', () => { bootSession(); });
+  /* ========================================================
+       ЛОГИКА ИИ-СОВЕТНИКА: ХАРАКТЕР, ИМЯ И ЧАТ (С 'ai-star')
+       ======================================================== */
+    const AI_ARCHETYPES = {
+      mentor: {
+        title: 'Искушённая наставница',
+        icon: '💋',
+        greeting: 'Приветствую в будуаре. Я наблюдаю за страстью вашего союза и знаю все тайные струны желаний. О чём ты хочешь спросить меня сегодня? 🍷',
+        instruction: 'Ты — опытный эротический психолог и будуарная наставница. Твой тон: бархатный, уверенный, чувственный, с лёгкой загадочной улыбкой. Формат ответа: кратко (2-3 ёмких, волнующих предложения). Никакого морализаторства.'
+      },
+      submissive: {
+        title: 'Нежная спутница',
+        icon: '🕊️',
+        greeting: 'Здравствуй... Я трепетно ждала твоего прихода. Чем я могу услужить тебе и порадовать сегодня? 🌸',
+        instruction: 'Ты — покорная, кроткая и нежная спутница. Ты общаешься трепетно и ласково, используешь действия в скобках (например, слегка опускает взгляд), обращаешься с глубоким почтением и преданностью.'
+      },
+      dominant: {
+        title: 'Властная Госпожа',
+        icon: '👑',
+        greeting: 'Какая трогательная смелость. Войди и преклони колено, если ищешь моего совета. Слушаю тебя... 🗝️',
+        instruction: 'Ты — властная, искушённая и насмешливая Госпожа. Ты общаешься дерзко, требовательно, с иронией и королевским превосходством. Не терпишь нерешительности и проверяешь собеседника на послушание.'
+      },
+      psychologist: {
+        title: 'Чуткий психолог',
+        icon: '⚖️',
+        greeting: 'Здравствуй. Я здесь, чтобы помочь вам глубже почувствовать друг друга, снять напряжение и раскрыть истинные желания. Что вас волнует? ✨',
+        instruction: 'Ты — деликатный, тёплый и глубокий психолог парных отношений. Твой стиль: доверительный, заботливый, помогающий преодолеть стыд, страх и раскрыть эмоциональную и телесную близость.'
+      },
+      custom: {
+        title: 'Свой характер',
+        icon: '✍️',
+        greeting: 'Приветствую. Мой характер настроен по твоим правилам. О чём поговорим? ✨',
+        instruction: 'Отыгрывай уникальную роль, заданную пользователем.'
+      }
+    };
+
+    // Исходная конфигурация по умолчанию
+  let aiPersonaConfig = {
+    name: 'Лилит',
+     archetypeKey: 'mentor',
+     icon: 'ai-star',
+    customInstruction: '',
+    isConfigured: false
+  };
+
+  // Загружаем сохранённую личность из памяти браузера при каждом запуске
+  try {
+    const savedPersona = localStorage.getItem('pact_ai_persona_config');
+    if (savedPersona) {
+    aiPersonaConfig = Object.assign(aiPersonaConfig, JSON.parse(savedPersona));
+  }
+} catch (e) {
+  console.warn('Не удалось загрузить личность советника:', e);
+}
+    let aiDialogHistory = [];
+
+   function applyAiChatTheme(presetId) {
+      const preset = CHAT_PRESETS.find(p => p.id === presetId) || CHAT_PRESETS[1]; // По умолчанию тема mp2 или любая другая
+      const chatScreen = document.getElementById('tab-chat-ai');
+      try { localStorage.setItem('pact_ai_chat_theme', preset.id); } catch (e) {}
+
+      resolveThemeImage(preset).then(url => {
+        if (chatScreen) {
+          chatScreen.style.backgroundImage = url ? `url('${url}')` : '';
+        }
+      });
+    }
+
+    function openAiChatThemeModal() {
+      const container = document.getElementById('ai-theme-presets-container');
+      let curId = 'theme_mp2';
+      try { curId = localStorage.getItem('pact_ai_chat_theme') || curId; } catch (e) {}
+      if (!container) return;
+
+      container.innerHTML = CHAT_PRESETS.map(p => `
+        <div class="theme-card-preview ${p.id === curId ? 'active' : ''}" data-theme-id="${p.id}" onclick="selectAiThemeAndClose('${p.id}')">
+          <span class="theme-title-tag">${p.title}</span>
+        </div>
+      `).join('');
+
+      CHAT_PRESETS.forEach(p => {
+        resolveThemeImage(p).then(url => {
+          const card = container.querySelector(`[data-theme-id="${p.id}"]`);
+          if (card && url) card.style.backgroundImage = `url('${url}')`;
+        });
+      });
+
+      document.getElementById('ai-chat-theme-modal')?.classList.add('active');
+    }
+
+    function closeAiChatThemeModal() {
+      document.getElementById('ai-chat-theme-modal')?.classList.remove('active');
+    }
+
+    function selectAiThemeAndClose(id) {
+      applyAiChatTheme(id);
+      closeAiChatThemeModal();
+      showToast('Обои советника обновлены ✨', 'success');
+    }
+
+    
+    /* ========================================================
+       РЕНДЕР СООБЩЕНИЙ В СТИЛЕ БУДУАРНОГО МЕССЕНДЖЕРА
+       ======================================================== */
+    function renderAiMessagesUI() {
+      const box = document.getElementById('ai-chat-messages-stream');
+      const headerName = document.getElementById('ai-chat-header-name');
+      const archetypeLabel = document.getElementById('ai-chat-archetype-label');
+      if (!box) return;
+
+      const arch = AI_ARCHETYPES[aiPersonaConfig.archetypeKey] || AI_ARCHETYPES.mentor;
+      if (headerName) headerName.textContent = `Советник ${aiPersonaConfig.name}`;
+      if (archetypeLabel) archetypeLabel.textContent = arch.title;
+
+      // Текущий пользователь
+      const role = currentAvatarRole || 'female';
+      const myInfo = (typeof window.getRoleInfo === 'function') ? window.getRoleInfo(role) : { name: 'Вы', tone: role };
+      const maleAvatar = localStorage.getItem('pact_avatar_male') || DEFAULT_AVATAR_MALE;
+      const femaleAvatar = localStorage.getItem('pact_avatar_female') || DEFAULT_AVATAR_FEMALE;
+      const myAvatar = (role === 'male') ? maleAvatar : femaleAvatar;
+
+      // Если диалог пуст, добавляем приветствие персонажа
+      if (aiDialogHistory.length === 0) {
+        aiDialogHistory.push({
+          role: 'assistant',
+          content: arch.greeting,
+          time: nowTime()
+        });
+      }
+
+      box.innerHTML = aiDialogHistory.map(m => {
+        const isMine = (m.role === 'user');
+
+        if (isMine) {
+          return `
+            <div class="pair-msg-row outgoing">
+              <img class="pair-msg-avatar" src="${myAvatar}" alt="">
+              <div class="pair-msg-bubble role-${myInfo.tone}">
+                <div class="pair-msg-author-tag">${escapeHtml(myInfo.name)}</div>
+                <div class="pair-msg-text">${escapeHtml(m.content)}</div>
+                <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
+              </div>
+            </div>`;
+        } else {
+          return `
+            <div class="pair-msg-row incoming">
+              <div class="pair-msg-avatar" style="border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 8px rgba(34,197,94,0.4);">
+                <svg viewBox="0 0 100 100" width="100%" height="100%">
+                  <rect width="100" height="100" rx="26" fill="#1b9e35" />
+                  <path d="M 50 16 Q 50 50 16 50 Q 50 50 50 84 Q 50 50 84 50 Q 50 50 50 16 Z" fill="#ffffff" />
+                </svg>
+              </div>
+              <div class="pair-msg-bubble" style="background: linear-gradient(135deg, rgba(18, 38, 25, 0.92) 0%, rgba(9, 20, 14, 0.95) 100%) !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; color: #f0fdf4 !important; border-bottom-left-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.5);">
+                <div class="pair-msg-author-tag" style="color: #4ade80 !important;">${escapeHtml(aiPersonaConfig.name)} (ИИ)</div>
+                <div class="pair-msg-text">${escapeHtml(m.content)}</div>
+                <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
+              </div>
+            </div>`;
+        }
+      }).join('');
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function clearAiChatHistory() {
+      const arch = AI_ARCHETYPES[aiPersonaConfig.archetypeKey] || AI_ARCHETYPES.mentor;
+      aiDialogHistory = [{
+        role: 'assistant',
+        content: arch.greeting,
+        time: nowTime()
+      }];
+      renderAiMessagesUI();
+      showToast('Диалог с советником очищен', 'info');
+    }
+
+    function sendAiQuickPrompt(promptText) {
+      const input = document.getElementById('ai-chat-input');
+      if (input) {
+        input.value = promptText;
+        submitAiChatMessage();
+      }
+    }
+
+    // 1. Форматирование времени для сообщений
+    function getAiChatTime() {
+      const now = new Date();
+      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
+    // 2. Отрисовка пузырьков сообщений на экране
+    function renderAiMessagesUI() {
+      const box = document.getElementById('ai-chat-messages-stream');
+      if (!box) return;
+
+      const arch = (typeof AI_ARCHETYPES !== 'undefined' && AI_ARCHETYPES[aiPersonaConfig.archetypeKey])
+        ? AI_ARCHETYPES[aiPersonaConfig.archetypeKey]
+        : { title: 'Советник', greeting: 'Приветствую в будуаре ✨' };
+
+      const headerName = document.getElementById('ai-chat-header-name');
+      const archetypeLabel = document.getElementById('ai-chat-archetype-label');
+      if (headerName) headerName.textContent = `Советник ${aiPersonaConfig.name || 'Лилит'}`;
+      if (archetypeLabel) archetypeLabel.textContent = arch.title;
+
+      const role = window.currentAvatarRole || currentAvatarRole || 'female';
+      const myInfo = (typeof window.getRoleInfo === 'function') 
+        ? window.getRoleInfo(role) 
+        : { name: (role === 'male' ? 'Верхний' : 'Нижняя'), tone: role };
+
+      const maleAvatar = localStorage.getItem('pact_avatar_male') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
+      const femaleAvatar = localStorage.getItem('pact_avatar_female') || 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
+      const myAvatar = (role === 'male') ? maleAvatar : femaleAvatar;
+
+      // Приветствие при первом входе в диалог
+      if (!aiDialogHistory || aiDialogHistory.length === 0) {
+        aiDialogHistory = [{
+          role: 'assistant',
+          content: arch.greeting,
+          time: getAiChatTime()
+        }];
+      }
+
+      box.innerHTML = aiDialogHistory.map(m => {
+        const isMine = (m.role === 'user');
+
+        if (isMine) {
+          return `
+            <div class="pair-msg-row outgoing">
+              <img class="pair-msg-avatar" src="${myAvatar}" alt="">
+              <div class="pair-msg-bubble role-${myInfo.tone || 'female'}">
+                <div class="pair-msg-author-tag">${escapeHtml(myInfo.name)}</div>
+                <div class="pair-msg-text">${escapeHtml(m.content)}</div>
+                <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
+              </div>
+            </div>`;
+        } else {
+          return `
+            <div class="pair-msg-row incoming">
+              <div class="pair-msg-avatar" style="border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(0, 168, 255, 0.45); background: linear-gradient(135deg, #00F5D4 0%, #0048DE 100%);">
+                <svg viewBox="0 0 100 100" width="70%" height="70%">
+                  <path d="M 50 16 Q 50 50 84 50 Q 50 50 50 84 Q 50 50 16 50 Q 50 50 50 16 Z" fill="#FFFFFF" />
+                </svg>
+              </div>
+              <div class="pair-msg-bubble" style="background: linear-gradient(135deg, rgba(16, 26, 42, 0.94) 0%, rgba(8, 14, 26, 0.98) 100%) !important; border: 1px solid rgba(0, 245, 212, 0.5) !important; color: #f0fdf4 !important; border-bottom-left-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.5);">
+                <div class="pair-msg-author-tag" style="color: #00F5D4 !important;">${escapeHtml(aiPersonaConfig.name || 'Советник')} (ИИ)</div>
+                <div class="pair-msg-text">${escapeHtml(m.content)}</div>
+                <div class="pair-msg-time">${escapeHtml(m.time || '')}</div>
+              </div>
+            </div>`;
+        }
+      }).join('');
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    // 3. Отправка сообщения и мгновенное появление тучки
+    async function submitAiChatMessage() {
+      const input = document.getElementById('ai-chat-input');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+
+      if (typeof haptic === 'function') haptic('medium');
+      input.value = '';
+
+      // 1. Мгновенно отображаем вопрос пользователя
+      aiDialogHistory.push({ role: 'user', content: text, time: getAiChatTime() });
+      renderAiMessagesUI();
+
+      // 2. Индикатор ожидания
+      aiDialogHistory.push({
+        role: 'assistant',
+        content: `${aiPersonaConfig.name || 'Советник'} думает над ответом... ✨`,
+        time: getAiChatTime(),
+        isPending: true
+      });
+      renderAiMessagesUI();
+
+      const systemPrompt = (typeof generateBoudoirAiSystemPrompt === 'function') 
+        ? generateBoudoirAiSystemPrompt() 
+        : 'Ты — личный советник пары.';
+
+      try {
+        const apiKey = "AQ.Ab8RN6K6iZEIr8kfLO9bW6nIbkZp22QSr_78aYJtceE5OLgTsQ";
+        
+        // Актуальная и самая быстрая модель из вашего Google AI Studio
+        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+
+        const payload = {
+          contents: [
+            {
+              parts: [
+                { text: `${systemPrompt}\n\nСобеседник спрашивает: "${text}"` }
+              ]
+            }
+          ],
+          generationConfig: {
+            maxOutputTokens: 1000, // Запас токенов, чтобы ответ не обрывался
+            temperature: 0.85,
+            thinkingConfig: {
+              thinkingBudget: 0    // Отключаем размышления: ответ моментальный и полный
+            }
+          },
+          safetySettings: [
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+          ]
+        };
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-goog-api-key': apiKey
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        console.log("Ответ от Gemini API:", data);
+
+        // Проверяем ошибку сервера
+        if (data.error) {
+          console.error("Код ошибки Google:", data.error);
+        }
+
+        const candidate = data?.candidates?.[0];
+        const candidateText = candidate?.content?.parts?.[0]?.text;
+
+        aiDialogHistory = aiDialogHistory.filter(m => !m.isPending);
+
+        if (candidateText) {
+          aiDialogHistory.push({ role: 'assistant', content: candidateText.trim(), time: getAiChatTime() });
+          if (typeof playCrystalChime === 'function') playCrystalChime();
+        } else {
+          // Если ответ всё же пуст, смотрим причину в объекте candidate
+          console.warn("Причина отсутствия текста:", candidate?.finishReason || "Неизвестно");
+          aiDialogHistory.push({ 
+            role: 'assistant', 
+            content: 'Мужчине важна уверенность в твоих глазах. Доверьтесь предвкушению и сделайте этот вечер особенным 🍷', 
+            time: getAiChatTime() 
+          });
+        }
+      } catch (err) {
+        console.error('Сетевой сбой:', err);
+        aiDialogHistory = aiDialogHistory.filter(m => !m.isPending);
+        aiDialogHistory.push({
+          role: 'assistant',
+          content: 'Связь с будуаром прервалась, но совет остаётся прежним: зажгите свечи и следуйте зову страсти 🍷',
+          time: getAiChatTime()
+        });
+      }
+
+      renderAiMessagesUI();
+    }
+  
+
+    // 4. Быстрые кнопки-подсказки над полем ввода
+    function sendAiQuickPrompt(promptText) {
+      const input = document.getElementById('ai-chat-input');
+      if (input) {
+        input.value = promptText;
+        submitAiChatMessage();
+      }
+    }
+    function initAiAdvisorData() {
+      try {
+        const saved = localStorage.getItem('pact_ai_persona_config');
+        if (saved) {
+          aiPersonaConfig = { ...aiPersonaConfig, ...JSON.parse(saved) };
+        }
+      } catch (e) {}
+      syncAdvisorTileName();
+    }
+
+    function syncAdvisorUIName() {
+      // 1. Плитка рабочего стола: жестко держим значок 'ai-star'
+      const tile = desktopItems.find(i => i.id === 'tile-ai-advisor');
+      if (tile) {
+        tile.title = aiPersonaConfig.name || 'Советник';
+        tile.icon = 'ai-star';
+        saveDesktopItems();
+        renderDesktop();
+      }
+
+      // 2. Имя в списке диалогов (вкладка Сообщения)
+      const msgName = document.getElementById('messenger-ai-name');
+      if (msgName) msgName.textContent = `Советник ${aiPersonaConfig.name}`;
+
+      // 3. Имя в шапке открытого экрана чата
+      const chatHeaderName = document.getElementById('ai-chat-header-name');
+      if (chatHeaderName) chatHeaderName.textContent = `Советник ${aiPersonaConfig.name}`;
+    }
+
+    function initAiAdvisorData() {
+      try {
+        const saved = localStorage.getItem('pact_ai_persona_config');
+        if (saved) {
+          aiPersonaConfig = { ...aiPersonaConfig, ...JSON.parse(saved) };
+        }
+      } catch (e) {}
+      syncAdvisorUIName();
+    }
+
+    function handleAiAdvisorTileClick() {
+      haptic('light');
+      if (!aiPersonaConfig.isConfigured) {
+        openAiPersonaSetupModal();
+      } else {
+        openSubScreen('tab-chat-ai');
+      }
+    }
+
+    function openAiPersonaSetupModal() {
+      if (typeof haptic === 'function') haptic('light');
+      
+      const modal = document.getElementById('modal-ai-persona-setup');
+      if (!modal) return;
+
+      // Возвращаем видимость окну (чтобы открывалось всегда, сколько угодно раз)
+      modal.style.display = 'flex';
+      
+      const input = document.getElementById('ai-custom-name-input');
+      if (input) input.value = aiPersonaConfig.name || '';
+
+      selectAiArchetypePreset(aiPersonaConfig.archetypeKey || 'mentor');
+
+      if (aiPersonaConfig.archetypeKey === 'custom') {
+        const customArea = document.getElementById('ai-custom-persona-textarea');
+        if (customArea) {
+          customArea.style.display = 'block';
+          customArea.value = aiPersonaConfig.customInstruction || '';
+        }
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeAiPersonaSetupModal() {
+      const modal = document.getElementById('modal-ai-persona-setup');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+    }
+
+    function selectAiNamePreset(name, icon, btn) {
+      if (typeof haptic === 'function') haptic('selection');
+      document.querySelectorAll('.ai-name-chip').forEach(c => c.classList.remove('active'));
+      btn?.classList.add('active');
+
+      const input = document.getElementById('ai-custom-name-input');
+      if (input) input.value = name;
+      aiPersonaConfig.icon = 'ai-star';
+    }
+
+    function selectAiArchetypePreset(key) {
+      if (typeof haptic === 'function') haptic('light');
+      aiPersonaConfig.archetypeKey = key;
+      const arch = (typeof AI_ARCHETYPES !== 'undefined') ? AI_ARCHETYPES[key] : null;
+
+      // Подсветка активной карточки
+      document.querySelectorAll('.ai-archetype-card').forEach(card => {
+        if (card.getAttribute('data-archetype') === key) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+
+      // Поле ввода для своего характера
+      const customArea = document.getElementById('ai-custom-persona-textarea');
+      if (customArea) {
+        customArea.style.display = (key === 'custom') ? 'block' : 'none';
+      }
+    }
+
+    function saveAiPersonaSettings() {
+      try {
+        if (typeof haptic === 'function') haptic('medium');
+        const input = document.getElementById('ai-custom-name-input');
+        const customArea = document.getElementById('ai-custom-persona-textarea');
+        const arch = (typeof AI_ARCHETYPES !== 'undefined' && AI_ARCHETYPES[aiPersonaConfig.archetypeKey])
+          ? AI_ARCHETYPES[aiPersonaConfig.archetypeKey]
+          : { defaultName: 'Советник' };
+
+        const nameVal = input?.value.trim();
+        aiPersonaConfig.name = nameVal || arch.defaultName || 'Советник';
+        aiPersonaConfig.icon = 'ai-star';
+
+        if (aiPersonaConfig.archetypeKey === 'custom' && customArea) {
+          aiPersonaConfig.customInstruction = customArea.value.trim();
+        }
+
+        aiPersonaConfig.isConfigured = true;
+        localStorage.setItem('pact_ai_persona_config', JSON.stringify(aiPersonaConfig));
+
+        if (typeof syncAdvisorUIName === 'function') syncAdvisorUIName();
+        closeAiPersonaSetupModal();
+        
+        const toastMsg = `Советник ${aiPersonaConfig.name} готов к диалогу ✨`;
+        if (typeof showToastMsg === 'function') showToastMsg(toastMsg);
+        else if (typeof showToast === 'function') showToast(toastMsg, 'success');
+
+        // Очищаем ленту под новый характер и плавно переходим в чат
+        aiDialogHistory = [];
+        const list = document.getElementById('ai-chat-messages-stream');
+        if (list) list.innerHTML = '';
+        setTimeout(() => {
+          if (typeof openSubScreen === 'function') openSubScreen('tab-chat-ai');
+        }, 250);
+      } catch (err) {
+        console.error('Ошибка сохранения советника:', err);
+        closeAiPersonaSetupModal();
+      }
+    }
+
+    function generateBoudoirAiSystemPrompt() {
+      const arch = AI_ARCHETYPES[aiPersonaConfig.archetypeKey] || AI_ARCHETYPES.mentor;
+      const baseInstruction = (aiPersonaConfig.archetypeKey === 'custom' && aiPersonaConfig.customInstruction)
+        ? aiPersonaConfig.customInstruction
+        : arch.instruction;
+
+      const passion = getPassionStatus();
+      const currentRole = (typeof window.getRoleInfo === 'function')
+        ? window.getRoleInfo(currentAvatarRole || 'female').name
+        : 'Нижняя';
+
+      const wornItems = wardrobeItems.filter(w => selectedWardrobeIds.includes(w.id)).map(w => w.title).join(', ') || 'Невинный образ';
+      const cycleInfo = (typeof getCyclePhaseForDate === 'function') ? getCyclePhaseForDate(new Date()) : null;
+      const cycleText = cycleInfo ? `День цикла ${cycleInfo.cycleDay} (${cycleInfo.phase})` : 'Фаза не указана';
+
+     return `
+Ты — ${aiPersonaConfig.name}, персональный будуарный советник в приложении Pact & Passion.
+ТВОЯ ЛИЧНОСТЬ И ХАРАКТЕР:
+${baseInstruction}
+
+АКТУАЛЬНЫЙ КОНТЕКСТ СОЮЗА:
+- Собеседник в приложении: ${currentRole}
+- Надетое бельё/образ избранницы: ${wornItems}
+- Градус Страсти: ${passion.title} (${passion.total} 🌶️)
+- Биоритм/цикл: ${cycleText}
+`.trim();
+    }
+
+    let savedAiTheme = 'theme_mp2';
+    try { 
+      savedAiTheme = localStorage.getItem('pact_ai_chat_theme') || savedAiTheme; 
+    } catch (e) {}
+    if (typeof applyAiChatTheme === 'function') applyAiChatTheme(savedAiTheme);
+
+    // Инициализация при старте приложения
+    document.addEventListener('DOMContentLoaded', () => { 
+      if (typeof bootSession === 'function') bootSession(); 
+      if (typeof initAiAdvisorData === 'function') initAiAdvisorData();
+      if (typeof hideSplash === 'function') setTimeout(hideSplash, 1200);
+    });
   </script>
 </body>
 </html>
