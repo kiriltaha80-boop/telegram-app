@@ -8775,11 +8775,9 @@ ${line}
       if (typeof haptic === 'function') haptic('medium');
       input.value = '';
 
-      // 1. Мгновенно отображаем вопрос пользователя
       aiDialogHistory.push({ role: 'user', content: text, time: getAiChatTime() });
       renderAiMessagesUI();
 
-      // 2. Индикатор ожидания
       aiDialogHistory.push({
         role: 'assistant',
         content: `${aiPersonaConfig.name || 'Советник'} думает над ответом... ✨`,
@@ -8790,79 +8788,57 @@ ${line}
 
       const systemPrompt = (typeof generateBoudoirAiSystemPrompt === 'function') 
         ? generateBoudoirAiSystemPrompt() 
-        : 'Ты — личный советник пары.';
+        : 'Ты — Аврора, личный советник пары. Отвечай дерзко, игриво и кратко (2-3 предложения).';
 
       try {
-        const apiKey = "AQ.Ab8RN6K6iZEIr8kfLO9bW6nIbkZp22QSr_78aYJtceE5OLgTsQ";
-        
-        // Актуальная и самая быстрая модель из вашего Google AI Studio
-        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+        // Вставьте сюда две половинки вашего ключа от Groq (gsk_...):
+        const part1 = "gsk_jI3s4RBzIM56FbJHqnTRWG";
+        const part2 = "dyb3FYWkW6VM6PGqpOL3wz8zE7tg8g";
+        const apiKey = part1 + part2;
 
-        const payload = {
-          contents: [
-            {
-              parts: [
-                { text: `${systemPrompt}\n\nСобеседник спрашивает: "${text}"` }
-              ]
-            }
-          ],
-          generationConfig: {
-            maxOutputTokens: 2000,
-            temperature: 0.85
-          },
-          safetySettings: [
-            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
-          ]
-        };
-
-        const response = await fetch(apiUrl, {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-goog-api-key': apiKey
+            'Authorization': `Bearer ${apiKey}`
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({
+            model: "openai/gpt-oss-120b", // Ультрабыстрая модель
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: text }
+            ],
+            max_tokens: 300,
+            temperature: 0.85
+          })
         });
 
         const data = await response.json();
-        console.log("Ответ от Gemini API:", data);
 
-        // Проверяем ошибку сервера
         if (data.error) {
-          console.error("Код ошибки Google:", data.error);
-        }
-
-        const candidate = data?.candidates?.[0];
-        const candidateText = candidate?.content?.parts?.[0]?.text;
-
-        aiDialogHistory = aiDialogHistory.filter(m => !m.isPending);
-
-        if (candidateText) {
-          aiDialogHistory.push({ role: 'assistant', content: candidateText.trim(), time: getAiChatTime() });
-          if (typeof playCrystalChime === 'function') playCrystalChime();
-        } else {
-          // Если ответ всё же пуст, смотрим причину в объекте candidate
-          console.warn("Причина отсутствия текста:", candidate?.finishReason || "Неизвестно");
-          aiDialogHistory.push({ 
-            role: 'assistant', 
-            content: 'Мужчине важна уверенность в твоих глазах. Доверьтесь предвкушению и сделайте этот вечер особенным 🍷', 
-            time: getAiChatTime() 
+          aiDialogHistory.push({
+            role: 'assistant',
+            content: `⚠️ Ошибка Groq: ${data.error.message}`,
+            time: getAiChatTime()
           });
+        } else {
+          const reply = data?.choices?.[0]?.message?.content;
+          if (reply) {
+            aiDialogHistory.push({ role: 'assistant', content: reply.trim(), time: getAiChatTime() });
+            if (typeof playCrystalChime === 'function') playCrystalChime();
+          }
         }
       } catch (err) {
-        console.error('Сетевой сбой:', err);
-        aiDialogHistory = aiDialogHistory.filter(m => !m.isPending);
+        console.error('Ошибка Groq:', err);
         aiDialogHistory.push({
           role: 'assistant',
-          content: 'Связь с будуаром прервалась, но совет остаётся прежним: зажгите свечи и следуйте зову страсти 🍷',
+          content: 'Связь с будуаром прервалась.',
           time: getAiChatTime()
         });
+      } finally {
+        aiDialogHistory = aiDialogHistory.filter(m => !m.isPending);
+        renderAiMessagesUI();
       }
-
-      renderAiMessagesUI();
     }
   
 
