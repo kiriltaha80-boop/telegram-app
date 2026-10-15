@@ -8807,11 +8807,8 @@ ${line}
             }
           ],
           generationConfig: {
-            maxOutputTokens: 1000, // Запас токенов, чтобы ответ не обрывался
-            temperature: 0.85,
-            thinkingConfig: {
-              thinkingBudget: 0    // Отключаем размышления: ответ моментальный и полный
-            }
+            maxOutputTokens: 2000,
+            temperature: 0.85
           },
           safetySettings: [
             { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
