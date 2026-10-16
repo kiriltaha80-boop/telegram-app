@@ -8480,44 +8480,39 @@ ${line}
     }
 
     function sendSupportMessage(text) {
-  // 1. Инициализируем WebApp (обязательно для мобилок)
+  // 1. Обязательно вызываем ready() для инициализации WebApp в Telegram
   const tg = window.Telegram?.WebApp;
   if (tg) {
-    tg.ready(); // Сообщаем Telegram, что приложение готово
+    tg.ready();
   }
 
-  // 2. Безопасно достаем данные пользователя
+  // 2. Достаем реальные данные пользователя из Telegram
   const tgUser = tg?.initDataUnsafe?.user || {};
   
   const userInfo = {
-    id: tgUser.id || 'Невідомо',
-    firstName: tgUser.first_name || 'Мобільний',
-    lastName: tgUser.last_name || '',
-    username: tgUser.username ? `@${tgUser.username}` : 'Без юзернейма'
+    id: tgUser.id || null,             // Уникальный Telegram ID
+    firstName: tgUser.first_name || '', // Имя
+    lastName: tgUser.last_name || '',   // Фамилия
+    username: tgUser.username || ''     // Юзернейм (например, durov)
   };
 
-  // 3. Отправляем запрос на сервер Render
+  // 3. Отправляем на сервер
   fetch('https://pact-passion-server-1.onrender.com/api/support', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       message: text, 
-      category: 'Техпідтримка з телефону',
-      user: userInfo 
+      category: 'Техпідтримка з гри',
+      user: userInfo // Обязательно передаем этот объект!
     })
   })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert('Повідомлення успішно надіслано з телефону!');
-    } else {
-      alert('Помилка сервера: ' + (data.error || 'Невідомо'));
+      alert('Повідомлення надіслано!');
     }
   })
-  .catch(err => {
-    console.error('Помилка мережі:', err);
-    alert('Не вдалося з\'єднатися з сервером з телефону.');
-  });
+  .catch(err => console.error('Помилка:', err));
 }
     // Создатель правит текст в уже согласованном пересмотре (сценарий остаётся прежним)
     function openContractWriterForRevision() {
