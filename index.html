@@ -8480,27 +8480,36 @@ ${line}
     }
 
    function sendSupportMessage(text) {
-  // 1. Перевіряємо, чи є об'єкт Telegram WebApp
+  // 1. Получаем объект Telegram WebApp
   const tg = window.Telegram?.WebApp;
-  
   if (tg) {
-    tg.ready(); // Повідомляємо Telegram, що додаток завантажився
+    tg.ready();
   }
 
-  // 2. Безпечно дістаємо дані (якщо це мобільний Telegram, вони будуть тут)
-  const tgUser = tg?.initDataUnsafe?.user;
+  // 2. Ищем ID пользователя во всех возможных местах объекта Telegram
+  const userId = 
+    tg?.initDataUnsafe?.user?.id || 
+    tg?.initData?.user?.id || 
+    window.TelegramUser?.id || 
+    null;
 
-  // Формуємо об'єкт користувача
+  const firstName = tg?.initDataUnsafe?.user?.first_name || 'Гість';
+  const lastName = tg?.initDataUnsafe?.user?.last_name || '';
+  const username = tg?.initDataUnsafe?.user?.username ? `@${tg?.initDataUnsafe?.user?.username}` : 'немає';
+
+  // Если ID все еще нет, выведем отладочное окно на телефон, чтобы понять, видит ли телефон Telegram вообще
+  if (!userId) {
+    alert('Увага: Telegram ID не знайдено! Перевірте, чи запущена гра в Telegram.');
+  }
+
   const userInfo = {
-    id: tgUser?.id || 'Тест із браузера (не з Telegram)',
-    firstName: tgUser?.first_name || 'Гість',
-    lastName: tgUser?.last_name || '',
-    username: tgUser?.username ? `@${tgUser.username}` : 'немає'
+    id: userId || 'Невідомо',
+    firstName: firstName,
+    lastName: lastName,
+    username: username
   };
 
-  console.log("Відправляємо дані користувача:", userInfo); // Можете подивитися в консолі мобільного/браузера
-
-  // 3. Надсилаємо на сервер Render
+  // 3. Отправляем на сервер
   fetch('https://pact-passion-server-1.onrender.com/api/support', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -8520,7 +8529,7 @@ ${line}
   })
   .catch(err => {
     console.error('Помилка мережі:', err);
-    alert('Не вдалося зв\'язатися з сервером.');
+    alert('Не вдалося зв\'язатися з сервером. Перевірте інтернет.');
   });
 }
     // Создатель правит текст в уже согласованном пересмотре (сценарий остаётся прежним)
