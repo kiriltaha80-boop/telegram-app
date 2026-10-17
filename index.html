@@ -8479,40 +8479,49 @@ ${line}
       }
     }
 
-    function sendSupportMessage(text) {
-  // 1. Обязательно вызываем ready() для инициализации WebApp в Telegram
+   function sendSupportMessage(text) {
+  // 1. Перевіряємо, чи є об'єкт Telegram WebApp
   const tg = window.Telegram?.WebApp;
+  
   if (tg) {
-    tg.ready();
+    tg.ready(); // Повідомляємо Telegram, що додаток завантажився
   }
 
-  // 2. Достаем реальные данные пользователя из Telegram
-  const tgUser = tg?.initDataUnsafe?.user || {};
-  
+  // 2. Безпечно дістаємо дані (якщо це мобільний Telegram, вони будуть тут)
+  const tgUser = tg?.initDataUnsafe?.user;
+
+  // Формуємо об'єкт користувача
   const userInfo = {
-    id: tgUser.id || null,             // Уникальный Telegram ID
-    firstName: tgUser.first_name || '', // Имя
-    lastName: tgUser.last_name || '',   // Фамилия
-    username: tgUser.username || ''     // Юзернейм (например, durov)
+    id: tgUser?.id || 'Тест із браузера (не з Telegram)',
+    firstName: tgUser?.first_name || 'Гість',
+    lastName: tgUser?.last_name || '',
+    username: tgUser?.username ? `@${tgUser.username}` : 'немає'
   };
 
-  // 3. Отправляем на сервер
+  console.log("Відправляємо дані користувача:", userInfo); // Можете подивитися в консолі мобільного/браузера
+
+  // 3. Надсилаємо на сервер Render
   fetch('https://pact-passion-server-1.onrender.com/api/support', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       message: text, 
       category: 'Техпідтримка з гри',
-      user: userInfo // Обязательно передаем этот объект!
+      user: userInfo 
     })
   })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert('Повідомлення надіслано!');
+      alert('Повідомлення успішно надіслано!');
+    } else {
+      alert('Помилка сервера: ' + (data.error || 'невідомо'));
     }
   })
-  .catch(err => console.error('Помилка:', err));
+  .catch(err => {
+    console.error('Помилка мережі:', err);
+    alert('Не вдалося зв\'язатися з сервером.');
+  });
 }
     // Создатель правит текст в уже согласованном пересмотре (сценарий остаётся прежним)
     function openContractWriterForRevision() {
