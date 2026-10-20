@@ -12,111 +12,19 @@
   <style>
     /* ===================== CSS ШЛЮЗА (из test.html) ===================== */
 
-   
-  /* Контейнер для всей сетки фото */
-  .photo-grid-compact {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Отступ между строками */
-  }
+   /* Полное отключение полос прокрутки во всей программе для всех элементов */
+* {
+  scrollbar-width: none !important;      /* Для Firefox */
+  -ms-overflow-style: none !important;     /* Для IE и старого Edge */
+}
 
-  /* Общие стили для слотов */
-  .photo-slot {
-    position: relative;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    overflow: hidden;
-    transition: 0.2s;
-  }
-  /* Слот с картинкой */
-  .photo-slot img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  /* Крестик удаления */
-  .photo-slot .remove-btn {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2;
-  }
-  /* Иконка плюса */
-  .photo-slot .plus-icon {
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  /* Сетка 2х1 (большое + два маленьких) */
-  .photo-row-top {
-    display: flex;
-    gap: 8px;
-    height: 112px; /* Общая высота строки */
-  }
-  /* Большое фото (титульное) — занимает 2/3 ширины */
-  .photo-slot.main-slot {
-    flex: 2;
-    border-style: solid;
-    border-color: rgba(227, 84, 98, 0.5);
-    background: rgba(227, 84, 98, 0.05);
-  }
-  /* Два маленьких фото вверху — занимают по 1/6 ширины каждое */
-  .photo-top-right-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .photo-slot.small-slot {
-    flex: 1;
-  }
-
-  /* Сетка 1x1 (одно маленькое + кнопка добавления) */
-  .photo-row-bottom {
-    display: flex;
-    gap: 8px;
-    height: 52px; /* Высота строки */
-  }
-  /* Маленькое фото (третье доп.) — занимает 1/3 ширины */
-  .photo-slot.small-slot-bottom {
-    flex: 1;
-  }
-  /* Кнопка «Добавить фото» — занимает 2/3 ширины */
-  .add-more-btn {
-    flex: 2;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #aaa;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .add-more-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-  }
-
+*::-webkit-scrollbar {
+  display: none !important;                /* Для Chrome, Safari, iOS, Android и Telegram WebApp */
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+  
     :root {
       --bg-color: #0C0A10;
       --card-bg: rgba(22, 18, 30, 0.95);
@@ -1406,7 +1314,6 @@
       font-weight: 700;
     }
 
-   
     .gw-modal-overlay {
       position: absolute;
       inset: 0;
@@ -1457,7 +1364,15 @@
       letter-spacing: 2px;
       color: #fff;
     }
-  
+  /* Скрываем полоску скролла для списка товаров */
+  #shop-products-list::-webkit-scrollbar {
+    display: none;
+  }
+  #shop-products-list {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+    
     /* ===================== CSS ЯДРА (основа 0.0.4) ===================== */
 
     /* ========================================================
@@ -1621,27 +1536,6 @@
     .app-toast.toast-success { border-color: rgba(16, 185, 129, 0.55); box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); }
     .app-toast.toast-penalty, .app-toast.toast-error { border-color: rgba(230, 57, 86, 0.6); box-shadow: 0 0 20px rgba(230, 57, 86, 0.3); }
     .app-toast.toast-info { border-color: rgba(155, 81, 224, 0.55); box-shadow: 0 0 20px rgba(155, 81, 224, 0.25); }
-
-   
-   
-  .cat-btn {
-    flex: 1;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #888;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .cat-btn.active {
-    background: rgba(227, 84, 98, 0.2);
-    border-color: rgba(227, 84, 98, 0.6);
-    color: #fff;
-    font-weight: 800;
-  }
 
     /* ========================================================
        3. ВЕРХНЯЯ КОЛБА-БРЕНДИНГ
@@ -2213,24 +2107,30 @@
     /* ========================================================
        9. БУТИК ИСКУШЕНИЯ (1 КОЛОНКА + ФИКСИРОВАННАЯ ШАПКА)
        ======================================================== */
+   
     
-   .shop-layout-card {
-      padding: 0 !important;
-      background: transparent !important;
-      border: none !important;
-    }
-
+  .shop-layout-card {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
     .shop-fixed-header-block,
     .wardrobe-fixed-header-block {
       position: sticky;
-      top: -16px;
+      top: 0;
       background: rgba(18, 14, 24, 0.98);
       backdrop-filter: blur(24px);
       z-index: 10;
       padding: 12px 14px 8px 14px;
-      margin: -16px -16px 8px -16px;
+      margin: 0 0 8px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px 24px 0 0;
+      border-radius: 0;
+      flex-shrink: 0;
     }
 
     .shop-account-balance-bar {
@@ -2279,9 +2179,11 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 4px 0 20px 0;
+      padding: 4px 0 80px 0;
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
-
     .product-row-card {
       background: rgba(14, 10, 20, 0.85);
       border: 1px solid var(--card-border);
@@ -2325,54 +2227,7 @@
       background: rgba(230, 57, 86, 0.9);
       box-shadow: 0 0 10px rgba(230, 57, 86, 0.6);
     }
-/* Нижняя плавающая панель магазина */
-  /* Контейнер теперь без фона и обводки, просто фиксирует кнопку внизу */
-    .shop-bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px)) 16px;
-      display: flex;
-      align-items: center;
-      z-index: 100;
-      background: transparent;
-      pointer-events: none; /* Чтобы кликалась только сама кнопка, а пустоты пропускали нажатия */
-    }
 
-    /* Возвращаем кликабельность самой кнопке */
-    .shop-bottom-bar > * {
-      pointer-events: auto;
-    }
-
-    /* Массивная кнопка корзины */
-    .shop-cart-main-btn {
-      width: 100%;
-      background: var(--accent-gradient, linear-gradient(135deg, #e35462, #b83243));
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(230, 57, 86, 0.4), 0 4px 12px rgba(0, 0, 0, 0.5);
-      transition: all 0.2s ease;
-    }
-    .shop-cart-main-btn:active {
-      transform: scale(0.98);
-    }
-
-    /* Бейдж счетчика товаров */
-    .shop-cart-badge {
-      background: rgba(0, 0, 0, 0.35);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
     /* ========================================================
        10. ГАРДЕРОБ (50/50 + НАМЁКИ)
        ======================================================== */
@@ -3138,9 +2993,6 @@
     }
     #tab-chat-pair .partner-name-text { text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
 
-    
-    
-    
     /* Пузырьки берут цвета из выбранной темы */
     .pair-msg-bubble.role-male {
       background: var(--bubble-male-bg) !important;
@@ -4247,79 +4099,6 @@
     </div>
   </div>
 
-  
-  <!-- ЭКРАН НАСТРОЕК -->
-  <div id="tab-settings" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Настройки </div>
-        <button class="tutorial-help-btn" onclick="openTutorial('settings')">?</button>
-      </div>
-
-      <!-- Список опций в настройках -->
-      <div class="contract-list" style="margin-top: 10px;">
-        
-        <!-- Кнопка: Настройка ценности -->
-    <div class="contract-item section-menu-card filled" onclick="openValuationSettings()" style="cursor: pointer;">
-      <div class="menu-action-left">
-        <div class="menu-action-icon">💰</div>
-        <div class="menu-action-texts">
-          <span class="menu-action-title">Настройка ценности</span>
-          <span class="menu-action-desc">Управление стоимостью и балансом токенов</span>
-        </div>
-      </div>
-      <span class="menu-action-badge badge-selected">Открыть ›</span>
-    </div>
-<!-- Кнопка 2: Режим спонсора -->
-        <div class="contract-item section-menu-card filled" onclick="openSponsorModeModal()" style="cursor: pointer;">
-          <div class="menu-action-left">
-            <div class="menu-action-icon">💸</div>
-            <div class="menu-action-texts">
-              <span class="menu-action-title">Режим спонсора</span>
-              <span class="menu-action-desc">Нормальный, Щедрый или Безлимит</span>
-            </div>
-          </div>
-          <span class="menu-action-badge badge-selected">Выбрать ›</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  
-  <!-- МОДАЛКА: ВЫБОР РЕЖИМА СПОНСОРА В ФИРМЕННОМ СТИЛЕ -->
-  <div id="sponsor-mode-modal" class="modal-overlay" onclick="if(event.target===this) closeSponsorModeModal()">
-    <div class="modal-card" style="max-width: 410px;">
-      <div class="modal-header">
-        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing: 0.5px;">⚡ Выбор режима спонсора</h3>
-        <span class="modal-close-btn" onclick="closeSponsorModeModal()">✕</span>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
-        
-        <!-- Кнопка 1: Нормальный режим -->
-        <button class="contract-mode-btn" id="s-mode-normal" onclick="selectSponsorMode('normal')" style="width:100%; text-align:left; padding:12px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02)); border: 1px solid var(--border-color); transition: all 0.2s ease;">
-          <b style="font-size: 12px; color: #fff;">🛡️ Нормальный режим</b><br>
-          <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block; margin-top: 3px;">Базовые лимиты по курсу 2 грн = 1 очко.</span>
-        </button>
-
-        <!-- Кнопка 2: Щедрый режим -->
-        <button class="contract-mode-btn" id="s-mode-generous" onclick="selectSponsorMode('generous')" style="width:100%; text-align:left; padding:12px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02)); border: 1px solid var(--border-color); transition: all 0.2s ease;">
-          <b style="font-size: 12px; color: #fff;">⚡ Щедрый режим</b><br>
-          <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block; margin-top: 3px;">Растраты увеличены на 1.75x.</span>
-        </button>
-
-        <!-- Кнопка 3: Безлимит -->
-        <button class="contract-mode-btn" id="s-mode-unlimited" onclick="selectSponsorMode('unlimited')" style="width:100%; text-align:left; padding:12px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02)); border: 1px solid var(--border-color); transition: all 0.2s ease;">
-          <b style="font-size: 12px; color: #fff;">♾️ Безлимит</b><br>
-          <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block; margin-top: 3px;">Без ограничений для нижней.</span>
-        </button>
-
-        <!-- Общая кнопка подтверждения выбора снизу -->
-        <button class="action-roll-btn" onclick="confirmSponsorModeSelection()" style="width:100%; margin-top: 6px;">ВЫБРАТЬ ✨</button>
-
-      </div>
-    </div>
-  </div>
   <!-- ЭКРАН ПРИНЯТИЯ ПАКТА ПАРТНЁРОМ -->
   <div class="joiner-gate-stage" id="joiner-gate-stage">
     <div class="welcome-box" style="width: 100%; max-width: 380px;">
@@ -4366,56 +4145,11 @@
     </div>
   </div>
 
- <!-- МОДАЛКА: НАСТРОЙКА ЦЕННОСТИ -->
-  <div id="valuation-settings-modal" class="modal-overlay" onclick="if(event.target===this) closeValuationSettingsModal()">
-    <div class="modal-card" style="max-width: 410px;">
-      <div class="modal-header">
-        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">💰 Настройка ценности</h3>
-        <span class="modal-close-btn" onclick="closeValuationSettingsModal()">✕</span>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
-        
-        <!-- Ввод изначальной суммы и подпись рядом в едином фирменном стиле -->
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <!-- Левая часть: Поле ввода с фирменным градиентным фоном -->
-          <div class="form-group" style="flex: 0 0 130px; margin: 0;">
-            <label style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;">Сумма (грн):</label>
-            <input type="number" id="base-uah-input" value="2000" oninput="calculateValuationFromInput()" style="width: 100%; height: 40px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.15), rgba(230, 57, 86, 0.05)); border: 1px solid var(--accent-color, #e35462); color: #c9bfc0; font-size: 14px; font-weight: 700; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
-          </div>
+  
+  <!-- Тёмная подложка шлюза: скрывает рабочий стол, пока идёт вход, бокал и написание контракта -->
+  <div id="gateway-backdrop"></div>
 
-          <!-- Правая часть: Блок с идентичным фирменным градиентом -->
-          <div style="flex: 1; height: 40px; margin-top: 18px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.15), rgba(230, 57, 86, 0.05)); border: 1px solid rgba(230, 57, 86, 0.3); border-radius: 10px; padding: 0 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-            <span style="font-size: 12px; font-weight: 800; color: #c9bfc0; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Желаемые растраты</span>
-          </div>
-        </div>
-       
-        <!-- Красивый блок расчета для Нижней -->
-        <div style="background: linear-gradient(135deg, rgba(230, 57, 86, 0.12), rgba(255, 255, 255, 0.03)); border: 1px solid rgba(230, 57, 86, 0.35); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.25);">
-          
-          <!-- Шапка блока -->
-          <div style="display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(230, 57, 86, 0.2); padding-bottom: 8px;">
-            <span style="font-size: 14px;">💎</span>
-            <span style="font-size: 11px; font-weight: 800; color: #c9bfc0; text-transform: uppercase; letter-spacing: 0.5px;">Расчет для Нижней (Магазин)</span>
-          </div>
 
-          <!-- Строка 1: Итоговый бюджет -->
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: var(--text-muted);">
-            <span>Итоговый бюджет:</span> 
-            <b id="calc-res-uah" style="color: #fff; font-size: 12px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">2000 грн</b>
-          </div>
-
-          <!-- Строка 2: Эквивалент в очках -->
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: var(--text-muted);">
-            <span>Эквивалент (за 4 задания):</span> 
-            <b id="calc-res-pts" style="color: var(--accent-color, #e35462); font-size: 12px; background: rgba(230, 57, 86, 0.15); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(230, 57, 86, 0.3);">1000 очков</b>
-          </div>
-
-        </div>
-
-        <button class="action-roll-btn" onclick="saveValuationSettings()" style="width:100%;">ГОТОВО ✨</button>
-      </div>
-    </div>
-  </div>
 
   <!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
   <div id="modal-revision-ask" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-revision-ask')">
@@ -4583,6 +4317,106 @@
     </div>
   </div>
 
+ <!-- ЭКРАН НАСТРОЕК (Стандартный экран приложения) -->
+<div id="tab-settings" class="tab-content">
+  <div class="card">
+    <div class="sub-screen-header">
+      <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+      <div class="screen-title">Настройки</div>
+      <button class="tutorial-help-btn" onclick="openTutorial('settings')">?</button>
+    </div>
+
+    <!-- Список функций внутри экрана настроек -->
+    <div class="contract-list" style="margin-top: 10px;">
+      
+      <!-- Пункт 1: Настройка ценности -->
+      <div class="contract-item section-menu-card filled" onclick="openValuationModal()" style="cursor: pointer;">
+        <div class="menu-action-left">
+          <div class="menu-action-icon">💰</div>
+          <div class="menu-action-texts">
+            <span class="menu-action-title">Настройка ценности</span>
+            <span class="menu-action-desc">Настройка бюджета и очков</span>
+          </div>
+        </div>
+        <span class="menu-action-badge badge-selected">Открыть ›</span>
+      </div>
+
+      <!-- Пункт 2: Режим спонсора -->
+      <div class="contract-item section-menu-card filled" onclick="openSponsorModal()" style="cursor: pointer;">
+        <div class="menu-action-left">
+          <div class="menu-action-icon">💸</div>
+          <div class="menu-action-texts">
+            <span class="menu-action-title">Режим спонсора</span>
+            <span class="menu-action-desc" id="screen-menu-sponsor-desc">Нормальный, Щедрый или Безлимит</span>
+          </div>
+        </div>
+        <span class="menu-action-badge badge-selected">Выбрать ›</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- МОДАЛКА 1: НАСТРОЙКА ЦЕННОСТИ -->
+<div id="valuation-modal" class="modal-overlay" onclick="if(event.target===this) closeValuationModal()">
+  <div class="modal-card" style="max-width: 410px;">
+    <div class="modal-header">
+      <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing: 0.5px;">💰 Настройка ценности</h3>
+      <span class="modal-close-btn" onclick="closeValuationModal()">✕</span>
+    </div>
+    
+    <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+      <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+        Укажите общий месячный бюджет. Сумма автоматически делится на 4 задания по курсу <b style="color:#fff;">2 грн = 1 очко</b>.
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Месячный бюджет (грн):</label>
+        <input type="number" id="sub-valuation-input" oninput="updateValuationPreview(this.value)" style="width:100%; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:#fff; font-size:14px; font-weight:bold;" placeholder="2000">
+      </div>
+
+      <div style="padding:10px 12px; border-radius:10px; background:rgba(230,57,86,0.08); border:1px solid rgba(230,57,86,0.2); display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:11px; color:#fff;">📊 Итого очков: <b id="sub-preview-points" style="color:var(--accent-color, #e63956);">1000 очков</b></div>
+        <div style="font-size:10px; color:var(--text-muted);" id="sub-preview-task">500 грн на каждое из 4 заданий</div>
+      </div>
+
+      <button class="action-roll-btn" onclick="saveValuation()" style="width:100%; margin-top: 4px;">СОХРАНИТЬ ✨</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- МОДАЛКА 2: РЕЖИМ СПОНСОРА -->
+<div id="sponsor-modal" class="modal-overlay" onclick="if(event.target===this) closeSponsorModal()">
+  <div class="modal-card" style="max-width: 410px;">
+    <div class="modal-header">
+      <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase; letter-spacing: 0.5px;">⚡ Выбор режима спонсора</h3>
+      <span class="modal-close-btn" onclick="closeSponsorModal()">✕</span>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+      
+      <button class="contract-mode-btn" id="sub-mode-normal" onclick="selectSponsorMode('normal')" style="width:100%; text-align:left; padding:12px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02)); border: 1px solid var(--border-color); cursor:pointer;">
+        <b style="font-size: 12px; color: #fff;">🛡️ Нормальный режим</b><br>
+        <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block; margin-top: 3px;">Базовые лимиты по курсу 2 грн = 1 очко.</span>
+      </button>
+
+      <button class="contract-mode-btn" id="sub-mode-generous" onclick="selectSponsorMode('generous')" style="width:100%; text-align:left; padding:12px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02)); border: 1px solid var(--border-color); cursor:pointer;">
+        <b style="font-size: 12px; color: #fff;">⚡ Щедрый режим</b><br>
+        <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block; margin-top: 3px;">Лимиты верхнего увеличены на 1.75x.</span>
+      </button>
+
+      <button class="contract-mode-btn" id="sub-mode-unlimited" onclick="selectSponsorMode('unlimited')" style="width:100%; text-align:left; padding:12px 14px; border-radius: 12px; background: linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02)); border: 1px solid var(--border-color); cursor:pointer;">
+        <b style="font-size: 12px; color: #fff;">♾️ Безлимит</b><br>
+        <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3; display: block; margin-top: 3px;">Без ограничений для нижней стороны.</span>
+      </button>
+
+      <button class="action-roll-btn" onclick="saveSponsorMode()" style="width:100%; margin-top: 6px;">СОХРАНИТЬ ✨</button>
+    </div>
+  </div>
+</div>
+
   <!-- МОДАЛКА: НАСТРОЙКИ ЦИКЛА -->
   <div id="cycle-settings-modal" class="modal-overlay" onclick="if(event.target===this) closeCycleSettingsModal()">
     <div class="modal-card">
@@ -4666,17 +4500,19 @@
     </div>
   </div>
 
-  <!-- 6. БУТИК (ЕДИНЫЙ МАГАЗИН: 1 КОЛОНКА, БЕЛЬЕ + СЕКС-ШОП) -->
+  <!-- 6. БУТИК ИСКУШЕНИЯ (ЕДИНЫЙ МАГАЗИН: 1 КОЛОНКА, БЕЛЬЕ + СЕКС-ШОП) -->
 <div id="tab-shop" class="tab-content shop-tab-container">
-  <div class="card shop-layout-card">
-    <div class="shop-fixed-header-block">
+  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
+  <!-- Главный контейнер окна с жесткими границами -->
+  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
+    
+    <!-- 1. ВЕРХНЯЯ ЗОНА (Зафиксирована намертво, без какого-либо скролла) -->
+    <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
-        <div class="screen-title">Бутик</div>
+        <div class="screen-title">Бутик Искушения</div>
         <div style="display: flex; gap: 6px;">
-          <button class="small-btn" onclick="openStandardPrompt()">
-          + Добавить
-          </button>
+          <button id="shop-add-btn-master" class="small-btn" onclick="openAddProductModal()" style="display: none;">+ Добавить</button>
           <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
         </div>
       </div>
@@ -4689,192 +4525,32 @@
           <button class="chip-btn" id="shop-cat-btn-sexshop" onclick="setShopCategory('Секс-шоп', this)">🔮 Секс-шоп</button>
         </div>
         <div class="shop-actions-right">
-          <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 В подарок</button>
-          <button class="chip-btn liked-btn" id="shop-cat-btn-liked" onclick="setShopCategory('Понравилось', this)">❤️ Избранное</button>
+          <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 Подарки</button>
         </div>
+      </div>
+    </div>
+
+    <!-- 2. СРЕДНЯЯ ЗОНА (Единственное место во всем окне, где разрешен скролл товаров) -->
+    <div id="shop-products-list" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0;"></div>
+
+    <!-- 3. НИЖНЯЯ ЗОНА (Корзина и Избранное — зафиксированы намертво, без скролла) -->
+    <div style="flex-shrink: 0; display: flex; padding: 10px 15px; gap: 10px; background: transparent; z-index: 5; overflow: visible;">
       
-      </div>
-    </div>
+      <button class="shop-nav-tab-btn" id="shop-tab-cart" onclick="switchShopView('cart', this)" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
+        🛒 Корзина 
+        <span id="shop-cart-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+      </button>
 
-    <!-- Список товаров -->
-    <div id="shop-products-list" class="products-single-column-view"></div>
-    
-    <!-- Отступ, чтобы нижний бар не перекрывал последний товар -->
-    <div style="height: 90px;"></div>
-  </div>
+      <button class="shop-nav-tab-btn" id="shop-tab-liked" onclick="switchShopView('liked', this)" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
+        ❤️ Избранное 
+        <span id="shop-liked-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+      </button>
 
-  <!-- Нижняя плавающая панель с Корзиной (чистая кнопка без рамки и фона) -->
-  <div class="shop-bottom-bar">
-    <button onclick="openCart()" class="shop-cart-main-btn">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 20px;">🛒</span>
-        <span style="font-size: 14px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Корзина</span>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span id="cart-counter-badge" class="shop-cart-badge">0 шт</span>
-        <span style="font-size: 14px; color: rgba(255,255,255,0.8); font-weight: bold;">›</span>
-      </div>
-    </button>
-  </div>
-</div>
-
-<!-- МОДАЛКА ДОБАВИТЬ ТОВАР -->
-<div id="simple-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; padding: 16px;">
-  <div style="background: #120e18; border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; padding: 20px; color: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.7);">
-    
-    <!-- Заголовок -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-      <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #fff;">✨ Добавить товар в Бутик</h3>
-      <button onclick="document.getElementById('simple-modal').style.display='none'" style="background: none; border: none; color: #888; font-size: 18px; cursor: pointer; padding: 0;">✕</button>
-    </div>
-
-    <!-- Поля формы -->
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-      
-      <div>
-        <label style="font-size: 11px; font-weight: 700; color: #888; display: block; margin-bottom: 4px;">Название товара</label>
-        <input type="text" id="simple-title" placeholder="Например, Комплект кружевного белья" style="width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none;">
-      </div>
-
-      <!-- Переключатель категорий в виде кнопок -->
-      <div>
-  <label style="font-size: 11px; font-weight: 700; color: #888; display: block; margin-bottom: 6px;">Категория</label>
-  <div style="display: flex; gap: 8px;">
-    <button type="button" class="cat-btn active" data-category="Белье" id="cat-btn-underwear">👙 Белье</button>
-    <button type="button" class="cat-btn" data-category="Секс-шоп" id="cat-btn-sexshop">🔮 Секс-шоп</button>
-  </div>
-  <input type="hidden" id="simple-category" value="Белье">
-</div>
-      <!-- Блок компактной сетки фото (как в Telegram) -->
-      <div>
-        <label style="font-size: 11px; font-weight: 700; color: #888; display: block; margin-bottom: 6px;">📸 Фотографии товара</label>
-        
-        <div class="photo-grid-compact">
-          
-          <!-- Верхний ряд (Большое + 2 маленьких) -->
-          <div class="photo-row-top">
-            <!-- Слот 0: Большое Титульное фото (Главное) -->
-            <div class="photo-slot main-slot" id="slot-0" onclick="triggerPhotoUpload(0)" title="Титульное фото">
-              <span class="plus-icon">+</span>
-              <div style="position: absolute; bottom: 4px; left: 4px; background: rgba(227, 84, 98, 0.8); color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">ГЛАВНОЕ</div>
-            </div>
-            
-            <!-- Группа из 2 маленьких фото справа от большого -->
-            <div class="photo-top-right-group">
-              <!-- Слот 1: Дополнительное 1 -->
-              <div class="photo-slot small-slot" id="slot-1" onclick="triggerPhotoUpload(1)" title="Дополнительное фото 1">
-                <span class="plus-icon">+</span>
-              </div>
-              <!-- Слот 2: Дополнительное 2 -->
-              <div class="photo-slot small-slot" id="slot-2" onclick="triggerPhotoUpload(2)" title="Дополнительное фото 2">
-                <span class="plus-icon">+</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Нижний ряд (1 маленькое + кнопка добавить) -->
-          <div class="photo-row-bottom">
-            <!-- Слот 3: Дополнительное 3 -->
-            <div class="photo-slot small-slot-bottom" id="slot-3" onclick="triggerPhotoUpload(3)" title="Дополнительное фото 3">
-              <span class="plus-icon">+</span>
-            </div>
-            
-            <!-- Кнопка добавления (активна, если есть свободные слоты) -->
-            <button type="button" class="add-more-btn" onclick="autoFindNextFreeSlot()" id="add-more-photo-btn">
-              <span class="plus-icon">+</span> Добавить фото (макс. 4)
-            </button>
-          </div>
-        </div>
-
-        <!-- Скрытый инпут для выбора файлов -->
-        <input type="file" id="hidden-photo-input" accept="image/*" style="display: none;" onchange="handlePhotoSelected(this)">
-      </div>
-
-      <!-- Блок цены, очков и слайдера баланса -->
-      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
-        
-        <div>
-          <label style="font-size: 11px; font-weight: 700; color: #888; display: block; margin-bottom: 4px;">Цена в гривнах (UAH)</label>
-          <input type="number" id="simple-price" placeholder="1000" oninput="calculateProductPoints()" style="width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 14px; font-weight: bold; box-sizing: border-box; outline: none;">
-        </div>
-
-        <!-- Итоговые очки с учетом баланса -->
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-          <span style="color: #888; text-align: center; display: block;">Эквивалент (2:1):</span>
-          
-        </div>
-
-        <!-- Слайдер баланса: Покорность <-> Страсть -->
-        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
-          <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #aaa; margin-bottom: 6px;">
-            <span id="label-sub" style="color: #aaa;">🖤 Покорность: 0</span>
-            <span id="label-passion" style="color: #b854e3;"> Страсть 💜: 0</span>
-          </div>
-          
-          <!-- Сам ползунок -->
-          <input type="range" id="simple-balance-slider" min="0" max="100" value="50" oninput="calculateProductPoints()" style="width: 100%; accent-color: #b854e3; cursor: pointer;">
-        </div>
-      </div>
-
-
-<!-- Кнопки управления -->
-    <div style="display: flex; gap: 8px; margin-top: 18px;">
-      <button onclick="document.getElementById('simple-modal').style.display='none'" style="flex: 1; padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #888; font-weight: 700; cursor: pointer;">Отмена</button>
-      <button onclick="saveSimpleProduct()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #e35462, #b83243); border: none; border-radius: 12px; color: #fff; font-weight: 900; cursor: pointer; box-shadow: 0 4px 15px rgba(230,57,86,0.4);">Сохранить</button>
     </div>
 
   </div>
 </div>
-<!-- БУТИК ИСКУШЕНИЯ -->
-<div id="tab-shop" class="tab-content shop-tab-container">
-  <div class="card shop-layout-card">
-    <div class="shop-fixed-header-block">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
-        <div class="screen-title">Бутик Искушения</div>
-        <button class="small-btn" onclick="openStandardPrompt()">
-         + Добавить
-        </button>
-      </div>
 
-      <div class="shop-account-balance-bar" id="shop-account-balance-slot"></div>
-
-      <div class="shop-controls-bar">
-        <div class="shop-cats-left">
-          <button class="chip-btn active" id="shop-cat-btn-lingerie" onclick="setShopCategory('Белье', this)">👙 Белье</button>
-          <button class="chip-btn" id="shop-cat-btn-sexshop" onclick="setShopCategory('Секс-шоп', this)">🔮 Секс-шоп</button>
-        </div>
-        <div class="shop-actions-right">
-          <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 В подарок</button>
-          <button class="chip-btn liked-btn" id="shop-cat-btn-liked" onclick="setShopCategory('Понравилось', this)">❤️ Избранное</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Список товаров -->
-    <div id="shop-products-list" class="products-single-column-view"></div>
-    
-    <!-- Отступ, чтобы нижняя кнопка не перекрывала товары -->
-    <div style="height: 90px;"></div>
-  </div>
-
-  <!-- Нижняя панель без рамки и фона (только плавающая кнопка корзины) -->
-  <div class="shop-bottom-bar">
-    <button onclick="openCart()" class="shop-cart-main-btn">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 20px;">🛒</span>
-        <span style="font-size: 14px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Корзина</span>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span id="cart-counter-badge" class="shop-cart-badge">0 шт</span>
-        <span style="font-size: 14px; color: rgba(255,255,255,0.8); font-weight: bold;">›</span>
-      </div>
-    </button>
-  </div>
-</div>
-  
   <!-- 7. ЖЕЛАНИЯ & ПОДАРКИ -->
   <div id="tab-gifts" class="tab-content">
     <div class="card">
@@ -5157,66 +4833,28 @@
     </div>
   </div>
 
- <!-- ЭКРАН: БАЛАНС В СТИЛЕ ИКОНОК РАБОЧЕГО СТОЛА -->
+  <!-- 12. БАЛАНС -->
   <div id="tab-bank" class="tab-content">
     <div class="card">
       <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
         <div class="screen-title">БАЛАНС</div>
         <button class="tutorial-help-btn" onclick="openTutorial('bank')">?</button>
       </div>
 
-      <!-- Сетка с виджетами в стиле иконок -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
-        
-        <!-- Блок Нижней (Иконка) -->
-        <div id="bank-box-female" style="
-          background: linear-gradient(135deg, rgba(230, 57, 86, 0.12), rgba(230, 57, 86, 0.03));
-          border: 1px solid rgba(230, 57, 86, 0.3);
-          border-radius: 16px;
-          padding: 14px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.05);
-          transition: all 0.3s ease;
-          cursor: default;
-        "
-        onmouseover="this.style.borderColor='rgba(230, 57, 86, 0.6)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.1)'; this.style.transform='translateY(-2px)';"
-        onmouseout="this.style.borderColor='rgba(230, 57, 86, 0.3)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.05)'; this.style.transform='translateY(0)';">
-          
-          <div style="font-size: 11px; font-weight: 900; color: #FF8599; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Нижняя</div>
-          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 2px;">
-            <span style="font-size: 11px; color: var(--text-muted);">💜 Страсть: <b id="bank-f-ptc" style="color: #fff; font-size: 13px; text-shadow: 0 0 5px rgba(255,255,255,0.5);">0</b></span>
-            <span style="font-size: 11px; color: var(--text-muted);">🖤 Покорность: <b id="bank-f-otc" style="color: #fff; font-size: 13px; text-shadow: 0 0 5px rgba(255,255,255,0.5);">0</b></span>
-            <span style="font-size: 11px; color: var(--text-muted);">❤️ Токены: <b id="bank-f-stc" style="color: var(--accent-color); font-size: 13px; text-shadow: 0 0 8px var(--accent-color);">0</b></span>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div id="bank-box-female" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
+            <span>💜 Страсть: <b id="bank-f-ptc">0</b></span>
+            <span>🖤 Покорность: <b id="bank-f-otc">0</b></span>
+            <span>❤️ Секс-токены: <b id="bank-f-stc">0</b></span>
           </div>
         </div>
-
-        <!-- Блок Топа (Иконка) -->
-        <div id="bank-box-male" style="
-          background: linear-gradient(135deg, rgba(53, 162, 235, 0.12), rgba(53, 162, 235, 0.03));
-          border: 1px solid rgba(53, 162, 235, 0.3);
-          border-radius: 16px;
-          padding: 14px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.05);
-          transition: all 0.3s ease;
-          cursor: default;
-        "
-        onmouseover="this.style.borderColor='rgba(53, 162, 235, 0.6)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.1)'; this.style.transform='translateY(-2px)';"
-        onmouseout="this.style.borderColor='rgba(53, 162, 235, 0.3)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.05)'; this.style.transform='translateY(0)';">
-          
-          <div style="font-size: 11px; font-weight: 900; color: #5bc0de; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Топ</div>
-          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 2px;">
-            <span style="font-size: 11px; color: var(--text-muted);">💙 Внимание: <b id="bank-m-atc" style="color: #fff; font-size: 13px; text-shadow: 0 0 5px rgba(255,255,255,0.5);">0</b></span>
-            <span style="font-size: 11px; color: var(--text-muted);">💚 Забота: <b id="bank-m-ctc" style="color: #fff; font-size: 13px; text-shadow: 0 0 5px rgba(255,255,255,0.5);">0</b></span>
-            <span style="font-size: 11px; color: var(--text-muted);">❤️ Токены: <b id="bank-m-stc" style="color: var(--accent-color); font-size: 13px; text-shadow: 0 0 8px var(--accent-color);">0</b></span>
+        <div id="bank-box-male" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
+            <span>💙 Внимание: <b id="bank-m-atc">0</b></span>
+            <span>💚 Забота: <b id="bank-m-ctc">0</b></span>
+            <span>❤️ Секс-токены: <b id="bank-m-stc">0</b></span>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -5803,16 +5441,6 @@
       }
     }
 
-    function openValuationSettings() {
-      if (typeof haptic === 'function') haptic('light');
-      const modal = document.getElementById('valuation-settings-modal');
-      if (modal) {
-        modal.classList.add('active');
-        modal.style.display = 'flex'; // Принудительно показываем
-      }
-    }
-    window.openValuationSettings = openValuationSettings;
-  
     // Полноэкранный просмотр фото из чата
     function openFullscreenPhoto(src) {
       if (!src) return;
@@ -5967,27 +5595,6 @@
       } catch (e) { console.warn(e); }
     }
 
-    
-    document.addEventListener('DOMContentLoaded', () => {
-  const buttons = document.querySelectorAll('.cat-btn');
-  const hiddenInput = document.getElementById('simple-category');
-
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Убираем активный класс у всех
-      buttons.forEach(btn => btn.classList.remove('active'));
-      
-      // Добавляем нажатой
-      button.classList.add('active');
-      
-      // Записываем категорию в скрытый инпут
-      const selectedCategory = button.getAttribute('data-category');
-      if (hiddenInput) {
-        hiddenInput.value = selectedCategory;
-      }
-    });
-  });
-});
     // Роль и балансы
     let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
     window.currentAvatarRole = currentAvatarRole;
@@ -6089,7 +5696,7 @@
       { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
       { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '📅', target: 'tab-cycle', page: 0 },
       { id: 'tile-ai-advisor', type: 'tile', title: 'Советник', icon: 'ai-star', target: 'tab-ai-advisor', page: 0 },
-      { id: 'tile-settings', type: 'tile', title: 'Настройки', icon: '⚙️', target: 'tab-settings', page: 0 } // <--- Добавили на стол
+      { id: 'tile-settings', type: 'tile', title: 'Настройки', icon: '⚙️', target: 'tab-settings', page: 0, role: 'upper' }
     ];
     function saveDesktopItems() {
       localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
@@ -6123,43 +5730,9 @@
       const viewport = document.getElementById('desktop-viewport');
       if (!viewport) return;
 
-   function setProductCategory(categoryName) {
-  const hiddenInput = document.getElementById('simple-category');
-  const btnUnderwear = document.getElementById('cat-btn-underwear');
-  const btnSexshop = document.getElementById('cat-btn-sexshop');
-
-  if (hiddenInput) hiddenInput.value = categoryName;
-
-  if (categoryName === 'Белье') {
-    if (btnUnderwear) {
-      btnUnderwear.style.background = 'rgba(227, 84, 98, 0.2)';
-      btnUnderwear.style.borderColor = 'rgba(227, 84, 98, 0.6)';
-      btnUnderwear.style.color = '#fff';
-      btnUnderwear.style.fontWeight = '800';
-    }
-    if (btnSexshop) {
-      btnSexshop.style.background = 'rgba(255, 255, 255, 0.05)';
-      btnSexshop.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-      btnSexshop.style.color = '#888';
-      btnSexshop.style.fontWeight = '700';
-    }
-  } else {
-    if (btnUnderwear) {
-      btnUnderwear.style.background = 'rgba(255, 255, 255, 0.05)';
-      btnUnderwear.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-      btnUnderwear.style.color = '#888';
-      btnUnderwear.style.fontWeight = '700';
-    }
-    if (btnSexshop) {
-      btnSexshop.style.background = 'rgba(227, 84, 98, 0.2)';
-      btnSexshop.style.borderColor = 'rgba(227, 84, 98, 0.6)';
-      btnSexshop.style.color = '#fff';
-      btnSexshop.style.fontWeight = '800';
-    }
-  }
-}
+    
       /* ========================================================
-     УМНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ (БЕЗОПАСНАЯ ВЕРСИЯ)
+       УМНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ (БЕЗОПАСНАЯ ВЕРСИЯ)
        ======================================================== */
 
     // Безопасная вибрация (работает даже если tg не подключен)
@@ -6565,7 +6138,8 @@
     window.deleteCalendarEventById = deleteCalendarEventById;
   }
 
-   function renderDesktop() {
+    // Отрисовка рабочего стола
+    function renderDesktop() {
       const pages = [
         document.getElementById('desktop-page-0'),
         document.getElementById('desktop-page-1'),
@@ -6574,16 +6148,11 @@
       if (!pages[0] || !pages[1] || !pages[2]) return;
       pages.forEach(p => p.innerHTML = '');
 
-      // 1. Создаем отфильтрованный список (без настроек для Нижней)
-      const activeDesktopItems = desktopItems.filter(item => {
-        if (currentAvatarRole === 'female' && item.id === 'tile-settings') {
-          return false;
-        }
-        return true;
-      });
-
       const passion = getPassionStatus();
-      activeDesktopItems.forEach(item => {
+
+      desktopItems.forEach(item => {
+        if (item.role === 'upper' && !isUserUpper()) return;
+        if (item.role === 'lower' && isUserUpper()) return;
         const targetContainer = pages[item.page || 0] || pages[0];
         const wrap = document.createElement('div');
         wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
@@ -6726,6 +6295,7 @@
     }
     function closeWallpaperModal() { document.getElementById('wallpaper-modal')?.classList.remove('active'); }
 
+    // Добавить на робочий стол 
     const availableCatalogItems = [
       { id: 'w-passion', type: 'widget-passion', span: 4, title: 'Градус Страсти', icon: '🌶️', desc: 'Сумма перчинок и статус вечера' },
       { id: 'w-balance', type: 'widget-balance', span: 2, title: 'Баланс Очков', icon: '💖', desc: 'Квадратный виджет счетов' },
@@ -6736,28 +6306,46 @@
       { id: 'tile-contract', type: 'tile', target: 'tab-contract', title: 'Контракт', icon: '📜', desc: 'Соглашение пары' },
       { id: 'tile-random', type: 'tile', target: 'tab-randomizer', title: 'Жребий', icon: '🎲', desc: 'Монетка судьбы и кубик' },
       { id: 'tile-gifts', type: 'tile', target: 'tab-gifts', title: 'Желания', icon: '✨', desc: 'Подарки и просьбы' },
-      { id: 'tile-chat', type: 'tile', target: 'tab-messenger', title: 'Чат', icon: '💬', desc: 'Диалог ' },
-      { id: 'tile-settings', type: 'tile', target: 'tab-settings', title: 'Настройки', icon: '⚙️', desc: 'Общие настройки' }
+      { id: 'tile-chat', type: 'tile', target: 'tab-messenger', title: 'Чат', icon: '💬', desc: 'Диалог' },
+      { id: 'tile-settings', type: 'tile', target: 'tab-settings', title: 'Настройки', icon: '⚙️', desc: 'Управление бюджетом и режимом', page: 0, role: 'upper' }
     ];
 
-    function openAddWidgetModalDirect() {
+   function openAddWidgetModalDirect() {
       closeCapsuleToolbar();
       renderDesktopCatalogModal();
       document.getElementById('customization-modal')?.classList.add('active');
     }
-    function closeCustomizationModal() { document.getElementById('customization-modal')?.classList.remove('active'); }
+
     function closeCustomizationModal() { 
       document.getElementById('customization-modal')?.classList.remove('active');
-      // Выключаем режим перемещения и прячем панель колбы
-      toggleDesktopEditMode(false);
-      closeCapsuleToolbar();
+      
+      // 1. Закрываем нижнюю колбу
+      if (typeof closeCapsuleToolbar === 'function') {
+        closeCapsuleToolbar();
+      }
+      
+      // 2. Официально выключаем режим перемещения иконок через твою же функцию!
+      if (typeof toggleDesktopEditMode === 'function') {
+        toggleDesktopEditMode(false);
+      } else {
+        renderDesktop();
+      }
     }
 
     function closeWallpaperModal() { 
       document.getElementById('wallpaper-modal')?.classList.remove('active');
-      // Выключаем режим перемещения и прячем панель колбы
-      toggleDesktopEditMode(false);
-      closeCapsuleToolbar();
+      
+      // 1. Закрываем нижнюю колбу
+      if (typeof closeCapsuleToolbar === 'function') {
+        closeCapsuleToolbar();
+      }
+      
+      // 2. Официально выключаем режим перемещения иконок через твою же функцию!
+      if (typeof toggleDesktopEditMode === 'function') {
+        toggleDesktopEditMode(false);
+      } else {
+        renderDesktop();
+      }
     }
 
     function renderDesktopCatalogModal() {
@@ -6765,15 +6353,15 @@
       if (!container) return;
       container.innerHTML = '';
 
-      // Фильтруем каталог: убираем настройки для роли Нижней ('female')
-      const catalogToRender = availableCatalogItems.filter(item => {
-        if (currentAvatarRole === 'female' && item.id === 'tile-settings') {
-          return false;
-        }
+      // Фильтруем каталог: показываем только то, что соответствует роли пользователя
+      const filteredCatalog = availableCatalogItems.filter(item => {
+        if (item.role === 'upper' && !isUserUpper()) return false;
+        if (item.role === 'lower' && isUserUpper()) return false;
         return true;
       });
 
-      catalogToRender.forEach(item => {
+      // Перебираем уже отфильтрованный список
+      filteredCatalog.forEach(item => {
         const isPresent = desktopItems.some(d => 
           item.type === 'tile' ? d.target === item.target : d.type === item.type
         );
@@ -6799,9 +6387,23 @@
             showToast(`Удалено: ${item.title}`, 'info');
           } else {
             if (item.type === 'tile') {
-              desktopItems.push({ id: 't-' + Date.now(), type: 'tile', title: item.title, icon: item.icon, target: item.target, page: currentDesktopPage });
+              desktopItems.push({ 
+                id: 't-' + Date.now(), 
+                type: 'tile', 
+                title: item.title, 
+                icon: item.icon, 
+                target: item.target, 
+                page: currentDesktopPage,
+                role: item.role 
+              });
             } else {
-              desktopItems.push({ id: 'w-' + Date.now(), type: item.type, span: item.span, page: currentDesktopPage });
+              desktopItems.push({ 
+                id: 'w-' + Date.now(), 
+                type: item.type, 
+                span: item.span, 
+                page: currentDesktopPage,
+                role: item.role 
+              });
             }
             showToast(`Добавлено: ${item.title}`, 'success');
           }
@@ -6814,11 +6416,17 @@
         container.appendChild(card);
       });
     }
-
     // 3. БУТИК ИСКУШЕНИЯ
     let shopFilterCat = 'Белье';
     let boutiqueItems = [
-      ];
+    { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом' },
+    { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом' },
+      { id: 102, title: '«Тёмная Покорность»', category: 'Белье', pricePtc: 160, priceOtc: 340, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, гартеры' },
+      { id: 103, title: '«Цветение Айвори»', category: 'Белье', pricePtc: 280, priceOtc: 140, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт' },
+      { id: 201, title: '«Бархатный Ошейник»', category: 'Секс-шоп', priceStc: 180, mainImg: 'https://images.unsplash.com/photo-1611042553365-9b101441c135?w=900', desc: 'С позолоченным кольцом и поводком' },
+      { id: 202, title: '«Атласные Ленты & Повязка»', category: 'Секс-шоп', priceStc: 120, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Для ограничения чувств' },
+      { id: 203, title: '«Кожаный Флоггер Покора»', category: 'Секс-шоп', priceStc: 260, mainImg: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900', desc: 'Мягкие замшевые хвосты' }
+    ];
 
     function setShopCategory(cat, btn) {
       shopFilterCat = cat;
@@ -7117,6 +6725,7 @@
       draw();
     }
 
+    
     // 6. ТУТОРИАЛ
     const tutorialsData = {
       randomizer: {
@@ -7160,19 +6769,36 @@
 
     // Профиль и смена ролей
     function toggleRoleByEmoji() {
-      currentAvatarRole = (currentAvatarRole === 'male') ? 'female' : 'male';
-      window.currentAvatarRole = currentAvatarRole;
-      localStorage.setItem('pact_current_role', currentAvatarRole);
-      updateRoleEmojiUI();
-      updateAllAvatarsUI()
-      renderDesktop();
-      if (typeof window.renderPairChat === 'function') window.renderPairChat();
-      showToast(`Активная роль: ${getRoleInfo(currentAvatarRole).name}`, 'info');
-      updateRoomIndicator();
-    }
-  function updateRoleEmojiUI() {
+  // 1. Переключаем аватар/пол ('male' <-> 'female')
+  currentAvatarRole = (currentAvatarRole === 'male') ? 'female' : 'male';
+  window.currentAvatarRole = currentAvatarRole;
+  
+  // 2. Автоматически определяем системную роль для плиток:
+  // Пусть 'male' будет верхним ('upper'), а 'female' — нижним ('lower')
+  const systemRole = (currentAvatarRole === 'male') ? 'upper' : 'lower';
+  
+  // 3. Сохраняем ОБА ключа в localStorage, чтобы и старый код, и плитки работали идеально
+  localStorage.setItem('pact_current_role', currentAvatarRole);
+  localStorage.setItem('pact_user_role', systemRole);
+  
+  // 4. Обновляем интерфейс и перерисовываем рабочий стол
+  updateRoleEmojiUI();
+  updateAllAvatarsUI();
+  renderDesktop(); // 👉 Плитка настроек мгновенно появится или исчезнет здесь!
+  
+  if (typeof window.renderPairChat === 'function') {
+    window.renderPairChat();
+  }
+  
+  showToast(`Активная роль: ${getRoleInfo(currentAvatarRole).name}`, 'info');
+  updateRoomIndicator();
+}
+
+function updateRoleEmojiUI() {
   const el = document.getElementById('role-toggle-emoji');
-  if (el) el.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
+  if (el) {
+    el.innerText = (currentAvatarRole === 'male') ? '😈' : '😇';
+  }
   updateProfileRoleBadge();
 }
 
@@ -7442,6 +7068,7 @@ function updateAllAvatarsUI() {
     // Заглушки для кнопок, которые вызывали несуществующие функции (раньше падали с ReferenceError)
 
     function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
+    function openAddProductModal() { showToast('Добавление товаров появится в следующей версии', 'info'); }
     function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
 
     // Инициализация
@@ -8138,7 +7765,6 @@ function updateAllAvatarsUI() {
       document.getElementById('modal-section-viewer')?.classList.remove('active');
     }
 
-   
     /* ПОЛНЫЙ ПРЕДПРОСМОТР ПАКТА И СКАЧИВАНИЕ .TXT */
 
 
@@ -9202,211 +8828,7 @@ ${line}
       }
       finish();
     }
-
-// Функция открытия нашего простого окна вместо prompt
-  function openStandardPrompt() {
-    const modal = document.getElementById('simple-modal');
-    if (modal) {
-      modal.style.display = 'flex';
-    } else {
-      console.error("Окно #simple-modal не найдено в HTML!");
-    }
-  }
-
-  // Ограничиваем выбор дополнительных файлов максимум до 3 штук
-  function checkExtraImagesLimit(input) {
-    if (input.files.length > 3) {
-      alert('Можно выбрать не более 3 дополнительных фотографий!');
-      input.value = ''; // сбрасываем выбор
-    }
-  }
-
-  // Вспомогательная функция для конвертации файла в Base64 (чтобы сохранить в localStorage)
-  function readFileAsDataURL(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // Массив для хранения загруженных фото (всего 4: [0] главная, [1,2,3] доп.)
-  let uploadedPhotos = [null, null, null, null];
-  let activeUploadingIndex = 0;
-
-  // Функция клика по конкретному слоту
-  function triggerPhotoUpload(index) {
-    activeUploadingIndex = index;
-    const fileInput = document.getElementById('hidden-photo-input');
-    if (fileInput) {
-      fileInput.value = '';
-      fileInput.click();
-    }
-  }
-
-  // Кнопка "Добавить фото" находит первый свободный слот
-  function autoFindNextFreeSlot() {
-    const firstEmptyIndex = uploadedPhotos.findIndex(photo => photo === null);
-    if (firstEmptyIndex !== -1) {
-      triggerPhotoUpload(firstEmptyIndex);
-    } else {
-      alert('Все 4 слота для фото уже заполнены!');
-    }
-  }
-
-  // Обработка выбора файла
-  async function handlePhotoSelected(input) {
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      try {
-        // Читаем файл как DataURL (base64)
-        const base64 = await readFileAsDataURL(file);
-        uploadedPhotos[activeUploadingIndex] = base64;
-        renderPhotoSlots(); // Обновляем вид
-      } catch (err) {
-        console.error("Ошибка чтения фото:", err);
-      }
-    }
-  }
-
-  // Удаление фото по крестику
-  function removePhoto(index, event) {
-    event.stopPropagation(); // Чтобы не открывался выбор файла
-    uploadedPhotos[index] = null;
-    renderPhotoSlots();
-  }
-
-  // Обновление вида клеток (плюсики / картинки с крестиками + состояние кнопки)
-  function renderPhotoSlots() {
-    // Обновляем все 4 слота
-    for (let i = 0; i < 4; i++) {
-      const slot = document.getElementById(`slot-${i}`);
-      if (!slot) continue;
-
-      if (uploadedPhotos[i]) {
-        // Если фото есть, показываем его и крестик удаления
-        slot.innerHTML = `
-          <img src="${uploadedPhotos[i]}" alt="photo ${i+1}">
-          <button class="remove-btn" onclick="removePhoto(${i}, event)" title="Удалить фото">✕</button>
-        `;
-        slot.style.borderStyle = 'solid'; // Если есть фото, делаем рамку сплошной
-      } else {
-        // Если фото нет, показываем плюсик
-        slot.innerHTML = `<span class="plus-icon">+</span>`;
-        // Восстанавливаем стиль границы для пустого слота
-        if (i === 0) {
-          slot.style.borderStyle = 'solid'; // Главный слот всегда со сплошной рамкой
-        } else {
-          slot.style.borderStyle = 'dashed'; // Дополнительные слоты с пунктиром
-        }
-      }
-    }
-
-    // Обновляем текст и активность кнопки «Добавить фото»
-    const addBtn = document.getElementById('add-more-photo-btn');
-    const firstEmptyIndex = uploadedPhotos.findIndex(photo => photo === null);
-    
-    if (addBtn) {
-      if (firstEmptyIndex === -1) {
-        addBtn.innerText = 'Все фото заполнены';
-        addBtn.style.opacity = '0.5';
-        addBtn.style.cursor = 'not-allowed';
-        addBtn.disabled = true;
-      } else {
-        addBtn.innerText = `+ Добавить еще (${4 - firstEmptyIndex} свободно)`;
-        addBtn.style.opacity = '1';
-        addBtn.style.cursor = 'pointer';
-        addBtn.disabled = false;
-      }
-    }
-  }
-
-  // Утилита чтения файла (остается та же)
-  function readFileAsDataURL(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // Инициализация при открытии модалки (вызови это при показе модалки)
-  // renderPhotoSlots();
-  async function saveSimpleProduct() {
-    const title = document.getElementById('simple-title').value.trim();
-    const category = document.getElementById('simple-category').value;
-    const description = document.getElementById('simple-desc').value.trim();
-    const priceUah = parseFloat(document.getElementById('simple-price').value) || 0;
-    const balanceVal = parseInt(document.getElementById('simple-balance-slider').value) || 50;
-
-    const mainInput = document.getElementById('simple-main-img');
-    const extraInput = document.getElementById('simple-extra-imgs');
-
-    if (!title) {
-      alert('Пожалуйста, введите название товара!');
-      return;
-    }
-
-    let mainImageUrl = 'https://images.unsplash.com/photo-1584273143981-4cc07302ae9b';
-    const allImages = [];
-
-    try {
-      if (mainInput && mainInput.files && mainInput.files[0]) {
-        mainImageUrl = await readFileAsDataURL(mainInput.files[0]);
-      }
-      allImages.push(mainImageUrl);
-
-      if (extraInput && extraInput.files) {
-        const extraFilesCount = Math.min(extraInput.files.length, 3);
-        for (let i = 0; i < extraFilesCount; i++) {
-          const extraUrl = await readFileAsDataURL(extraInput.files[i]);
-          allImages.push(extraUrl);
-        }
-      }
-    } catch (err) {
-      console.error("Ошибка при чтении картинок:", err);
-    }
-
-    const calculatedPoints = Math.round(priceUah * 0.5);
-    const passionPoints = Math.round(calculatedPoints * (balanceVal / 100));
-    const submissionPoints = calculatedPoints - passionPoints;
-
-    const newProduct = {
-      id: 'prod_' + Date.now(),
-      title: title,
-      category: category,
-      image: mainImageUrl,
-      images: allImages,
-      description: description || 'Без описания',
-      priceUah: priceUah,
-      pricePoints: calculatedPoints,
-      balance: {
-        submission: submissionPoints,
-        passion: passionPoints
-      },
-      isLiked: false
-    };
-
-    if (typeof shopProducts !== 'undefined') {
-      shopProducts.unshift(newProduct);
-      if (typeof saveShopProducts === 'function') saveShopProducts();
-      if (typeof renderShopProducts === 'function') renderShopProducts();
-      if (typeof showToast === 'function') showToast('Товар успешно добавлен! ✨', 'success');
-    }
-
-    // Сброс формы и закрытие
-    document.getElementById('simple-title').value = '';
-    document.getElementById('simple-desc').value = '';
-    document.getElementById('simple-price').value = '';
-    document.getElementById('simple-main-img').value = '';
-    document.getElementById('simple-extra-imgs').value = '';
-    document.getElementById('simple-balance-slider').value = '50';
-    calculateProductPoints();
-    document.getElementById('simple-modal').style.display = 'none';
-  }
-    /* ========================================================
+/* ========================================================
    ЛОГИКА ЧАТА ТЕХПОДДЕРЖКИ С ИСТОРИЕЙ И ТЕМАМИ
    ======================================================== */
 
@@ -9679,101 +9101,8 @@ document.addEventListener('DOMContentLoaded', () => {
       closeAiChatThemeModal();
       showToast('Обои советника обновлены ✨', 'success');
     }
-let shopProducts = [];
-    let cartItems = [];
 
-    // Отрисовка товаров в Бутике (с учетом выбранной категории и базы)
-    function renderShopProducts() {
-      const container = document.getElementById('shop-products-list');
-      if (!container) return;
-      container.innerHTML = '';
-
-      // Определяем текущую активную категорию
-      let activeCategory = 'Белье';
-      const activeCatBtn = document.querySelector('.shop-cats-left .chip-btn.active, .shop-actions-right .liked-btn.active');
-      if (activeCatBtn) {
-        if (activeCatBtn.id === 'shop-cat-btn-sexshop') activeCategory = 'Секс-шоп';
-        if (activeCatBtn.id === 'shop-cat-btn-liked') activeCategory = 'Понравилось';
-      }
-
-      // Фильтруем товары из базы (shopProducts)
-      let filteredProducts = shopProducts;
-      if (activeCategory === 'Понравилось') {
-        filteredProducts = shopProducts.filter(p => p.isLiked);
-      } else {
-        filteredProducts = shopProducts.filter(p => p.category === activeCategory);
-      }
-
-      if (filteredProducts.length === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px;">
-            📭 В этой категории пока нет товаров
-          </div>
-        `;
-        return;
-      }
-
-      // Рендерим каждую карточку товара
-      filteredProducts.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-row-card';
-        card.innerHTML = `
-          <!-- Кнопка Лайк / Избранное -->
-          <button class="product-like-btn ${product.isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike('${product.id}')">
-            ${product.isLiked ? '❤️' : '🤍'}
-          </button>
-
-          <!-- Титульное фото -->
-          <img src="${product.image}" alt="${product.title}" class="product-row-img" onerror="this.src='https://images.unsplash.com/photo-1584273143981-4cc07302ae9b'">
-
-          <!-- Информация о товаре -->
-          <div class="product-row-details">
-            <div>
-              <div style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 4px; padding-right: 28px;">${product.title}</div>
-              <div style="font-size: 11px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;">${product.description || ''}</div>
-            </div>
-
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <div>
-                <div style="font-size: 12px; font-weight: 900; color: #fff;">${product.priceUah} UAH</div>
-                <div style="font-size: 11px; font-weight: 800; color: var(--accent-color);">${product.pricePoints} 💖</div>
-              </div>
-              <button onclick="event.stopPropagation(); addToCart('${product.id}')" style="background: var(--accent-gradient); border: none; border-radius: 12px; padding: 8px 14px; color: #fff; font-size: 11px; font-weight: 900; cursor: pointer; box-shadow: 0 3px 10px rgba(230,57,86,0.4);">
-                В корзину 🛒
-              </button>
-            </div>
-          </div>
-        `;
-
-        // Клик по карточке открывает детальный просмотр с галереей фото
-        card.onclick = () => openProductDetails(product.id);
-        container.appendChild(card);
-      });
-    }
-
-    // Переключение категории в табах
-    function setShopCategory(categoryName, btnElement) {
-      // Убираем класс active у всех кнопок категорий и избранного
-      document.querySelectorAll('.shop-cats-left .chip-btn, .shop-actions-right .liked-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      // Активируем нажатую
-      if (btnElement) btnElement.classList.add('active');
-      
-      renderShopProducts();
-      tg?.HapticFeedback?.selectionChanged?.();
-    }
-
-    // Лайк / Избранное товара
-    function toggleProductLike(productId) {
-      const product = shopProducts.find(p => p.id === productId);
-      if (product) {
-        product.isLiked = !product.isLiked;
-        saveShopProducts();
-        renderShopProducts();
-        tg?.HapticFeedback?.impactOccurred?.('light');
-      }
-    }
+    
     /* ========================================================
        РЕНДЕР СООБЩЕНИЙ В СТИЛЕ БУДУАРНОГО МЕССЕНДЖЕРА
        ======================================================== */
@@ -10033,7 +9362,167 @@ let shopProducts = [];
   });
 }
     
-    // 4. Быстрые кнопки-подсказки над полем ввода
+// --- МОДУЛЬ НАСТРОЕК (ЭКРАН + ПОДМОДАЛКИ) ---
+
+if (!localStorage.getItem('pact_monthly_budget')) {
+  localStorage.setItem('pact_monthly_budget', '2000');
+}
+if (!localStorage.getItem('pact_sponsor_mode')) {
+  localStorage.setItem('pact_sponsor_mode', 'normal');
+}
+
+let tempBudget = localStorage.getItem('pact_monthly_budget');
+let tempSponsor = localStorage.getItem('pact_sponsor_mode');
+const CONVERSION_RATE = 2; // 2 грн = 1 очко
+
+// Проверка роли: true, если верхний игрок
+function isUserUpper() {
+  // Собираем данные отовсюду, где может храниться роль
+  const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
+  
+  // Возвращаем true, если это 'male' (твоя верхняя роль) или явно указано 'upper'
+  return activeRole === 'male' || activeRole === 'upper';
+function isUserLower() {
+  // Собираем данные отовсюду, где может храниться роль
+  const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
+  
+  // Возвращаем true, если это 'female' (твоя нижняя роль) или явно указано 'lower'
+  return activeRole === 'female' || activeRole === 'lower';
+}
+}
+
+
+// Обновление описания режима на экране настроек
+function updateScreenMenuDesc() {
+  const desc = document.getElementById('screen-menu-sponsor-desc');
+  const currentMode = localStorage.getItem('pact_sponsor_mode') || 'normal';
+  const modeNames = { normal: 'Нормальный', generous: 'Щедрый (1.75x)', unlimited: 'Безлимит' };
+  
+  if (desc) {
+    desc.textContent = isUserUpper() ? `Активен: ${modeNames[currentMode]}` : `Режим: ${modeNames[currentMode]} (выбор верхнего)`;
+  }
+}
+
+
+// 2. Управление подмодалкой «Настройка ценности»
+function openValuationModal() {
+  tempBudget = localStorage.getItem('pact_monthly_budget') || '2000';
+  const input = document.getElementById('sub-valuation-input');
+  if (input) input.value = tempBudget;
+  updateValuationPreview(tempBudget);
+
+  const modal = document.getElementById('valuation-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeValuationModal() {
+  const modal = document.getElementById('valuation-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function updateValuationPreview(val) {
+  const totalUAH = parseFloat(val) || 0;
+  const taskUAH = totalUAH / 4;
+  const totalPoints = totalUAH / CONVERSION_RATE;
+  
+  const pointsEl = document.getElementById('sub-preview-points');
+  const taskEl = document.getElementById('sub-preview-task');
+  if (pointsEl) pointsEl.textContent = `${totalPoints} очков`;
+  if (taskEl) taskEl.textContent = `${taskUAH} грн на каждое из 4 заданий`;
+}
+
+function saveValuation() {
+  const input = document.getElementById('sub-valuation-input');
+  if (input) {
+    tempBudget = input.value || '2000';
+  }
+  localStorage.setItem('pact_monthly_budget', tempBudget);
+  closeValuationModal();
+  applyGameEconomy();
+  console.log("Бюджет сохранен:", tempBudget);
+}
+
+
+// 3. Управление подмодалкой «Режим спонсора» (с защитой роли)
+function openSponsorModal() {
+  if (!isUserUpper()) {
+    alert("🔒 Режим спонсора доступен только для управления верхнему игроку.");
+    return;
+  }
+  
+  tempSponsor = localStorage.getItem('pact_sponsor_mode') || 'normal';
+  updateSponsorUI();
+
+  const modal = document.getElementById('sponsor-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeSponsorModal() {
+  const modal = document.getElementById('sponsor-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function selectSponsorMode(mode) {
+  tempSponsor = mode;
+  updateSponsorUI();
+}
+
+function updateSponsorUI() {
+  ['normal', 'generous', 'unlimited'].forEach(m => {
+    const btn = document.getElementById(`sub-mode-${m}`);
+    if (btn) {
+      if (m === tempSponsor) {
+        btn.style.borderColor = 'var(--accent-color, #e63956)';
+        btn.style.background = 'linear-gradient(135deg, rgba(230, 57, 86, 0.25), rgba(255,255,255,0.05))';
+      } else {
+        btn.style.borderColor = 'var(--border-color)';
+        btn.style.background = 'linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02))';
+      }
+    }
+  });
+}
+
+function saveSponsorMode() {
+  localStorage.setItem('pact_sponsor_mode', tempSponsor);
+  closeSponsorModal();
+  updateScreenMenuDesc();
+  applyGameEconomy();
+  console.log("Режим спонсора сохранен:", tempSponsor);
+}
+
+
+// 4. Расчеты экономики игры
+function getActiveGameLimits() {
+  const baseBudget = parseFloat(localStorage.getItem('pact_monthly_budget')) || 2000;
+  const mode = localStorage.getItem('pact_sponsor_mode') || 'normal';
+  
+  let multiplier = 1.0;
+  if (mode === 'generous') multiplier = 1.75;
+  else if (mode === 'unlimited') multiplier = Infinity;
+  
+  return {
+    baseBudget,
+    mode,
+    multiplier,
+    effectiveBudget: baseBudget * multiplier,
+    basePoints: baseBudget / CONVERSION_RATE,
+    effectivePoints: (baseBudget * multiplier) / CONVERSION_RATE,
+    taskBudget: baseBudget / 4,
+    taskPoints: (baseBudget / CONVERSION_RATE) / 4
+  };
+}
+
+function applyGameEconomy() {
+  console.log("Экономика обновлена:", getActiveGameLimits());
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyGameEconomy();
+  updateScreenMenuDesc();
+});
+
+
+// 4. Быстрые кнопки-подсказки над полем ввода
     function sendAiQuickPrompt(promptText) {
       const input = document.getElementById('ai-chat-input');
       if (input) {
@@ -10050,184 +9539,8 @@ let shopProducts = [];
       } catch (e) {}
       syncAdvisorTileName();
     }
-   // . Конвертор очков-денги 
-let valuationConfig = JSON.parse(localStorage.getItem('pact_valuation_config')) || {
-      mode: 'normal', // normal, generous, unlimited
-      baseUAH: 2000
-    };
 
-function openValuationSettings() {
-      if (typeof haptic === 'function') haptic('light');
-      const modal = document.getElementById('valuation-settings-modal');
-      if (modal) {
-        modal.classList.add('active');
-      } else {
-        console.error("Элемент valuation-settings-modal не найден в HTML!");
-      }
-    }
-
-    function closeValuationSettingsModal() {
-      if (typeof haptic === 'function') haptic('light');
-      const modal = document.getElementById('valuation-settings-modal');
-      if (modal) {
-        modal.classList.remove('active');
-      }
-    }
-
-    window.openValuationSettings = openValuationSettings;
-    window.closeValuationSettingsModal = closeValuationSettingsModal;
-    function setValuationMode(mode) {
-      if (typeof haptic === 'function') haptic('selection');
-      valuationConfig.mode = mode;
-      updateValuationModalUI();
-    }
-
-    // Твой текущий конфиг спонсора (объект)
-    let sponsorConfig = JSON.parse(localStorage.getItem('pact_sponsor_config')) || {
-      mode: 'normal',
-      baseUAH: 2000
-    };
-
-    let tempSelectedMode = sponsorConfig.mode || 'normal';
-
-    function openSponsorModeModal() {
-      if (typeof haptic === 'function') haptic('light');
-      tempSelectedMode = sponsorConfig.mode || 'normal';
-      updateSponsorModeUI();
-      const modal = document.getElementById('sponsor-mode-modal');
-      if (modal) {
-        modal.classList.add('active');
-        modal.style.display = 'flex';
-      }
-    }
-
-    function closeSponsorModeModal() {
-      const modal = document.getElementById('sponsor-mode-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-      }
-    }
-
-    function selectSponsorMode(mode) {
-      if (typeof haptic === 'function') haptic('selection');
-      tempSelectedMode = mode;
-      updateSponsorModeUI();
-    }
-
-    // Сохранение выбора режима и обновление расчетов в магазине/интерфейсе
-    function confirmSponsorModeSelection() {
-      if (typeof haptic === 'function') haptic('heavy');
-      
-      // Записываем выбранный режим в общий конфиг
-      sponsorConfig.mode = tempSelectedMode;
-      
-      // Сохраняем в localStorage и облако PactCloud
-      localStorage.setItem('pact_sponsor_config', JSON.stringify(sponsorConfig));
-      if (window.PactCloud && typeof window.PactCloud.saveShared === 'function') {
-        window.PactCloud.saveShared({ sponsorConfig });
-      }
-      
-      closeSponsorModeModal();
-      
-      // Пересчитываем значения для магазина/интерфейса
-      if (typeof calculateValuationFromInput === 'function') {
-        calculateValuationFromInput();
-      }
-      
-      if (typeof showToast === 'function') {
-        showToast(`Режим спонсора изменен на: ${tempSelectedMode.toUpperCase()} ✨`, 'success');
-      }
-    }
-
-    function updateSponsorModeUI() {
-      ['normal', 'generous', 'unlimited'].forEach(m => {
-        const btn = document.getElementById(`s-mode-${m}`);
-        if (btn) {
-          if (tempSelectedMode === m) {
-            btn.style.borderColor = 'var(--accent-color, #e35462)';
-            btn.style.background = 'linear-gradient(135deg, rgba(230, 57, 86, 0.25), rgba(230, 57, 86, 0.1))';
-            btn.style.boxShadow = '0 0 10px rgba(230, 57, 86, 0.3)';
-          } else {
-            btn.style.borderColor = 'var(--border-color)';
-            btn.style.background = 'linear-gradient(135deg, rgba(230, 57, 86, 0.08), rgba(255,255,255,0.02))';
-            btn.style.boxShadow = 'none';
-          }
-        }
-      });
-    }
-
-    // Функция живого расчета очков с распределением по очкам вместо процентов
-function calculateProductPoints() {
-  const priceUah = parseFloat(document.getElementById('simple-price').value) || 0;
-  const balanceVal = parseInt(document.getElementById('simple-balance-slider').value) || 50; // от 0 до 100
-
-  // Базовый расчет общего количества очков (2:1)
-  const totalPoints = Math.round(priceUah * 0.5);
-
-  // Считаем сколько очков уходит на Страсть, а сколько на Покорность
-  const passionPoints = Math.round(totalPoints * (balanceVal / 100));
-  const submissionPoints = totalPoints - passionPoints;
-
-  // Обновляем тексты над слайдером (теперь тут конкретные очки)
-  const subLabel = document.getElementById('label-sub');
-  const passionLabel = document.getElementById('label-passion');
-  const pointsPreview = document.getElementById('simple-points-preview');
-
-  if (subLabel) subLabel.innerText = `🖤 Покорность: ${submissionPoints}`;
-  if (passionLabel) passionLabel.innerText = `💜 Страсть: ${passionPoints}`;
-  if (pointsPreview) pointsPreview.innerText = totalPoints;
-}
-    // Расчет для Нижней с учетом базы из sponsorConfig
-    function calculateValuationFromInput() {
-      const inputElem = document.getElementById('base-uah-input');
-      if (inputElem) {
-        const val = parseFloat(inputElem.value);
-        sponsorConfig.baseUAH = isNaN(val) ? 2000 : val;
-      }
-
-      let base = sponsorConfig.baseUAH || 2000;
-      let finalUAH = base;
-      let finalPTS = Math.round(base / 2);
-
-      // Применяем коэффициенты режимов спонсора
-      if (sponsorConfig.mode === 'generous') {
-        finalUAH = Math.round(base * 1.75);
-        finalPTS = Math.round(finalUAH / 2);
-      } else if (sponsorConfig.mode === 'unlimited') {
-        finalUAH = '∞';
-        finalPTS = '∞';
-      }
-
-      // Вывод результатов в блок расчета для магазина
-      const uahResElem = document.getElementById('calc-res-uah');
-      const ptsResElem = document.getElementById('calc-res-pts');
-
-      if (uahResElem) {
-        uahResElem.textContent = sponsorConfig.mode === 'unlimited' ? 'Без лимитов ♾️' : `${finalUAH} грн`;
-      }
-      if (ptsResElem) {
-        ptsResElem.textContent = sponsorConfig.mode === 'unlimited' ? 'Без лимитов ♾️' : `${finalPTS} очков`;
-      }
-    }
-
-    // Экспорт в глобальную область видимости
-    window.openSponsorModeModal = openSponsorModeModal;
-    window.closeSponsorModeModal = closeSponsorModeModal;
-    window.selectSponsorMode = selectSponsorMode;
-    window.confirmSponsorModeSelection = confirmSponsorModeSelection;
-    window.calculateValuationFromInput = calculateValuationFromInput;
-
-    // Автовызов при загрузке страницы для восстановления введенной суммы
-    document.addEventListener('DOMContentLoaded', () => {
-      const inputElem = document.getElementById('base-uah-input');
-      if (inputElem && sponsorConfig.baseUAH) {
-        inputElem.value = sponsorConfig.baseUAH;
-      }
-      calculateValuationFromInput();
-    });
     function syncAdvisorUIName() {
-     
       // 1. Плитка рабочего стола: жестко держим значок 'ai-star'
       const tile = desktopItems.find(i => i.id === 'tile-ai-advisor');
       if (tile) {
@@ -10369,26 +9682,6 @@ function calculateProductPoints() {
       }
     }
 
-   function openValuationSettings() {
-      if (typeof haptic === 'function') haptic('light');
-      const modal = document.getElementById('valuation-settings-modal');
-      if (modal) {
-        modal.classList.add('active');
-        // Если в твоем проекте модалки открываются через display: flex, подстрахуем:
-        modal.style.display = 'flex';
-      }
-    }
-
-    function closeValuationSettingsModal() {
-      const modal = document.getElementById('valuation-settings-modal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-      }
-    }
-
-    window.openValuationSettings = openValuationSettings;
-    window.closeValuationSettingsModal = closeValuationSettingsModal;
     function generateBoudoirAiSystemPrompt() {
       const arch = AI_ARCHETYPES[aiPersonaConfig.archetypeKey] || AI_ARCHETYPES.mentor;
       const baseInstruction = (aiPersonaConfig.archetypeKey === 'custom' && aiPersonaConfig.customInstruction)
