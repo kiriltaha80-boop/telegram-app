@@ -1601,6 +1601,29 @@
       100% { background-position: 0% 50%; }
     }
 
+    
+    widget-catalog-card, 
+.product-card, 
+.item-card {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Защита текстового блока внутри */
+.widget-catalog-card .cat-info,
+.product-card .cat-info {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Обрезка длинного текста */
+.widget-catalog-card .title,
+.product-card .title {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
     /* ========================================================
        4. ЗАСТАВКА (SPLASH SCREEN)
        ======================================================== */
@@ -3762,7 +3785,24 @@
 .product-sub-thumb:hover {
   border-color: var(--accent-color, #ff2a85);
 }
+/* ползунок */
 
+#new-prod-ratio-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+/* Для Firefox */
+#new-prod-ratio-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 46px;
+  height: 42px;
+  opacity: 0; /* Делаем стандартный бегунок полностью невидимым, управляя нашим кастомным SVG */
+}
+  
+  
   </style>
 </head>
 <body>
@@ -4593,7 +4633,7 @@
         <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
         <div class="screen-title">Бутик </div>
         <div style="display: flex; gap: 6px;">
-         <button id="shop-add-btn-new" class="small-btn" onclick="openAddProductModal()" style="background: var(--accent-gradient); color: #f5f2f2; font-weight: 800;">➕ </button>
+        <button id="shop-add-btn-new" class="small-btn" onclick="openAddProductModal()" style="background: linear-gradient(135deg, #0bad4f, #27ae60); color: #eeecec; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(11, 39, 12, 0.3);">➕</button>
           <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
         </div>
       </div>
@@ -4632,7 +4672,19 @@
   </div>
 </div>
 
- <!-- Модальное окно добавления нового товара в Бутик с галереей фото и слайдером очков -->
+ 
+<!-- ДОПОЛНИТЕЛЬНОЕ ОКНО ВВОДА ТЕКСТА ДЛЯ МОБИЛОК -->
+<div id="text-input-modal" class="modal-overlay" style="display: none; align-items: flex-end; z-index: 9999;" onclick="if(event.target===this) closeTextInputModal()">
+  <div class="modal-card" style="width: 100%; border-radius: 20px 20px 0 0; padding: 16px; background: #121214; border-top: 1px solid var(--border-color);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <h4 id="text-modal-title" style="color: #fff; font-size: 12px; font-weight: 800; margin: 0; text-transform: uppercase;">Редактирование текста</h4>
+      <span onclick="closeTextInputModal()" style="font-size: 16px; color: var(--text-muted); cursor: pointer; padding: 4px;">✕</span>
+    </div>
+    <textarea id="mobile-text-helper" class="form-control" style="width: 100%; height: 110px; resize: none; font-size: 13px; padding: 10px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff;" placeholder="Введите текст..."></textarea>
+    <button class="action-roll-btn" onclick="saveTextInputModal()" style="width: 100%; margin-top: 12px;">ГОТОВО ✓</button>
+  </div>
+</div>
+<!-- Модальное окно добавления нового товара в Бутик с галереей фото и слайдером очков -->
 <div id="add-product-modal" class="modal-overlay" style="display: none;" onclick="if(event.target===this) closeAddProductModal()">
   <div class="modal-card" style="max-width: 410px; max-height: 92vh; overflow-y: auto;">
     <div class="modal-header">
@@ -4660,58 +4712,84 @@
         </div>
       </div>
 
-      <!-- БЛОК ЦЕНЫ В ГРИВНАХ И СЛАЙДЕРА РАСПРЕДЕЛЕНИЯ -->
-      <div class="form-group">
-        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Цена товара (в грн):</label>
-        <input type="number" id="new-prod-uah" class="form-control" placeholder="Напр.: 1200" oninput="calculateProductPoints()">
+      <!-- КОМПАКТНОЕ ПОЛЕ: ЧТО ВХОДИТ В КОМПЛЕКТ (С ЗАЩИТОЙ ОТ КЛАВИАТУРЫ) -->
+      <div class="form-group" style="margin-top: 8px;">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:4px;">Что входит в комплект:</label>
+       <div onclick="openTextInputModal('new-prod-bundle', 'Что входит в комплект')" id="display-new-prod-bundle" class="form-control" style="position: relative; z-index: 5; min-height: 42px; display: flex; align-items: center; color: var(--text-muted); font-size: 11px; cursor: pointer; background: rgba(255,255,255,0.03);">
+  Напр.: топ, стринги, чокер...
+</div>
+        <input type="hidden" id="new-prod-bundle-val">
       </div>
 
-      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 800;">
-          <span style="color: #9A91A5;">Всего очков (курс 2:1):</span>
-          <span id="new-prod-total-pts" style="color: #fff;">0 очков</span>
-        </div>
-
-        <!-- Слайдер соотношения: Покорность (OTC) vs Страсть (PTC) -->
-        <div class="form-group" style="margin-bottom: 0;">
-          <div style="display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; margin-bottom: 4px;">
-            <span style="color: #fff;">🖤 Покорность (OTC): <b id="lbl-split-otc" style="color: #D6A4FF;">0</b></span>
-            <span style="color: #fff;">💜 Страсть (PTC): <b id="lbl-split-ptc" style="color: #FF8599;">0</b></span>
-          </div>
-          <input type="range" id="new-prod-ratio-slider" min="0" max="100" value="50" style="width: 100%; accent-color: var(--accent-color);" oninput="calculateProductPoints()">
+      <!-- ЦЕНА И РАСПРЕДЕЛЕНИЕ ПОПОЛАМ -->
+      <div class="form-group" style="margin-top: 10px;">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Цена товара (в грн / баллах):</label>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+          <input type="number" id="new-prod-uah" class="form-control" placeholder="Напр.: 1200" oninput="calculateProductPoints()" style="flex: 1;">
+          <span id="new-prod-total-pts" style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+            = 🖤 0 💜
+          </span>
         </div>
       </div>
 
-      <!-- БЛОК ЗАГРУЗКИ ФОТОГРАФИЙ (1 главное + до 4 дополнительных) -->
-      <div class="form-group">
-        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:6px;">Фотографии товара (1 главное + до 4 доп.):</label>
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 900; margin-bottom: 4px;">
+          <span style="color: #ffffff; display: flex; align-items: center; gap: 4px;"><b id="lbl-split-otc" style="color: #ffffff; font-size: 14px;">0</b> 🖤 Покорность</span>
+          <span style="color: #f8f8f8; display: flex; align-items: center; gap: 4px;">Страсть 💜 <b id="lbl-split-ptc" style="color: #ffffff; font-size: 14px;">0</b></span>
+        </div>
         
-        <!-- Скрытые инпуты файлов -->
-        <input type="file" id="input-main-photo" accept="image/*" style="display:none;" onchange="handleNewProductMainPhoto(event)">
-        <input type="file" id="input-extra-photos" accept="image/*" multiple style="display:none;" onchange="handleNewProductExtraPhotos(event)">
-
-        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;" id="product-photos-preview-row">
-          <!-- Слот главного фото (плюсик) -->
-          <div id="slot-main-photo" onclick="document.getElementById('input-main-photo').click()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1.5px dashed rgba(230,57,86,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden;">
-            <span style="font-size: 20px;">➕</span>
-            <span style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">Главное</span>
-          </div>
-
-          <!-- Слоты для дополнительных фото будут добавляться сюда динамически -->
-          <div id="slot-add-extra" onclick="triggerAddExtraPhoto()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1.5px dashed rgba(255,255,255,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
-            <span style="font-size: 18px; color: var(--text-muted);">📷</span>
-            <span style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">Доп. (0/4)</span>
+        <!-- Контейнер для слайдера с кастомным сердцем -->
+        <div style="position: relative; width: 100%; height: 36px; display: flex; align-items: center;">
+          <!-- Шкала слайдера под сердечком -->
+          <div style="position: absolute; width: 100%; height: 8px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);"></div>
+          
+          <!-- Прозрачный нативный инпут для работы слайдера -->
+          <input type="range" id="new-prod-ratio-slider" min="0" max="100" value="50" oninput="calculateProductPoints(); updateHeartPosition(this);" style="position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; margin: 0;">
+          
+          <!-- Наше визуальное разбитое сердечко -->
+          <div id="heart-thumb" style="position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 5; filter: drop-shadow(0 4px 10px rgba(223, 140, 238, 0.651)) drop-shadow(0 2px 5px rgba(0,0,0,0.8));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="46" height="42">
+              <defs>
+                <linearGradient id="blackHalf" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#262626"/>
+                  <stop offset="100%" stop-color="#050505"/>
+                </linearGradient>
+                <linearGradient id="purpleHalf" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="var(--ovulation-color, #420c5c)"/>
+                  <stop offset="100%" stop-color="#420c5c"/>
+                </linearGradient>
+              </defs>
+              <path d="M25 43C25 43 7 30 7 17C7 10 12 5 18 5C22 5 25 8 25 12V43Z" fill="url(#blackHalf)" stroke="#ffffff" stroke-width="1.5"/>
+              <path d="M25 43C25 43 43 30 43 17C43 10 38 5 32 5C28 5 25 8 25 12V43Z" fill="url(#purpleHalf)" stroke="#ffffff" stroke-width="1.5"/>
+            </svg>
           </div>
         </div>
       </div>
 
-      <div class="form-group">
+      <!-- ПОЛЕ ОПИСАНИЯ (С ЗАЩИТОЙ ОТ КЛАВИАТУРЫ) -->
+      <div class="form-group" style="margin-top: 4px;">
         <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Описание:</label>
-        <textarea id="new-prod-desc" class="form-control" style="height:60px; resize:none;" placeholder="Изысканный элемент гардероба..."></textarea>
+        <div onclick="openTextInputModal('new-prod-desc', 'Описание товара')" id="display-new-prod-desc" class="form-control" style="min-height: 50px; display: flex; align-items: center; color: var(--text-muted); font-size: 11px; cursor: pointer; background: rgba(255,255,255,0.03);">
+          Изысканный элемент гардероба...
+        </div>
+        <input type="hidden" id="new-prod-desc-val">
       </div>
 
+      
       <button class="action-roll-btn" onclick="saveNewProductFromModal()" style="width:100%; margin-top:6px;">ОПУБЛИКОВАТЬ В БУТИК ✨</button>
     </div>
+  </div>
+</div>
+
+<!-- ДОПОЛНИТЕЛЬНОЕ ОКНО ВВОДА ТЕКСТА ДЛЯ МОБИЛОК -->
+<div id="text-input-modal" class="modal-overlay" style="display: none; align-items: flex-end; z-index: 9999;" onclick="if(event.target===this) closeTextInputModal()">
+  <div class="modal-card" style="width: 100%; border-radius: 20px 20px 0 0; padding: 16px; background: #121214; border-top: 1px solid var(--border-color);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <h4 id="text-modal-title" style="color: #fff; font-size: 12px; font-weight: 800; margin: 0; text-transform: uppercase;">Редактирование текста</h4>
+      <span onclick="closeTextInputModal()" style="font-size: 16px; color: var(--text-muted); cursor: pointer; padding: 4px;">✕</span>
+    </div>
+    <textarea id="mobile-text-helper" class="form-control" style="width: 100%; height: 110px; resize: none; font-size: 13px; padding: 10px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #fff;" placeholder="Введите текст..."></textarea>
+    <button class="action-roll-btn" onclick="saveTextInputModal()" style="width: 100%; margin-top: 12px;">ГОТОВО ✓</button>
   </div>
 </div>
 
@@ -6652,21 +6730,30 @@ container.innerHTML = filtered.map(p => {
   const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
   const itemImage = p.mainImg || p.image || '';
 
-  return `
-    <div class="product-row-card" onclick="openProductModal(${p.id})">
-      <div class="product-like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike(${p.id})">
-        ${isLiked ? '❤️' : '🤍'}
-      </div>
-      <img class="product-row-img" src="${itemImage}" alt="${p.title}">
-      <div class="product-row-details">
-        <div>
-          <div style="font-size:12.5px; font-weight:800; color:#fff;">${p.title}</div>
-          <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${p.desc || 'Изысканный комплект белья'}</div>
+ return `
+    <div class="product-row-card" onclick="openProductModal(${p.id})" style="width: 100%; max-width: 100%; height: 137px; min-height: 137px; box-sizing: border-box; overflow: hidden; position: relative; display: flex; align-items: center; gap: 10px; padding: 10px;">
+      <img class="product-row-img" src="${itemImage}" alt="${p.title}" style="flex-shrink: 0; width: 120px; height: 120px; object-fit: cover; border-radius: 10px;">
+      <div class="product-row-details" style="flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 2px 0;">
+        
+        <!-- Верхняя зона: Название и массивное описание -->
+        <div style="overflow: hidden;">
+          <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.title}</div>
+          <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 65px; overflow: hidden; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+            ${p.desc || 'Изысканный комплект белья'}
+          </div>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-          <span style="font-size:11px; font-weight:800; color:var(--ovulation-color);">${priceStr}</span>
-          <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})">Выбрать</button>
+
+        <!-- Нижняя зона: Компактная цена и кнопки -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+          <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color); white-space: nowrap;">${priceStr}</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div onclick="event.stopPropagation(); toggleProductLike(${p.id})" style="cursor: pointer; font-size: 18px; background: none; border: none; padding: 0; display: flex; align-items: center;">
+              ${isLiked ? '❤️' : '🤍'}
+            </div>
+            <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})">В корзину</button>
+          </div>
         </div>
+
       </div>
     </div>
   `;
@@ -7226,106 +7313,51 @@ function updateAllAvatarsUI() {
       showToast('Тема оформления обновлена ✨', 'success');
     }
 
-    // кнопка добавить товар 
-let newProdImages = {
-  main: '',
-  extra: [] // до 4 штук
-};
-
-// Открытие модалки добавления товара
-// Открытие модалки добавления товара
-window.openAddProductModal = function() {
-  tg?.HapticFeedback?.impactOccurred?.('light');
-  
-  // Сбрасываем поля формы
-  document.getElementById('new-prod-title').value = '';
-  const uahInput = document.getElementById('new-prod-uah');
-  if (uahInput) uahInput.value = '';
-  
-  const slider = document.getElementById('new-prod-ratio-slider');
-  if (slider) slider.value = 50;
-
-  document.getElementById('new-prod-desc').value = '';
-
-  // Сбрасываем категорию на «Белье» по умолчанию
-  const hiddenCatInput = document.getElementById('new-prod-cat');
-  if (hiddenCatInput) hiddenCatInput.value = 'Белье';
-
-  const btnLingerie = document.getElementById('modal-cat-lingerie');
-  const btnSexshop = document.getElementById('modal-cat-sexshop');
-  if (btnLingerie && btnSexshop) {
-    btnLingerie.classList.add('active');
-    btnSexshop.classList.remove('active');
-  }
-  
-  if (typeof calculateProductPoints === 'function') {
-    calculateProductPoints();
-  }
-  
-  if (typeof newProdImages !== 'undefined') {
-    newProdImages = { main: '', extra: [] };
-    if (typeof updateNewProductPhotosUI === 'function') updateNewProductPhotosUI();
-  }
-
-  const modal = document.getElementById('add-product-modal');
-  if (modal) {
-    modal.style.display = 'flex';
-    modal.classList.add('active');
-  }
-window.setModalProductCategory = function(categoryName, btnElement) {
-  const hiddenInput = document.getElementById('new-prod-cat');
-  if (hiddenInput) hiddenInput.value = categoryName;
-
-  const parent = btnElement.parentElement;
-  if (parent) {
-    parent.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
-  }
-  btnElement.classList.add('active');
-  
-  tg?.HapticFeedback?.selectionChanged?.();
-};
-};  
-
-// Закрытие модалки
+   // --- БУТИК И УПРАВЛЕНИЕ ТОВАРАМИ ---
 const CACHE_KEY = 'pact_passion_boutique_cache';
+let newProdImages = { main: '', extra: [] };
 
-// 1. Загрузка при старте — ТОЛЬКО из локальной памяти (сервер не дергаем!)
+// 1. Загрузка при старте — ТОЛЬКО из локальной памяти
 window.loadBoutiqueProducts = function() {
   const cachedData = localStorage.getItem(CACHE_KEY);
-  
   if (cachedData) {
     try {
       boutiqueItems = JSON.parse(cachedData);
-      if (typeof renderProducts === 'function') {
-        renderProducts();
-      }
-      return; // 🚀 Выходим! Базу данных вообще не беспокоили, лимиты целы.
+      if (typeof renderProducts === 'function') renderProducts();
+      return;
     } catch (e) {
       console.error('Ошибка чтения кэша:', e);
     }
   }
-
-  // Если кэш пустой (первый запуск), только тогда идем в базу один раз
   if (typeof fetchInitialDataFromDatabase === 'function') {
     fetchInitialDataFromDatabase();
   }
 };
 
-// Открытие модалки добавления товара
+// 2. Открытие модалки добавления товара
 window.openAddProductModal = function() {
   tg?.HapticFeedback?.impactOccurred?.('light');
   
-  // Сбрасываем поля формы
   document.getElementById('new-prod-title').value = '';
   const uahInput = document.getElementById('new-prod-uah');
   if (uahInput) uahInput.value = '';
   
+  // Сбрасываем слайдер и сердечко ровно на середину (50%)
   const slider = document.getElementById('new-prod-ratio-slider');
-  if (slider) slider.value = 50;
+  if (slider) {
+    slider.value = 50;
+    if (typeof updateHeartPosition === 'function') updateHeartPosition(slider);
+  }
 
-  document.getElementById('new-prod-desc').value = '';
+  // Сбрасываем поля защищенного ввода описания
+  const descVal = document.getElementById('new-prod-desc-val');
+  if (descVal) descVal.value = '';
+  const descDisplay = document.getElementById('display-new-prod-desc');
+  if (descDisplay) {
+    descDisplay.textContent = 'Изысканный элемент гардероба...';
+    descDisplay.style.color = 'var(--text-muted)';
+  }
 
-  // Сбрасываем категорию на «Белье» по умолчанию
   const hiddenCatInput = document.getElementById('new-prod-cat');
   if (hiddenCatInput) hiddenCatInput.value = 'Белье';
 
@@ -7340,10 +7372,8 @@ window.openAddProductModal = function() {
     calculateProductPoints();
   }
   
-  if (typeof newProdImages !== 'undefined') {
-    newProdImages = { main: '', extra: [] };
-    if (typeof updateNewProductPhotosUI === 'function') updateNewProductPhotosUI();
-  }
+  newProdImages = { main: '', extra: [] };
+  updateNewProductPhotosUI();
 
   const modal = document.getElementById('add-product-modal');
   if (modal) {
@@ -7352,21 +7382,7 @@ window.openAddProductModal = function() {
   }
 };
 
-// Переключение категории внутри модалки кнопочками (вынесено отдельно на уровень окна)
-window.setModalProductCategory = function(categoryName, btnElement) {
-  const hiddenInput = document.getElementById('new-prod-cat');
-  if (hiddenInput) hiddenInput.value = categoryName;
-
-  const parent = btnElement.parentElement;
-  if (parent) {
-    parent.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
-  }
-  btnElement.classList.add('active');
-  
-  tg?.HapticFeedback?.selectionChanged?.();
-};
-
-// Закрытие модалки
+// 3. Закрытие модалки
 window.closeAddProductModal = function() {
   const modal = document.getElementById('add-product-modal');
   if (modal) {
@@ -7376,7 +7392,21 @@ window.closeAddProductModal = function() {
   tg?.HapticFeedback?.impactOccurred?.('light');
 };
 
-// Автоматический расчет очков из грн (2 грн = 1 очко) и разделение по слайдеру
+// 4. Переключение категории внутри модалки кнопочками
+window.setModalProductCategory = function(categoryName, btnElement) {
+  const hiddenInput = document.getElementById('new-prod-cat');
+  if (hiddenInput) hiddenInput.value = categoryName;
+
+  const parent = btnElement.parentElement;
+  if (parent) {
+    parent.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+  }
+  btnElement.classList.add('active');
+  
+  tg?.HapticFeedback?.selectionChanged?.();
+};
+
+// 5. Автоматический расчет очков и распределение (0–100% в обе стороны)
 window.calculateProductPoints = function() {
   const uahInput = document.getElementById('new-prod-uah');
   const totalPtsEl = document.getElementById('new-prod-total-pts');
@@ -7385,21 +7415,101 @@ window.calculateProductPoints = function() {
   const ptcLabel = document.getElementById('lbl-split-ptc');
 
   const uah = parseFloat(uahInput?.value) || 0;
-  // Курс 2 грн = 1 очко
   const totalPoints = Math.round(uah / 2);
 
-  if (totalPtsEl) totalPtsEl.textContent = `${totalPoints} очков`;
+  if (totalPtsEl) totalPtsEl.textContent = `= ${totalPoints} очков`;
 
-  // Слайдер задает процент страсти (PTC) от 0 до 100%
-  const ratioPtc = parseInt(slider?.value) || 50;
-  const ptc = Math.round((totalPoints * ratioPtc) / 100);
-  const otc = totalPoints - ptc;
+  let ratioPtc = parseInt(slider?.value) || 50;
+
+  // 🧲 МАГНИТНЫЕ КРАЯ (срабатывают, если дотянул почти до конца)
+  if (ratioPtc >= 90) {
+    ratioPtc = 100;
+    if (slider) slider.value = 100; // Принудительно выравниваем сам инпут
+    // Обновляем положение сердечка визуально
+    if (typeof updateHeartPosition === 'function') updateHeartPosition(slider);
+  } else if (ratioPtc <= 10) {
+    ratioPtc = 0;
+    if (slider) slider.value = 0;
+    if (typeof updateHeartPosition === 'function') updateHeartPosition(slider);
+  }
+
+  let ptc = Math.round((totalPoints * ratioPtc) / 100);
+  let otc = totalPoints - ptc;
 
   if (otcLabel) otcLabel.textContent = otc;
   if (ptcLabel) ptcLabel.textContent = ptc;
 };
 
-// Загрузка главного фото
+// 6. Синхронизация визуального сердечка со слайдером
+window.updateHeartPosition = function(slider) {
+  const val = slider.value; // от 0 до 100
+  const heart = document.getElementById('heart-thumb');
+  if (heart) {
+    heart.style.left = `${val}%`;
+    heart.style.transform = `translateX(-50%)`;
+  }
+};
+
+// --- МОБИЛЬНЫЙ ВВОД ТЕКСТА (ЗАЩИТА ОТ КЛАВИАТУРЫ) ---
+let activeTargetFieldId = null;
+
+window.openTextInputModal = function(fieldKey, labelTitle) {
+  activeTargetFieldId = fieldKey;
+  const titleEl = document.getElementById('text-modal-title');
+  if (titleEl) titleEl.textContent = labelTitle;
+  
+  const hiddenInputVal = document.getElementById(`${fieldKey}-val`)?.value || '';
+  const helperArea = document.getElementById('mobile-text-helper');
+  if (helperArea) helperArea.value = hiddenInputVal;
+
+  const modal = document.getElementById('text-input-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    setTimeout(() => helperArea?.focus(), 100);
+  }
+  tg?.HapticFeedback?.impactOccurred?.('light');
+};
+
+window.saveTextInputModal = function() {
+  if (!activeTargetFieldId) return;
+  const helperArea = document.getElementById('mobile-text-helper');
+  const text = helperArea ? helperArea.value.trim() : '';
+
+  const hiddenInput = document.getElementById(`${activeTargetFieldId}-val`);
+  if (hiddenInput) hiddenInput.value = text;
+
+  const displayBox = document.getElementById(`display-${activeTargetFieldId}`);
+  if (displayBox) {
+    if (text) {
+      displayBox.textContent = text;
+      displayBox.style.color = '#fff';
+    } else {
+      // 🎯 Умная подстановка дефолтного текста в зависимости от того, какое поле редактировали
+      if (activeTargetFieldId === 'new-prod-bundle') {
+        displayBox.textContent = 'Напр.: топ, стринги, чокер...';
+      } else {
+        displayBox.textContent = 'Изысканный элемент гардероба...';
+      }
+      displayBox.style.color = 'var(--text-muted)';
+    }
+  }
+
+  closeTextInputModal();
+  tg?.HapticFeedback?.notificationOccurred?.('success');
+};
+
+window.closeTextInputModal = function() {
+  const modal = document.getElementById('text-input-modal');
+  if (modal) modal.style.display = 'none';
+  activeTargetFieldId = null;
+};
+window.closeTextInputModal = function() {
+  const modal = document.getElementById('text-input-modal');
+  if (modal) modal.style.display = 'none';
+  activeTargetFieldId = null;
+};
+
+// 7. Работа с фото товара
 window.handleNewProductMainPhoto = function(event) {
   const file = event.target.files?.[0];
   if (!file) return;
@@ -7413,7 +7523,6 @@ window.handleNewProductMainPhoto = function(event) {
   event.target.value = '';
 };
 
-// Вызов диалога добавления дополнительных фото (максимум 4)
 window.triggerAddExtraPhoto = function() {
   if (newProdImages.extra.length >= 4) {
     showToast('Максимум можно добавить 4 дополнительных фото', 'info');
@@ -7422,7 +7531,6 @@ window.triggerAddExtraPhoto = function() {
   document.getElementById('input-extra-photos').click();
 };
 
-// Загрузка дополнительных фото
 window.handleNewProductExtraPhotos = function(event) {
   const files = Array.from(event.target.files || []);
   if (files.length === 0) return;
@@ -7440,7 +7548,6 @@ window.handleNewProductExtraPhotos = function(event) {
   event.target.value = '';
 };
 
-// Удаление фото из формы создания
 window.removeNewProductPhoto = function(type, index) {
   if (type === 'main') {
     newProdImages.main = '';
@@ -7451,14 +7558,12 @@ window.removeNewProductPhoto = function(type, index) {
   tg?.HapticFeedback?.impactOccurred?.('light');
 };
 
-// Обновление превью фото в форме
 function updateNewProductPhotosUI() {
   const row = document.getElementById('product-photos-preview-row');
   if (!row) return;
 
   let html = '';
 
-  // Слот главного фото
   if (newProdImages.main) {
     html += `
       <div style="width: 70px; height: 70px; border-radius: 12px; position: relative; overflow: hidden; border: 1.5px solid var(--accent-color);">
@@ -7474,7 +7579,6 @@ function updateNewProductPhotosUI() {
       </div>`;
   }
 
-  // Слоты дополнительных фото
   newProdImages.extra.forEach((imgUrl, idx) => {
     html += `
       <div style="width: 70px; height: 70px; border-radius: 12px; position: relative; overflow: hidden; border: 1.5px solid rgba(255,255,255,0.2);">
@@ -7483,7 +7587,6 @@ function updateNewProductPhotosUI() {
       </div>`;
   });
 
-  // Кнопка добавления следующего доп. фото (если меньше 4)
   if (newProdImages.extra.length < 4) {
     html += `
       <div onclick="triggerAddExtraPhoto()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1.5px dashed rgba(255,255,255,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
@@ -7495,12 +7598,12 @@ function updateNewProductPhotosUI() {
   row.innerHTML = html;
 }
 
-// Сохранение нового товара с кэшированием в localStorage и отправкой в базу
+// 8. Сохранение нового товара
 window.saveNewProductFromModal = async function() {
   const title = document.getElementById('new-prod-title')?.value.trim();
   const category = document.getElementById('new-prod-cat')?.value || 'Белье';
   const uahPrice = parseFloat(document.getElementById('new-prod-uah')?.value) || 0;
-  const desc = document.getElementById('new-prod-desc')?.value.trim() || 'Эксклюзивное поступление в бутик.';
+  const desc = document.getElementById('new-prod-desc-val')?.value.trim() || 'Эксклюзивное поступление в бутик.';
 
   if (!title) {
     showToast('Введите название товара', 'error');
@@ -7515,13 +7618,11 @@ window.saveNewProductFromModal = async function() {
     return;
   }
 
-  // Расчет очков (курс 2 грн = 1 очко)
   const totalPoints = Math.round(uahPrice / 2);
   const ratioPtc = parseInt(document.getElementById('new-prod-ratio-slider')?.value) || 50;
-  const pricePtc = Math.round((totalPoints * ratioPtc) / 100); // 💜 Страсть
-  const priceOtc = totalPoints - pricePtc; // 🖤 Покорность
+  const pricePtc = Math.round((totalPoints * ratioPtc) / 100);
+  const priceOtc = totalPoints - pricePtc;
 
-  // Собираем полный массив галереи: главное фото + дополнительные
   const fullGallery = [newProdImages.main, ...newProdImages.extra];
 
   const newProduct = {
@@ -7540,34 +7641,27 @@ window.saveNewProductFromModal = async function() {
     boutiqueItems.unshift(newProduct);
   }
 
-  // 💾 Обновляем локальный кэш
   localStorage.setItem(CACHE_KEY, JSON.stringify(boutiqueItems));
 
-  // 🚀 ОТПРАВКА В FIRESTORE (Чтобы Нижняя увидела товар)
   try {
-    // Если у тебя используется классический синтаксис Firestore (SDK v8):
     await db.collection('rooms').doc(currentRoomId).collection('boutique_items').doc(String(newProduct.id)).set(newProduct);
-    
-    // ИЛИ если у тебя модульный синтаксис (SDK v9+):
-    // await setDoc(doc(db, 'rooms', currentRoomId, 'boutique_items', String(newProduct.id)), newProduct);
   } catch (error) {
     console.error('Ошибка записи в Firestore:', error);
     showToast('Ошибка синхронизации с базой', 'error');
   }
 
   closeAddProductModal();
-  if (typeof renderProducts === 'function') {
-    renderProducts();
-  }
+  if (typeof renderProducts === 'function') renderProducts();
   
   tg?.HapticFeedback?.notificationOccurred?.('success');
   showToast('Товар успешно добавлен в Бутик! ✨', 'success');
 };
-// Заглушки для кнопок, которые вызывали несуществующие функции
+
+// Заглушки
 function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
 function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
 
-// Инициализация при загрузке страницы
+// Инициализация при старте приложения
 document.addEventListener('DOMContentLoaded', () => {
   window.currentAvatarRole = currentAvatarRole;
   let savedTheme = 'theme_im1';
@@ -7576,33 +7670,25 @@ document.addEventListener('DOMContentLoaded', () => {
   updateRoleEmojiUI();
   updateAllAvatarsUI();
   
-  // 🚀 Загружаем товары из локального кэша при старте
   if (typeof loadBoutiqueProducts === 'function') {
     loadBoutiqueProducts();
+  }
+
+  // Сворачивание мобильного окна ввода текста по клавише Enter
+  const helperArea = document.getElementById('mobile-text-helper');
+  if (helperArea) {
+    helperArea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        saveTextInputModal();
+      }
+    });
   }
 
   renderDesktop();
   initSwipeGestures();
   setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
 });
-    
-    // Заглушки для кнопок, которые вызывали несуществующие функции (раньше падали с ReferenceError)
-
-    function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
-    function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
-
-    // Инициализация
-    document.addEventListener('DOMContentLoaded', () => {
-      window.currentAvatarRole = currentAvatarRole;
-      let savedTheme = 'theme_im1';
-      try { savedTheme = localStorage.getItem('pact_selected_chat_theme') || savedTheme; } catch (e) {}
-      applyChatTheme(savedTheme);
-      updateRoleEmojiUI();
-      updateAllAvatarsUI();
-      renderDesktop();
-      initSwipeGestures();
-      setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
-    });
   
 
     /* ====================== ШЛЮЗ (из test.html) ====================== */
@@ -10127,7 +10213,21 @@ function openFullscreenPhoto(src) {
   tg?.HapticFeedback?.impactOccurred?.('light');
 }
 
+function updateHeartPosition(slider) {
+  const val = slider.value; // от 0 до 100
+  const heart = document.getElementById('heart-thumb');
+  if (heart) {
+    // Двигаем точно по процентам от 0 до 100, а translateX(-50%) центрирует иконку
+    heart.style.left = `${val}%`;
+    heart.style.transform = `translateX(-50%)`;
+  }
+}
 
+// Вызывай её при старте, чтобы установить сердечко по центру (при value="50")
+document.addEventListener("DOMContentLoaded", () => {
+  const slider = document.getElementById('new-prod-ratio-slider');
+  if (slider) updateHeartPosition(slider);
+});
 
 // 4. Быстрые кнопки-подсказки над полем ввода
     function sendAiQuickPrompt(promptText) {
