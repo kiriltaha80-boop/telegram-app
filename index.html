@@ -2035,7 +2035,7 @@
       border-top-color: rgba(255, 255, 255, 0.25);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
       padding: 16px;
-      overflow-y: auto;
+      overflow-y: hidden!important;
       -webkit-overflow-scrolling: touch;
     }
 
@@ -2353,7 +2353,8 @@
     .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
     .modal-close-btn { font-size: 18px; color: var(--text-muted); cursor: pointer; }
 
-    .widget-catalog-list { display: flex; flex-direction: column; gap: 8px; }
+   .widget-catalog-list { display: flex; flex-direction: column; gap: 8px; }
+    
     .widget-catalog-card {
       background: rgba(12, 10, 16, 0.65);
       border: 1px solid var(--border-color);
@@ -2363,11 +2364,41 @@
       align-items: center;
       gap: 10px;
       cursor: pointer;
+      
+      /* 👉 Жесткие границы и защита от расширения */
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
     }
-    .widget-catalog-card .cat-icon { font-size: 22px; }
-    .widget-catalog-card .cat-info { flex: 1; }
-    .widget-catalog-card .title { font-size: 11.5px; font-weight: 700; color: #fff; }
-    .widget-catalog-card .sub { font-size: 9px; color: var(--text-muted); }
+
+    .widget-catalog-card .cat-icon { font-size: 22px; flex-shrink: 0; } /* Иконка не сжимается */
+    
+    .widget-catalog-card .cat-info { 
+      flex: 1; 
+      min-width: 0; /* 👉 Критически важно: позволяет флекс-контейнеру сжимать текст, а не распирать его */
+    }
+    
+    .widget-catalog-card .title { 
+      font-size: 11.5px; 
+      font-weight: 700; 
+      color: #fff;
+      
+      /* 👉 Обрезаем длинный заголовок в одну строчку с троеточием */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .widget-catalog-card .sub { 
+      font-size: 9px; 
+      color: var(--text-muted);
+      
+      /* 👉 Обрезаем подзаголовок, если он слишком длинный */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .catalog-status-btn {
       width: 32px;
@@ -3680,7 +3711,56 @@
       box-shadow: 0 4px 14px rgba(230, 57, 86, 0.45);
     }
     .ai-send-btn:active { transform: scale(0.92); }
-  
+    
+    /* описание товаров 
+    /* Контейнер картинки в модалке */
+.product-detail-image-box {
+  width: 100%;
+  background: #09070c;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  position: relative;
+  max-height: 360px;
+}
+
+/* Главное фото НЕ обрезается, а вписывается целиком */
+.product-detail-img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain; /* Главное правило: картинка не режется! */
+  cursor: zoom-in;
+  display: block;
+  background: #000;
+}
+
+/* Миниатюры галереи */
+.product-sub-gallery {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  padding-bottom: 4px;
+}
+
+.product-sub-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover; /* Миниатюры могут быть квадратными для красоты */
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+.product-sub-thumb:hover {
+  border-color: var(--accent-color, #ff2a85);
+}
+
   </style>
 </head>
 <body>
@@ -4502,7 +4582,6 @@
 
   <!-- 6. БУТИК ИСКУШЕНИЯ (ЕДИНЫЙ МАГАЗИН: 1 КОЛОНКА, БЕЛЬЕ + СЕКС-ШОП) -->
 <div id="tab-shop" class="tab-content shop-tab-container">
-  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
   <!-- Главный контейнер окна с жесткими границами -->
   <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
     
@@ -4510,9 +4589,9 @@
     <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
-        <div class="screen-title">Бутик Искушения</div>
+        <div class="screen-title">Бутик </div>
         <div style="display: flex; gap: 6px;">
-          <button id="shop-add-btn-master" class="small-btn" onclick="openAddProductModal()" style="display: none;">+ Добавить</button>
+         <button id="shop-add-btn-new" class="small-btn" onclick="openAddProductModal()" style="background: var(--accent-gradient); color: #f5f2f2; font-weight: 800;">➕ </button>
           <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
         </div>
       </div>
@@ -4551,17 +4630,88 @@
   </div>
 </div>
 
-  <!-- 7. ЖЕЛАНИЯ & ПОДАРКИ -->
-  <div id="tab-gifts" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title">Подарки & Просьбы</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
+ <!-- Модальное окно добавления нового товара в Бутик с галереей фото и слайдером очков -->
+<div id="add-product-modal" class="modal-overlay" style="display: none;" onclick="if(event.target===this) closeAddProductModal()">
+  <div class="modal-card" style="max-width: 410px; max-height: 92vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">➕ Добавить товар из галереи</h3>
+      <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+      
+      <div class="form-group">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Название товара:</label>
+        <input type="text" id="new-prod-title" class="form-control" placeholder="Напр.: Бархатный пеньюар">
       </div>
-      <div id="gifts-list-container" class="contract-list"></div>
+
+      <!-- ВЫБОР КАТЕГОРИИ КНОПКАМИ ВНУТРИ МОДАЛКИ -->
+      <div class="form-group">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:6px;">Категория товара:</label>
+        
+        <!-- Скрытый инпут, где хранится выбранное значение для отправки -->
+        <input type="hidden" id="new-prod-cat" value="Белье">
+
+        <!-- Кнопки выбора категории рядом -->
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="chip-btn active" id="modal-cat-lingerie" onclick="setModalProductCategory('Белье', this)" style="flex: 1; padding: 10px; text-align: center; font-size: 11px;">👙 Белье</button>
+          <button type="button" class="chip-btn" id="modal-cat-sexshop" onclick="setModalProductCategory('Секс-шоп', this)" style="flex: 1; padding: 10px; text-align: center; font-size: 11px;">🔮 Секс-шоп</button>
+        </div>
+      </div>
+
+      <!-- БЛОК ЦЕНЫ В ГРИВНАХ И СЛАЙДЕРА РАСПРЕДЕЛЕНИЯ -->
+      <div class="form-group">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Цена товара (в грн):</label>
+        <input type="number" id="new-prod-uah" class="form-control" placeholder="Напр.: 1200" oninput="calculateProductPoints()">
+      </div>
+
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 800;">
+          <span style="color: #9A91A5;">Всего очков (курс 2:1):</span>
+          <span id="new-prod-total-pts" style="color: #fff;">0 очков</span>
+        </div>
+
+        <!-- Слайдер соотношения: Покорность (OTC) vs Страсть (PTC) -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <div style="display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; margin-bottom: 4px;">
+            <span style="color: #fff;">🖤 Покорность (OTC): <b id="lbl-split-otc" style="color: #D6A4FF;">0</b></span>
+            <span style="color: #fff;">💜 Страсть (PTC): <b id="lbl-split-ptc" style="color: #FF8599;">0</b></span>
+          </div>
+          <input type="range" id="new-prod-ratio-slider" min="0" max="100" value="50" style="width: 100%; accent-color: var(--accent-color);" oninput="calculateProductPoints()">
+        </div>
+      </div>
+
+      <!-- БЛОК ЗАГРУЗКИ ФОТОГРАФИЙ (1 главное + до 4 дополнительных) -->
+      <div class="form-group">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:6px;">Фотографии товара (1 главное + до 4 доп.):</label>
+        
+        <!-- Скрытые инпуты файлов -->
+        <input type="file" id="input-main-photo" accept="image/*" style="display:none;" onchange="handleNewProductMainPhoto(event)">
+        <input type="file" id="input-extra-photos" accept="image/*" multiple style="display:none;" onchange="handleNewProductExtraPhotos(event)">
+
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;" id="product-photos-preview-row">
+          <!-- Слот главного фото (плюсик) -->
+          <div id="slot-main-photo" onclick="document.getElementById('input-main-photo').click()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1.5px dashed rgba(230,57,86,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden;">
+            <span style="font-size: 20px;">➕</span>
+            <span style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">Главное</span>
+          </div>
+
+          <!-- Слоты для дополнительных фото будут добавляться сюда динамически -->
+          <div id="slot-add-extra" onclick="triggerAddExtraPhoto()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1.5px dashed rgba(255,255,255,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+            <span style="font-size: 18px; color: var(--text-muted);">📷</span>
+            <span style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">Доп. (0/4)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Описание:</label>
+        <textarea id="new-prod-desc" class="form-control" style="height:60px; resize:none;" placeholder="Изысканный элемент гардероба..."></textarea>
+      </div>
+
+      <button class="action-roll-btn" onclick="saveNewProductFromModal()" style="width:100%; margin-top:6px;">ОПУБЛИКОВАТЬ В БУТИК ✨</button>
     </div>
   </div>
+</div>
 
   <!-- СПИСОК ДИАЛОГОВ -->
   <div id="tab-messenger" class="tab-content">
@@ -6419,7 +6569,7 @@
     // 3. БУТИК ИСКУШЕНИЯ
     let shopFilterCat = 'Белье';
     let boutiqueItems = [
-    { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом' },
+    { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://ibb.co/sp55ZcS0', desc: 'Корсетный топ с кружевом' },
     { id: 101, title: 'Кружевной Комплект Velour', category: 'Белье', pricePtc: 220, priceOtc: 80, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Корсетный топ с кружевом' },
       { id: 102, title: '«Тёмная Покорность»', category: 'Белье', pricePtc: 160, priceOtc: 340, mainImg: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600', desc: 'Чёрное кружево, чокер, гартеры' },
       { id: 103, title: '«Цветение Айвори»', category: 'Белье', pricePtc: 280, priceOtc: 140, mainImg: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600', desc: 'Невесомый бралетт' },
@@ -6470,11 +6620,18 @@
         }
       }
 
+      const container = document.getElementById('shop-products-list');
+  if (!container) return;
+
+  // 👉 Управляем видимостью новой кнопки добавления товара
+  const newAddBtn = document.getElementById('shop-add-btn-new');
+  if (newAddBtn) {
+    newAddBtn.style.display = (currentAvatarRole === 'male') ? 'inline-block' : 'none';
+  }
       const addBtn = document.getElementById('shop-add-btn-master');
       if (addBtn) addBtn.style.display = (currentAvatarRole === 'male') ? 'block' : 'none';
 
-      const container = document.getElementById('shop-products-list');
-      if (!container) return;
+     
 
       let filtered = boutiqueItems;
       if (shopFilterCat === 'Понравилось') {
@@ -6488,28 +6645,30 @@
         return;
       }
 
-      container.innerHTML = filtered.map(p => {
-        const isLiked = likedShopItemIds.includes(p.id);
-        const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
-        return `
-          <div class="product-row-card">
-            <div class="product-like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike(${p.id})">
-              ${isLiked ? '❤️' : '🤍'}
-            </div>
-            <img class="product-row-img" src="${p.mainImg}" alt="${p.title}">
-            <div class="product-row-details">
-              <div>
-                <div style="font-size:12.5px; font-weight:800; color:#fff;">${p.title}</div>
-                <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${p.desc}</div>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                <span style="font-size:11px; font-weight:800; color:var(--ovulation-color);">${priceStr}</span>
-                <button class="small-btn" onclick="buyShopItem(${p.id})">Выбрать</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+container.innerHTML = filtered.map(p => {
+  const isLiked = likedShopItemIds.includes(p.id);
+  const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
+  const itemImage = p.mainImg || p.image || '';
+
+  return `
+    <div class="product-row-card" onclick="openProductModal(${p.id})">
+      <div class="product-like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleProductLike(${p.id})">
+        ${isLiked ? '❤️' : '🤍'}
+      </div>
+      <img class="product-row-img" src="${itemImage}" alt="${p.title}">
+      <div class="product-row-details">
+        <div>
+          <div style="font-size:12.5px; font-weight:800; color:#fff;">${p.title}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${p.desc || 'Изысканный комплект белья'}</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <span style="font-size:11px; font-weight:800; color:var(--ovulation-color);">${priceStr}</span>
+          <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})">Выбрать</button>
+        </div>
+      </div>
+    </div>
+  `;
+}).join('');
     }
 
     function buyShopItem(id) {
@@ -7065,10 +7224,367 @@ function updateAllAvatarsUI() {
       showToast('Тема оформления обновлена ✨', 'success');
     }
 
+    // кнопка добавить товар 
+let newProdImages = {
+  main: '',
+  extra: [] // до 4 штук
+};
+
+// Открытие модалки добавления товара
+// Открытие модалки добавления товара
+window.openAddProductModal = function() {
+  tg?.HapticFeedback?.impactOccurred?.('light');
+  
+  // Сбрасываем поля формы
+  document.getElementById('new-prod-title').value = '';
+  const uahInput = document.getElementById('new-prod-uah');
+  if (uahInput) uahInput.value = '';
+  
+  const slider = document.getElementById('new-prod-ratio-slider');
+  if (slider) slider.value = 50;
+
+  document.getElementById('new-prod-desc').value = '';
+
+  // Сбрасываем категорию на «Белье» по умолчанию
+  const hiddenCatInput = document.getElementById('new-prod-cat');
+  if (hiddenCatInput) hiddenCatInput.value = 'Белье';
+
+  const btnLingerie = document.getElementById('modal-cat-lingerie');
+  const btnSexshop = document.getElementById('modal-cat-sexshop');
+  if (btnLingerie && btnSexshop) {
+    btnLingerie.classList.add('active');
+    btnSexshop.classList.remove('active');
+  }
+  
+  if (typeof calculateProductPoints === 'function') {
+    calculateProductPoints();
+  }
+  
+  if (typeof newProdImages !== 'undefined') {
+    newProdImages = { main: '', extra: [] };
+    if (typeof updateNewProductPhotosUI === 'function') updateNewProductPhotosUI();
+  }
+
+  const modal = document.getElementById('add-product-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  }
+window.setModalProductCategory = function(categoryName, btnElement) {
+  const hiddenInput = document.getElementById('new-prod-cat');
+  if (hiddenInput) hiddenInput.value = categoryName;
+
+  const parent = btnElement.parentElement;
+  if (parent) {
+    parent.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+  }
+  btnElement.classList.add('active');
+  
+  tg?.HapticFeedback?.selectionChanged?.();
+};
+};  
+
+// Закрытие модалки
+const CACHE_KEY = 'pact_passion_boutique_cache';
+
+// 1. Загрузка при старте — ТОЛЬКО из локальной памяти (сервер не дергаем!)
+window.loadBoutiqueProducts = function() {
+  const cachedData = localStorage.getItem(CACHE_KEY);
+  
+  if (cachedData) {
+    try {
+      boutiqueItems = JSON.parse(cachedData);
+      if (typeof renderProducts === 'function') {
+        renderProducts();
+      }
+      return; // 🚀 Выходим! Базу данных вообще не беспокоили, лимиты целы.
+    } catch (e) {
+      console.error('Ошибка чтения кэша:', e);
+    }
+  }
+
+  // Если кэш пустой (первый запуск), только тогда идем в базу один раз
+  if (typeof fetchInitialDataFromDatabase === 'function') {
+    fetchInitialDataFromDatabase();
+  }
+};
+
+// Открытие модалки добавления товара
+window.openAddProductModal = function() {
+  tg?.HapticFeedback?.impactOccurred?.('light');
+  
+  // Сбрасываем поля формы
+  document.getElementById('new-prod-title').value = '';
+  const uahInput = document.getElementById('new-prod-uah');
+  if (uahInput) uahInput.value = '';
+  
+  const slider = document.getElementById('new-prod-ratio-slider');
+  if (slider) slider.value = 50;
+
+  document.getElementById('new-prod-desc').value = '';
+
+  // Сбрасываем категорию на «Белье» по умолчанию
+  const hiddenCatInput = document.getElementById('new-prod-cat');
+  if (hiddenCatInput) hiddenCatInput.value = 'Белье';
+
+  const btnLingerie = document.getElementById('modal-cat-lingerie');
+  const btnSexshop = document.getElementById('modal-cat-sexshop');
+  if (btnLingerie && btnSexshop) {
+    btnLingerie.classList.add('active');
+    btnSexshop.classList.remove('active');
+  }
+  
+  if (typeof calculateProductPoints === 'function') {
+    calculateProductPoints();
+  }
+  
+  if (typeof newProdImages !== 'undefined') {
+    newProdImages = { main: '', extra: [] };
+    if (typeof updateNewProductPhotosUI === 'function') updateNewProductPhotosUI();
+  }
+
+  const modal = document.getElementById('add-product-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  }
+};
+
+// Переключение категории внутри модалки кнопочками (вынесено отдельно на уровень окна)
+window.setModalProductCategory = function(categoryName, btnElement) {
+  const hiddenInput = document.getElementById('new-prod-cat');
+  if (hiddenInput) hiddenInput.value = categoryName;
+
+  const parent = btnElement.parentElement;
+  if (parent) {
+    parent.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+  }
+  btnElement.classList.add('active');
+  
+  tg?.HapticFeedback?.selectionChanged?.();
+};
+
+// Закрытие модалки
+window.closeAddProductModal = function() {
+  const modal = document.getElementById('add-product-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+  tg?.HapticFeedback?.impactOccurred?.('light');
+};
+
+// Автоматический расчет очков из грн (2 грн = 1 очко) и разделение по слайдеру
+window.calculateProductPoints = function() {
+  const uahInput = document.getElementById('new-prod-uah');
+  const totalPtsEl = document.getElementById('new-prod-total-pts');
+  const slider = document.getElementById('new-prod-ratio-slider');
+  const otcLabel = document.getElementById('lbl-split-otc');
+  const ptcLabel = document.getElementById('lbl-split-ptc');
+
+  const uah = parseFloat(uahInput?.value) || 0;
+  // Курс 2 грн = 1 очко
+  const totalPoints = Math.round(uah / 2);
+
+  if (totalPtsEl) totalPtsEl.textContent = `${totalPoints} очков`;
+
+  // Слайдер задает процент страсти (PTC) от 0 до 100%
+  const ratioPtc = parseInt(slider?.value) || 50;
+  const ptc = Math.round((totalPoints * ratioPtc) / 100);
+  const otc = totalPoints - ptc;
+
+  if (otcLabel) otcLabel.textContent = otc;
+  if (ptcLabel) ptcLabel.textContent = ptc;
+};
+
+// Загрузка главного фото
+window.handleNewProductMainPhoto = function(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    newProdImages.main = e.target.result;
+    updateNewProductPhotosUI();
+    tg?.HapticFeedback?.selectionChanged?.();
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+};
+
+// Вызов диалога добавления дополнительных фото (максимум 4)
+window.triggerAddExtraPhoto = function() {
+  if (newProdImages.extra.length >= 4) {
+    showToast('Максимум можно добавить 4 дополнительных фото', 'info');
+    return;
+  }
+  document.getElementById('input-extra-photos').click();
+};
+
+// Загрузка дополнительных фото
+window.handleNewProductExtraPhotos = function(event) {
+  const files = Array.from(event.target.files || []);
+  if (files.length === 0) return;
+
+  files.forEach(file => {
+    if (newProdImages.extra.length >= 4) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      newProdImages.extra.push(e.target.result);
+      updateNewProductPhotosUI();
+    };
+    reader.readAsDataURL(file);
+  });
+  tg?.HapticFeedback?.selectionChanged?.();
+  event.target.value = '';
+};
+
+// Удаление фото из формы создания
+window.removeNewProductPhoto = function(type, index) {
+  if (type === 'main') {
+    newProdImages.main = '';
+  } else if (type === 'extra') {
+    newProdImages.extra.splice(index, 1);
+  }
+  updateNewProductPhotosUI();
+  tg?.HapticFeedback?.impactOccurred?.('light');
+};
+
+// Обновление превью фото в форме
+function updateNewProductPhotosUI() {
+  const row = document.getElementById('product-photos-preview-row');
+  if (!row) return;
+
+  let html = '';
+
+  // Слот главного фото
+  if (newProdImages.main) {
+    html += `
+      <div style="width: 70px; height: 70px; border-radius: 12px; position: relative; overflow: hidden; border: 1.5px solid var(--accent-color);">
+        <img src="${newProdImages.main}" style="width:100%; height:100%; object-fit:cover;">
+        <button onclick="removeNewProductPhoto('main')" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.7); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+        <span style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.6); font-size:7px; color:#fff; text-align:center;">Главное</span>
+      </div>`;
+  } else {
+    html += `
+      <div onclick="document.getElementById('input-main-photo').click()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1.5px dashed rgba(230,57,86,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+        <span style="font-size: 20px;">➕</span>
+        <span style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">Главное</span>
+      </div>`;
+  }
+
+  // Слоты дополнительных фото
+  newProdImages.extra.forEach((imgUrl, idx) => {
+    html += `
+      <div style="width: 70px; height: 70px; border-radius: 12px; position: relative; overflow: hidden; border: 1.5px solid rgba(255,255,255,0.2);">
+        <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover;">
+        <button onclick="removeNewProductPhoto('extra', ${idx})" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.7); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+      </div>`;
+  });
+
+  // Кнопка добавления следующего доп. фото (если меньше 4)
+  if (newProdImages.extra.length < 4) {
+    html += `
+      <div onclick="triggerAddExtraPhoto()" style="width: 70px; height: 70px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1.5px dashed rgba(255,255,255,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+        <span style="font-size: 18px; color: var(--text-muted);">📷</span>
+        <span style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">Доп. (${newProdImages.extra.length}/4)</span>
+      </div>`;
+  }
+
+  row.innerHTML = html;
+}
+
+// Сохранение нового товара с кэшированием в localStorage и отправкой в базу
+window.saveNewProductFromModal = async function() {
+  const title = document.getElementById('new-prod-title')?.value.trim();
+  const category = document.getElementById('new-prod-cat')?.value || 'Белье';
+  const uahPrice = parseFloat(document.getElementById('new-prod-uah')?.value) || 0;
+  const desc = document.getElementById('new-prod-desc')?.value.trim() || 'Эксклюзивное поступление в бутик.';
+
+  if (!title) {
+    showToast('Введите название товара', 'error');
+    return;
+  }
+  if (!newProdImages.main) {
+    showToast('Добавьте главное фото товара', 'error');
+    return;
+  }
+  if (uahPrice <= 0) {
+    showToast('Укажите цену товара в грн', 'error');
+    return;
+  }
+
+  // Расчет очков (курс 2 грн = 1 очко)
+  const totalPoints = Math.round(uahPrice / 2);
+  const ratioPtc = parseInt(document.getElementById('new-prod-ratio-slider')?.value) || 50;
+  const pricePtc = Math.round((totalPoints * ratioPtc) / 100); // 💜 Страсть
+  const priceOtc = totalPoints - pricePtc; // 🖤 Покорность
+
+  // Собираем полный массив галереи: главное фото + дополнительные
+  const fullGallery = [newProdImages.main, ...newProdImages.extra];
+
+  const newProduct = {
+    id: Date.now(),
+    title: title,
+    category: category,
+    priceUah: uahPrice,
+    pricePtc: pricePtc, // 💜 Страсть
+    priceOtc: priceOtc, // 🖤 Покорность
+    mainImg: newProdImages.main,
+    desc: desc,
+    gallery: fullGallery
+  };
+
+  if (typeof boutiqueItems === 'undefined') {
+    boutiqueItems = [];
+  }
+
+  boutiqueItems.unshift(newProduct);
+
+  // 💾 Обновляем локальный кэш
+  localStorage.setItem(CACHE_KEY, JSON.stringify(boutiqueItems));
+
+  // 🚀 Отправляем в базу данных для синхронизации со вторым участником
+  try {
+    // await set(ref(db, 'boutique_items/' + newProduct.id), newProduct);
+  } catch (error) {
+    console.error('Ошибка записи в базу:', error);
+  }
+
+  closeAddProductModal();
+  if (typeof renderProducts === 'function') {
+    renderProducts();
+  }
+  
+  tg?.HapticFeedback?.notificationOccurred?.('success');
+  showToast('Товар успешно добавлен и закэширован! ✨', 'success');
+};
+
+// Заглушки для кнопок, которые вызывали несуществующие функции
+function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
+function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+  window.currentAvatarRole = currentAvatarRole;
+  let savedTheme = 'theme_im1';
+  try { savedTheme = localStorage.getItem('pact_selected_chat_theme') || savedTheme; } catch (e) {}
+  applyChatTheme(savedTheme);
+  updateRoleEmojiUI();
+  updateAllAvatarsUI();
+  
+  // 🚀 Загружаем товары из локального кэша при старте
+  if (typeof loadBoutiqueProducts === 'function') {
+    loadBoutiqueProducts();
+  }
+
+  renderDesktop();
+  initSwipeGestures();
+  setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
+});
+    
     // Заглушки для кнопок, которые вызывали несуществующие функции (раньше падали с ReferenceError)
 
     function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
-    function openAddProductModal() { showToast('Добавление товаров появится в следующей версии', 'info'); }
     function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
 
     // Инициализация
@@ -9520,6 +10036,93 @@ document.addEventListener('DOMContentLoaded', () => {
   applyGameEconomy();
   updateScreenMenuDesc();
 });
+
+// описание товара 
+let activeModalProductId = null;
+
+function openProductModal(productId) {
+  // Находим товар в массиве бутика (поддерживаем разные ключи id)
+  const product = boutiqueItems.find(item => item.id === productId || item.id == productId);
+  if (!product) return;
+
+  activeModalProductId = productId;
+
+  // Заполняем данные
+  document.getElementById('modal-product-title').textContent = product.title || product.name || 'Эсклюзивный комплект';
+  
+  const mainImage = product.mainImg || product.image || '';
+  const mainImgEl = document.getElementById('modal-product-img');
+  mainImgEl.src = mainImage;
+  
+  // Клик по главному фото открывает его на полный экран
+  mainImgEl.onclick = () => openFullscreenPhoto(mainImgEl.src);
+
+  // Придумываем атмосферное описание, если его нет в объекте товара
+  const generatedDesc = product.desc || product.description || 
+    "Изысканный комплект ручной работы из эластичного кружева премиум-класса. Создан для особых моментов, подчёркивает силуэт и дарит абсолютную уверенность. Фурнитура с регуляторами посадки обеспечивает идеальный комфорт.";
+  document.getElementById('modal-product-desc').textContent = generatedDesc;
+
+  // Цена
+  const priceStr = product.priceStc 
+    ? `❤️ ${product.priceStc} Секс-токенов` 
+    : `💜 ${product.pricePtc || 150} PTC + 🖤 ${product.priceOtc || 50} OTC`;
+  document.getElementById('modal-product-price').textContent = priceStr;
+
+  // Собираем галерею из твоего примера / ссылок или данных товара
+  // Если у товара нет массива gallery, создадим красивый набор из примера
+  const defaultGallery = [
+    mainImage,
+    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600",
+    "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600",
+    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600"
+  ];
+  const galleryImages = (product.gallery && product.gallery.length > 0) ? product.gallery : defaultGallery;
+
+  // Рендерим миниатюры
+  const galleryContainer = document.getElementById('modal-product-gallery');
+  if (galleryContainer) {
+    galleryContainer.innerHTML = '';
+    galleryImages.forEach(imgUrl => {
+      const thumb = document.createElement('img');
+      thumb.src = imgUrl;
+      thumb.className = 'product-sub-thumb';
+      // По клику на миниатюру меняем главное фото
+      thumb.onclick = () => {
+        mainImgEl.src = imgUrl;
+        tg?.HapticFeedback?.selectionChanged?.();
+      };
+      galleryContainer.appendChild(thumb);
+    });
+    galleryContainer.style.display = 'flex';
+  }
+
+  // Открываем модалку
+  document.getElementById('product-detail-modal').style.display = 'flex';
+  tg?.HapticFeedback?.impactOccurred?.('light');
+}
+
+function closeProductModal() {
+  document.getElementById('product-detail-modal').style.display = 'none';
+  activeModalProductId = null;
+  tg?.HapticFeedback?.impactOccurred?.('light');
+}
+
+// Полноэкранный просмотр фото (зум)
+function openFullscreenPhoto(src) {
+  if (!src) return;
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;padding:10px;backdrop-filter:blur(10px);';
+  
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.8);';
+  
+  overlay.appendChild(img);
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+  tg?.HapticFeedback?.impactOccurred?.('light');
+}
+
 
 
 // 4. Быстрые кнопки-подсказки над полем ввода
