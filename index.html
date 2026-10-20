@@ -2365,18 +2365,19 @@
       gap: 10px;
       cursor: pointer;
       
-      /* 👉 Жесткие границы и защита от расширения */
+      /* 👉 Жесткие границы, защита от расширения */
       width: 100%;
       max-width: 100%;
       box-sizing: border-box;
       overflow: hidden;
     }
 
-    .widget-catalog-card .cat-icon { font-size: 22px; flex-shrink: 0; } /* Иконка не сжимается */
+    .widget-catalog-card .cat-icon { font-size: 22px; flex-shrink: 0; }
     
     .widget-catalog-card .cat-info { 
       flex: 1; 
-      min-width: 0; /* 👉 Критически важно: позволяет флекс-контейнеру сжимать текст, а не распирать его */
+      min-width: 0; /* 👉 Запрещает флексу растягивать блок */
+      overflow: hidden;
     }
     
     .widget-catalog-card .title { 
@@ -2384,7 +2385,7 @@
       font-weight: 700; 
       color: #fff;
       
-      /* 👉 Обрезаем длинный заголовок в одну строчку с троеточием */
+      /* 👉 Обрезаем длинный текст точками */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -2394,11 +2395,12 @@
       font-size: 9px; 
       color: var(--text-muted);
       
-      /* 👉 Обрезаем подзаголовок, если он слишком длинный */
+      /* 👉 Обрезаем подзаголовок */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    
 
     .catalog-status-btn {
       width: 32px;
@@ -7527,27 +7529,30 @@ window.saveNewProductFromModal = async function() {
     title: title,
     category: category,
     priceUah: uahPrice,
-    pricePtc: pricePtc, // 💜 Страсть
-    priceOtc: priceOtc, // 🖤 Покорность
+    pricePtc: pricePtc,
+    priceOtc: priceOtc,
     mainImg: newProdImages.main,
     desc: desc,
     gallery: fullGallery
   };
 
-  if (typeof boutiqueItems === 'undefined') {
-    boutiqueItems = [];
+  if (typeof boutiqueItems !== 'undefined') {
+    boutiqueItems.unshift(newProduct);
   }
-
-  boutiqueItems.unshift(newProduct);
 
   // 💾 Обновляем локальный кэш
   localStorage.setItem(CACHE_KEY, JSON.stringify(boutiqueItems));
 
-  // 🚀 Отправляем в базу данных для синхронизации со вторым участником
+  // 🚀 ОТПРАВКА В FIRESTORE (Чтобы Нижняя увидела товар)
   try {
-    // await set(ref(db, 'boutique_items/' + newProduct.id), newProduct);
+    // Если у тебя используется классический синтаксис Firestore (SDK v8):
+    await db.collection('rooms').doc(currentRoomId).collection('boutique_items').doc(String(newProduct.id)).set(newProduct);
+    
+    // ИЛИ если у тебя модульный синтаксис (SDK v9+):
+    // await setDoc(doc(db, 'rooms', currentRoomId, 'boutique_items', String(newProduct.id)), newProduct);
   } catch (error) {
-    console.error('Ошибка записи в базу:', error);
+    console.error('Ошибка записи в Firestore:', error);
+    showToast('Ошибка синхронизации с базой', 'error');
   }
 
   closeAddProductModal();
@@ -7556,9 +7561,8 @@ window.saveNewProductFromModal = async function() {
   }
   
   tg?.HapticFeedback?.notificationOccurred?.('success');
-  showToast('Товар успешно добавлен и закэширован! ✨', 'success');
+  showToast('Товар успешно добавлен в Бутик! ✨', 'success');
 };
-
 // Заглушки для кнопок, которые вызывали несуществующие функции
 function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
 function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
