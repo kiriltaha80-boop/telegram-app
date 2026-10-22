@@ -3817,7 +3817,54 @@
   z-index: 9999;
   box-sizing: border-box;
 }
-  </style>
+ /* Модальное окно корзины */
+#cart-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vw; /* или 100vh */
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+}
+
+#cart-modal .modal-card {
+  width: 90%;
+  max-width: 410px;
+  max-height: 92vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #180820;
+  border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+}
+ 
+ 
+ /* коризина */
+ .product-row-details {
+  min-width: 0; /* защита флекс-контейнера от расширения */
+}
+
+.product-row-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* ограничение в 2 строки */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#cart-items-container, .products-single-column-view {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+ 
+ </style>
 </head>
 <body>
   <script>try{if(localStorage.getItem("pact_session"))document.documentElement.classList.add("has-session");}catch(e){}</script>
@@ -4287,6 +4334,41 @@
 
 
 
+<!-- ЭКРАН ИЗБРАННОГО (Полный аналог Корзины) -->
+<!-- ЭКРАН ИЗБРАННОГО (Полный аналог архитектуры Корзины) -->
+<div id="tab-liked" class="tab-content shop-tab-container">
+  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
+    
+    <!-- Шапка (фиксированная, как в Бутике и Корзине) -->
+    <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div class="screen-title" style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; font-weight: 800;">❤️ Избранное</div>
+        <button class="tutorial-help-btn" onclick="showLikedHelp()">?</button>
+      </div>
+    </div>
+
+    <!-- Средина со скроллом для товаров -->
+    <div id="liked-items-container" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0; padding: 4px 14px 80px 14px;">
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Список избранного пуст 🤍
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <!-- Средина со скроллом для товаров (точно как в Корзине) -->
+    <div id="liked-items-container" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0; padding: 4px 14px 80px 14px;">
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Список избранного пуст 🤍
+      </div>
+    </div>
+
+  </div>
+</div>
+  
+  
   <!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
   <div id="modal-revision-ask" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-revision-ask')">
     <div class="gw-modal-card">
@@ -4645,11 +4727,11 @@
     <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
       <div class="sub-screen-header">
         <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
-        <div class="screen-title">Бутик </div>
-        <div style="display: flex; gap: 6px;">
-        <button id="shop-add-btn-new" class="small-btn" onclick="openAddProductModal()" style="background: linear-gradient(135deg, #0bad4f, #27ae60); color: #eeecec; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(11, 39, 12, 0.3);">➕</button>
-          <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
-        </div>
+<div class="screen-title">Бутик</div>
+<div style="display: flex; gap: 6px; align-items: center;">
+  <button class="back-action-btn" onclick="openAddProductModal()" title="Добавить товар">Добавить</button>
+  <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
+</div>
       </div>
 
       <div class="shop-account-balance-bar" id="shop-account-balance-slot"></div>
@@ -4669,19 +4751,18 @@
     <div id="shop-products-list" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0;"></div>
 
     <!-- 3. НИЖНЯЯ ЗОНА (Корзина и Избранное — зафиксированы намертво, без скролла) -->
-    <div style="flex-shrink: 0; display: flex; padding: 10px 15px; gap: 10px; background: transparent; z-index: 5; overflow: visible;">
-      
-      <button class="shop-nav-tab-btn" id="shop-tab-cart" onclick="switchShopView('cart', this)" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
-        🛒 Корзина 
-        <span id="shop-cart-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
-      </button>
+   <div style="flex-shrink: 0; display: flex; padding: 10px 14px; gap: 8px; background: transparent; z-index: 5; overflow: visible;">
+  
+  <button class="chip-btn" id="shop-tab-cart" onclick="openCartModal()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
+    🛒 Корзина 
+    <span id="shop-cart-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+  </button>
 
-      <button class="shop-nav-tab-btn" id="shop-tab-liked" onclick="switchShopView('liked', this)" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
-        ❤️ Избранное 
-        <span id="shop-liked-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
-      </button>
-
-    </div>
+  <button class="chip-btn" id="shop-tab-liked" onclick="openLikedTab()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
+    ❤️ Избранное 
+    <span id="shop-liked-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+</button>
+</div>
 
   </div>
 </div>
@@ -4698,7 +4779,7 @@
       
       <div class="form-group">
         <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Название товара:</label>
-        <input type="text" id="new-prod-title" class="form-control" placeholder="Напр.: Бархатный пеньюар">
+        <input type="text" id="new-prod-title" class="form-control" placeholder="Напр.: Бархатный пеньюар" onfocus="this.scrollIntoView({behavior: 'smooth', block: 'center'});">
       </div>
 
       <!-- ВЫБОР КАТЕГОРИИ КНОПКАМИ ВНУТРИ МОДАЛКИ -->
@@ -4715,13 +4796,49 @@
         </div>
       </div>
 
-     
+     <!-- КОМПАКТНАЯ ГАЛЕРЕЯ ФОТОГРАФИЙ (Все слоты одного размера в один ряд) -->
+<div class="form-group" style="margin-top: 4px;">
+  <label style="font-size:9px; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:4px;">Фотографии (главная + до 3 доп.):</label>
+  
+  <div style="display: flex; gap: 6px; width: 100%;">
+    
+    <!-- Главное фото -->
+    <div style="position: relative; flex: 1; aspect-ratio: 1; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.3); background: rgba(0,0,0,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="document.getElementById('input-main-img').click()">
+      <img id="preview-main-img" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+      <span id="placeholder-main-img" style="font-size: 14px; color: var(--text-muted);">➕</span>
+      <span style="position: absolute; bottom: 1px; left: 2px; font-size: 7px; background: rgba(0,0,0,0.7); color: #fff; padding: 1px 2px; border-radius: 3px;">Главное</span>
+    </div>
+    <input type="file" id="input-main-img" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'preview-main-img', 'placeholder-main-img')">
+
+    <!-- Дополнительный слот 1 -->
+    <div style="position: relative; flex: 1; aspect-ratio: 1; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="document.getElementById('input-extra-1').click()">
+      <img id="preview-extra-1" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+      <span id="placeholder-extra-1" style="font-size: 12px; color: var(--text-muted);">➕</span>
+    </div>
+    <input type="file" id="input-extra-1" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'preview-extra-1', 'placeholder-extra-1')">
+
+    <!-- Дополнительный слот 2 -->
+    <div style="position: relative; flex: 1; aspect-ratio: 1; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="document.getElementById('input-extra-2').click()">
+      <img id="preview-extra-2" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+      <span id="placeholder-extra-2" style="font-size: 12px; color: var(--text-muted);">➕</span>
+    </div>
+    <input type="file" id="input-extra-2" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'preview-extra-2', 'placeholder-extra-2')">
+
+    <!-- Дополнительный слот 3 -->
+    <div style="position: relative; flex: 1; aspect-ratio: 1; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="document.getElementById('input-extra-3').click()">
+      <img id="preview-extra-3" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+      <span id="placeholder-extra-3" style="font-size: 12px; color: var(--text-muted);">➕</span>
+    </div>
+    <input type="file" id="input-extra-3" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'preview-extra-3', 'placeholder-extra-3')">
+
+  </div>
+</div>
 
       <!-- ЦЕНА И РАСПРЕДЕЛЕНИЕ ПОПОЛАМ -->
       <div class="form-group" style="margin-top: 10px;">
         <label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Цена товара (в грн / баллах):</label>
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
-          <input type="number" id="new-prod-uah" class="form-control" placeholder="Напр.: 1200" oninput="calculateProductPoints()" style="flex: 1;">
+          <input type="number" id="new-prod-uah" class="form-control" placeholder="Напр.: 1200" oninput="calculateProductPoints()" style="flex: 1;" onfocus="this.scrollIntoView({behavior: 'smooth', block: 'center'});">
           <span id="new-prod-total-pts" style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color);">
             = 🖤 0 💜
           </span>
@@ -4778,7 +4895,31 @@
   </div>
 </div>
 
+<!-- ========================================== -->
+<!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ (ОКНО ОЖИДАНИЯ)     -->
+<!-- ========================================== -->
+<!-- ЭКРАН КОРЗИНЫ (Полный аналог архитектуры Бутика) -->
+<div id="tab-cart" class="tab-content shop-tab-container">
+  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
+    
+    <!-- Шапка (фиксированная, как в Бутике) -->
+    <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+        <div class="screen-title" style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; font-weight: 800;">🛒 Корзина</div>
+        <button class="tutorial-help-btn" onclick="showCartHelp()">?</button>
+      </div>
+    </div>
 
+    <!-- Средина со скроллом для товаров -->
+    <div id="cart-items-container" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0; padding: 4px 14px 80px 14px;">
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Корзина пока пуста 🖤
+      </div>
+    </div>
+
+  </div>
+</div>
 
   <!-- СПИСОК ДИАЛОГОВ -->
   <div id="tab-messenger" class="tab-content">
@@ -5339,6 +5480,322 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+  
+  // Иззбаное 
+
+// ==========================================
+// БЕЗОПАСНЫЙ МОДУЛЬ ИЗБРАННОГО
+// ==========================================
+let likedShopItemIds = JSON.parse(localStorage.getItem('pact_liked_shop_ids')) || [];
+
+// 1. Открытие окна Избранного через роутер с защитой
+window.openLikedTab = function() {
+  if (typeof openSubScreen === 'function') {
+    openSubScreen('tab-liked');
+    if (typeof renderLikedScreenItems === 'function') {
+      renderLikedScreenItems();
+    }
+  } else {
+    console.warn("Роутер openSubScreen не найден, используется запасной вариант");
+    const tab = document.getElementById('tab-liked');
+    if (tab) {
+      tab.classList.add('active');
+      tab.style.display = 'block';
+    }
+    if (typeof renderLikedScreenItems === 'function') {
+      renderLikedScreenItems();
+    }
+  }
+};
+
+// 2. Обновление бейдика количества
+window.updateLikedBadge = function() {
+  const badge = document.getElementById('shop-liked-badge');
+  if (!badge) return;
+  
+  if (likedShopItemIds.length > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = likedShopItemIds.length;
+  } else {
+    badge.style.display = 'none';
+  }
+};
+
+// 3. Переключение лайка с защитой от ошибок
+// Универсальное переключение лайка с защитой от типов (строка/число)
+ window.toggleProductLike = function(productId) {
+  const idStr = String(productId);
+  const index = likedShopItemIds.findIndex(id => String(id) === idStr);
+  const isNowLiked = (index === -1);
+
+  if (index === -1) {
+    likedShopItemIds.push(productId);
+    try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
+  } else {
+    likedShopItemIds.splice(index, 1);
+    try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
+  }
+
+  // Сохраняем в память
+  localStorage.setItem('pact_liked_shop_ids', JSON.stringify(likedShopItemIds));
+  
+  // 1. Обновляем бейдж внизу
+  if (typeof updateLikedBadge === 'function') updateLikedBadge();
+  
+  // 2. Обновляем список в открытом окне Избранного
+  if (typeof renderLikedScreenItems === 'function') renderLikedScreenItems();
+  
+  // 3. ТОЧЕЧНО И БЫСТРО меняем иконку на витрине Бутика без перерисовки всего списка!
+  const heartSpan = document.getElementById(`shop-heart-${productId}`);
+  if (heartSpan) {
+    heartSpan.textContent = isNowLiked ? '❤️' : '🤍';
+  }
+};
+// 4. Отрисовка карточек с проверкой наличия контейнера
+window.renderLikedScreenItems = function() {
+  const container = document.getElementById('liked-items-container');
+  if (!container) return;
+
+  const likedProducts = (typeof boutiqueItems !== 'undefined' ? boutiqueItems : []).filter(p => likedShopItemIds.includes(p.id));
+
+  if (likedProducts.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Список избранного пуст 🤍
+      </div>
+    `;
+    return;
+  }
+
+  let html = '<div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">';
+
+  html += likedProducts.map(item => {
+    const priceStr = item.priceStc ? `❤️ ${item.priceStc}` : `💜 ${item.pricePtc || 0} 🖤 ${item.priceOtc || 0}`;
+    const itemImage = item.mainImg || item.image || '';
+
+    return `
+      <div class="product-row-card" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; max-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px !important;">
+        
+        <!-- Картинка товара -->
+        <img class="product-row-img" src="${itemImage}" alt="${item.title}" style="flex-shrink: 0; width: 120px !important; height: 120px !important; object-fit: cover !important; border-radius: 10px !important;">
+        
+        <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 2px 0 !important;">
+          
+          <!-- Верхняя зона: Название и описание -->
+          <div style="overflow: hidden; width: 100%;">
+            <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${item.title}</div>
+            <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 65px; height: 65px; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+              ${item.desc || item.description || 'Изысканный товар'}
+            </div>
+          </div>
+
+          <!-- Нижняя зона: Цена, разбитое сердце для удаления и кнопка "В гардероб" -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
+            <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
+              ${priceStr}
+            </span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              
+              <button onclick="event.stopPropagation(); toggleProductLike(${item.id})" style="background: none; border: none; padding: 0; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Удалить из избранного">💔</button>              
+              <!-- Кнопка отправки напрямую в гардероб (использует твою стандартную функцию) -->
+              <button class="small-btn" onclick="event.stopPropagation(); markItemAsReceived(${item.id})" style="background: linear-gradient(135deg, #420c5c, #260538); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; cursor: pointer; white-space: nowrap;">
+  В гардероб
+</button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  html += '</div>';
+  container.innerHTML = html;
+};
+
+// Безопасная инициализация при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof updateLikedBadge === 'function') {
+    updateLikedBadge();
+  }
+});
+
+// Инициализация бейджа при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+  updateLikedBadge();
+});
+    // ========================================================
+    // КОРЗИНА И ПЕРЕНОС В ГАРДЕРОБ
+    // ========================================================
+    let cartItems = JSON.parse(localStorage.getItem('pact_cart_items')) || [];
+
+    // Добавление товара в корзину (окно ожидания) из бутика
+    window.buyShopItem = function(id) {
+      const product = boutiqueItems.find(p => p.id === id);
+      if (!product) return;
+
+      const existing = cartItems.find(item => item.id === id);
+      if (existing) {
+        showToast('Этот товар уже находится в корзине 🛒', 'info');
+      } else {
+        cartItems.push(product);
+        localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
+        
+        updateCartBadge();
+        if (typeof renderCartItems === 'function') renderCartItems();
+
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+        showToast('Предмет добавлен в корзину (ожидание) 🖤', 'success');
+      }
+    };
+
+    // Обновление красного бейдика с количеством товаров на кнопке
+    window.updateCartBadge = function() {
+      const badge = document.getElementById('shop-cart-badge');
+      if (!badge) return;
+      if (cartItems.length > 0) {
+        badge.style.display = 'inline-block';
+        badge.textContent = cartItems.length;
+      } else {
+        badge.style.display = 'none';
+      }
+    };
+
+    // Отрисовка списка товаров внутри экрана корзины
+    window.renderCartItems = function() {
+  const container = document.getElementById('cart-items-container');
+  if (!container) return;
+
+  if (cartItems.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Корзина пока пуста 🖤
+      </div>
+    `;
+    return;
+  }
+
+  // Делаем ширину обертки 100% без сужающих отступов по бокам, как в Бутике
+  let html = '<div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">';
+
+  html += cartItems.map((item, index) => `
+    <div class="product-row-card" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; max-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px !important;">
+      
+      <!-- Картинка товара строго 120x120 -->
+      <img class="product-row-img" src="${item.mainImg || item.image || ''}" alt="${item.title}" style="flex-shrink: 0; width: 120px !important; height: 120px !important; object-fit: cover !important; border-radius: 10px !important;">
+      
+      <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 2px 0 !important;">
+        
+        <!-- Верхняя зона: Название и описание до 4 строк -->
+        <div style="overflow: hidden; width: 100%;">
+          <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${item.title}</div>
+          <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 65px; height: 65px; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+            ${item.desc || item.description || 'Изысканный комплект белья'}
+          </div>
+        </div>
+
+        <!-- Нижняя зона: Цена и кнопки -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
+          <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
+            ${item.priceStc ? '❤️ ' + item.priceStc : '💜 ' + (item.pricePtc || 0) + ' | 🖤 ' + (item.priceOtc || 0)}
+          </span>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button class="small-btn" onclick="markItemAsReceived(${index})" style="background: linear-gradient(135deg, #420c5c, #260538); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer;">
+              ✓ В гардероб
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `).join('');
+
+  html += '</div>';
+  container.innerHTML = html;
+};
+  // Универсальный перенос товара в Гардероб (из Корзины или Избранного)
+window.markItemAsReceived = function(identifier) {
+  let item = null;
+  let cartIndex = -1;
+
+  // Если передали индекс (из корзины) или ID (из избранного/бутика)
+  if (typeof identifier === 'number' && cartItems && cartItems[identifier]) {
+    cartIndex = identifier;
+    item = cartItems[cartIndex];
+  } else if (identifier !== undefined && identifier !== null) {
+    // Ищем товар в корзине по ID или названию
+    cartIndex = cartItems.findIndex(c => String(c.id) === String(identifier) || String(c.title) === String(identifier));
+    if (cartIndex !== -1) {
+      item = cartItems[cartIndex];
+    } else if (typeof boutiqueItems !== 'undefined') {
+      // Или ищем сразу в бутике, если кнопка нажата из избранного
+      item = boutiqueItems.find(p => String(p.id) === String(identifier) || String(p.title) === String(identifier));
+    }
+  }
+
+  if (!item) return;
+
+  // 1. Проверяем наличие массива wardrobeItems и добавляем в него товар
+  if (typeof wardrobeItems !== 'undefined') {
+    const alreadyExists = wardrobeItems.some(w => w.title === item.title);
+    if (!alreadyExists) {
+      wardrobeItems.push({
+        id: item.id || Date.now(),
+        title: item.title,
+        desc: item.desc || 'Приобретено из бутика',
+        category: item.category || 'Белье',
+        peppers: 2,
+        mainImg: item.mainImg || item.image || ''
+      });
+      // Если гардероб сохраняется в localStorage, можно добавить сохранение здесь
+      if (typeof localStorage !== 'undefined' && typeof WARDROBE_CACHE_KEY !== 'undefined') {
+        localStorage.setItem(WARDROBE_CACHE_KEY, JSON.stringify(wardrobeItems));
+      }
+    }
+  }
+
+  // 2. Убираем товар из корзины (если он там был)
+  if (cartIndex !== -1 && cartItems) {
+    cartItems.splice(cartIndex, 1);
+    localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
+  }
+
+  // 3. УДАЛЯЕМ ТОВАР ИЗ ИЗБРАННОГО (чтобы починить хвосты и там)
+  if (typeof likedShopItemIds !== 'undefined' && item.id) {
+    likedShopItemIds = likedShopItemIds.filter(id => String(id) !== String(item.id));
+    localStorage.setItem('pact_liked_shop_ids', JSON.stringify(likedShopItemIds));
+  }
+
+  // 4. УДАЛЯЕМ ТОВАР ИЗ БУТИКА (каталога), чтобы он пропал с витрины
+  if (typeof boutiqueItems !== 'undefined') {
+    const boutiqueIndex = boutiqueItems.findIndex(p => (item.id && String(p.id) === String(item.id)) || (p.title && item.title && p.title.trim() === item.title.trim()));
+    if (boutiqueIndex !== -1) {
+      boutiqueItems.splice(boutiqueIndex, 1);
+      if (typeof CACHE_KEY !== 'undefined') {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(boutiqueItems));
+      }
+    }
+  }
+
+  // Обновляем все интерфейсы, бейджи и экраны на лету
+  if (typeof updateCartBadge === 'function') updateCartBadge();
+  if (typeof updateLikedBadge === 'function') updateLikedBadge();
+  if (typeof renderCartItems === 'function') renderCartItems();
+  if (typeof renderLikedScreenItems === 'function') renderLikedScreenItems(); // Обновляем экран избранного
+  if (typeof renderProducts === 'function') renderProducts(); // Перерисовываем витрину бутика
+  if (typeof renderWardrobe === 'function') renderWardrobe();
+
+  try {
+    tg?.HapticFeedback?.notificationOccurred?.('success');
+  } catch(e) {}
+  
+  if (typeof showToast === 'function') {
+    showToast('Предмет добавлен в гардероб! ✨', 'success');
+  }
+};
+   
+   
     /* ====================================================================
        АВТОРИЗАЦИЯ (анонимная). В Firebase Console должно быть включено:
        Build → Authentication → Sign-in method → Anonymous
@@ -6743,9 +7200,9 @@ container.innerHTML = filtered.map(p => {
           <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color); white-space: nowrap;">${priceStr}</span>
           <div style="display: flex; align-items: center; gap: 8px;">
             <div onclick="event.stopPropagation(); toggleProductLike(${p.id})" style="cursor: pointer; font-size: 18px; background: none; border: none; padding: 0; display: flex; align-items: center;">
-              ${isLiked ? '❤️' : '🤍'}
+             <span id="shop-heart-${p.id}">${likedShopItemIds.some(id => String(id) === String(p.id)) ? '❤️' : '🤍'}</span>
             </div>
-            <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})">В корзину</button>
+            <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})" style="flex-shrink: 0 !important; width: 60px !important; min-width: 60px !important; max-width: 60px !important;font-size: 10px; height: 28px !important; box-sizing: border-box !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; display: flex !important; align-items: center !important; justify-content: center !important;">В корзину</button>
           </div>
         </div>
 
@@ -6755,9 +7212,6 @@ container.innerHTML = filtered.map(p => {
 }).join('');
     }
 
-    function buyShopItem(id) {
-      showToast('Предмет добавлен в гардероб!', 'success');
-    }
 
     // 4. ГАРДЕРОБ
     let wardrobeFilterCat = 'Белье';
@@ -6874,6 +7328,8 @@ container.innerHTML = filtered.map(p => {
       else showToast(`${getRoleInfo('male').name} намекает на: ${hintedItems.map(i => i.title).join(', ')}`, 'info');
     }
 
+    
+    
     // 5. СУДЬБА & ЖРЕБИЙ
     function switchRandomMode(mode) {
       document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
@@ -10128,6 +10584,149 @@ document.addEventListener('DOMContentLoaded', () => {
   updateScreenMenuDesc();
 });
 
+// корзина 
+// Массив для хранения товаров в корзине (ожидании)
+let cartItems = [];
+
+// Открыть модальное окно корзины
+window.openCartModal = function() {
+  if (typeof openSubScreen === 'function') {
+    openSubScreen('tab-cart');
+    if (typeof renderCartItems === 'function') {
+      renderCartItems();
+    }
+  } else {
+    console.error("Функция openSubScreen не найдена!");
+  }
+};
+
+window.closeCartModal = function() {
+  if (typeof handleBackAction === 'function') {
+    handleBackAction();
+  }
+};
+// Кнопка "?" в корзине (информация)
+function showCartHelp() {
+  alert("Здесь хранятся выбранные желания. Когда Верхний приобретет предмет в реальной жизни, нажмите кнопку «Получено», чтобы товар переместился в ваш общий гардероб! ✨");
+}
+
+// Добавить товар в корзину из бутика
+function addProductToCart(productId) {
+  const product = boutiqueProducts.find(p => p.id === productId);
+  if (!product) return;
+
+  const existing = cartItems.find(item => item.id === productId);
+  if (!existing) {
+    cartItems.push({ ...product });
+    if (typeof showNotification === 'function') {
+      showNotification("Товар добавлен в корзину! 🛒");
+    }
+  }
+  updateCartBadgeCount();
+}
+
+// Отрисовка товаров в корзине с кнопкой "Получено"
+window.renderCartItems = function() {
+  const container = document.getElementById('cart-items-container');
+  if (!container) return;
+
+  if (cartItems.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Корзина пока пуста 🖤
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = cartItems.map((item, index) => `
+    <div class="product-row-card" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; max-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: center !important; gap: 8px !important; padding: 2px !important; margin-bottom: 8px !important;">
+      <img class="product-row-img" src="${item.mainImg || item.image || ''}" alt="${item.title}" style="flex-shrink: 0; width: 110px; height: 115px; object-fit: cover; border-radius: 10px;">
+      <div id="cart-items-container" style="padding: 4px 14px 80px 14px;">
+      <div class="product-row-details" style="flex: 1; min-width: 0; max-width: calc(100% - 120px); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 2px 0;">
+        <!-- Верхняя зона: Название и строго ограниченное описание -->
+        <div style="overflow: hidden; width: 100%;">
+          <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${item.title}</div>
+          <div style="font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 48px; height: 48px; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; word-break: break-word;">
+            ${item.desc || item.description || 'Изысканный комплект белья'}
+          </div>
+        </div>
+
+        <!-- Нижняя зона: Цена и кнопки -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
+          <span style="font-size: 11px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
+            ${item.priceStc ? `❤️ ${item.priceStc}` : `💜 ${item.pricePtc || 0} | 🖤 ${item.priceOtc || 0}`}
+          </span>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button class="small-btn" onclick="markItemAsReceived(${index})" style="background: linear-gradient(135deg, #420c5c, #260538); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer;">
+              ✓ В гардероб
+            </button>
+            <button onclick="removeFromCart(${index})" class="product-like-btn" style="background: rgba(255,0,0,0.2); border-color: rgba(255,0,0,0.4); font-size: 11px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer;" title="Удалить">✕</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `).join('');
+};
+
+// Удалить товар из корзины без переноса
+function removeFromCart(index) {
+  cartItems.splice(index, 1);
+  renderCartItems();
+  updateCartBadgeCount();
+}
+
+// Нажатие «Получено»: удаляем из корзины и отправляем в гардероб
+function markItemAsReceived(index) {
+  const item = cartItems[index];
+  if (!item) return;
+
+  // 1. Отправляем в гардероб (если массив существует)
+  if (typeof userWardrobe !== 'undefined') {
+    userWardrobe.push(item);
+  }
+
+  // 2. Удаляем из корзины по индексу
+  cartItems.splice(index, 1);
+  
+  // 3. Удаляем товар из основного каталога бутика (boutiqueItems), чтобы он пропал с витрины
+  if (typeof boutiqueItems !== 'undefined') {
+    // Ищем товар либо по id, либо по точному совпадению названия, если id нет
+    const boutiqueIndex = boutiqueItems.findIndex(p => (item.id && p.id === item.id) || p.title === item.title);
+    if (boutiqueIndex !== -1) {
+      boutiqueItems.splice(boutiqueIndex, 1);
+      
+      // Сохраняем обновленный список бутика в локальную память (CACHE_KEY), чтобы изменения не пропали
+      if (typeof CACHE_KEY !== 'undefined') {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(boutiqueItems));
+      }
+    }
+  }
+
+  // 4. Обновляем отображение корзины, витрины бутика и счетчиков
+  renderCartItems();
+  
+  // Если у тебя функция отрисовки бутика называется renderProducts (как видно из loadBoutiqueProducts)
+  if (typeof renderProducts === 'function') {
+    renderProducts(); 
+  }
+  
+  if (typeof updateCartBadgeCount === 'function') {
+    updateCartBadgeCount();
+  }
+
+  alert(`Поздравляем! «${item.title}» теперь в вашем гардеробе ✨`);
+}
+// Обновление счетчика (для бейджа)
+function updateCartBadgeCount() {
+  const badge = document.getElementById('shop-cart-badge');
+  if (badge) {
+    badge.innerText = cartItems.length;
+    badge.style.display = cartItems.length > 0 ? 'inline-block' : 'none';
+  }
+}
+
 // описание товара 
 let activeModalProductId = null;
 
@@ -10142,8 +10741,10 @@ function openProductModal(productId) {
   document.getElementById('modal-product-title').textContent = product.title || product.name || 'Эсклюзивный комплект';
   
   const mainImage = product.mainImg || product.image || '';
-  const mainImgEl = document.getElementById('modal-product-img');
-  mainImgEl.src = mainImage;
+  const titleEl = document.getElementById('modal-product-title');
+if (titleEl) {
+  titleEl.textContent = product.title || product.name || 'Эсклюзивный комплект';
+}
   
   // Клик по главному фото открывает его на полный экран
   mainImgEl.onclick = () => openFullscreenPhoto(mainImgEl.src);
