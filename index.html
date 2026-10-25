@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Pact &amp; Passion</title>
-  
+
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -25,7 +25,7 @@
   background: transparent !important;
 }
   
-    :root {
+   :root {
       --bg-color: #0C0A10;
       --card-bg: rgba(22, 18, 30, 0.95);
       --card-border: rgba(230, 57, 86, 0.28);
@@ -55,48 +55,52 @@
       padding: 0;
     }
 
-html {
-  background-color: #050407 !important;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
+    html {
+      background-color: #050407 !important;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-body {
-  background-color: #0C0A10 !important;
-  color: #F5F3F7;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  margin: 0 auto;
-  width: 100vw;
-  height: 100vh;
-  /* Используем безопасные зоны Telegram, чтобы контент не залезал под шторки и системные жесты */
-  padding-top: env(safe-area-inset-top, 12px);
-  padding-bottom: env(safe-area-inset-bottom, 16px);
-  padding-left: 12px;
-  padding-right: 12px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
+    body { 
+      background-color: #0C0A10 !important;
+      color: #F5F3F7;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 100vw;
+      width: 100dvw;
+      height: 100vh;
+      height: 100dvh;
+      /* Динамические отступы с учетом безопасных зон iOS и Telegram */
+      padding-top: max(env(safe-area-inset-top, 12px), 12px);
+      padding-bottom: max(env(safe-area-inset-bottom, 16px), 16px);
+      padding-left: clamp(12px, 3.5vw, 24px);
+      padding-right: clamp(12px, 3.5vw, 24px);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
 
-/* На больших экранах (компьютерах или планшетах) ограничиваем ширину красивой рамкой смартфона */
-@media (min-width: 450px) {
-  body {
-    max-width: 428px;
-    max-height: 926px;
-    height: 100vh;
-    border-radius: 36px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
-    margin: auto;
-    position: absolute;
-    inset: 0;
-  }
-}
+    /* 
+      Убрали жесткие рамки фиксированного телефона. 
+      Теперь на ПК и планшетах приложение аккуратно центрируется, 
+      но на любых айфонах (от 14 Pro до 13 Pro Max) оно полностью 
+      и гармонично занимает всю доступную ширину экрана!
+    */
+    @media (min-width: 600px) {
+      body {
+        max-width: 480px;
+        height: 92vh;
+        max-height: 950px;
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
+        margin: auto;
+        position: absolute;
+        inset: 0;
+      }
+    }
 
     .ambient-glow {
       position: absolute;
@@ -110,7 +114,6 @@ body {
     }
     .glow-1 { top: -50px; left: -50px; background: #680C1F; }
     .glow-2 { bottom: -40px; right: -40px; width: 280px; height: 280px; background: #2B040F; opacity: 0.35; filter: blur(110px); }
-
     .toast-box {
       position: absolute;
       top: 116px;
@@ -1382,65 +1385,7 @@ body {
     /* ========================================================
        1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И БАЗОВЫЙ RESET
        ======================================================== */
-    :root {
-      --bg-color: #0C0A10;
-      --card-bg: rgba(22, 18, 30, 0.94);
-      --card-border: rgba(230, 57, 86, 0.28);
-      --accent-color: #E63956;
-      --accent-gradient: linear-gradient(135deg, #E63956 0%, #B82342 100%);
-      --accent-soft: rgba(230, 57, 86, 0.15);
-      --passion-color: #9B51E0;
-      --ovulation-color: #E8A0BF;
-      --text-main: #F5F3F7;
-      --text-muted: #9A91A5;
-      --border-color: rgba(255, 255, 255, 0.09);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      background-color: #050407 !important;
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    body {
-      background-color: #0C0A10 !important;
-      color: #F5F3F7;
-      margin: 0 auto;
-      padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 90px) 12px;
-      width: 100%;
-      height: 100%;
-      max-width: 428px;
-      max-height: 926px;
-      overscroll-behavior: none;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      overflow: hidden;
-      position: relative;
-      /* transform: translateZ(0) заставляет все элементы position: fixed удерживаться строго внутри рамки body */
-      transform: translateZ(0);
-      transition: background 0.4s ease;
-    }
-
-    /* На мониторах и планшетах (когда экран больше 428x926) оформляем как изящный смартфон с неоновой рамкой */
-    @media (min-width: 429px), (min-height: 927px) {
-      body {
-        border-radius: 36px;
-        box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 0 1.5px rgba(230, 57, 86, 0.35);
-      }
-    }
+    
 
     /* Фоновые неоновые пятна */
     .ambient-glow {
@@ -2350,31 +2295,46 @@ body {
     /* ========================================================
        11. МОДАЛКА: ДОБАВИТЬ НА СТОЛ (✓ / ✕)
        ======================================================== */
+    /* Универсальный оверлей для ВСЕХ модальных окон — строго по центру экрана */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px 14px;
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      width: 100dvw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      background: rgba(5, 4, 7, 0.85) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 999999 !important;
+      padding: 16px !important;
+      box-sizing: border-box !important;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    .modal-overlay.active { opacity: 1; visibility: visible; }
+    
+    .modal-overlay.active { 
+      opacity: 1 !important; 
+      visibility: visible !important; 
+    }
+
+    /* Карточка модалки всегда по центру */
     .modal-card {
-      background: rgba(22, 18, 30, 0.98);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 16px;
-      width: 100%;
-      max-width: 380px;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      background: rgba(22, 18, 30, 0.98) !important;
+      border: 1px solid var(--card-border, rgba(230, 57, 86, 0.28)) !important;
+      border-radius: 20px !important;
+      padding: 16px !important;
+      width: 100% !important;
+      max-width: 380px !important;
+      max-height: 85vh !important;
+      overflow-y: auto !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+      margin: auto !important;
     }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
@@ -3868,10 +3828,104 @@ body {
   padding-right: 14px;
 }
  
- /* Если у body класс role-upper — кнопка подарков скрыта навсегда */
-body.role-upper #gift-action-btn {
-  display: none !important;
+/* Оверлей (затемнение фона) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(5, 4, 7, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  box-sizing: border-box;
 }
+
+/* Контейнер модального окна */
+.modal-content {
+  background: var(--card-bg, rgba(22, 18, 30, 0.95));
+  border: 1px solid var(--card-border, rgba(230, 57, 86, 0.28));
+  border-radius: 24px;
+  width: 100%;
+  max-width: 380px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(230, 57, 86, 0.12);
+  box-sizing: border-box;
+  animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+/* Шапка */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.09));
+}
+
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-title-wrap h3 {
+  margin: 0;
+  color: var(--text-main, #F5F3F7);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.modal-icon {
+  font-size: 20px;
+}
+
+/* Блок с кнопками в шапке (?) и (✕) */
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-icon-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted, #9A91A5);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.modal-icon-btn:hover {
+  background: rgba(230, 57, 86, 0.15);
+  color: var(--text-main, #F5F3F7);
+  border-color: rgba(230, 57, 86, 0.3);
+  transform: scale(1.05);
+}
+
+.modal-icon-btn:active {
+  transform: scale(0.95);
+}
+
 
 
  </style>
@@ -4379,9 +4433,12 @@ body.role-upper #gift-action-btn {
 
   </div>
 </div>
+ 
+
+ 
   
   
-  <!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
+<!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
   <div id="modal-revision-ask" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-revision-ask')">
     <div class="gw-modal-card">
       <div class="gw-modal-header">
@@ -4399,19 +4456,7 @@ body.role-upper #gift-action-btn {
   </div>
 
   
-  <!-- Стандартная модалка для Желаний -->
-<div class="modal-overlay" id="wish-modal" style="display: none;">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>✨ Желания</h3>
-      <button class="modal-close-btn" onclick="closeWishModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <!-- Сюда можно добавить содержимое или оставить стандартное -->
-      <p>Список желаний и управление ими.</p>
-    </div>
-  </div>
-</div>
+  
   
   <!-- ===== КОНЕЦ ШЛЮЗА ===== -->
 
@@ -4561,7 +4606,27 @@ body.role-upper #gift-action-btn {
       </div>
     </div>
   </div>
+<!-- Модалка желаний -->
+  
+<div id="tab-gifts" class="tab-content">
+  <div style="display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden;">
+    
+    <!-- Шапка без нижней полоски -->
+    <div class="sub-screen-header" style="flex-shrink: 0; margin-bottom: 12px; padding: 0 4px; border-bottom: none !important;">
+      <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
+      <div class="screen-title">Желания</div>
+      <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
+    </div>
 
+    <!-- Контейнер со скроллом для списка товаров, приходящих сюда -->
+    <div id="wishes-items-container" style="flex: 1; overflow-y: auto; min-height: 0; padding: 4px 4px 80px 4px;">
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Список желаний пока пуст ✨
+      </div>
+    </div>
+
+  </div>
+</div>
  <!-- ЭКРАН НАСТРОЕК (Стандартный экран приложения) -->
 <div id="tab-settings" class="tab-content">
   <div class="card">
@@ -5821,24 +5886,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let cartItems = JSON.parse(localStorage.getItem('pact_cart_items')) || [];
 
     // Добавление товара в корзину (окно ожидания) из бутика
-    window.buyShopItem = function(id) {
-      const product = boutiqueItems.find(p => p.id === id);
-      if (!product) return;
+   window.buyShopItem = function(id) {
+  const product = boutiqueItems.find(p => p.id === id);
+  if (!product) return;
 
-      const existing = cartItems.find(item => item.id === id);
-      if (existing) {
-        showToast('Этот товар уже находится в корзине 🛒', 'info');
-      } else {
-        cartItems.push(product);
-        localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
-        
-        updateCartBadge();
-        if (typeof renderCartItems === 'function') renderCartItems();
+  const existing = cartItems.find(item => item.id === id);
+  if (existing) {
+    showToast('Этот товар уже находится в корзине 🛒', 'info');
+  } else {
+    cartItems.push(product);
+    localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
+    
+    // 👉 ДОБАВЛЯЕМ АВТОМАТИЧЕСКИ И В ЖЕЛАНИЯ:
+    addCartItemToWishes(product);
 
-        tg?.HapticFeedback?.notificationOccurred?.('success');
-        showToast('Предмет добавлен в корзину (ожидание) 🖤', 'success');
-      }
-    };
+    updateCartBadge();
+    if (typeof renderCartItems === 'function') renderCartItems();
+
+    tg?.HapticFeedback?.notificationOccurred?.('success');
+    showToast('Предмет добавлен в корзину и в Желания! 🖤✨', 'success');
+  }
+};
 
     // Обновление красного бейдика с количеством товаров на кнопке
     window.updateCartBadge = function() {
@@ -6567,10 +6635,11 @@ window.markItemAsReceived = function(identifier) {
       { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
       { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
       { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
-      { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0 },
       { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '📅', target: 'tab-cycle', page: 0 },
       { id: 'tile-ai-advisor', type: 'tile', title: 'Советник', icon: 'ai-star', target: 'tab-ai-advisor', page: 0 },
+      { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0, role: 'upper' },
       { id: 'tile-settings', type: 'tile', title: 'Настройки', icon: '⚙️', target: 'tab-settings', page: 0, role: 'upper' }
+      
     ];
     function saveDesktopItems() {
       localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
@@ -7715,32 +7784,41 @@ window.removeProductImage = function(keyName, previewId, placeholderId, inputId,
     function closeTutorial() { document.getElementById('tutorial-modal')?.classList.remove('active'); }
 
     // Профиль и смена ролей
-    function toggleRoleByEmoji() {
-  // 1. Переключаем аватар/пол ('male' <-> 'female')
+   // Функція переключення ролі (Верхній / Нижня) за кліком на емодзі
+function toggleRoleByEmoji() {
+  // 1. Переключаємо роль ('male' <-> 'female')
   currentAvatarRole = (currentAvatarRole === 'male') ? 'female' : 'male';
   window.currentAvatarRole = currentAvatarRole;
   
-  // 2. Автоматически определяем системную роль для плиток:
-  // Пусть 'male' будет верхним ('upper'), а 'female' — нижним ('lower')
+  // 2. Визначаємо системну роль для інтерфейсу
   const systemRole = (currentAvatarRole === 'male') ? 'upper' : 'lower';
   
-  // 3. Сохраняем ОБА ключа в localStorage, чтобы и старый код, и плитки работали идеально
+  // 3. Зберігаємо обидва ключі в localStorage для сумісності
   localStorage.setItem('pact_current_role', currentAvatarRole);
   localStorage.setItem('pact_user_role', systemRole);
   
-  // 4. Обновляем интерфейс и перерисовываем рабочий стол
+  // 4. Оновлюємо інтерфейс, робочий стіл та видимість кнопки «Подарки»
   updateRoleEmojiUI();
   updateAllAvatarsUI();
-  renderDesktop(); // 👉 Плитка настроек мгновенно появится или исчезнет здесь!
+  renderDesktop();   
+  
+  // 👉 Миттєво оновлюємо видимість кнопки «Подарки» за допомогою твоєї функції
+  if (typeof updateGiftButtonVisibility === 'function') {
+    updateGiftButtonVisibility();
+  }
   
   if (typeof window.renderPairChat === 'function') {
     window.renderPairChat();
   }
   
-  showToast(`Активная роль: ${getRoleInfo(currentAvatarRole).name}`, 'info');
-  updateRoomIndicator();
+  showToast(`Активна роль: ${getRoleInfo(currentAvatarRole).name}`, 'info');
+  
+  if (typeof updateRoomIndicator === 'function') {
+    updateRoomIndicator();
+  }
 }
 
+// Оновлення емодзі статусу та бейджа в профілі
 function updateRoleEmojiUI() {
   const el = document.getElementById('role-toggle-emoji');
   if (el) {
@@ -7749,23 +7827,34 @@ function updateRoleEmojiUI() {
   updateProfileRoleBadge();
 }
 
+
     // Функция обновления плашки статуса роли над именем
-    function updateProfileRoleBadge() {
-      const badge = document.getElementById('profile-role-badge');
-      const textEl = document.getElementById('profile-role-badge-text');
-      if (!badge || !textEl) return;
+   function updateProfileRoleBadge() {
+  const badge = document.getElementById('profile-role-badge');
+  const textEl = document.getElementById('profile-role-badge-text');
+  if (!badge || !textEl) return;
 
-      const roleKey = currentAvatarRole || 'female';
-      const info = (typeof window.getRoleInfo === 'function')
-        ? window.getRoleInfo(roleKey)
-       : { name: roleKey === 'male' ? 'Верхний ' : 'Нижняя ', icon: roleKey === 'male' ? '👑' : '🗝️', color: roleKey === 'male' ? '#7DD3FC' : '#FF8599' };
+  // Определяем текущую роль ('male' / 'upper' или 'female' / 'lower')
+  const roleKey = currentAvatarRole || 'female';
+  
+  // Получаем информацию о роли (иконку, текст и цвет)
+  const info = (typeof window.getRoleInfo === 'function')
+    ? window.getRoleInfo(roleKey)
+    : { 
+        name: roleKey === 'male' ? 'Верхний' : 'Нижняя', 
+        icon: roleKey === 'male' ? '👑' : '🗝️', 
+        color: roleKey === 'male' ? '#7DD3FC' : '#FF8599' 
+      };
 
-      textEl.textContent = `${info.icon} ${info.name}`;
-     badge.style.color = info.color;
-     badge.style.borderColor = info.color + '66';
-     badge.style.background = info.color + '22';
-     badge.style.boxShadow = `0 0 14px ${info.color}33`;
-    }
+  // Выводим текст и иконку
+  textEl.textContent = `${info.icon} ${info.name}`;
+  
+  // Применяем динамические цвета и неоновые тени
+  badge.style.color = info.color;
+  badge.style.borderColor = info.color + '66';
+  badge.style.background = info.color + '22';
+  badge.style.boxShadow = `0 0 14px ${info.color}33`;
+}
    // Стандартные аватарки по умолчанию
 const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
 const DEFAULT_AVATAR_FEMALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png';
@@ -8197,6 +8286,103 @@ window.updateHeartPosition = function(slider) {
   }
 };
 
+// --- МОДУЛЬ ЖЕЛАНИЙ ---
+let wishesItems = JSON.parse(localStorage.getItem('pact_wishes_items')) || [];
+
+// Функция добавления товара в Желания (вызывается параллельно с корзиной)
+window.addCartItemToWishes = function(product) {
+  if (!product) return;
+  const exists = wishesItems.some(item => String(item.id) === String(product.id));
+  if (!exists) {
+    wishesItems.push(product);
+    localStorage.setItem('pact_wishes_items', JSON.stringify(wishesItems));
+    
+    // Если подключена база Firebase и есть активная комната, сохраняем в реальном времени в общую базу
+    if (window.PactCloud && typeof currentCode !== 'undefined' && currentCode) {
+      window.PactCloud.saveShared({ wishesItems });
+    }
+    
+    renderWishesScreen();
+  }
+};
+
+// Отрисовка списка в разделе «Желания»
+window.renderWishesScreen = function() {
+  const container = document.getElementById('wishes-items-container');
+  if (!container) return;
+
+  if (wishesItems.length === 0) {
+    container.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 50px 20px; height: 100%;">
+        
+        <!-- Изящная неоновая иконка в фирменном стиле -->
+        <div style="width: 72px; height: 72px; border-radius: 22px; background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(18, 10, 20, 0.9) 100%); border: 1px solid rgba(230, 57, 86, 0.35); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 57, 86, 0.2); display: flex; align-items: center; justify-content: center; font-size: 34px; margin-bottom: 16px; animation: pulseCrest 3s ease-in-out infinite alternate;">
+          ✨
+        </div>
+
+        <div style="font-size: 14px; font-weight: 900; color: #fff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; text-shadow: 0 2px 8px rgba(230,57,86,0.4);">
+          Здесь пока пусто
+        </div>
+
+        <div style="font-size: 11.5px; color: var(--text-muted, #9A91A5); line-height: 1.5; max-width: 260px;">
+          Здесь будут храниться товары и заветные мечты 🖤
+        </div>
+
+      </div>
+    `;
+    return;
+  }
+
+  let html = '<div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">';
+  
+  html += wishesItems.map((item, index) => {
+    const priceStr = item.priceStc ? `❤️ ${item.priceStc}` : `💜 ${item.pricePtc || 0} 🖤 ${item.priceOtc || 0}`;
+    const itemImage = item.mainImg || item.image || '';
+
+    return `
+      <div class="product-row-card" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; max-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px !important;">
+        <img class="product-row-img" src="${itemImage}" alt="${item.title}" style="flex-shrink: 0; width: 120px !important; height: 120px !important; object-fit: cover !important; border-radius: 10px !important;">
+        
+        <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 2px 0 !important;">
+          <div style="overflow: hidden; width: 100%;">
+            <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${item.title}</div>
+            <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 65px; height: 65px; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+              ${item.desc || item.description || 'Желаемый подарок'}
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
+            <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
+              ${priceStr}
+            </span>
+            <button class="small-btn" onclick="removeWishItem(${index})" style="background: rgba(230,57,86,0.2); color: #ff8599; border: 1px solid rgba(230,57,86,0.4); padding: 5px 8px; border-radius: 8px; font-size: 10px; cursor: pointer;">
+              Выполнить ✨
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  html += '</div>';
+  container.innerHTML = html;
+};
+
+window.removeWishItem = function(index) {
+  wishesItems.splice(index, 1);
+  localStorage.setItem('pact_wishes_items', JSON.stringify(wishesItems));
+  if (window.PactCloud && typeof currentCode !== 'undefined' && currentCode) {
+    window.PactCloud.saveShared({ wishesItems });
+  }
+  renderWishesScreen();
+  showToast('Желание выполнено', 'info');
+};
+
+// Запускаем отрисовку при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+  renderWishesScreen();
+});
+
 // --- МОБИЛЬНЫЙ ВВОД ТЕКСТА (ЗАЩИТА ОТ КЛАВИАТУРЫ) ---
 let activeTargetField = null;
 
@@ -8383,6 +8569,9 @@ document.addEventListener('DOMContentLoaded', () => {
   updateRoleEmojiUI();
   updateAllAvatarsUI();
   
+  if (typeof updateGiftButtonVisibility === 'function') {
+    updateGiftButtonVisibility();
+  }
   if (typeof loadBoutiqueProducts === 'function') {
     loadBoutiqueProducts();
   }
@@ -10977,6 +11166,29 @@ window.renderCartItems = function() {
     </div>
   `).join('');
 };
+
+window.openWishesModal = function() {
+    const modal = document.getElementById('modal-wishes');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeWishesModal = function() {
+    const modal = document.getElementById('modal-wishes');
+    if (modal) modal.style.display = 'none';
+};
+
+window.openWishesHelp = function() {
+    // Здесь можно вызвать подсказку или алерт с правилами раздела
+    alert('Подсказка: здесь вы можете добавлять желания и управлять ими.');
+};
+
+// Закрытие по клику на темный фон за пределами окошка
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('modal-wishes');
+    if (e.target === modal) {
+        closeWishesModal();
+    }
+});
 
 // Удалить товар из корзины без переноса
 function removeFromCart(index) {
