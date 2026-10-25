@@ -3864,6 +3864,12 @@
   padding-right: 14px;
 }
  
+ /* Если у body класс role-upper — кнопка подарков скрыта навсегда */
+body.role-upper #gift-action-btn {
+  display: none !important;
+}
+
+
  </style>
 </head>
 <body>
@@ -3878,13 +3884,15 @@
     <div id="support-theme-presets-container" class="theme-presets-grid"></div>
   </div>
 </div>
-  
+ 
+
   <!-- ========================================================
        МОДУЛЬ ЖИВОГО МЕССЕНДЖЕРА ПАРЫ (FIREBASE REAL-TIME CLOUD)
        ======================================================== -->
   
 
-  <!-- Всплывающие уведомления -->
+ 
+       <!-- Всплывающие уведомления -->
   <div id="toast-container" class="toast-container"></div>
 
   <!-- ===== ШЛЮЗ: ВХОД, АНИМАЦИЯ, КАБИНЕТ СОЗДАТЕЛЯ, ПРИНЯТИЕ ПАКТА ===== -->
@@ -4386,6 +4394,21 @@
     </div>
   </div>
 
+  
+  <!-- Стандартная модалка для Желаний -->
+<div class="modal-overlay" id="wish-modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>✨ Желания</h3>
+      <button class="modal-close-btn" onclick="closeWishModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Сюда можно добавить содержимое или оставить стандартное -->
+      <p>Список желаний и управление ими.</p>
+    </div>
+  </div>
+</div>
+  
   <!-- ===== КОНЕЦ ШЛЮЗА ===== -->
 
 
@@ -4575,6 +4598,181 @@
   </div>
 </div>
 
+<!-- ЭКРАН ПОДАРКОВ (Стандартное окно с подарками и фиксированными размерами карточек) -->
+<div id="tab-gift-order" class="tab-content shop-tab-container">
+  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">  
+    
+    <!-- Шапка (фиксированная) -->
+    <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
+      <div class="sub-screen-header">
+        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
+        <div class="screen-title" style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; font-weight: 800;">🎁 Подарки</div>
+        <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
+      </div>
+    </div>
+
+    <!-- КОНТЕЙНЕР СО СКРОЛЛОМ -->
+    <div class="products-single-column-view" style="
+      flex-grow: 1; 
+      overflow-y: auto; 
+      min-height: 0; 
+      padding: 20px 14px 80px 14px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 17px;
+    ">     
+      
+      <!-- 1. МАЛЕНЬКИЙ ПОДАРОК -->
+      <div class="product-row-card" style="
+        width: 100%; 
+        max-width: 100%; 
+        height: 125px;
+        box-sizing: border-box; 
+        overflow: hidden; 
+        position: relative; 
+        display: flex; 
+        align-items: center; 
+        gap: 12px; 
+        padding: 18px 16px; 
+        background: rgba(14, 10, 20, 0.85); 
+        border: 1px solid var(--card-border); 
+        border-radius: 16px;
+        flex-shrink: 0;
+      ">
+        <div style="width: 75px; height: 75px; border-radius: 12px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">
+          🎁
+        </div>
+        <div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 13.5px; font-weight: 800; color: #fff;">Маленький подарок</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.35;">
+              Приятный сюрприз для поднятия настроения и знака внимания.
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span style="font-size: 11.5px; font-weight: 900; color: var(--ovulation-color, #ff8566);">
+              💜 250 | 🖤 250 <span style="font-size: 9.5px; color: var(--text-muted); font-weight: normal;"></span>
+            </span>
+            <button class="small-btn" onclick="showToast('Маленький подарок запрошен! 🎁', 'success')">Выбрать</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. СРЕДНИЙ ПОДАРОК -->
+      <div class="product-row-card" style="
+        width: 100%; 
+        max-width: 100%; 
+        height: 125px;
+        box-sizing: border-box; 
+        overflow: hidden; 
+        position: relative; 
+        display: flex; 
+        align-items: center; 
+        gap: 12px; 
+        padding: 18px 16px; 
+        background: rgba(14, 10, 20, 0.85); 
+        border: 1px solid var(--card-border); 
+        border-radius: 16px;
+        flex-shrink: 0;
+      ">
+        <div style="width: 75px; height: 75px; border-radius: 12px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 44px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">
+          🎁
+        </div>
+        <div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 13.5px; font-weight: 800; color: #fff;">Средний подарок</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.35;">
+              Более значимый знак внимания, несущий в себе особую романтическую теплоту.
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span style="font-size: 11.5px; font-weight: 900; color: var(--ovulation-color, #ff8566);">
+              💜 375 | 🖤 375 <span style="font-size: 9.5px; color: var(--text-muted); font-weight: normal;"></span>
+            </span>
+            <button class="small-btn" onclick="showToast('Средний подарок запрошен! 🎁', 'success')">Выбрать</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. БОЛЬШОЙ ПОДАРОК -->
+      <div class="product-row-card" style="
+        width: 100%; 
+        max-width: 100%; 
+        height: 125px;
+        box-sizing: border-box; 
+        overflow: hidden; 
+        position: relative; 
+        display: flex; 
+        align-items: center; 
+        gap: 12px; 
+        padding: 18px 16px; 
+        background: rgba(14, 10, 20, 0.85); 
+        border: 1px solid var(--card-border); 
+        border-radius: 16px;
+        flex-shrink: 0;
+      ">
+        <div style="width: 75px; height: 75px; border-radius: 12px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 52px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">
+          🎁
+        </div>
+        <div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 13.5px; font-weight: 800; color: #fff;">Большой подарок</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.35;">
+              Роскошный жест искренней страсти, преданности и глубоких чувств.
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span style="font-size: 11.5px; font-weight: 900; color: var(--ovulation-color, #ff8566);">
+              💜 500 | 🖤 500 <span style="font-size: 9.5px; color: var(--text-muted); font-weight: normal;"></span>
+            </span>
+            <button class="small-btn" onclick="showToast('Большой подарок запрошен! 🎁', 'success')">Выбрать</button>
+          </div>
+        </div>
+      </div>
+      
+     <!-- Премиальный блок с сложными закрученными виньетками (разными сверху и снизу) -->
+      <div style="position: absolute; bottom: 16px; left: 16px; right: 16px; box-sizing: border-box; pointer-events: none; text-align: center; background: transparent; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        
+        <!-- Верхняя виньетка: сложный закрученный растительный орнамент -->
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%; opacity: 0.85; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.35));">
+          <svg width="260" height="24" viewBox="0 0 260 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Центральный элемент -->
+            <path d="M130 3C125 9 125 15 130 21C135 15 135 9 130 3Z" fill="var(--ovulation-color, #E63956)"/>
+            <!-- Левая закрученная спираль -->
+            <path d="M124 12C110 4 90 2 75 8C60 14 65 22 80 20C95 18 100 10 90 8" stroke="var(--ovulation-color, #E63956)" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M75 14C65 18 50 16 40 10C35 7 38 3 45 4" stroke="var(--ovulation-color, #E63956)" stroke-width="1" stroke-linecap="round"/>
+            <path d="M35 10C25 8 15 12 12 16" stroke="var(--ovulation-color, #E63956)" stroke-width="1" stroke-linecap="round"/>
+            <!-- Правая закрученная спираль (симметрично-сложная) -->
+            <path d="M136 12C150 4 170 2 185 8C200 14 195 22 180 20C165 18 160 10 170 8" stroke="var(--ovulation-color, #E63956)" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M185 14C195 18 210 16 220 10C225 7 222 3 215 4" stroke="var(--ovulation-color, #E63956)" stroke-width="1" stroke-linecap="round"/>
+            <path d="M225 10C235 8 245 12 248 16" stroke="var(--ovulation-color, #E63956)" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- Изысканный текст подсказки -->
+        <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.6; text-align: center; width: 100%; padding: 0 14px; font-weight: 400; letter-spacing: 0.2px;">
+          Вы выбираете уровень подарка и тратите свои очки, а партнёр подбирает для вас приятный сюрприз на своё усмотрение ✨
+        </div>
+
+        <!-- Нижняя виньетка: другой узор (с акцентом на каплевидные завитки и волны) -->
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%; opacity: 0.85; margin-top: 8px; filter: drop-shadow(0 0 10px rgba(230, 57, 86, 0.35));">
+          <svg width="260" height="24" viewBox="0 0 260 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="130" cy="12" r="1.5" fill="var(--ovulation-color, #E63956)"/>
+            <!-- Левая нижняя волна с завитком наружу -->
+            <path d="M120 12C105 18 85 20 65 14C50 9 55 3 70 6C85 9 95 15 85 18C75 21 60 18 50 12" stroke="var(--ovulation-color, #E63956)" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M45 14C35 18 20 14 15 10" stroke="var(--ovulation-color, #E63956)" stroke-width="1" stroke-linecap="round"/>
+            <!-- Правая нижняя волна -->
+            <path d="M140 12C155 18 175 20 195 14C210 9 205 3 190 6C175 9 165 15 175 18C185 21 200 18 210 12" stroke="var(--ovulation-color, #E63956)" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M215 14C225 18 240 14 245 10" stroke="var(--ovulation-color, #E63956)" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- МОДАЛКА 1: НАСТРОЙКА ЦЕННОСТИ -->
 <div id="valuation-modal" class="modal-overlay" onclick="if(event.target===this) closeValuationModal()">
@@ -4741,9 +4939,10 @@
           <button class="chip-btn active" id="shop-cat-btn-lingerie" onclick="setShopCategory('Белье', this)">👙 Белье</button>
           <button class="chip-btn" id="shop-cat-btn-sexshop" onclick="setShopCategory('Секс-шоп', this)">🔮 Секс-шоп</button>
         </div>
-        <div class="shop-actions-right">
-          <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 Подарки</button>
-        </div>
+        
+<div class="shop-actions-right gift-action-container" id="gift-action-btn">
+  <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 Подарки</button>
+</div>
       </div>
     </div>
 
@@ -6264,6 +6463,8 @@ window.markItemAsReceived = function(identifier) {
       } catch (e) { console.warn(e); }
     }
 
+    
+    
     // Роль и балансы
     let currentAvatarRole = localStorage.getItem('pact_current_role') || 'female';
     window.currentAvatarRole = currentAvatarRole;
@@ -6827,6 +7028,8 @@ window.markItemAsReceived = function(identifier) {
         wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
         wrap.setAttribute('data-id', item.id);
 
+      
+        // ============================
         const deleteBtn = `<button class="item-delete-btn" onclick="event.stopPropagation(); deleteDesktopItem('${item.id}')">✕</button>`;
         let inner = '';
 
@@ -7161,94 +7364,99 @@ window.removeProductImage = function(keyName, previewId, placeholderId, inputId,
       renderProducts();
     }
 
-    function requestPartnerGift() {
-      tg?.HapticFeedback?.notificationOccurred?.('success');
-      showToast('Намёк на подарок отправлен партнёру! 🎁', 'success');
-    }
+   function requestPartnerGift() {
+  tg?.HapticFeedback?.impactOccurred?.('light');
+  openSubScreen('tab-gift-order');
+}
+    
 
     function renderProducts() {
-      const slot = document.getElementById('shop-account-balance-slot');
-      if (slot) {
-        if (currentAvatarRole === 'female') {
-          slot.innerHTML = `
-            <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Твой баланс:</div>
-            <div class="shop-bal-chips-group">
-              <span class="curr-chip ptc">💜 <b>${femaleBalances.ptc}</b></span>
-              <span class="curr-chip otc">🖤 <b>${femaleBalances.otc}</b></span>
-              <span class="curr-chip stc">❤️ <b>${femaleBalances.stc}</b></span>
-            </div>`;
-        } else {
-          slot.innerHTML = `
-            <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Баланс: ${getRoleInfo('male').name}</div>
-            <div class="shop-bal-chips-group">
-              <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span>
-              <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span>
-              <span class="curr-chip stc">❤️ <b>${maleBalances.stc}</b></span>
-            </div>`;
-        }
-      }
+  const slot = document.getElementById('shop-account-balance-slot');
+  if (slot) {
+    if (currentAvatarRole === 'female') {
+      slot.innerHTML = `
+        <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Твой баланс:</div>
+        <div class="shop-bal-chips-group">
+          <span class="curr-chip ptc">💜 <b>${femaleBalances.ptc}</b></span>
+          <span class="curr-chip otc">🖤 <b>${femaleBalances.otc}</b></span>
+          <span class="curr-chip stc">❤️ <b>${femaleBalances.stc}</b></span>
+        </div>`;
+    } else {
+      slot.innerHTML = `
+        <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Баланс: ${getRoleInfo('male').name}</div>
+        <div class="shop-bal-chips-group">
+          <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span>
+          <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span>
+          <span class="curr-chip stc">❤️ <b>${maleBalances.stc}</b></span>
+        </div>`;
+    }
+  }
 
-      const container = document.getElementById('shop-products-list');
+  const container = document.getElementById('shop-products-list');
   if (!container) return;
 
-  // 👉 Управляем видимостью новой кнопки добавления товара
   const newAddBtn = document.getElementById('shop-add-btn-new');
   if (newAddBtn) {
     newAddBtn.style.display = (currentAvatarRole === 'male') ? 'inline-block' : 'none';
   }
-      const addBtn = document.getElementById('shop-add-btn-master');
-      if (addBtn) addBtn.style.display = (currentAvatarRole === 'male') ? 'block' : 'none';
+  const addBtn = document.getElementById('shop-add-btn-master');
+  if (addBtn) addBtn.style.display = (currentAvatarRole === 'male') ? 'block' : 'none';
 
-     
+  let filtered = boutiqueItems;
+  if (shopFilterCat === 'Понравилось') {
+    filtered = boutiqueItems.filter(p => likedShopItemIds.includes(p.id));
+  } else {
+    filtered = boutiqueItems.filter(p => p.category === shopFilterCat);
+  }
 
-      let filtered = boutiqueItems;
-      if (shopFilterCat === 'Понравилось') {
-        filtered = boutiqueItems.filter(p => likedShopItemIds.includes(p.id));
-      } else {
-        filtered = boutiqueItems.filter(p => p.category === shopFilterCat);
-      }
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:30px;">В этом разделе пока пусто</div>`;
+    return;
+  }
 
-      if (filtered.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:30px;">В этом разделе пока пусто</div>`;
-        return;
-      }
+  container.innerHTML = filtered.map(p => {
+    const isLiked = likedShopItemIds.includes(p.id);
+    const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
+    const itemImage = p.mainImg || p.image || '';
 
-container.innerHTML = filtered.map(p => {
-  const isLiked = likedShopItemIds.includes(p.id);
-  const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
-  const itemImage = p.mainImg || p.image || '';
+    // ✨ Очищаем текст описания на карточке от строки "В комплект входит: ..."
+    let cleanDesc = p.desc || 'Изысканный комплект белья';
+    cleanDesc = cleanDesc.replace(/^В комплект входит:[^\n]*\n*/i, '').trim();
+    if (!cleanDesc) cleanDesc = 'Изысканный комплект белья';
 
- return `
-    <div class="product-row-card" onclick="openProductModal(${p.id})" style="width: 100%; max-width: 100%; height: 137px; min-height: 137px; box-sizing: border-box; overflow: hidden; position: relative; display: flex; align-items: center; gap: 10px; padding: 10px;">
-      <img class="product-row-img" src="${itemImage}" alt="${p.title}" style="flex-shrink: 0; width: 120px; height: 120px; object-fit: cover; border-radius: 10px;">
-      <div class="product-row-details" style="flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 2px 0;">
-        
-        <!-- Верхняя зона: Название и массивное описание -->
-        <div style="overflow: hidden;">
-          <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.title}</div>
-          <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 65px; overflow: hidden; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
-            ${p.desc || 'Изысканный комплект белья'}
-          </div>
-        </div>
+    return `
+      <div class="product-row-card" onclick="openProductModal(${p.id})" style="width: 100%; max-width: 100%; height: 137px; min-height: 137px; box-sizing: border-box; overflow: hidden; position: relative; display: flex; align-items: center; gap: 10px; padding: 10px;">
+        <img class="product-row-img" src="${itemImage}" alt="${p.title}" style="flex-shrink: 0; width: 120px; height: 120px; object-fit: cover; border-radius: 10px;">
+        <div class="product-row-details" style="flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 2px 0;">
+          
+          <!-- Верхняя зона: Название, теги и очищенное описание -->
+          <div style="overflow: hidden;">
+            <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.title}</div>
+            
+            <!-- Теги комплекта сверху -->
+            ${window.renderBundleTags(p.desc)}
 
-        <!-- Нижняя зона: Компактная цена и кнопки -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-          <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color); white-space: nowrap;">${priceStr}</span>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <div onclick="event.stopPropagation(); toggleProductLike(${p.id})" style="cursor: pointer; font-size: 18px; background: none; border: none; padding: 0; display: flex; align-items: center;">
-             <span id="shop-heart-${p.id}">${likedShopItemIds.some(id => String(id) === String(p.id)) ? '❤️' : '🤍'}</span>
+            <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 45px; overflow: hidden; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+              ${cleanDesc}
             </div>
-            <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})" style="flex-shrink: 0 !important; width: 60px !important; min-width: 60px !important; max-width: 60px !important;font-size: 10px; height: 28px !important; box-sizing: border-box !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; display: flex !important; align-items: center !important; justify-content: center !important;">В корзину</button>
           </div>
+
+          <!-- Нижняя зона: Цена и кнопки -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+            <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color); white-space: nowrap;">${priceStr}</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div onclick="event.stopPropagation(); toggleProductLike(${p.id})" style="cursor: pointer; font-size: 18px; background: none; border: none; padding: 0; display: flex; align-items: center;">
+               <span id="shop-heart-${p.id}">${likedShopItemIds.some(id => String(id) === String(p.id)) ? '❤️' : '🤍'}</span>
+              </div>
+              <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})" style="flex-shrink: 0 !important; width: 60px !important; min-width: 60px !important; max-width: 60px !important;font-size: 10px; height: 28px !important; box-sizing: border-box !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; display: flex !important; align-items: center !important; justify-content: center !important;">В корзину</button>
+            </div>
+          </div>
+
         </div>
-
       </div>
-    </div>
-  `;
-}).join('');
-    }
-
-
+    `;
+  }).join('');
+}
     // 4. ГАРДЕРОБ
     let wardrobeFilterCat = 'Белье';
     let selectedWardrobeIds = [1];
@@ -8136,15 +8344,26 @@ window.saveNewProductFromModal = async function() {
   showToast('Товар успешно добавлен в Бутик! ✨', 'success');
 };
 // 9. Автоматическая генерация тегов комплекта для витрины
-window.renderBundleTags = function(bundleString) {
+window.renderBundleTags = function(bundleString, maxItems = 2) {
   if (!bundleString) return '';
   let cleanStr = bundleString.replace(/^В комплект входит:\s*/i, '');
   const items = cleanStr.split(',').map(item => item.trim()).filter(item => item.length > 0);
   if (items.length === 0) return '';
   
-  return `<div class="product-bundle-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">` +
-    items.map(item => `<span class="bundle-tag" style="background: rgba(0, 122, 255, 0.15); color: #0a84ff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">${item}</span>`).join('') +
-    `</div>`;
+  // Ограничиваем количество тегов, чтобы они точно влазили в рамку карточки
+  const visibleItems = items.slice(0, maxItems);
+  const extraCount = items.length - visibleItems.length;
+
+  let html = `<div class="product-bundle-tags" style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; overflow: hidden; max-height: 24px;">` +
+    visibleItems.map(item => `<span class="bundle-tag" style="background: rgba(0, 122, 255, 0.15); color: #0a84ff; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; white-space: nowrap;">${item}</span>`).join('');
+
+  // Если тегов больше, чем поместилось, можно показать маленькую плашку с плюсом
+  if (extraCount > 0) {
+    html += `<span class="bundle-tag-more" style="background: rgba(255, 255, 255, 0.08); color: var(--text-muted); padding: 2px 5px; border-radius: 4px; font-size: 10px; font-weight: 600;">+${extraCount}</span>`;
+  }
+
+  html += `</div>`;
+  return html;
 };
 
 // Заглушки
@@ -9191,6 +9410,16 @@ ${line}
       el.style.color = online ? '#27ae60' : '#8b8296';
     }
 
+    // Проверяем роль при старте
+const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
+
+if (activeRole === 'male' || activeRole === 'upper') {
+  // Если это Верхний — вешаем класс на весь документ
+  document.body.classList.add('role-upper');
+} else {
+  // Если Нижняя — убираем класс, чтобы кнопка показывалась
+  document.body.classList.remove('role-upper');
+}
     /* ---------------- ИНДИКАТОР КОМНАТЫ НА РАБОЧЕМ СТОЛЕ ---------------- */
     function roomStatusText() {
       const d = window.PactRoom;
@@ -10482,21 +10711,53 @@ let tempSponsor = localStorage.getItem('pact_sponsor_mode');
 const CONVERSION_RATE = 2; // 2 грн = 1 очко
 
 // Проверка роли: true, если верхний игрок
+// Проверка роли: true, если верхний игрок
+// Проверка роли: true, если верхний игрок
 function isUserUpper() {
-  // Собираем данные отовсюду, где может храниться роль
   const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
-  
-  // Возвращаем true, если это 'male' (твоя верхняя роль) или явно указано 'upper'
   return activeRole === 'male' || activeRole === 'upper';
-function isUserLower() {
-  // Собираем данные отовсюду, где может храниться роль
-  const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
-  
-  // Возвращаем true, если это 'female' (твоя нижняя роль) или явно указано 'lower'
-  return activeRole === 'female' || activeRole === 'lower';
-}
 }
 
+// Проверка роли: true, если нижний игрок
+function isUserLower() {
+  const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
+  return activeRole === 'female' || activeRole === 'lower';
+}
+
+// Главная функция обновления видимости
+function updateGiftButtonVisibility() {
+  const giftBtn = document.getElementById('gift-action-btn');
+  if (!giftBtn) return;
+
+  // Проверяем роль точно так же, как в твоем движке
+  const activeRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || localStorage.getItem('pact_user_role');
+  const upper = activeRole === 'male' || activeRole === 'upper';
+
+  if (upper) {
+    // Если зашел Верхний — железобетонно скрываем
+    giftBtn.style.display = 'none';
+  } else {
+    // Если Нижняя (или роль еще грузится) — железобетонно показываем
+    giftBtn.style.display = 'flex';
+  }
+}
+
+// Запускаем при загрузке
+window.addEventListener('load', updateGiftButtonVisibility);
+document.addEventListener('DOMContentLoaded', updateGiftButtonVisibility);
+
+// Запускаем при загрузке
+window.addEventListener('load', () => {
+  updateGiftButtonVisibility();
+});
+
+// Запускаем при загрузке страницы (с небольшой задержкой, чтобы DOM точно успел построиться)
+window.addEventListener('load', () => {
+  updateGiftButtonVisibility();
+});
+
+// Если у тебя в коде где-то меняются экраны или роли, 
+// просто допиши вызов `updateGiftButtonVisibility();` в ту функцию!
 
 // Обновление описания режима на экране настроек
 function updateScreenMenuDesc() {
@@ -10769,8 +11030,25 @@ function updateCartBadgeCount() {
     badge.style.display = cartItems.length > 0 ? 'inline-block' : 'none';
   }
 }
+// Открыть окно желаний
+function openWishModal() {
+  const modal = document.getElementById('wish-modal');
+  if (modal) {
+    modal.style.display = 'flex'; // или 'block' в зависимости от твоего CSS модалок
+  }
+}
+
+// Закрыть окно желаний
+function closeWishModal() {
+  const modal = document.getElementById('wish-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
 
 // описание товара 
+
 let activeModalProductId = null;
 
 function openProductModal(productId) {
