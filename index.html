@@ -1385,7 +1385,65 @@
     /* ========================================================
        1. СИСТЕМНЫЕ ПЕРЕМЕННЫЕ И БАЗОВЫЙ RESET
        ======================================================== */
-    
+    :root {
+      --bg-color: #0C0A10;
+      --card-bg: rgba(22, 18, 30, 0.94);
+      --card-border: rgba(230, 57, 86, 0.28);
+      --accent-color: #E63956;
+      --accent-gradient: linear-gradient(135deg, #E63956 0%, #B82342 100%);
+      --accent-soft: rgba(230, 57, 86, 0.15);
+      --passion-color: #9B51E0;
+      --ovulation-color: #E8A0BF;
+      --text-main: #F5F3F7;
+      --text-muted: #9A91A5;
+      --border-color: rgba(255, 255, 255, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: #050407 !important;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #0C0A10 !important;
+      color: #F5F3F7;
+      margin: 0 auto;
+      padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 90px) 12px;
+      width: 100%;
+      height: 100%;
+      max-width: 428px;
+      max-height: 926px;
+      overscroll-behavior: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      position: relative;
+      /* transform: translateZ(0) заставляет все элементы position: fixed удерживаться строго внутри рамки body */
+      transform: translateZ(0);
+      transition: background 0.4s ease;
+    }
+
+    /* На мониторах и планшетах (когда экран больше 428x926) оформляем как изящный смартфон с неоновой рамкой */
+    @media (min-width: 429px), (min-height: 927px) {
+      body {
+        border-radius: 36px;
+        box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 0 1.5px rgba(230, 57, 86, 0.35);
+      }
+    }
 
     /* Фоновые неоновые пятна */
     .ambient-glow {
@@ -2295,46 +2353,31 @@
     /* ========================================================
        11. МОДАЛКА: ДОБАВИТЬ НА СТОЛ (✓ / ✕)
        ======================================================== */
-    /* Универсальный оверлей для ВСЕХ модальных окон — строго по центру экрана */
     .modal-overlay {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      width: 100dvw !important;
-      height: 100vh !important;
-      height: 100dvh !important;
-      background: rgba(5, 4, 7, 0.85) !important;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      z-index: 999999 !important;
-      padding: 16px !important;
-      box-sizing: border-box !important;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    
-    .modal-overlay.active { 
-      opacity: 1 !important; 
-      visibility: visible !important; 
-    }
-
-    /* Карточка модалки всегда по центру */
+    .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal-card {
-      background: rgba(22, 18, 30, 0.98) !important;
-      border: 1px solid var(--card-border, rgba(230, 57, 86, 0.28)) !important;
-      border-radius: 20px !important;
-      padding: 16px !important;
-      width: 100% !important;
-      max-width: 380px !important;
-      max-height: 85vh !important;
-      overflow-y: auto !important;
-      box-sizing: border-box !important;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
-      margin: auto !important;
+      background: rgba(22, 18, 30, 0.98);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      max-width: 380px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
     }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .modal-header h3 { font-size: 13px; font-weight: 800; color: #fff; }
@@ -3828,104 +3871,6 @@
   padding-right: 14px;
 }
  
-/* Оверлей (затемнение фона) */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  width: 100dvw;
-  height: 100vh;
-  height: 100dvh;
-  background: rgba(5, 4, 7, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-/* Контейнер модального окна */
-.modal-content {
-  background: var(--card-bg, rgba(22, 18, 30, 0.95));
-  border: 1px solid var(--card-border, rgba(230, 57, 86, 0.28));
-  border-radius: 24px;
-  width: 100%;
-  max-width: 380px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(230, 57, 86, 0.12);
-  box-sizing: border-box;
-  animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-/* Шапка */
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.09));
-}
-
-.modal-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.modal-title-wrap h3 {
-  margin: 0;
-  color: var(--text-main, #F5F3F7);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-.modal-icon {
-  font-size: 20px;
-}
-
-/* Блок с кнопками в шапке (?) и (✕) */
-.modal-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.modal-icon-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-muted, #9A91A5);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
-}
-
-.modal-icon-btn:hover {
-  background: rgba(230, 57, 86, 0.15);
-  color: var(--text-main, #F5F3F7);
-  border-color: rgba(230, 57, 86, 0.3);
-  transform: scale(1.05);
-}
-
-.modal-icon-btn:active {
-  transform: scale(0.95);
-}
-
 
 
  </style>
@@ -4405,15 +4350,19 @@
 <div id="tab-liked" class="tab-content shop-tab-container">
   <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
     
-    <!-- Шапка (фиксированная, как в Бутике и Корзине) -->
-    <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-        <div class="screen-title" style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; font-weight: 800;">❤️ Избранное</div>
-        <button class="tutorial-help-btn" onclick="showLikedHelp()">?</button>
-      </div>
-    </div>
-
+    <!-- Шапка в виде отдельной стеклянной рамки с крупным объемным заголовком -->
+<div class="sub-screen-header" style="flex-shrink: 0; margin-bottom: 12px; padding: 12px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+  <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>
+  <button class="back-action-btn" onclick="handleBackAction()" style="height: 30px; padding: 0 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    Назад
+  </button>
+  <div class="screen-title" style="font-size: 16px; font-weight: 900; background: linear-gradient(135deg, #eeedf3 0%, #4492e0 50%, #436da8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.3); letter-spacing: 0.5px;">
+    ИЗБРАННОЕ 🤍
+  </div>
+  <button class="tutorial-help-btn" onclick="openTutorial('gifts')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    ?
+  </button>
+</div>
     <!-- Средина со скроллом для товаров -->
     <div id="liked-items-container" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0; padding: 4px 14px 80px 14px;">
       <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
@@ -4433,12 +4382,37 @@
 
   </div>
 </div>
- 
+  <!-- Модалка желаний -->
+  
+<div id="tab-gifts" class="tab-content">
+  <div style="display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden;">
+    
+    <!-- Шапка в виде отдельной стеклянной рамки с крупным объемным заголовком -->
+<div class="sub-screen-header" style="flex-shrink: 0; margin-bottom: 12px; padding: 12px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+  <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>
+  <button class="back-action-btn" onclick="handleBackAction()" style="height: 30px; padding: 0 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    Назад
+  </button>
+  <div class="screen-title" style="font-size: 16px; font-weight: 900; background: linear-gradient(135deg, #eeedf3 0%, #4492e0 50%, #436da8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.3); letter-spacing: 0.5px;">
+    Желания ✨
+  </div>
+  <button class="tutorial-help-btn" onclick="openTutorial('gifts')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    ?
+  </button>
+</div>
 
- 
+    <!-- Контейнер со скроллом для списка товаров, приходящих сюда -->
+    <div id="wishes-items-container" style="flex: 1; overflow-y: auto; min-height: 0; padding: 4px 4px 80px 4px;">
+      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
+        Список желаний пока пуст ✨
+      </div>
+    </div>
+
+  </div>
+</div>
   
-  
-<!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
+
+  <!-- МОДАЛКА: ПАРТНЁР ПРЕДЛАГАЕТ ПЕРЕСМОТР КОНТРАКТА -->
   <div id="modal-revision-ask" class="gw-modal-overlay" onclick="if(event.target===this) closeModal('modal-revision-ask')">
     <div class="gw-modal-card">
       <div class="gw-modal-header">
@@ -4456,7 +4430,19 @@
   </div>
 
   
-  
+  <!-- Стандартная модалка для Желаний -->
+<div class="modal-overlay" id="wish-modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>✨ Желания</h3>
+      <button class="modal-close-btn" onclick="closeWishModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Сюда можно добавить содержимое или оставить стандартное -->
+      <p>Список желаний и управление ими.</p>
+    </div>
+  </div>
+</div>
   
   <!-- ===== КОНЕЦ ШЛЮЗА ===== -->
 
@@ -4606,27 +4592,7 @@
       </div>
     </div>
   </div>
-<!-- Модалка желаний -->
-  
-<div id="tab-gifts" class="tab-content">
-  <div style="display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden;">
-    
-    <!-- Шапка без нижней полоски -->
-    <div class="sub-screen-header" style="flex-shrink: 0; margin-bottom: 12px; padding: 0 4px; border-bottom: none !important;">
-      <button class="back-action-btn" onclick="handleBackAction()">← Назад</button>
-      <div class="screen-title">Желания</div>
-      <button class="tutorial-help-btn" onclick="openTutorial('gifts')">?</button>
-    </div>
 
-    <!-- Контейнер со скроллом для списка товаров, приходящих сюда -->
-    <div id="wishes-items-container" style="flex: 1; overflow-y: auto; min-height: 0; padding: 4px 4px 80px 4px;">
-      <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 60px;">
-        Список желаний пока пуст ✨
-      </div>
-    </div>
-
-  </div>
-</div>
  <!-- ЭКРАН НАСТРОЕК (Стандартный экран приложения) -->
 <div id="tab-settings" class="tab-content">
   <div class="card">
@@ -5040,6 +5006,7 @@
 <div id="add-product-modal" class="modal-overlay" style="display: none;" onclick="if(event.target===this) closeAddProductModal()">
   <div class="modal-card" style="max-width: 420px; max-height: 94vh; overflow-y: auto; padding: 16px;">
     
+    
     <div class="modal-header" style="margin-bottom: 12px;">
       <h3 style="color:#fff; font-size:14px; font-weight:800; margin:0; text-transform:uppercase;">➕ Добавить товар</h3>
       <span class="modal-close-btn" onclick="closeAddProductModal()">✕</span>
@@ -5060,7 +5027,10 @@
       <div>
         <input type="text" id="new-prod-title" class="form-control" style="width: 100%; padding: 10px 12px;" placeholder="Название товара (напр.: Бархатный пеньюар)" onfocus="this.scrollIntoView({behavior: 'smooth', block: 'center'});">
       </div>
-
+<!-- Скрытая ссылка на покупку (видна только Верхнему в Желаниях) -->
+      <div>
+        <input type="text" id="new-prod-link" class="form-control" style="width: 100%; padding: 10px 12px;" placeholder="Ссылка на покупку (напр.: https://t.me/... или маркетплейс)" onfocus="this.scrollIntoView({behavior: 'smooth', block: 'center'});">
+      </div>
       <!-- 3. ФОТОГРАФИИ (Галерея с комфортным отступом) -->
       <div style="display: flex; gap: 8px; width: 100%;">
         <!-- Главное фото -->
@@ -5449,11 +5419,18 @@
   <!-- 12. БАЛАНС -->
   <div id="tab-bank" class="tab-content">
     <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()">Назад</button>
-        <div class="screen-title">БАЛАНС</div>
-        <button class="tutorial-help-btn" onclick="openTutorial('bank')">?</button>
-      </div>
+      <div class="sub-screen-header" style="flex-shrink: 0; margin-bottom: 12px; padding: 12px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+  <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>
+  <button class="back-action-btn" onclick="handleBackAction()" style="height: 30px; padding: 0 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    Назад
+  </button>
+  <div class="screen-title" style="font-size: 16px; font-weight: 900; background: linear-gradient(135deg, #eeedf3 0%, #4492e0 50%, #436da8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.3); letter-spacing: 0.5px;">
+    БАЛАНС 💎
+  </div>
+  <button class="tutorial-help-btn" onclick="openTutorial('gifts')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    ?
+  </button>
+</div>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
         <div id="bank-box-female" style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:12px; padding:8px;">
@@ -5886,18 +5863,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let cartItems = JSON.parse(localStorage.getItem('pact_cart_items')) || [];
 
     // Добавление товара в корзину (окно ожидания) из бутика
-   window.buyShopItem = function(id) {
-  const product = boutiqueItems.find(p => p.id === id);
-  if (!product) return;
+    window.buyShopItem = function(id) {
+      const product = boutiqueItems.find(p => p.id === id);
+      if (!product) return;
 
-  const existing = cartItems.find(item => item.id === id);
-  if (existing) {
-    showToast('Этот товар уже находится в корзине 🛒', 'info');
-  } else {
-    cartItems.push(product);
-    localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
-    
-    // 👉 ДОБАВЛЯЕМ АВТОМАТИЧЕСКИ И В ЖЕЛАНИЯ:
+      const existing = cartItems.find(item => item.id === id);
+      if (existing) {
+        showToast('Этот товар уже находится в корзине 🛒', 'info');
+      } else {
+        cartItems.push(product);
+        localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
+        addCartItemToWishes(product);
+
     addCartItemToWishes(product);
 
     updateCartBadge();
@@ -5905,8 +5882,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tg?.HapticFeedback?.notificationOccurred?.('success');
     showToast('Предмет добавлен в корзину и в Желания! 🖤✨', 'success');
-  }
-};
+  
+        
+        updateCartBadge();
+        if (typeof renderCartItems === 'function') renderCartItems();
+
+        tg?.HapticFeedback?.notificationOccurred?.('success');
+        showToast('Предмет добавлен в корзину  🖤', 'success');
+      }
+    };
 
     // Обновление красного бейдика с количеством товаров на кнопке
     window.updateCartBadge = function() {
@@ -6674,6 +6658,7 @@ window.markItemAsReceived = function(identifier) {
       if (!viewport) return;
 
     
+     
       /* ========================================================
        УМНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ (БЕЗОПАСНАЯ ВЕРСИЯ)
        ======================================================== */
@@ -7741,6 +7726,133 @@ window.removeProductImage = function(keyName, previewId, placeholderId, inputId,
       draw();
     }
 
+   
+// --- МОДУЛЬ ЖЕЛАНИЙ ---
+let wishesItems = JSON.parse(localStorage.getItem('pact_wishes_items')) || [];
+
+// Функция добавления товара в Желания (вызывается параллельно с корзиной)
+window.addCartItemToWishes = function(product) {
+  if (!product) return;
+  const exists = wishesItems.some(item => String(item.id) === String(product.id));
+  if (!exists) {
+    wishesItems.push(product);
+    localStorage.setItem('pact_wishes_items', JSON.stringify(wishesItems));
+    
+    // Если подключена база Firebase и есть активная комната, сохраняем в реальном времени в общую базу
+    if (window.PactCloud && typeof currentCode !== 'undefined' && currentCode) {
+      window.PactCloud.saveShared({ wishesItems });
+    }
+    
+    renderWishesScreen();
+  }
+};
+
+// Отрисовка списка в разделе «Желания»
+window.renderWishesScreen = function() {
+  const container = document.getElementById('wishes-items-container');
+  if (!container) return;
+
+  if (wishesItems.length === 0) {
+    container.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 50px 20px; height: 100%;">
+        
+        <!-- Изящная неоновая иконка в фирменном стиле -->
+        <div style="width: 72px; height: 72px; border-radius: 22px; background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(18, 10, 20, 0.9) 100%); border: 1px solid rgba(230, 57, 86, 0.35); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 57, 86, 0.2); display: flex; align-items: center; justify-content: center; font-size: 34px; margin-bottom: 16px; animation: pulseCrest 3s ease-in-out infinite alternate;">
+          ✨
+        </div>
+
+        <div style="font-size: 14px; font-weight: 900; color: #fff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; text-shadow: 0 2px 8px rgba(230,57,86,0.4);">
+          Будуар Желаний
+        </div>
+
+        <div style="font-size: 11.5px; color: var(--text-muted, #9A91A5); line-height: 1.5; max-width: 260px;">
+          Здесь будут храниться товары и заветные мечты, выбранные для вас обоими 🖤
+        </div>
+
+      </div>
+    `;
+    return;
+  }
+
+  // Здесь дальше идет рендер карточек, когда желания есть...
+
+
+let html = '<div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">';
+  
+  html += wishesItems.map((item, index) => {
+    const itemImage = item.mainImg || item.image || '';
+    const wishSource = item.source || item.category || 'Из бутика 🛍️';
+    const hasLink = item.link && item.link.trim() !== '';
+
+    // Кнопка «Купить товар» — благородный приглушенный синий (индиго)
+    const buyButtonHtml = hasLink 
+      ? `<a href="${item.link}" target="_blank" onclick="event.stopPropagation();" style="width: 100%; height: 26px; background: linear-gradient(135deg, #1E40AF 0%, #1E3A8A 50%, #172554 100%); border: 1px solid rgba(147, 197, 253, 0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 800; color: #E2E8F0; text-decoration: none; box-sizing: border-box; box-shadow: 0 3px 10px rgba(30, 64, 175, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.4); position: relative; overflow: hidden;">
+           <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
+           🔗 Купить товар
+         </a>`
+      : '';
+
+    return `
+      <div class="product-row-card" style="width: 100% !important; max-width: 100% !important; height: 165px !important; min-height: 165px !important; max-height: 165px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px !important;">
+        <!-- Картинка товара слева -->
+        <img class="product-row-img" src="${itemImage}" alt="${item.title}" style="flex-shrink: 0; width: 135px !important; height: 135px !important; object-fit: cover !important; border-radius: 10px !important;">
+        
+        <!-- Правая колонка с вертикальным стеком -->
+        <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 2px 0 !important;">
+          
+          <!-- 1. Название товара -->
+          <div style="width: 100%; height: 28px; padding: 0 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.25) 100%); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 8px; display: flex; align-items: center; box-sizing: border-box; box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0,0,0,0.3); position: relative; overflow: hidden;">
+            <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>
+            <div style="font-size: 12px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">
+              ${item.title}
+            </div>
+          </div>
+
+          <!-- Разделитель (три точки) -->
+          <div style="text-align: center; font-size: 10px; font-weight: 900; color: rgba(255, 255, 255, 0.3); letter-spacing: 3px; line-height: 2px;">
+            •••
+          </div>
+
+          <!-- Вертикальный блок кнопок -->
+          <div style="display: flex; flex-direction: column; gap: 3px; width: 100%;">
+            
+            <!-- 2. Плашка источника (винная) -->
+            <div style="width: 100%; height: 26px; padding: 0 10px; background: linear-gradient(135deg, rgba(159, 18, 57, 0.6) 0%, rgba(110, 8, 29, 0.75) 50%, rgba(58, 2, 14, 0.9) 100%); border: 1px solid rgba(244, 63, 94, 0.4); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #FFD1DC; white-space: nowrap; box-sizing: border-box; box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0,0,0,0.3); position: relative; overflow: hidden;">
+              <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
+              💕 ${wishSource}
+            </div>
+
+            <!-- 3. Кнопка «Купить товар» -->
+            ${buyButtonHtml}
+
+            <!-- 4. Кнопка «Выполнено ✨» — приглушенный глубокий изумруд -->
+            <button onclick="removeWishItem(${index})" style="width: 100%; height: 26px; padding: 0 10px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #065F46 0%, #047857 50%, #022C22 100%); color: #E2E8F0; border: 1px solid rgba(52, 211, 153, 0.35); border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; box-sizing: border-box; box-shadow: 0 3px 10px rgba(4, 120, 87, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.35), inset 0 -3px 4px rgba(0, 0, 0, 0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.4); position: relative; overflow: hidden; transition: transform 0.15s ease;">
+              <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>
+              Выполнено ✨
+            </button>
+
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  container.innerHTML = html;
+};
+
+window.removeWishItem = function(index) {
+  wishesItems.splice(index, 1);
+  localStorage.setItem('pact_wishes_items', JSON.stringify(wishesItems));
+  if (window.PactCloud && typeof currentCode !== 'undefined' && currentCode) {
+    window.PactCloud.saveShared({ wishesItems });
+  }
+  renderWishesScreen();
+  showToast('Желание выполнено', 'info');
+};
+
+// Запускаем отрисовку при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+  renderWishesScreen();
+});
     
     // 6. ТУТОРИАЛ
     const tutorialsData = {
@@ -8286,103 +8398,6 @@ window.updateHeartPosition = function(slider) {
   }
 };
 
-// --- МОДУЛЬ ЖЕЛАНИЙ ---
-let wishesItems = JSON.parse(localStorage.getItem('pact_wishes_items')) || [];
-
-// Функция добавления товара в Желания (вызывается параллельно с корзиной)
-window.addCartItemToWishes = function(product) {
-  if (!product) return;
-  const exists = wishesItems.some(item => String(item.id) === String(product.id));
-  if (!exists) {
-    wishesItems.push(product);
-    localStorage.setItem('pact_wishes_items', JSON.stringify(wishesItems));
-    
-    // Если подключена база Firebase и есть активная комната, сохраняем в реальном времени в общую базу
-    if (window.PactCloud && typeof currentCode !== 'undefined' && currentCode) {
-      window.PactCloud.saveShared({ wishesItems });
-    }
-    
-    renderWishesScreen();
-  }
-};
-
-// Отрисовка списка в разделе «Желания»
-window.renderWishesScreen = function() {
-  const container = document.getElementById('wishes-items-container');
-  if (!container) return;
-
-  if (wishesItems.length === 0) {
-    container.innerHTML = `
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 50px 20px; height: 100%;">
-        
-        <!-- Изящная неоновая иконка в фирменном стиле -->
-        <div style="width: 72px; height: 72px; border-radius: 22px; background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(18, 10, 20, 0.9) 100%); border: 1px solid rgba(230, 57, 86, 0.35); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 57, 86, 0.2); display: flex; align-items: center; justify-content: center; font-size: 34px; margin-bottom: 16px; animation: pulseCrest 3s ease-in-out infinite alternate;">
-          ✨
-        </div>
-
-        <div style="font-size: 14px; font-weight: 900; color: #fff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; text-shadow: 0 2px 8px rgba(230,57,86,0.4);">
-          Здесь пока пусто
-        </div>
-
-        <div style="font-size: 11.5px; color: var(--text-muted, #9A91A5); line-height: 1.5; max-width: 260px;">
-          Здесь будут храниться товары и заветные мечты 🖤
-        </div>
-
-      </div>
-    `;
-    return;
-  }
-
-  let html = '<div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">';
-  
-  html += wishesItems.map((item, index) => {
-    const priceStr = item.priceStc ? `❤️ ${item.priceStc}` : `💜 ${item.pricePtc || 0} 🖤 ${item.priceOtc || 0}`;
-    const itemImage = item.mainImg || item.image || '';
-
-    return `
-      <div class="product-row-card" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; max-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px !important;">
-        <img class="product-row-img" src="${itemImage}" alt="${item.title}" style="flex-shrink: 0; width: 120px !important; height: 120px !important; object-fit: cover !important; border-radius: 10px !important;">
-        
-        <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 2px 0 !important;">
-          <div style="overflow: hidden; width: 100%;">
-            <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${item.title}</div>
-            <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 65px; height: 65px; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
-              ${item.desc || item.description || 'Желаемый подарок'}
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
-            <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
-              ${priceStr}
-            </span>
-            <button class="small-btn" onclick="removeWishItem(${index})" style="background: rgba(230,57,86,0.2); color: #ff8599; border: 1px solid rgba(230,57,86,0.4); padding: 5px 8px; border-radius: 8px; font-size: 10px; cursor: pointer;">
-              Выполнить ✨
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  html += '</div>';
-  container.innerHTML = html;
-};
-
-window.removeWishItem = function(index) {
-  wishesItems.splice(index, 1);
-  localStorage.setItem('pact_wishes_items', JSON.stringify(wishesItems));
-  if (window.PactCloud && typeof currentCode !== 'undefined' && currentCode) {
-    window.PactCloud.saveShared({ wishesItems });
-  }
-  renderWishesScreen();
-  showToast('Желание выполнено', 'info');
-};
-
-// Запускаем отрисовку при загрузке
-document.addEventListener('DOMContentLoaded', () => {
-  renderWishesScreen();
-});
-
 // --- МОБИЛЬНЫЙ ВВОД ТЕКСТА (ЗАЩИТА ОТ КЛАВИАТУРЫ) ---
 let activeTargetField = null;
 
@@ -8484,6 +8499,8 @@ window.saveNewProductFromModal = async function() {
     window.currentProductGallery.extra3
   ].filter(img => img && img !== '');
 
+  const purchaseLink = document.getElementById('new-prod-link')?.value.trim() || '';
+
   const newProduct = {
     id: Date.now(),
     title: title,
@@ -8493,7 +8510,8 @@ window.saveNewProductFromModal = async function() {
     priceOtc: priceOtc,
     mainImg: window.currentProductGallery.main,
     desc: fullDesc,
-    gallery: fullGallery
+    gallery: fullGallery,
+    link: purchaseLink // 👈 Сохраняем скрытую ссылку в объект товара
   };
 
   if (typeof boutiqueItems !== 'undefined') {
@@ -11166,29 +11184,6 @@ window.renderCartItems = function() {
     </div>
   `).join('');
 };
-
-window.openWishesModal = function() {
-    const modal = document.getElementById('modal-wishes');
-    if (modal) modal.style.display = 'flex';
-};
-
-window.closeWishesModal = function() {
-    const modal = document.getElementById('modal-wishes');
-    if (modal) modal.style.display = 'none';
-};
-
-window.openWishesHelp = function() {
-    // Здесь можно вызвать подсказку или алерт с правилами раздела
-    alert('Подсказка: здесь вы можете добавлять желания и управлять ими.');
-};
-
-// Закрытие по клику на темный фон за пределами окошка
-window.addEventListener('click', (e) => {
-    const modal = document.getElementById('modal-wishes');
-    if (e.target === modal) {
-        closeWishesModal();
-    }
-});
 
 // Удалить товар из корзины без переноса
 function removeFromCart(index) {
