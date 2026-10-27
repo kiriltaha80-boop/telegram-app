@@ -25,7 +25,78 @@
   background: transparent !important;
 }
   
-   :root {
+   
+/* Подложка модального окна: увеличили до 0.38с для заметной плавности */
+.modal-overlay,
+.gw-modal-overlay,
+.scenario-picker-modal,
+.contract-writer-modal,
+.full-contract-modal,
+.section-popup-modal,
+.ai-persona-modal,
+.ai-chat-modal,
+#add-product-modal,
+#cart-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(4, 2, 7, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1), 
+              visibility 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Состояние активной подложки */
+.modal-overlay.active,
+.gw-modal-overlay.active,
+.scenario-picker-modal.active,
+.contract-writer-modal.active,
+.full-contract-modal.active,
+.section-popup-modal.active,
+.ai-persona-modal.active,
+.ai-chat-modal.active,
+#add-product-modal.active,
+#cart-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Карточки внутри: старт с 92% размера и сдвиг вниз для мягкого вплывания */
+.modal-card,
+.gw-modal-card,
+.scenario-card-sheet,
+.contract-writer-sheet,
+.full-contract-sheet,
+.section-popup-sheet,
+.ai-persona-sheet,
+.ai-chat-card-sheet {
+  transform: scale(0.92) translateY(16px);
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* Когда окно открылось — плавно встает на 100% */
+.modal-overlay.active .modal-card,
+.gw-modal-overlay.active .gw-modal-card,
+.scenario-picker-modal.active .scenario-card-sheet,
+.contract-writer-modal.active .contract-writer-sheet,
+.full-contract-modal.active .full-contract-sheet,
+.section-popup-modal.active .section-popup-sheet,
+.ai-persona-modal.active .ai-persona-sheet,
+.ai-chat-modal.active .ai-chat-card-sheet,
+#add-product-modal.active .modal-card,
+#cart-modal.active .modal-card {
+  transform: scale(1) translateY(0);
+}
+:root {
       --bg-color: #0C0A10;
       --card-bg: rgba(22, 18, 30, 0.95);
       --card-border: rgba(230, 57, 86, 0.28);
@@ -3871,7 +3942,21 @@
   padding-right: 14px;
 }
  
+/* Принудительная «страховка» для всех активных модалок и их содержимого */
+.modal-overlay.active,
+.gw-modal-overlay.active,
+[class*="-modal"].active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
 
+.modal-overlay.active > div,
+.gw-modal-overlay.active > div,
+[class*="-modal"].active > div,
+[class*="-sheet"] {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
 
  </style>
 </head>
@@ -4396,7 +4481,7 @@
   <div class="screen-title" style="font-size: 16px; font-weight: 900; background: linear-gradient(135deg, #eeedf3 0%, #4492e0 50%, #436da8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.3); letter-spacing: 0.5px;">
     Желания ✨
   </div>
-  <button class="tutorial-help-btn" onclick="openTutorial('gifts')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+  <button class="tutorial-help-btn" onclick="openTutorial('gifts')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;" onmousedown="this.style.transform='scale(0.94)'; this.style.background='rgba(255,255,255,0.12)';" onmouseup="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.06)';" onmouseleave="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.06)';">
     ?
   </button>
 </div>
@@ -4953,54 +5038,84 @@
 
   <!-- 6. БУТИК ИСКУШЕНИЯ (ЕДИНЫЙ МАГАЗИН: 1 КОЛОНКА, БЕЛЬЕ + СЕКС-ШОП) -->
 <div id="tab-shop" class="tab-content shop-tab-container">
-  <!-- Главный контейнер окна с жесткими границами -->
-  <div class="card shop-layout-card" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;">
+  <!-- Добавляем отрицательные отступы по бокам (margin-left/right: -10px или -14px), чтобы растянуть блок шире родителя -->
+  <div class="card shop-layout-card" style="display: flex; flex-direction: column; width: calc(100% + 20px); height: 100%; margin-left: -10px; margin-right: -10px; margin-top: 0; padding: 0 10px; box-sizing: border-box; overflow: hidden; position: relative;">
     
-    <!-- 1. ВЕРХНЯЯ ЗОНА (Зафиксирована намертво, без какого-либо скролла) -->
-    <div class="shop-fixed-header-block" style="flex-shrink: 0; margin-top: 10px; overflow: visible;">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
-<div class="screen-title">Бутик</div>
-<div style="display: flex; gap: 6px; align-items: center;">
-  <button class="back-action-btn" onclick="openAddProductModal()" title="Добавить товар">Добавить</button>
-  <button class="tutorial-help-btn" onclick="openTutorial('shop')">?</button>
-</div>
+    <!-- 1. ВЕРХНЯЯ ЗОНА -->
+    <div class="shop-fixed-header-block" style="flex-shrink: 0; width: 100%; box-sizing: border-box; margin-top: 2px; padding-top: 2px; overflow: visible;">
+      
+      <!-- Стеклянная шапка -->
+      <div class="sub-screen-header" style="flex-shrink: 0; width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 10px 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+        <!-- Верхний световой блик -->
+        <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>
+
+        <!-- Кнопка Назад -->
+        <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 30px; padding: 0 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2);">
+          Назад
+        </button>
+
+        <!-- Заголовок -->
+        <div class="screen-title" style="font-size: 16px; font-weight: 900; background: linear-gradient(135deg, #eeedf3 0%, #4492e0 50%, #436da8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.3); letter-spacing: 0.5px;">
+          Бутик ✨
+        </div>
+
+        <!-- Кнопка помощи -->
+        <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('shop')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2);">
+          ?
+        </button>
       </div>
 
+      <!-- Баланс -->
       <div class="shop-account-balance-bar" id="shop-account-balance-slot"></div>
 
-      <div class="shop-controls-bar">
-        <div class="shop-cats-left">
-          <button class="chip-btn active" id="shop-cat-btn-lingerie" onclick="setShopCategory('Белье', this)">👙 Белье</button>
-          <button class="chip-btn" id="shop-cat-btn-sexshop" onclick="setShopCategory('Секс-шоп', this)">🔮 Секс-шоп</button>
-        </div>
-        
-<div class="shop-actions-right gift-action-container" id="gift-action-btn">
-  <button class="chip-btn gift-btn" onclick="requestPartnerGift()">🎁 Подарки</button>
-</div>
-      </div>
-    </div>
-
-    <!-- 2. СРЕДНЯЯ ЗОНА (Единственное место во всем окне, где разрешен скролл товаров) -->
-    <div id="shop-products-list" class="products-single-column-view" style="flex-grow: 1; overflow-y: auto; min-height: 0;"></div>
-
-    <!-- 3. НИЖНЯЯ ЗОНА (Корзина и Избранное — зафиксированы намертво, без скролла) -->
-   <div style="flex-shrink: 0; display: flex; padding: 10px 14px; gap: 8px; background: transparent; z-index: 5; overflow: visible;">
+      <!-- Панель управления: растянута на всю ширину экрана -->
+<div class="shop-controls-bar" style="display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; gap: 6px;">
   
-  <button class="chip-btn" id="shop-tab-cart" onclick="openCartModal()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
-    🛒 Корзина 
-    <span id="shop-cart-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
-  </button>
+  <!-- 1. ЛЕВАЯ ГРУППА: Кнопки категорий («Белье» и «Секс-шоп»), занимают свободное пространство -->
+  <div class="shop-cats-left" style="display: flex; align-items: center; gap: 6px; flex: 2; box-sizing: border-box;">
+    
+    <!-- Кнопка Белье -->
+    <button class="chip-btn active tactile-btn" id="shop-cat-btn-lingerie" onclick="setShopCategory('Белье', this); document.getElementById('shop-cat-btn-sexshop').style.background='rgba(255, 255, 255, 0.04)'; document.getElementById('shop-cat-btn-sexshop').style.borderColor='rgba(255, 255, 255, 0.1)'; document.getElementById('shop-cat-btn-sexshop').style.boxShadow='0 2px 5px rgba(0,0,0,0.2)'; document.getElementById('shop-cat-btn-sexshop').style.borderTop='1px solid rgba(255,255,255,0.1)'; this.style.background='linear-gradient(135deg, rgba(115, 38, 59, 0.85) 0%, rgba(55, 15, 27, 0.95) 100%)'; this.style.borderColor='rgba(230, 57, 86, 0.5)'; this.style.borderTop='1px solid rgba(255, 255, 255, 0.5)'; this.style.boxShadow='0 4px 14px rgba(55, 15, 27, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.45)';" style="position: relative; height: 30px; width: 100%; padding: 0 10px; background: linear-gradient(135deg, rgba(115, 38, 59, 0.85) 0%, rgba(55, 15, 27, 0.95) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(230, 57, 86, 0.5); border-top: 1px solid rgba(255, 255, 255, 0.5); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(55, 15, 27, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.45); transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;" ontouchstart="this.style.transform='scale(0.88)';" ontouchend="this.style.transform='scale(1)';" ontouchcancel="this.style.transform='scale(1)';" onmousedown="this.style.transform='scale(0.88)';" onmouseup="this.style.transform='scale(1)';" onmouseleave="this.style.transform='scale(1)';">Белье</button>
 
-  <button class="chip-btn" id="shop-tab-liked" onclick="openLikedTab()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; cursor: pointer; position: relative;">
-    ❤️ Избранное 
-    <span id="shop-liked-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
-</button>
+    <!-- Кнопка Секс-шоп -->
+    <button class="chip-btn tactile-btn" id="shop-cat-btn-sexshop" onclick="setShopCategory('Секс-шоп', this); document.getElementById('shop-cat-btn-lingerie').style.background='rgba(255, 255, 255, 0.04)'; document.getElementById('shop-cat-btn-lingerie').style.borderColor='rgba(255, 255, 255, 0.1)'; document.getElementById('shop-cat-btn-lingerie').style.boxShadow='0 2px 5px rgba(0,0,0,0.2)'; document.getElementById('shop-cat-btn-lingerie').style.borderTop='1px solid rgba(255,255,255,0.1)'; this.style.background='linear-gradient(135deg, rgba(115, 38, 59, 0.85) 0%, rgba(55, 15, 27, 0.95) 100%)'; this.style.borderColor='rgba(230, 57, 86, 0.5)'; this.style.borderTop='1px solid rgba(255, 255, 255, 0.5)'; this.style.boxShadow='0 4px 14px rgba(55, 15, 27, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.45)';" style="position: relative; height: 30px; width: 100%; padding: 0 10px; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;" ontouchstart="this.style.transform='scale(0.88)';" ontouchend="this.style.transform='scale(1)';" ontouchcancel="this.style.transform='scale(1)';" onmousedown="this.style.transform='scale(0.88)';" onmouseup="this.style.transform='scale(1)';" onmouseleave="this.style.transform='scale(1)';">Секс-шоп</button> 
+    
+  </div>
+  
+  <!-- 2. ПРАВАЯ ГРУППА: Одно посадочное место для функциональной кнопки справа -->
+  <div class="shop-actions-right" style="display: flex; align-items: center; flex: 1; box-sizing: border-box;">
+    
+    <!-- Кнопка «Добавить» (показывается скриптом только для Верхнего) -->
+    <button class="back-action-btn tactile-btn" id="shop-add-role-btn" onclick="openAddProductModal()" title="Добавить товар" style="display: none; height: 30px; width: 100%; padding: 0 10px; background: linear-gradient(135deg, rgba(14, 52, 96, 0.65) 0%, rgba(6, 24, 48, 0.8) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(56, 133, 219, 0.4); border-top: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25); transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;" ontouchstart="this.style.transform='scale(0.88)';" ontouchend="this.style.transform='scale(1)';" ontouchcancel="this.style.transform='scale(1)';" onmousedown="this.style.transform='scale(0.88)';" onmouseup="this.style.transform='scale(1)';" onmouseleave="this.style.transform='scale(1)';">Добавить</button>
+
+    <!-- Кнопка «Подарки» (показывается скриптом ровно на этом же месте только для Нижнего) -->
+    <button class="chip-btn gift-btn tactile-btn" id="gift-action-btn" onclick="requestPartnerGift()" style="display: none; height: 30px; width: 100%; padding: 0 10px; background: linear-gradient(135deg, rgba(14, 52, 96, 0.65) 0%, rgba(6, 24, 48, 0.8) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(56, 133, 219, 0.4); border-top: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25); transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;" ontouchstart="this.style.transform='scale(0.88)';" ontouchend="this.style.transform='scale(1)';" ontouchcancel="this.style.transform='scale(1)';" onmousedown="this.style.transform='scale(0.88)';" onmouseup="this.style.transform='scale(1)';" onmouseleave="this.style.transform='scale(1)';">Подарки 🎁</button>
+
+  </div>
+
 </div>
+
+</div>
+
+    <!-- 2. СРЕДНЯЯ ЗОНА (Скролл товаров) -->
+    <div id="shop-products-list" class="products-single-column-view" style="flex-grow: 1; width: 100%; overflow-y: auto; min-height: 0; box-sizing: border-box;"></div>
+
+    <!-- 3. НИЖНЯЯ ЗОНА (Корзина и Избранное) -->
+    <div style="flex-shrink: 0; width: 100%; display: flex; padding: 8px 0; gap: 8px; background: transparent; z-index: 5; box-sizing: border-box; overflow: visible;">
+      
+      <button class="chip-btn tactile-btn" id="shop-tab-cart" onclick="openCartModal()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+        🛒 Корзина 
+        <span id="shop-cart-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+      </button>
+
+      <button class="chip-btn tactile-btn" id="shop-tab-liked" onclick="openLikedTab()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+        ❤️ Избранное 
+        <span id="sync-liked-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+      </button>
+    </div>
 
   </div>
 </div>
-
  
 <!-- Модальное окно добавления нового товара в Бутик (Просторное и сбалансированное) -->
 <div id="add-product-modal" class="modal-overlay" style="display: none;" onclick="if(event.target===this) closeAddProductModal()">
@@ -5718,6 +5833,9 @@
 // ==========================================
 // БЕЗОПАСНЫЙ МОДУЛЬ ИЗБРАННОГО
 // ==========================================
+// ==========================================
+// БЕЗОПАСНЫЙ МОДУЛЬ ИЗБРАННОГО
+// ==========================================
 let likedShopItemIds = JSON.parse(localStorage.getItem('pact_liked_shop_ids')) || [];
 
 // 1. Открытие окна Избранного через роутер с защитой
@@ -5743,19 +5861,22 @@ window.openLikedTab = function() {
 // 2. Обновление бейдика количества
 window.updateLikedBadge = function() {
   const badge = document.getElementById('shop-liked-badge');
-  if (!badge) return;
+  const syncBadge = document.getElementById('sync-liked-badge');
   
-  if (likedShopItemIds.length > 0) {
-    badge.style.display = 'inline-block';
-    badge.textContent = likedShopItemIds.length;
-  } else {
-    badge.style.display = 'none';
-  }
+  const count = likedShopItemIds.length;
+  [badge, syncBadge].forEach(b => {
+    if (!b) return;
+    if (count > 0) {
+      b.style.display = 'inline-block';
+      b.textContent = count;
+    } else {
+      b.style.display = 'none';
+    }
+  });
 };
 
-// 3. Переключение лайка с защитой от ошибок
-// Универсальное переключение лайка с защитой от типов (строка/число)
- window.toggleProductLike = function(productId) {
+// 3. Универсальное переключение лайка с защитой от типов
+window.toggleProductLike = function(productId) {
   const idStr = String(productId);
   const index = likedShopItemIds.findIndex(id => String(id) === idStr);
   const isNowLiked = (index === -1);
@@ -5771,19 +5892,18 @@ window.updateLikedBadge = function() {
   // Сохраняем в память
   localStorage.setItem('pact_liked_shop_ids', JSON.stringify(likedShopItemIds));
   
-  // 1. Обновляем бейдж внизу
+  // Обновляем бейджи и экраны
   if (typeof updateLikedBadge === 'function') updateLikedBadge();
-  
-  // 2. Обновляем список в открытом окне Избранного
   if (typeof renderLikedScreenItems === 'function') renderLikedScreenItems();
   
-  // 3. ТОЧЕЧНО И БЫСТРО меняем иконку на витрине Бутика без перерисовки всего списка!
+  // Точечно меняем иконку на витрине Бутика
   const heartSpan = document.getElementById(`shop-heart-${productId}`);
   if (heartSpan) {
     heartSpan.textContent = isNowLiked ? '❤️' : '🤍';
   }
 };
-// 4. Отрисовка карточек с проверкой наличия контейнера
+
+// 4. Отрисовка карточек в окне Избранного
 window.renderLikedScreenItems = function() {
   const container = document.getElementById('liked-items-container');
   if (!container) return;
@@ -5802,7 +5922,10 @@ window.renderLikedScreenItems = function() {
   let html = '<div style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">';
 
   html += likedProducts.map(item => {
-    const priceStr = item.priceStc ? `❤️ ${item.priceStc}` : `💜 ${item.pricePtc || 0} 🖤 ${item.priceOtc || 0}`;
+    const ptc = String(item.pricePtc || 0).replace(/\+/g, '');
+    const otc = String(item.priceOtc || 0).replace(/\+/g, '');
+    const stc = item.priceStc ? String(item.priceStc).replace(/\+/g, '') : '';
+    const priceStr = stc ? `❤️ ${stc}` : `💜 ${ptc} 🖤 ${otc}`;
     const itemImage = item.mainImg || item.image || '';
 
     return `
@@ -5821,19 +5944,16 @@ window.renderLikedScreenItems = function() {
             </div>
           </div>
 
-          <!-- Нижняя зона: Цена, разбитое сердце для удаления и кнопка "В гардероб" -->
+          <!-- Нижняя зона: Цена и действия -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
             <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
               ${priceStr}
             </span>
             <div style="display: flex; align-items: center; gap: 6px;">
-              
               <button onclick="event.stopPropagation(); toggleProductLike(${item.id})" style="background: none; border: none; padding: 0; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Удалить из избранного">💔</button>              
-              <!-- Кнопка отправки напрямую в гардероб (использует твою стандартную функцию) -->
               <button class="small-btn" onclick="event.stopPropagation(); markItemAsReceived(${item.id})" style="background: linear-gradient(135deg, #420c5c, #260538); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; cursor: pointer; white-space: nowrap;">
-  В гардероб
-</button>
-
+                В гардероб
+              </button>
             </div>
           </div>
 
@@ -5845,13 +5965,6 @@ window.renderLikedScreenItems = function() {
   html += '</div>';
   container.innerHTML = html;
 };
-
-// Безопасная инициализация при загрузке
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof updateLikedBadge === 'function') {
-    updateLikedBadge();
-  }
-});
 
 // Инициализация бейджа при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
@@ -5939,8 +6052,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Нижняя зона: Цена и кнопки -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 6px; width: 100%;">
-          <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color, #ff8566); white-space: nowrap;">
-            ${item.priceStc ? '❤️ ' + item.priceStc : '💜 ' + (item.pricePtc || 0) + ' | 🖤 ' + (item.priceOtc || 0)}
+          <span style="font-size: 12px !important; font-weight: 900 !important; color: #E63956 !important; white-space: nowrap !important; text-shadow: 0 1px 8px rgba(230,57,86,0.3);">
+            ${ (item.priceStc ? '❤️ ' + item.priceStc : '💜 ' + (item.pricePtc || 0) + '   🖤 ' + (item.priceOtc || 0)).replace(/\+/g, '') }
           </span>
           <div style="display: flex; align-items: center; gap: 6px;">
             <button class="small-btn" onclick="markItemAsReceived(${index})" style="background: linear-gradient(135deg, #420c5c, #260538); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer;">
@@ -5956,7 +6069,9 @@ document.addEventListener('DOMContentLoaded', () => {
   html += '</div>';
   container.innerHTML = html;
 };
-  // Универсальный перенос товара в Гардероб (из Корзины или Избранного)
+ 
+
+// Универсальный перенос товара в Гардероб (из Корзины или Избранного)
 window.markItemAsReceived = function(identifier) {
   let item = null;
   let cartIndex = -1;
@@ -7427,22 +7542,44 @@ window.removeProductImage = function(keyName, previewId, placeholderId, inputId,
   openSubScreen('tab-gift-order');
 }
     
-
-    function renderProducts() {
+function renderProducts() {
   const slot = document.getElementById('shop-account-balance-slot');
   if (slot) {
+    // Применяем фирменный стеклянный стиль с размытием и бликом
+    slot.style.cssText = `
+      position: relative;
+      margin-bottom: 8px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+      overflow: hidden;
+    `;
+
+    // Верхний световой блик для объёмного эффекта стекла
+    const lightLine = `<span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span>`;
+
     if (currentAvatarRole === 'female') {
       slot.innerHTML = `
-        <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Твой баланс:</div>
-        <div class="shop-bal-chips-group">
+        ${lightLine}
+        <div style="font-size: 10px; font-weight: 800; color: var(--text-muted, #9A91A5); text-transform: uppercase; letter-spacing: 0.5px;">Твой баланс:</div>
+        <div class="shop-bal-chips-group" style="display: flex; gap: 6px;">
           <span class="curr-chip ptc">💜 <b>${femaleBalances.ptc}</b></span>
           <span class="curr-chip otc">🖤 <b>${femaleBalances.otc}</b></span>
           <span class="curr-chip stc">❤️ <b>${femaleBalances.stc}</b></span>
         </div>`;
     } else {
       slot.innerHTML = `
-        <div style="font-size:9.5px; font-weight:800; color:var(--text-muted);">Баланс: ${getRoleInfo('male').name}</div>
-        <div class="shop-bal-chips-group">
+        ${lightLine}
+        <div style="font-size: 10px; font-weight: 800; color: var(--text-muted, #9A91A5); text-transform: uppercase; letter-spacing: 0.5px;">Баланс: ${getRoleInfo('male').name}</div>
+        <div class="shop-bal-chips-group" style="display: flex; gap: 6px;">
           <span class="curr-chip att">💙 <b>${maleBalances.atc}</b></span>
           <span class="curr-chip care">💚 <b>${maleBalances.ctc}</b></span>
           <span class="curr-chip stc">❤️ <b>${maleBalances.stc}</b></span>
@@ -7453,6 +7590,11 @@ window.removeProductImage = function(keyName, previewId, placeholderId, inputId,
   const container = document.getElementById('shop-products-list');
   if (!container) return;
 
+  // Управляем видимостью кнопки «Добавить» в зависимости от роли (например, показываем только для male)
+  const roleAddBtn = document.getElementById('shop-add-role-btn');
+  if (roleAddBtn) {
+    roleAddBtn.style.display = (currentAvatarRole === 'male') ? 'inline-block' : 'none';
+  }
   const newAddBtn = document.getElementById('shop-add-btn-new');
   if (newAddBtn) {
     newAddBtn.style.display = (currentAvatarRole === 'male') ? 'inline-block' : 'none';
@@ -7472,48 +7614,68 @@ window.removeProductImage = function(keyName, previewId, placeholderId, inputId,
     return;
   }
 
-  container.innerHTML = filtered.map(p => {
-    const isLiked = likedShopItemIds.includes(p.id);
-    const priceStr = p.priceStc ? `❤️ ${p.priceStc}` : `💜 ${p.pricePtc} + 🖤 ${p.priceOtc}`;
-    const itemImage = p.mainImg || p.image || '';
+  container.innerHTML = filtered.map(item => {
+    const isLiked = likedShopItemIds.includes(item.id);
+    const priceStr = item.priceStc ? `❤️ ${item.priceStc}` : `💜 ${item.pricePtc}  🖤 ${item.priceOtc} `;
+    const itemImage = item.mainImg || item.image || '';
 
-    // ✨ Очищаем текст описания на карточке от строки "В комплект входит: ..."
-    let cleanDesc = p.desc || 'Изысканный комплект белья';
+    let cleanDesc = item.desc || 'Изысканный комплект белья';
     cleanDesc = cleanDesc.replace(/^В комплект входит:[^\n]*\n*/i, '').trim();
     if (!cleanDesc) cleanDesc = 'Изысканный комплект белья';
 
     return `
-      <div class="product-row-card" onclick="openProductModal(${p.id})" style="width: 100%; max-width: 100%; height: 137px; min-height: 137px; box-sizing: border-box; overflow: hidden; position: relative; display: flex; align-items: center; gap: 10px; padding: 10px;">
-        <img class="product-row-img" src="${itemImage}" alt="${p.title}" style="flex-shrink: 0; width: 120px; height: 120px; object-fit: cover; border-radius: 10px;">
-        <div class="product-row-details" style="flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 2px 0;">
-          
-          <!-- Верхняя зона: Название, теги и очищенное описание -->
-          <div style="overflow: hidden;">
-            <div style="font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.title}</div>
-            
-            <!-- Теги комплекта сверху -->
-            ${window.renderBundleTags(p.desc)}
+      <div class="product-row-card tactile-btn" onclick="openProductModal(${item.id})" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: stretch !important; background: linear-gradient(135deg, rgba(28, 22, 38, 0.95) 0%, rgba(16, 12, 22, 0.98) 100%) !important; border: 1px solid rgba(255, 255, 255, 0.12) !important; border-radius: 18px !important; margin-bottom: 12px !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important; padding: 0 !important;">
+        
+        <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); z-index: 3; pointer-events: none;"></span>
 
-            <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; max-height: 45px; overflow: hidden; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+        <div style="position: relative !important; flex-shrink: 0 !important; width: 120px !important; height: 100% !important; min-height: 100% !important;">
+          <img class="product-row-img" src="${itemImage}" alt="${item.title}" style="width: 100% !important; height: 100% !important; object-fit: cover !important; border: none !important; padding: 0 !important; margin: 0 !important; border-top-left-radius: 18px !important; border-bottom-left-radius: 18px !important; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;">
+          
+          <div style="position: absolute !important; bottom: 8px !important; left: 6px !important; right: 6px !important; background: rgba(16, 12, 22, 0.85) !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; border: 1px solid rgba(255, 255, 255, 0.18) !important; border-radius: 8px !important; padding: 4px 6px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important; z-index: 2 !important;">
+            <span style="font-size: 11px !important; font-weight: 900 !important; color: #FFFFFF !important; white-space: nowrap !important; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
+              ${priceStr}
+            </span>
+          </div>
+        </div>
+
+        <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 12px 14px 12px 14px !important; box-sizing: border-box !important;">
+          
+          <div style="overflow: hidden !important; display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; width: 100% !important;">
+            <div style="font-size: 14px !important; font-weight: 900 !important; letter-spacing: 0.3px !important; background: linear-gradient(135deg, #FFFFFF 0%, #E8E2EC 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; width: 100% !important; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">${item.title}</div>
+            
+            ${window.renderBundleTags(item.desc)}
+
+            <div style="font-size: 11px !important; font-weight: 500 !important; color: #9A91A5 !important; margin-top: 3px !important; max-height: 34px !important; overflow: hidden !important; line-height: 1.3 !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; width: 100% !important;">
               ${cleanDesc}
             </div>
           </div>
 
-          <!-- Нижняя зона: Цена и кнопки -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-            <span style="font-size: 12px; font-weight: 900; color: var(--ovulation-color); white-space: nowrap;">${priceStr}</span>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <div onclick="event.stopPropagation(); toggleProductLike(${p.id})" style="cursor: pointer; font-size: 18px; background: none; border: none; padding: 0; display: flex; align-items: center;">
-               <span id="shop-heart-${p.id}">${likedShopItemIds.some(id => String(id) === String(p.id)) ? '❤️' : '🤍'}</span>
-              </div>
-              <button class="small-btn" onclick="event.stopPropagation(); buyShopItem(${p.id})" style="flex-shrink: 0 !important; width: 60px !important; min-width: 60px !important; max-width: 60px !important;font-size: 10px; height: 28px !important; box-sizing: border-box !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; display: flex !important; align-items: center !important; justify-content: center !important;">В корзину</button>
-            </div>
+          <!-- Нижняя зона: Сердечко и Кнопка -->
+      <div style="display: flex !important; justify-content: space-between !important; align-items: center !important; margin-top: auto !important; width: 100% !important;">
+        
+        <!-- Интерактивное сердечко с сильным тактильным сжатием -->
+        <div onclick="event.stopPropagation(); toggleProductLike(${item.id})" 
+             class="tactile-heart"
+             style="cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: none !important; border: none !important; padding: 4px !important; transition: transform 0.12s ease !important; position: relative !important; z-index: 5 !important;"
+             ontouchstart="this.style.transform='scale(0.2)';" 
+             ontouchend="this.style.transform='scale(1)';" 
+             ontouchcancel="this.style.transform='scale(1)';"
+             onmousedown="this.style.transform='scale(0.7)';" 
+             onmouseup="this.style.transform='scale(1)';" 
+             onmouseleave="this.style.transform='scale(1)';">
+           <span id="shop-heart-${item.id}">${likedShopItemIds.some(id => String(id) === String(item.id)) ? '❤️' : '🤍'}</span>
+        </div>
+            <button class="small-btn tactile-btn" onclick="event.stopPropagation(); buyShopItem(${item.id})" style="flex-shrink: 0 !important; width: 76px !important; min-width: 76px !important; font-size: 9.5px !important; height: 27px !important; padding: 0 6px !important; box-sizing: border-box !important; white-space: nowrap !important; display: flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, #065F46 0%, #047857 50%, #022C22 100%) !important; border: 1px solid rgba(52, 211, 153, 0.35) !important; border-radius: 7px !important; color: #E2E8F0 !important; font-weight: 800 !important; text-transform: uppercase !important; box-shadow: 0 3px 9px rgba(4, 120, 87, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important; position: relative !important; overflow: hidden !important; cursor: pointer !important; transition: transform 0.12s ease, filter 0.12s ease !important;" ontouchstart="this.style.transform='scale(0.90)'; this.style.filter='brightness(0.85)';" ontouchend="this.style.transform='scale(1)'; this.style.filter='brightness(1)';" ontouchcancel="this.style.transform='scale(1)'; this.style.filter='brightness(1)';" onmousedown="this.style.transform='scale(0.90)'; this.style.filter='brightness(0.85)';" onmouseup="this.style.transform='scale(1)'; this.style.filter='brightness(1)';" onmouseleave="this.style.transform='scale(1)'; this.style.filter='brightness(1)';">
+              <span style="position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 1.5px !important; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent) !important; pointer-events: none !important;"></span>
+              В корзину
+            </button>
           </div>
 
         </div>
       </div>
     `;
   }).join('');
+  
 }
     // 4. ГАРДЕРОБ
     let wardrobeFilterCat = 'Белье';
@@ -8677,139 +8839,7 @@ window.renderBundleTags = function(bundleString) {
       } catch (e) {}
     }
 
-    const I18N = {
-      ru: {
-        createBtn: "Создать комнату пары",
-        orText: "или",
-        roomInputPlaceholder: "Код: PACT-XXXXXX",
-        joinBtn: "Войти",
-        createdModalTitle: "Комната создана!",
-        createdModalDesc: "Отправьте этот код партнёру, чтобы войти в комнату:",
-        createdModalCrypto: "Ключ сквозного шифрования сгенерирован локально на вашем устройстве.",
-        enterRoomBtn: "Войти в комнату ✨",
-        emptyCodeAlert: "Введите код комнаты (например: PACT-K7M4X2)",
-        menu1Title: "Выбор сценария",
-        menu1Desc: "Определите архетип власти и динамику пары",
-        badgeNotSelected: "Не выбран",
-        badgeSelected: "Выбран",
-        menu2Title: "Написать контракт",
-        menu2Desc: "Свой текст или готовый сюжет с правками",
-        badgeNotSealed: "Не составлен",
-        badgeSealed: "Запечатан",
-        enterRoomLockedText: "Войти в комнату",
-        enterRoomReadyText: "Войти в будуар союза ✨",
-        scenarioSheetTitle: "Выберите сценарий союза",
-        groupMaleTitle: "Мужское главенство (Марс )",
-        groupFemaleTitle: "Женское главенство (Венера )",
-        groupFreeTitle: "Свободный стиль",
-        scen1Title: "ВЕРХНИЙ & НИЖНЯЯ",
-        scen1Desc: "Классический D/s. Слово мужчины — абсолютный закон, повиновение и верность.",
-        scen4Title: "ИСКУСИТЕЛЬ & ПЛЕННИЦА",
-        scen4Desc: "Чувственная охота, дерзкие испытания, сладкий плен и покорение страсти.",
-        scen2Title: "ГОСПОЖА & ПОКОРНЫЙ",
-        scen2Desc: "Королевская власть женщины, преклонение, исполнение её капризов и воли.",
-        scen3Title: "МУЗА & ПОКЛОННИК",
-        scen3Desc: "Рыцарское служение, эстетическое восхищение, поклонение красоте и вдохновению.",
-        scen5Title: "СВОЙ ВАРИАНТ",
-        scen5Desc: "Укажите собственные уникальные имена или титулы для вашей пары.",
-        confirmScenarioBtn: "Выбрать этот сценарий ✨",
-        contractWriterTitle: "Написание Пакта союза",
-        modePreset: "Сюжет (с правками)",
-        modeCustom: "Свой контракт",
-        secGeneralRules: "Общие правила союза",
-        tapToOpenPopupHint: "Нажмите, чтобы открыть окно раздела",
-        badgeConfigure: "Открыть ›",
-        badgeRead: "Читать ›",
-        saveSectionBtn: "Сохранить раздел ✨",
-        closeSectionBtn: "Закрыть раздел ✓",
-        editorPopupHint: "Отредактируйте положения этого раздела союза при необходимости",
-        sectionSavedToast: "Раздел сохранён ✨",
-        previewContractBtn: "Полный просмотр",
-        createContractActionBtn: "Создать контракт ✨",
-        joinerHeaderBadge: "Священный Пакт пары",
-        joinerAcceptSealBtn: "Принять контракт 💍",
-        needScenarioToast: "⚠️ Сначала выберите сценарий союза (пункт 1)",
-        needContractToast: "⚠️ Создайте контракт союза перед входом (пункт 2)",
-        contractSealedToast: "Пакт успешно запечатан и сохранён ✨",
-        copiedToast: "Код комнаты скопирован: ",
-        fullPreviewTitle: "Священный Пакт пары (Предпросмотр)",
-        downloadDocBtn: "Скачать (.txt)",
-        closePreviewBtn: "Закрыть ✕",
-        downloadSuccessToast: "Документ Пакта успешно скачан 📥",
-        passionTitle: "🌶️ Градус Страсти",
-        tileWardrobe: "Гардероб",
-        tileShop: "Бутик",
-        tileChat: "Чат",
-        tileDice: "Жребий",
-        tileContract: "Контракт"
-      },
-      ua: {
-        createBtn: "Створити кімнату пари",
-        orText: "або",
-        roomInputPlaceholder: "Код: PACT-XXXXXX",
-        joinBtn: "Увійти",
-        createdModalTitle: "Кімнату створено!",
-        createdModalDesc: "Надішліть цей код партнеру, щоб увійти до кімнати:",
-        createdModalCrypto: "Ключ наскрізного шифрування згенеровано локально на вашому пристрої.",
-        enterRoomBtn: "Увійти до кімнати ✨",
-        emptyCodeAlert: "Введіть код кімнати (наприклад: PACT-K7M4X2)",
-        menu1Title: "Вибір сценарію",
-        menu1Desc: "Визначте архетип влади та динаміку пари",
-        badgeNotSelected: "Не обрано",
-        badgeSelected: "Обрано",
-        menu2Title: "Написати контракт",
-        menu2Desc: "Власний текст або готовий сюжет із правками",
-        badgeNotSealed: "Не складено",
-        badgeSealed: "Запечатано",
-        enterRoomLockedText: "Увійти до кімнати",
-        enterRoomReadyText: "Увійти до будуару союзу ✨",
-        scenarioSheetTitle: "Оберіть сценарій союзу",
-        groupMaleTitle: "Чоловіче верховенство (Марс )",
-        groupFemaleTitle: "Жіноче верховенство (Венера )",
-        groupFreeTitle: "Вільний стиль",
-        scen1Title: "ВЕРХНІЙ & НИЖНЯ",
-        scen1Desc: "Класичний D/s. Слово чоловіка — абсолютний закон, покірність та вірність.",
-        scen4Title: "СПОКУСНИК & ПОЛОНЯНКА",
-        scen4Desc: "Чуттєве полювання, зухвалі випробування, солодкий полон і підкорення пристрасті.",
-        scen2Title: "ПАНІ & ПОКІРНИЙ",
-        scen2Desc: "Королівська влада жінки, схиляння, здійснення її примх та волі.",
-        scen3Title: "МУЗА & ШАНУВАЛЬНИК",
-        scen3Desc: "Лицарське служіння, естетичне захоплення, поклоніння красі та натхненню.",
-        scen5Title: "ВЛАСНИЙ ВАРІАНТ",
-        scen5Desc: "Вкажіть власні унікальні імена або титули для вашої пари.",
-        confirmScenarioBtn: "Обрати цей сценарій ✨",
-        contractWriterTitle: "Складання Пакту союзу",
-        modePreset: "Сюжет (із правками)",
-        modeCustom: "Власний контракт",
-        secGeneralRules: "Загальні правила союзу",
-        tapToOpenPopupHint: "Натисніть, щоб відкрити вікно розділу",
-        badgeConfigure: "Відкрити ›",
-        badgeRead: "Читати ›",
-        saveSectionBtn: "Зберегти розділ ✨",
-        closeSectionBtn: "Закрити розділ ✓",
-        editorPopupHint: "Відредагуйте положення цього розділу союзу за потреби",
-        sectionSavedToast: "Розділ збережено ✨",
-        previewContractBtn: "Повний перегляд",
-        createContractActionBtn: "Створити контракт ✨",
-        joinerHeaderBadge: "Священний Пакт пари",
-        joinerAcceptSealBtn: "Прийняти контракт 💍",
-        needScenarioToast: "⚠️ Спочатку оберіть сценарій союзу (пункт 1)",
-        needContractToast: "⚠️ Створіть контракт союзу перед входом (пункт 2)",
-        contractSealedToast: "Пакт успішно запечатано та збережено ✨",
-        copiedToast: "Код кімнати скопійовано: ",
-        fullPreviewTitle: "Священний Пакт пари (Попередній перегляд)",
-        downloadDocBtn: "Завантажити (.txt)",
-        closePreviewBtn: "Закрити ✕",
-        downloadSuccessToast: "Документ Пакту успішно завантажено 📥",
-        passionTitle: "🌶️ Градус Пристрасті",
-        tileWardrobe: "Гардероб",
-        tileShop: "Бутик",
-        tileChat: "Чат",
-        tileDice: "Жереб",
-        tileContract: "Контракт"
-      }
-    };
-
+    
     const savedLang = localStorage.getItem('pact_app_lang');
     const telegramUserLang = tg?.initDataUnsafe?.user?.language_code?.toLowerCase();
     const detectedLang = savedLang || (telegramUserLang === 'uk' || telegramUserLang === 'ua' ? 'ua' : 'ru');
