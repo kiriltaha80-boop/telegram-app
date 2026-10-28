@@ -5100,19 +5100,24 @@
     <!-- 2. СРЕДНЯЯ ЗОНА (Скролл товаров) -->
     <div id="shop-products-list" class="products-single-column-view" style="flex-grow: 1; width: 100%; overflow-y: auto; min-height: 0; box-sizing: border-box;"></div>
 
-    <!-- 3. НИЖНЯЯ ЗОНА (Корзина и Избранное) -->
-    <div style="flex-shrink: 0; width: 100%; display: flex; padding: 8px 0; gap: 8px; background: transparent; z-index: 5; box-sizing: border-box; overflow: visible;">
-      
-      <button class="chip-btn tactile-btn" id="shop-tab-cart" onclick="openCartModal()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-        🛒 Корзина 
-        <span id="shop-cart-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
-      </button>
+    <!-- 3. НИЖНЯЯ ЗОНА (Корзина и Избранное) в премиальном стиле с успокаивающими бейджами -->
+<div style="flex-shrink: 0; width: 100%; display: flex; padding: 8px 0; gap: 8px; background: transparent; z-index: 5; box-sizing: border-box; overflow: visible;">
+  
+  <!-- Кнопка Корзина -->
+  <button class="chip-btn tactile-btn" id="shop-tab-cart" onclick="openCartModal()" style="flex: 1; height: 42px; padding: 0 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.3); color: #FFF; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 12px; position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2); cursor: pointer; transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;" ontouchstart="this.style.transform='scale(0.88)';" ontouchend="this.style.transform='scale(1)';" ontouchcancel="this.style.transform='scale(1)';" onmousedown="this.style.transform='scale(0.88)';" onmouseup="this.style.transform='scale(1)';" onmouseleave="this.style.transform='scale(1)';">
+    <span>🛒 Корзина</span>
+    <!-- Успокаивающий сапфировый бейдж с мягким свечением -->
+    <span id="shop-cart-badge" style="background: linear-gradient(135deg, rgba(28, 92, 168, 0.9) 0%, rgba(14, 52, 96, 0.95) 100%); border: 1px solid rgba(56, 133, 219, 0.5); color: #E2E8F0; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px; box-shadow: 0 2px 8px rgba(14, 52, 96, 0.6); display: none;">0</span>
+  </button>
 
-      <button class="chip-btn tactile-btn" id="shop-tab-liked" onclick="openLikedTab()" style="flex: 1; padding: 12px; border-radius: 20px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 13px; position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-        ❤️ Избранное 
-        <span id="sync-liked-badge" style="background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
-      </button>
-    </div>
+  <!-- Кнопка Избранное -->
+  <button class="chip-btn tactile-btn" id="shop-tab-liked" onclick="openLikedTab()" style="flex: 1; height: 42px; padding: 0 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.3); color: #FFF; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 12px; position: relative; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2); cursor: pointer; transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;" ontouchstart="this.style.transform='scale(0.88)';" ontouchend="this.style.transform='scale(1)';" ontouchcancel="this.style.transform='scale(1)';" onmousedown="this.style.transform='scale(0.88)';" onmouseup="this.style.transform='scale(1)';" onmouseleave="this.style.transform='scale(1)';">
+    <span>❤️ Избранное</span>
+    <!-- Успокаивающий сапфировый бейдж с мягким свечением -->
+    <span id="sync-liked-badge" style="background: linear-gradient(135deg, rgba(28, 92, 168, 0.9) 0%, rgba(14, 52, 96, 0.95) 100%); border: 1px solid rgba(56, 133, 219, 0.5); color: #E2E8F0; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px; box-shadow: 0 2px 8px rgba(14, 52, 96, 0.6); display: none;">0</span>
+  </button>
+
+</div>
 
   </div>
 </div>
@@ -6006,16 +6011,35 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Обновление красного бейдика с количеством товаров на кнопке
-    window.updateCartBadge = function() {
-      const badge = document.getElementById('shop-cart-badge');
-      if (!badge) return;
-      if (cartItems.length > 0) {
-        badge.style.display = 'inline-block';
-        badge.textContent = cartItems.length;
-      } else {
-        badge.style.display = 'none';
-      }
-    };
+   // 1. Единая функция обновления бейджа корзины
+window.updateCartBadge = function() {
+  const badge = document.getElementById('shop-cart-badge');
+  if (!badge) return;
+
+  const count = cartItems.length;
+  if (count > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = count;
+  } else {
+    badge.style.display = 'none';
+  }
+};
+
+// 2. Вызов при старте страницы (обязательно в самом низу скрипта)
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const savedCart = localStorage.getItem('pact_cart_items');
+    if (savedCart) {
+      cartItems = JSON.parse(savedCart);
+    }
+  } catch (e) {
+    console.error('Ошибка загрузки корзины:', e);
+  }
+
+  // Зажигаем бейдж сразу при загрузке
+  updateCartBadge();
+  if (typeof renderCartItems === 'function') renderCartItems();
+});
 
     // Отрисовка списка товаров внутри экрана корзины
     window.renderCartItems = function() {
@@ -6134,15 +6158,41 @@ window.markItemAsReceived = function(identifier) {
       }
     }
   }
+// Корректная инициализация корзины при старте страницы
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const savedCart = localStorage.getItem('pact_cart_items');
+    if (savedCart) {
+      cartItems = JSON.parse(savedCart);
+    }
+  } catch (e) {
+    console.error('Ошибка загрузки корзины:', e);
+  }
 
-  // Обновляем все интерфейсы, бейджи и экраны на лету
-  if (typeof updateCartBadge === 'function') updateCartBadge();
+
+
+// 2. СРАЗУ ПРИ СТАРТЕ вызываем обновление всех бейджей и экранов
+ document.addEventListener('DOMContentLoaded', () => {
+  try {
+    // Обязательно используем ключ 'pact_cart_items', а не 'cartItems'
+    const savedCart = localStorage.getItem('pact_cart_items');
+    if (savedCart) {
+      cartItems = JSON.parse(savedCart);
+    }
+  } catch (e) {
+    console.error('Ошибка загрузки корзины:', e);
+  }
+
+  // Сразу при старте обновляем оба бейджа
   if (typeof updateLikedBadge === 'function') updateLikedBadge();
-  if (typeof renderCartItems === 'function') renderCartItems();
-  if (typeof renderLikedScreenItems === 'function') renderLikedScreenItems(); // Обновляем экран избранного
-  if (typeof renderProducts === 'function') renderProducts(); // Перерисовываем витрину бутика
-  if (typeof renderWardrobe === 'function') renderWardrobe();
+  if (typeof updateCartBadge === 'function') updateCartBadge();
+});
 
+  if (typeof renderCartItems === 'function') renderCartItems();
+  if (typeof renderLikedScreenItems === 'function') renderLikedScreenItems();
+  if (typeof renderProducts === 'function') renderProducts();
+  if (typeof renderWardrobe === 'function') renderWardrobe();
+});
   try {
     tg?.HapticFeedback?.notificationOccurred?.('success');
   } catch(e) {}
@@ -7624,7 +7674,7 @@ function renderProducts() {
     if (!cleanDesc) cleanDesc = 'Изысканный комплект белья';
 
     return `
-      <div class="product-row-card tactile-btn" onclick="openProductModal(${item.id})" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: stretch !important; background: linear-gradient(135deg, rgba(28, 22, 38, 0.95) 0%, rgba(16, 12, 22, 0.98) 100%) !important; border: 1px solid rgba(255, 255, 255, 0.12) !important; border-radius: 18px !important; margin-bottom: 12px !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important; padding: 0 !important;">
+      <div class="product-row-card tactile-btn" onclick="openProductModal(${item.id})" style="width: 100% !important; max-width: 100% !important; height: 137px !important; min-height: 137px !important; max-height: 137px !important; box-sizing: border-box !important; overflow: hidden !important; position: relative !important; display: flex !important; align-items: stretch !important; background: linear-gradient(135deg, rgba(28, 22, 38, 0.95) 0%, rgba(16, 12, 22, 0.98) 100%) !important; border: 1px solid rgba(255, 255, 255, 0.12) !important; border-radius: 18px !important; margin-bottom: 12px !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important; padding: 0 !important;">
         
         <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); z-index: 3; pointer-events: none;"></span>
 
@@ -7638,33 +7688,68 @@ function renderProducts() {
           </div>
         </div>
 
-        <div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 12px 14px 12px 14px !important; box-sizing: border-box !important;">
-          
-          <div style="overflow: hidden !important; display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; width: 100% !important;">
-            <div style="font-size: 14px !important; font-weight: 900 !important; letter-spacing: 0.3px !important; background: linear-gradient(135deg, #FFFFFF 0%, #E8E2EC 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; width: 100% !important; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">${item.title}</div>
-            
-            ${window.renderBundleTags(item.desc)}
+        <!-- Правая часть с контентом -->
+<div class="product-row-details" style="flex: 1 !important; min-width: 0 !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; padding: 8px 10px !important; box-sizing: border-box !important; width: 100% !important;">
+  
+  <!-- ВЕРХ: Название и теги -->
+ <div style="display: flex !important; flex-direction: column !important; align-items: center !important; width: 100% !important; flex-shrink: 0 !important;">
+    
+    <!-- Название товара (по центру) -->
+    <div style="font-size: 13.5px !important; font-weight: 900 !important; background: linear-gradient(90deg, #38BDF8, #7DD3FC, #E0F2FE, #7DD3FC, #38BDF8) !important; background-size: 300% 100% !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; width: 100% !important; text-align: center !important;" class="animated-grad-title">
+  ${item.title}
+</div>
+    
+    <!-- Теги (строго до 3 шт + счетчик) -->
+    <div style="width: 100% !important; margin-top: 3px !important;">
+      ${window.renderBundleTags(item.desc)}
+    </div>
 
-            <div style="font-size: 11px !important; font-weight: 500 !important; color: #9A91A5 !important; margin-top: 3px !important; max-height: 34px !important; overflow: hidden !important; line-height: 1.3 !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; width: 100% !important;">
-              ${cleanDesc}
-            </div>
-          </div>
+  </div>
+
+  <!-- БЛОК 2: Широкая рамка ТОЛЬКО для чистого описания (без тегов и слова "В комплект входит") -->
+  ${(() => {
+    // Вычисляем чистое описание: если есть item.description — берем его. 
+    // Если старый товар — берем item.desc и отрезаем из него строку про комплект.
+    let pureDesc = item.description || '';
+    if (!pureDesc && item.desc) {
+      let parts = item.desc.split(/\n\s*\n/);
+      if (parts.length > 1 && parts[0].startsWith('В комплект входит')) {
+        parts.shift();
+        pureDesc = parts.join('\n\n');
+      } else if (!item.desc.startsWith('В комплект входит')) {
+        pureDesc = item.desc;
+      }
+    }
+    pureDesc = pureDesc.trim();
+
+    if (!pureDesc) return '';
+
+    return `
+      <div style="display: flex !important; flex-direction: column !important; justify-content: center !important; width: 100% !important; max-width: 100% !important; height: 48px !important; min-height: 48px !important; max-height: 48px !important; margin: 4px 0 !important; background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; border-radius: 6px !important; padding: 4px 8px !important; box-sizing: border-box !important; flex-shrink: 0 !important;">
+        <div style="display: -webkit-box !important; width: 100% !important; font-size: 10.5px !important; font-weight: 500 !important; color: #C4BAD5 !important; line-height: 1.3 !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; text-overflow: ellipsis !important;">
+          ${pureDesc}
+        </div>
+      </div>
+    `;
+  })()}
 
           <!-- Нижняя зона: Сердечко и Кнопка -->
-      <div style="display: flex !important; justify-content: space-between !important; align-items: center !important; margin-top: auto !important; width: 100% !important;">
+          <div style="display: flex !important; justify-content: space-between !important; align-items: center !important; margin-top: auto !important; width: 100% !important;">
         
-        <!-- Интерактивное сердечко с сильным тактильным сжатием -->
-        <div onclick="event.stopPropagation(); toggleProductLike(${item.id})" 
-             class="tactile-heart"
-             style="cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: none !important; border: none !important; padding: 4px !important; transition: transform 0.12s ease !important; position: relative !important; z-index: 5 !important;"
-             ontouchstart="this.style.transform='scale(0.2)';" 
-             ontouchend="this.style.transform='scale(1)';" 
-             ontouchcancel="this.style.transform='scale(1)';"
-             onmousedown="this.style.transform='scale(0.7)';" 
-             onmouseup="this.style.transform='scale(1)';" 
-             onmouseleave="this.style.transform='scale(1)';">
-           <span id="shop-heart-${item.id}">${likedShopItemIds.some(id => String(id) === String(item.id)) ? '❤️' : '🤍'}</span>
-        </div>
+            <!-- Интерактивное сердечко -->
+            <div onclick="event.stopPropagation(); toggleProductLike(${item.id})" 
+                 class="tactile-heart"
+                 style="cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: none !important; border: none !important; padding: 4px !important; transition: transform 0.12s ease !important; position: relative !important; z-index: 5 !important;"
+                 ontouchstart="this.style.transform='scale(0.2)';" 
+                 ontouchend="this.style.transform='scale(1)';" 
+                 ontouchcancel="this.style.transform='scale(1)';"
+                 onmousedown="this.style.transform='scale(0.7)';" 
+                 onmouseup="this.style.transform='scale(1)';" 
+                 onmouseleave="this.style.transform='scale(1)';">
+               <span id="shop-heart-${item.id}">${likedShopItemIds.some(id => String(id) === String(item.id)) ? '❤️' : '🤍'}</span>
+            </div>
+
+            <!-- Кнопка В корзину -->
             <button class="small-btn tactile-btn" onclick="event.stopPropagation(); buyShopItem(${item.id})" style="flex-shrink: 0 !important; width: 76px !important; min-width: 76px !important; font-size: 9.5px !important; height: 27px !important; padding: 0 6px !important; box-sizing: border-box !important; white-space: nowrap !important; display: flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, #065F46 0%, #047857 50%, #022C22 100%) !important; border: 1px solid rgba(52, 211, 153, 0.35) !important; border-radius: 7px !important; color: #E2E8F0 !important; font-weight: 800 !important; text-transform: uppercase !important; box-shadow: 0 3px 9px rgba(4, 120, 87, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important; position: relative !important; overflow: hidden !important; cursor: pointer !important; transition: transform 0.12s ease, filter 0.12s ease !important;" ontouchstart="this.style.transform='scale(0.90)'; this.style.filter='brightness(0.85)';" ontouchend="this.style.transform='scale(1)'; this.style.filter='brightness(1)';" ontouchcancel="this.style.transform='scale(1)'; this.style.filter='brightness(1)';" onmousedown="this.style.transform='scale(0.90)'; this.style.filter='brightness(0.85)';" onmouseup="this.style.transform='scale(1)'; this.style.filter='brightness(1)';" onmouseleave="this.style.transform='scale(1)'; this.style.filter='brightness(1)';">
               <span style="position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 1.5px !important; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent) !important; pointer-events: none !important;"></span>
               В корзину
@@ -7677,7 +7762,20 @@ function renderProducts() {
   }).join('');
   
 }
-    // 4. ГАРДЕРОБ
+    if (!window._gradAnimRunning) {
+  window._gradAnimRunning = true;
+  let t = 0;
+  setInterval(() => {
+    t += 0.025; // Скорость движения ползунка
+    // Синусоида держит позицию строго в пределах от 25% до 75% (ползунок не вылезает за рамки)
+    let pos = 50 + 25 * Math.sin(t);
+    
+    document.querySelectorAll('.animated-grad-title').forEach(el => {
+      el.style.backgroundPosition = pos + '% 50%';
+    });
+  }, 30);
+}
+// 4. ГАРДЕРОБ
     let wardrobeFilterCat = 'Белье';
     let selectedWardrobeIds = [1];
 
@@ -8713,29 +8811,46 @@ window.saveNewProductFromModal = async function() {
   tg?.HapticFeedback?.notificationOccurred?.('success');
   showToast('Товар успешно добавлен в Бутик! ✨', 'success');
 };
-// 9. Автоматическая генерация тегов комплекта для витрины
-window.renderBundleTags = function(bundleString, maxItems = 2) {
+window.renderBundleTags = function(bundleString) {
   if (!bundleString) return '';
-  let cleanStr = bundleString.replace(/^В комплект входит:\s*/i, '');
+  let cleanStr = String(bundleString).replace(/^В комплект входит:\s*/i, '');
   const items = cleanStr.split(',').map(item => item.trim()).filter(item => item.length > 0);
   if (items.length === 0) return '';
   
-  // Ограничиваем количество тегов, чтобы они точно влазили в рамку карточки
-  const visibleItems = items.slice(0, maxItems);
+  const max = 3;
+  const visibleItems = items.slice(0, max);
   const extraCount = items.length - visibleItems.length;
+  
+  // Общий контейнер тегов
+  let html = `<div style="display: flex !important; flex-wrap: nowrap !important; align-items: center !important; justify-content: center !important; gap: 4px !important; overflow: hidden !important; width: 100% !important;">`;
+  
+  // Общие стили стеклянного тега (стекломорфизм + сине-голубая палитра + внутренний блик)
+  const tagStyle = `
+    background: rgba(56, 189, 248, 0.12) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    color: #E0F2FE !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  `;
 
-  let html = `<div class="product-bundle-tags" style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; overflow: hidden; max-height: 24px;">` +
-    visibleItems.map(item => `<span class="bundle-tag" style="background: rgba(0, 122, 255, 0.15); color: #0a84ff; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; white-space: nowrap;">${item}</span>`).join('');
-
-  // Если тегов больше, чем поместилось, можно показать маленькую плашку с плюсом
+  visibleItems.forEach(item => {
+    html += `<span style="${tagStyle}">${item}</span>`;
+  });
+  
   if (extraCount > 0) {
-    html += `<span class="bundle-tag-more" style="background: rgba(255, 255, 255, 0.08); color: var(--text-muted); padding: 2px 5px; border-radius: 4px; font-size: 10px; font-weight: 600;">+${extraCount}</span>`;
+    html += `<span style="${tagStyle}">+${extraCount}</span>`;
   }
-
+  
   html += `</div>`;
   return html;
 };
-
 // Заглушки
 function openNameModal() { showToast('Смена имени появится в следующей версии', 'info'); }
 function sendChatMessage() { showToast('Pact Bot пока в разработке', 'info'); }
@@ -8772,16 +8887,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setWallpaper(localStorage.getItem('pact_wallpaper_key') || 'ruby_opal');
 });
   
-window.renderBundleTags = function(bundleString) {
-  if (!bundleString) return '';
-  let cleanStr = bundleString.replace(/^В комплект входит:\s*/i, '');
-  const items = cleanStr.split(',').map(item => item.trim()).filter(item => item.length > 0);
-  if (items.length === 0) return '';
-  
-  return `<div class="product-bundle-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">` +
-    items.map(item => `<span class="bundle-tag" style="background: rgba(0, 122, 255, 0.15); color: #0a84ff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">${item}</span>`).join('') +
-    `</div>`;
-};
+
    
 /* ====================== ШЛЮЗ (из test.html) ====================== */
 
@@ -11263,6 +11369,10 @@ function markItemAsReceived(index) {
 
   alert(`Поздравляем! «${item.title}» теперь в вашем гардеробе ✨`);
 }
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Загружаем корзину из памяти (если еще не загружена)
+  cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  });
 // Обновление счетчика (для бейджа)
 function updateCartBadgeCount() {
   const badge = document.getElementById('shop-cart-badge');
