@@ -7,8 +7,27 @@
   <title>Pact &amp; Passion</title>
 
   <!-- Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Telegram WebApp SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Tailwind CSS Play CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Alpine.js Core -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+<!-- Подключаем Google Fonts (например, Plus Jakarta Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+<!--  AutoAnimate -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/@formkit/auto-animate@1.0.0-beta.6/index.min.js"></script>
+<!--  Hammer.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  
   <style>
     /* ===================== CSS ШЛЮЗА (из test.html) ===================== */
 
@@ -146,11 +165,15 @@ button:active,
       height: 100%;
       overflow: hidden;
     }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
+*, ::before, ::after {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
     body { 
       background-color: #0C0A10 !important;
       color: #F5F3F7;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       width: 100vw;
       width: 100dvw;
       height: 100vh;
@@ -167,26 +190,8 @@ button:active,
       box-sizing: border-box;
     }
 
-    /* 
-      Убрали жесткие рамки фиксированного телефона. 
-      Теперь на ПК и планшетах приложение аккуратно центрируется, 
-      но на любых айфонах (от 14 Pro до 13 Pro Max) оно полностью 
-      и гармонично занимает всю доступную ширину экрана!
-    */
-    @media (min-width: 600px) {
-      body {
-        max-width: 480px;
-        height: 92vh;
-        max-height: 950px;
-        border-radius: 32px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(230, 57, 86, 0.15);
-        margin: auto;
-        position: absolute;
-        inset: 0;
-      }
-    }
 
+   
     .ambient-glow {
       position: absolute;
       width: 260px;
@@ -1505,29 +1510,53 @@ button:active,
       overflow: hidden;
     }
 
-    body {
+   body { 
       background-color: #0C0A10 !important;
       color: #F5F3F7;
       margin: 0 auto;
       padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px calc(env(safe-area-inset-bottom, 0px) + 90px) 12px;
       width: 100%;
       height: 100%;
-      max-width: 428px;
-      max-height: 926px;
+      /* 👈 ТУТ УДАЛИЛИ max-width и max-height, чтобы на мобилках тянулось на 100% */
       overscroll-behavior: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       overflow: hidden;
       position: relative;
-      /* transform: translateZ(0) заставляет все элементы position: fixed удерживаться строго внутри рамки body */
       transform: translateZ(0);
       transition: background 0.4s ease;
     }
 
     /* На мониторах и планшетах (когда экран больше 428x926) оформляем как изящный смартфон с неоновой рамкой */
-    @media (min-width: 429px), (min-height: 927px) {
+@media (min-width: 600px) {
+      /* Заливаем фон монитора темным */
+      html, body {
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: #030205 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      /* Создаем монолитный «корпус» телефона, который физически не может изменить размер */
       body {
-        border-radius: 36px;
-        box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 0 1.5px rgba(230, 57, 86, 0.35);
+        width: 393px !important;
+        min-width: 393px !important;
+        max-width: 393px !important;
+        
+        height: 840px !important;
+        min-height: 840px !important;
+        max-height: 840px !important;
+        
+        border-radius: 36px !important;
+        box-shadow: 0 0 80px rgba(0, 0, 0, 0.98), 0 0 0 2px rgba(230, 57, 86, 0.4) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
       }
     }
 
@@ -1600,36 +1629,37 @@ button:active,
       flex-direction: column;
       gap: 8px;
       width: calc(100% - 28px);
-      max-width: 440px;
+      max-width: 420px;
       pointer-events: none;
     }
 
     .app-toast {
-      background: rgba(24, 14, 32, 0.96);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-radius: 14px;
-      padding: 12px 16px;
+      background: rgba(18, 14, 25, 0.92) !important;
+      backdrop-filter: blur(24px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important; /* Верхний световой блик */
+      border-radius: 16px !important;
+      padding: 11px 16px;
       color: #fff;
       font-size: 11.5px;
-      font-weight: 700;
-      line-height: 1.45;
+      font-weight: 800;
+      line-height: 1.4;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
+      gap: 8px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(230, 57, 86, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
       opacity: 0;
-      transform: translateY(-24px) scale(0.96);
+      transform: translateY(-20px) scale(0.96);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: auto;
+      white-space: nowrap;
     }
 
-    .app-toast.visible { opacity: 1; transform: translateY(0) scale(1); }
-    .app-toast.toast-success { border-color: rgba(16, 185, 129, 0.55); box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); }
-    .app-toast.toast-penalty, .app-toast.toast-error { border-color: rgba(230, 57, 86, 0.6); box-shadow: 0 0 20px rgba(230, 57, 86, 0.3); }
-    .app-toast.toast-info { border-color: rgba(155, 81, 224, 0.55); box-shadow: 0 0 20px rgba(155, 81, 224, 0.25); }
-
+    .app-toast.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
     /* ========================================================
        3. ВЕРХНЯЯ КОЛБА-БРЕНДИНГ
        ======================================================== */
@@ -1656,20 +1686,24 @@ button:active,
       border-radius: 999px !important;
       cursor: pointer !important;
       user-select: none !important;
-      background: rgba(28, 20, 36, 0.88) !important;
+      /* 1. ФОН КОЛБЫ (основной цвет): темно-графитовый с альфа-прозрачностью 88% */
+      background: #1C1424E0 !important;
       backdrop-filter: blur(20px) !important;
       -webkit-backdrop-filter: blur(20px) !important;
-      border: 1px solid rgba(230, 57, 86, 0.45) !important;
-      border-top-color: rgba(255, 255, 255, 0.35) !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 14px rgba(230, 57, 86, 0.25), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.6) !important;
+      /* 2. РАМКИ: боковые и верхняя фаска */
+      border: 1px solid #E6395673 !important;
+      border-top-color: #D6090959 !important;
+      /* 3. ТЕНИ И ВНУТРЕННИЙ СВЕТОВОЙ ИНСЕТ */
+      box-shadow: 0 4px 16px #00000080, 0 0 14px #E6395640, inset 0 1.5px 1.5px #FFCCD5, inset 0 -2px 4px #00000099 !important;
       transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease !important;
     }
 
     .dead-zone-brand:active { transform: scale(0.95) !important; }
     .dead-zone-brand.active {
-      background: linear-gradient(135deg, rgba(230, 57, 86, 0.85), rgba(120, 14, 34, 0.9)) !important;
-      border-color: rgba(255, 255, 255, 0.5) !important;
-      box-shadow: 0 0 22px rgba(230, 57, 86, 0.7), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6) !important;
+      /* Состояние ACTIVE: градиент изменен на HEX с альфа-каналом */
+      background: linear-gradient(135deg, #2B3445D9, #2A2137E6) !important;
+      border-color: #FFFFFF80 !important;
+      box-shadow: 0 0 22px #E63956B3, inset 0 1.5px 3px #FFFFFF99 !important;
     }
 
     .brand-shimmer-title {
@@ -1679,13 +1713,15 @@ button:active,
       text-transform: uppercase;
       margin: 0;
       white-space: nowrap;
+      /* 4. НАДПИСЬ (градиент текста): переведен в чистые HEX-цвета */
       background: linear-gradient(110deg, #B82342 0%, #E63956 22%, #FFFFFF 50%, #FFA3B5 68%, #B82342 100%);
       background-size: 240% auto;
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: brandShimmerWave 3.4s ease-in-out infinite;
-      filter: drop-shadow(0 1.5px 0px rgba(0, 0, 0, 0.95)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px rgba(230, 57, 86, 0.7));
+      /* 5. ТЕНИ ТЕКСТА */
+      filter: drop-shadow(0 1.5px 0px #000000F2) drop-shadow(0 4px 6px #000000CC) drop-shadow(0 0 12px #E63956B3);
     }
 
     @keyframes brandShimmerWave {
@@ -1814,6 +1850,47 @@ button:active,
       pointer-events: none !important;
     }
 
+    
+    /* Пружинный отскок ячейки при клике (120% ➔ 100%) */
+    @keyframes cellSpringPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .cal-day-cell.spring-active {
+      animation: cellSpringPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    /* Выбранный день при клике */
+    .cal-day-cell.selected-day {
+      background: var(--accent-gradient, linear-gradient(135deg, #ff477e 0%, #d4af37 100%)) !important;
+      border-color: rgba(255, 255, 255, 0.8) !important;
+      box-shadow: 0 0 15px rgba(255, 71, 126, 0.6);
+      z-index: 2;
+    }
+
+    /* Стиль для сегодняшнего дня */
+    .cal-day-cell.today-cell {
+      border: 2px solid #ff477e !important;
+      box-shadow: 0 0 10px rgba(255, 71, 126, 0.4), inset 0 0 6px rgba(255, 71, 126, 0.2);
+    }
+
+    /* Плавная физическая анимация тултипа */
+    @keyframes tooltipSmoothGrow {
+      0% { 
+        opacity: 0; 
+        transform: scale(0.1) translateY(6px); 
+      }
+      75% { 
+        opacity: 1; 
+        transform: scale(1.03) translateY(-1px); 
+      }
+      100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+      }
+    }
+    
     /* ========================================================
        5. РАБОЧИЙ СТОЛ (БЕЗ ВЕРТИКАЛЬНОГО СКРОЛЛА + СВАЙП)
        ======================================================== */
@@ -1884,194 +1961,203 @@ button:active,
     }
 
     .desktop-dot {
-      width: 7px;
-      height: 7px;
+      width: 8.5px;
+      height: 8.5px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
+      /* Неактивная точка: белый цвет с прозрачностью 20% */
+      background: #FFFFFF33;
       transition: all 0.25s ease;
       cursor: pointer;
     }
 
-    .desktop-dot.active {
-      width: 18px;
+      .desktop-dot.active {
+      width: 20px;
       border-radius: 10px;
-      background: var(--accent-color);
-      box-shadow: 0 0 10px rgba(230, 57, 86, 0.7);
+      /* Активная точка: наш фирменный сочный цвет розового золота / акцента в HEX */
+      background: #9E93B0 !important;
+      /* Неоновое свечение активной точки через HEX с прозрачностью 70% (суффикс B3) */
+      box-shadow: 0 0 10px #9E93B0B3 !important;
     }
-
     /* ========================================================
        6. ПЛИТКИ И ВИДЖЕТЫ
        ======================================================== */
-    .desktop-item-wrapper {
-      position: relative;
-      user-select: none;
-      touch-action: pan-x;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      display: flex;
-      justify-content: center;
-    }
-    .edit-mode .desktop-item-wrapper { touch-action: none; }
-    .desktop-item-wrapper.is-dragging { opacity: 0.35; transform: scale(0.92); z-index: 100; }
+  .desktop-item-wrapper {
+            position: relative;
+            user-select: none;
+            touch-action: pan-x;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            display: flex;
+            justify-content: center;
+        }
+        .edit-mode .desktop-item-wrapper { touch-action: none; }
+        .desktop-item-wrapper.is-dragging { opacity: 0.35; transform: scale(0.92); z-index: 100; }
 
-    .desktop-tile {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      transition: transform 0.15s ease;
-      position: relative;
-    }
-    .desktop-tile:active { transform: scale(0.92); }
+     .desktop-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            position: relative;
+        }
+        .desktop-tile:active { transform: scale(0.92); }
 
-    /* Квадратная иконка с вертикальной компоновкой */
-    .tile-icon {
-      width: 77px;
-     height: 77px;
-     border-radius: 20px;
-     position: relative;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     gap: 3px;
-     padding: 6px 4px 4px 4px;
-     background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
-     border: 1px solid rgba(255, 255, 255, 0.24);
-     border-bottom-color: rgba(230, 57, 86, 0.6);
-     box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55), inset 0 -3px 5px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.5), 0 14px 28px rgba(0, 0, 0, 0.8), 0 0 18px rgba(230, 57, 86, 0.25);
-     backdrop-filter: blur(20px);
-     -webkit-backdrop-filter: blur(20px);
-    }
+        .tile-icon {
+            width: 77px;
+            height: 77px;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 6px 4px 4px 4px;
+            background: linear-gradient(180deg, rgba(42, 30, 56, 0.95) 0%, rgba(22, 16, 32, 0.95) 55%, rgba(10, 8, 15, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom-color: rgba(230, 57, 86, 0.45);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 
+                        inset 0 -3px 5px rgba(0, 0, 0, 0.9), 
+                        0 4px 12px rgba(0, 0, 0, 0.4), 
+                        0 0 14px rgba(230, 57, 86, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
 
-    /* Эмодзи внутри значка */
-    .tile-emoji {
-      font-size:  24px;
-     line-height: 1;
-     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
-    }
+        .tile-emoji {
+            font-size: 24px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+        }
 
-    /* Название внутри значка под эмодзи */
-    .tile-label {
-     font-size: 11px;
-     font-weight: 700;
-     letter-spacing: 0.3px;
-     color: #79809cd0;
-     text-align: center;
-     line-height: 1.1;
-     max-width: 62px;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-    } 
+        .tile-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #9A91A5;
+            text-align: center;
+            line-height: 1.1;
+            max-width: 62px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+        }
+        .edit-mode .desktop-tile, .edit-mode .desktop-widget {
+            animation: jiggle 0.28s infinite alternate ease-in-out;
+        }
+        @keyframes jiggle {
+            0% { transform: rotate(-1.5deg) scale(0.98); }
+            100% { transform: rotate(1.5deg) scale(1.01); }
+        }
 
-     .edit-mode .desktop-tile, .edit-mode .desktop-widget {
-      animation: jiggle 0.28s infinite alternate ease-in-out;
-    }
-    @keyframes jiggle {
-      0% { transform: rotate(-1.5deg) scale(0.98); }
-      100% { transform: rotate(1.5deg) scale(1.01); }
-    }
+        .item-delete-btn {
+            position: absolute;
+            top: -6px;
+            right: -4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #E63956;
+            color: #fff;
+            border: 2px solid #0C0A10;
+            font-size: 11px;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .edit-mode .item-delete-btn { display: flex; }
 
-    .item-delete-btn {
-      position: absolute;
-      top: -6px;
-      right: -4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #E63956;
-      color: #fff;
-      border: 2px solid #0C0A10;
-      font-size: 11px;
-      font-weight: bold;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-    }
-    .edit-mode .item-delete-btn { display: flex; }
+       .desktop-widget {
+            background: linear-gradient(135deg, rgba(30, 22, 42, 0.92) 0%, rgba(15, 11, 22, 0.96) 100%);
+            border: 1px solid rgba(230, 57, 86, 0.28);
+            border-radius: 18px;
+            padding: 10px 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .widget-span-2 { grid-column: span 2; }
+        .widget-span-4 { grid-column: span 4; }
 
-    .desktop-widget {
-      background: linear-gradient(135deg, rgba(30, 22, 42, 0.92) 0%, rgba(15, 11, 22, 0.96) 100%);
-      border: 1px solid rgba(230, 57, 86, 0.35);
-      border-radius: 18px;
-      padding: 10px 12px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 100%;
-    }
-    .widget-span-2 { grid-column: span 2; }
-    .widget-span-4 { grid-column: span 4; }
+        .widget-passion-box {
+            background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(22, 10, 20, 0.9) 100%) !important;
+            border: 1px solid rgba(255, 90, 54, 0.35) !important;
+            box-shadow: 0 0 16px rgba(255, 90, 54, 0.15) !important;
+            min-height: 82px;
+        }
+        
+        .passion-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .passion-rank-title { font-size: 13.5px; font-weight: 900; color: #fff; }
+        .passion-peppers-badge {
+            background: rgba(255, 90, 54, 0.2);
+            border: 1px solid rgba(255, 90, 54, 0.4);
+            color: #FF8566;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 2px 7px;
+            border-radius: 8px;
+        }
+        .passion-progress-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+        .passion-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E63956, #FF5A36, #FFB703);
+            border-radius: 6px;
+            transition: width 0.4s ease;
+        }
+        .passion-status-desc { font-size: 10px; color: #c9bfd4; display: flex; justify-content: space-between; }
 
-    /* Виджет «Градус Страсти» */
-    .widget-passion-box {
-      background: linear-gradient(135deg, rgba(38, 12, 24, 0.95) 0%, rgba(22, 10, 20, 0.9) 100%) !important;
-      border: 1px solid rgba(255, 90, 54, 0.4) !important;
-      box-shadow: 0 0 18px rgba(255, 90, 54, 0.2) !important;
-      min-height: 82px;
-    }
-    .passion-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-    .passion-rank-title { font-size: 13.5px; font-weight: 900; color: #fff; }
-    .passion-peppers-badge {
-      background: rgba(255, 90, 54, 0.2);
-      border: 1px solid rgba(255, 90, 54, 0.5);
-      color: #FF8566;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 2px 7px;
-      border-radius: 8px;
-    }
-    .passion-progress-bg {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      overflow: hidden;
-      margin: 6px 0;
-    }
-    .passion-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #E63956, #FF5A36, #FFB703);
-      border-radius: 6px;
-      transition: width 0.4s ease;
-    }
-    .passion-status-desc { font-size: 10px; color: #c9bfd4; display: flex; justify-content: space-between; }
+       /* Переопределяем класс виджета баланса под горизонтальные 3 колонки */
+.desktop-widget.widget-balance-square {
+    min-height: unset !important;
+    padding: 10px !important;
+    display: flex !important;
+    flex-direction: row !important; /* Убираем вертикальное навязывание */
+    align-items: stretch !important;
+    gap: 0 !important;
+}
 
-    /* Квадратный виджет «Баланс Очков» (span 2) */
-    .desktop-widget.widget-balance-square {
-      min-height: 77px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-    }
-    .widget-balance-column {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      width: 100%;
-    }
-    .bal-col-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 4px 6px;
-      border-radius: 7px;
-    }
-    .bal-col-name { font-size: 9.5px; color: #d0c7d8; font-weight: 700; }
-    .bal-col-val { font-size: 11px; font-weight: 900; letter-spacing: 0.3px; }
-    .bal-col-val.ptc { color: var(--passion-color); }
-    .bal-col-val.otc { color: #f0f0f0; }
-    .bal-col-val.stc { color: #FF8599; }
-    .bal-col-val.att { color: #7DD3FC; }
-    .bal-col-val.care { color: #6EE7B7; }
+.widget-balance-column {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important; /* Строго 3 колонки */
+    gap: 8px !important;
+    width: 100% !important;
+}
+        .bal-col-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 6px;
+            border-radius: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .bal-col-name { font-size: 9.5px; color: #d0c7d8; font-weight: 700; }
+        .bal-col-val { font-size: 11px; font-weight: 900; letter-spacing: 0.3px; }
+        .bal-col-val.ptc { color: #9B51E0; }
+        .bal-col-val.otc { color: #f0f0f0; }
+        .bal-col-val.stc { color: #FF8599; }
+        .bal-col-val.att { color: #7DD3FC; }
+        .bal-col-val.care { color: #6EE7B7; }
+
+        /* Настройка трека страниц */
+        .desktop-viewport { width: 100%; overflow: hidden; position: relative; }
+        .desktop-pages-track { display: flex; width: 100%; transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1); }
+        .desktop-page { min-width: 100%; width: 100%; flex-shrink: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-content: start; padding: 4px 6px; }
+
 
     /* ========================================================
        7. ВСПЛЫВАЮЩАЯ ПАНЕЛЬ НАД НАВБАРОМ
@@ -2100,26 +2186,38 @@ button:active,
 
     .dock-action-btn {
       flex: 1;
-      display: flex;
+      display: flex;  
       align-items: center;
       justify-content: center;
       gap: 8px;
       height: 48px;
       border-radius: 18px;
-      background: rgba(22, 17, 30, 0.94);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(230, 57, 86, 0.45);
-      border-top-color: rgba(255, 255, 255, 0.25);
-      color: #FFFFFF;
+      
+      /* ФОН: глубокий графитовый градиент */
+      background: linear-gradient(135deg, #1A1322, #09070C) !important;
+      
+      /* РАМКИ: аккуратный контур с акцентом сверху */
+      border: 1.2px solid #2A2137 !important;
+      border-top: 1.2px solid #9E93B020 !important;
+      border-left: 1.2px solid #FFCCD533 !important;
+      border-right: 1.2px solid #786E8A33 !important;
+      
+      /* ТЕКСТ И ТИПОГРАФИКА */
+      color: #FFF !important;
       font-size: 12px;
       font-weight: 800;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 14px rgba(230, 57, 86, 0.25);
+
+      /* ОБЪЕДИНЕННЫЕ ТЕНИ: глубокий объем снизу + неоновый акцент + внутренняя световая фаска стекла */
+      box-shadow: 0 12px 28px #000000B3, 0 0 14px #E6395640, inset 0 1px 1.5px #FFFFFF66 !important;
+      
       cursor: pointer;
       transition: transform 0.15s ease;
     }
-    .dock-action-btn:active { transform: scale(0.95); }
-
+    
+    .dock-action-btn:active { 
+      transform: scale(0.95) !important; 
+    }
+ 
     /* ========================================================
        8. СТРУКТУРА ПОДЭКРАНОВ И ЕДИНЫЙ СТИЛЬ ШАПОК
        ======================================================== */
@@ -2134,8 +2232,7 @@ button:active,
       padding: 14px;
       margin-bottom: 12px;
     }
-
-    .tab-content:not(#tab-home) {
+.tab-content:not(#tab-home) {
       display: none;
       position: fixed;
       top: 115px;
@@ -2143,15 +2240,19 @@ button:active,
       left: 12px;
       right: 12px;
       z-index: 950;
-      background: rgba(18, 14, 24, 0.95);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border-radius: 26px;
-      border: 1px solid rgba(189, 151, 157, 0.35);
-      border-top-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      /* Чуть плотнее фон для объёма */
+      background: rgba(18, 14, 25, 0.86) !important;
+      /* Увеличенное размытие и насыщенность для глубокого эффекта стекла */
+      backdrop-filter: blur(34px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(34px) saturate(200%) !important;
+      border-radius: 30px !important;
+      /* Тонкая рамка + мощный двойной верхний блик для объёма */
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important; 
+      /* Многослойная глубокая тень и усиленный неоновый ореол */
+      box-shadow: 0 32px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(230, 57, 86, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
       padding: 16px;
-      overflow-y: hidden!important;
+      overflow-y: hidden !important;
       -webkit-overflow-scrolling: touch;
     }
 
@@ -2720,13 +2821,14 @@ button:active,
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
-    .nav-item.active {
-      flex: 2.2 !important;
-      background: linear-gradient(135deg, rgba(124, 39, 53, 0) 0%, rgba(140, 15, 42, 0.32) 100%) !important;
-      border: 1.5px solid rgba(167, 81, 95, 0.65) !important;
-      color: #FFF !important;
-      box-shadow: 0 4px 16px rgba(230, 57, 86, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
-    }
+
+ .nav-item.active {
+  flex: 2.2 !important;
+  background: rgba(34, 24, 26, 0.45) !important; /* глубокий полупрозрачный винный фон */
+  border: 1.5px solid rgba(90, 81, 167, 0.4) !important;
+  color: #FFF !important;
+ box-shadow: 0px 4px 12px #362A45, inset 0 1px 1px #F4A4B6 !important;
+}
 
     .nav-avatar-thumb {
       width: 28px;
@@ -2770,6 +2872,7 @@ button:active,
       pointer-events: none;
     }
 
+   
     .nav-item.active .nav-label {
       opacity: 1;
       max-width: 100px;
@@ -2780,6 +2883,34 @@ button:active,
     .nav-item:active {
       transform: scale(0.96);
     }
+ 
+ /* По умолчанию плашка полностью выключена и удалена из потока верстки */
+#nav-status-pill {
+  display: none !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Когда плашка активна — возвращаем ей нормальный вид */
+#nav-status-pill.show-pill {
+  display: flex !important;
+  width: auto !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 4px !important; /* 6px сверху/снизу, 4px слева/справа */
+  border-radius: 1rem !important;
+  background: linear-gradient(135deg, rgba(196, 181, 253, 0.3), #F472B6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 16px rgba(244, 114, 182, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  color: #FFF !important;
+}
+
+#nav-status-pill.show-pill span {
+  color: #FFF !important;
+}
     /* Статус текущей роли в профиле над именем */
 .profile-role-badge {
   display: inline-flex;
@@ -4030,6 +4161,30 @@ button:active,
   -webkit-text-fill-color: transparent !important;
   animation: customBtnWave 3.4s ease-in-out infinite !important;
 }
+/* Главный экран галереи строго по размеру видимой зоны */
+#tab-gallery {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden; /* Запрещаем странице дергаться целиком */
+  box-sizing: border-box;
+}
+
+/* Контейнер с сеткой фотографий — вот он должен скроллиться */
+#tab-gallery .gallery-scroll-container {
+  flex-grow: 1 !important;
+  width: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  padding-bottom: 300px !important; /* Запас снизу, чтобы плашки не перекрывали фото */
+}
 
  </style>
 </head>
@@ -4046,30 +4201,106 @@ button:active,
   </div>
 </div>
  
- <!-- 1. НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ -->
+   <!-------------------------------------------------- Ф1. НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ ----------------------------------------------------->
+</div>
   <nav class="nav-bar">
+    <!-- ПРОФИЛЬ -->
     <div class="nav-item" id="nav-profile" onclick="switchNavTab('tab-profile', this)">
-      <img id="nav-bar-avatar" class="nav-avatar-thumb" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Профиль">
+      <i class="bi bi-person" style="font-size: 23px;"></i>
       <span class="nav-label">Профиль</span>
     </div>
     
+    <!-- ГЛАВНАЯ -->
     <div class="nav-item active" id="nav-home" onclick="switchNavTab('tab-home', this)">
-      <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 20v-4h-2v4a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg>
+      <i id="icon-home" class="bi bi-house" style="font-size: 23px;"></i>
       <span class="nav-label">Главная</span>
     </div>
+
+    <!-- СТАТУСНАЯ ПЛАШКА ФУНКЦИИ -->
+<div class="nav-item context-pill px-3.5 py-1.5 rounded-2.5xl border border-white/25 bg-gradient-to-r from-[#C4B5FD]/30 to-[#F472B6] backdrop-blur-md shadow-lg" id="nav-status-pill" style="display: none !important;">
+  <span id="nav-status-icon" style="font-size: 16px;" class="text-white"></span>
+  <span class="nav-label text-white text-xs font-medium" id="nav-status-name"></span>
+</div>
     
+    <!-- ЧАТ -->
     <div class="nav-item" id="nav-chat" onclick="switchNavTab('tab-messenger', this)">
-      <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-3.64-.68L3 20.5l1.45-3.88C3.55 15.35 3 13.74 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+      <i id="icon-chat" class="bi bi-chat-right-heart" style="font-size: 23px;"></i>
       <span class="nav-label">Чат</span>
     </div>
-  </nav>
-
-  <!-- СКРИПТ УПРАВЛЕНИЯ -->
+</nav>
+<!-- СКРИПТ УПРАВЛЕНИЯ -->
   <script>
+  
+
+  // Словарь иконок и названий для твоих функций (окон)
+   const functionMetadata = {
+  'tab-bank': { 
+    icon: '<i class="bi bi-bank"style="font-size: 22px;"></i>', 
+    name: 'Банк' 
+  },
+  'tab-shop': { 
+    icon: '<i class="bi bi-bag-heart-fill"style="font-size: 22px;"></i>', 
+    name: 'Бутик' 
+  },
+  'tab-wardrobe': { 
+    icon: '<i class="bi bi-handbag"style="font-size: 22px;"></i>', 
+    name: 'Гардероб' 
+  },
+  'tab-cycle': { 
+    icon: '<i class="bi bi-calendar-heart"style="font-size: 22px;"></i>',
+    name: 'Календарь' 
+  },
+  'tab-randomizer': { 
+    icon: '<i class="bi bi-dice-5-fill"style="font-size: 22px;"></i>',
+    name: 'Жребий' 
+  },
+'tab-gift-order': { 
+    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>', 
+    name: 'Подарки' 
+  },
+  'tab-liked': { 
+    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>', 
+    name: 'Избранное' 
+  },
+  'tab-cart': { 
+    icon: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>', 
+    name: 'Корзина' 
+  },
+  'tab-contract': { 
+   icon: '<i class="bi bi-clipboard-heart"style="font-size: 22px;"></i>',
+  name: 'Контракт' 
+  },
+  'tab-settings': { 
+   icon: '<i class="bi bi-gear"style="font-size: 22px;"></i>',
+  name: 'Настройки' 
+  },
+  'tab-story': { 
+    icon: '<i class="bi bi-arrow-through-heart-fill"style="font-size: 22px;"></i>',
+  name: 'Сюжет' 
+  },
+  'tab-story-lower': { 
+    icon: '<i class="bi bi-arrow-through-heart-fill"style="font-size: 22px;"></i>',
+  name: 'Сюжет' 
+  },
+  'tab-gifts': { 
+    icon: '<i class="bi bi-balloon-heart"style="font-size: 22px;"></i>',
+  name: 'Желания' 
+  },
+  'tab-ai-advisor': { 
+    icon: '<i class="bi bi-person-hearts"style="font-size: 22px;"></i>',
+  name: 'Советник' 
+  }
+
+};
+
+    // Твой родной и надежный обработчик переключения вкладок в навбаре
     function switchNavTab(tabId, element) {
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
 
-      // Если нажали «Назад», вызываем функцию возврата и переключаем фокус на Главную
+      // При переходе на основные вкладки полностью гасим и очищаем плашку
+      hideStatusPill();
+
+      // Если нажали «Назад»
       if (tabId === 'nav-back') {
         if (typeof handleBackAction === 'function') {
           handleBackAction();
@@ -4090,7 +4321,79 @@ button:active,
         openSubScreen(tabId);
       }
     }
+
+    // ЕДИНСТВЕННАЯ И ЖЕЛЕЗОБЕТОННАЯ ФУНКЦИЯ СКРЫТИЯ (без дублей!)
+      function hideStatusPill() {
+      const pill = document.getElementById('nav-status-pill');
+      const iconEl = document.getElementById('nav-status-icon');
+      const nameEl = document.getElementById('nav-status-name');
+
+      // 1. Стираем текст и иконку подчистую
+      if (iconEl) iconEl.textContent = '';
+      if (nameEl) nameEl.textContent = '';
+
+      // 2. Полностью выключаем плашку, сбрасывая любые размеры, отступы и flex-поведение
+      if (pill) {
+        pill.classList.remove('active');
+        pill.style.cssText = 'display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; opacity: 0 !important;';
+      }
+    }
+    // Функция показа статусной плашки для конкретной функции
+function showStatusPill(screenId) {
+  const pill = document.getElementById('nav-status-pill');
+  const iconEl = document.getElementById('nav-status-icon');
+  const nameEl = document.getElementById('nav-status-name');
+
+  if (functionMetadata[screenId] && pill) {
+    const meta = functionMetadata[screenId];
+    
+    // Вставляем чистый векторный SVG-контур
+    if (iconEl) iconEl.innerHTML = meta.icon;
+    if (nameEl) nameEl.textContent = meta.name;
+
+    document.querySelectorAll('.nav-bar .nav-item').forEach(el => el.classList.remove('active'));
+
+    pill.style.cssText = 'display: flex !important;';
+    setTimeout(() => pill.classList.add('active'), 10);
+  } else {
+    hideStatusPill();
+  }
+}
+
+    // Универсальный наблюдатель: следит за активацией экранов
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            const target = mutation.target;
+            if (target.classList.contains('active') && target.id) {
+              showStatusPill(target.id);
+            }
+          }
+        });
+      });
+
+      document.querySelectorAll('.tab-content, [id^="tab-"]').forEach(tab => {
+        observer.observe(tab, { attributes: true });
+      });
+    });
+
+    // Перехват openSubScreen
+    if (typeof window.openSubScreen === 'function') {
+      const originalOpenSubScreen = window.openSubScreen;
+      window.openSubScreen = function(screenId) {
+        originalOpenSubScreen(screenId);
+        showStatusPill(screenId);
+      };
+    }
   </script>
+   </div>
+  </nav>
+  <!------------------------------------------------------------------ Ф2. ГЛОБАЛЬНЫЙ ТУЛТИП ----------------------------------------------------->
+ 
+
+
+
   <!-- ========================================================
        МОДУЛЬ ЖИВОГО МЕССЕНДЖЕРА ПАРЫ (FIREBASE REAL-TIME CLOUD)
        ======================================================== -->
@@ -4252,6 +4555,61 @@ button:active,
 
   </div>
 
+ <!-- 13. СЮЖЕТ -->
+<div id="tab-story" class="tab-content" >
+  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+    
+    <!-- Шапка в классическом родном стиле -->
+    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span> 
+      
+      <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        Назад
+      </button>
+
+      <div class="custom-btn-shimmer" style="font-size: 20px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+        Сюжет 
+      </div>
+
+      <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('story')" style="width: 28px; height: 28px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        ?
+      </button>
+    </div>
+
+    <!-- Контентная часть экрана сюжета -->
+    <div class="sub-screen-body" style="padding: 10px 4px; display: flex; flex-direction: column; gap: 10px;">
+      <!-- Здесь будут блоки/карточки выборов сюжетных веток -->
+      <div class="story-branch-card" style="padding: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #fff;">
+        <h4 style="margin: 0 0 6px 0; font-size: 14px; color: #e6c687;">Активная ветка: Романтический вечер</h4>
+        <p style="margin: 0; font-size: 12px; color: #aaa; line-height: 1.4;">История развивается в спокойном ключе с акцентом на близость и уют.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+ <!-- 14. СЮЖЕТ НИЖНЕЙ -->
+<div id="tab-story-lower" class="tab-content" >
+  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+    
+    <!-- Шапка в классическом родном стиле -->
+    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span> 
+      
+      <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        Назад
+      </button>
+
+      <div class="custom-btn-shimmer" style="font-size: 20px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+        Сюжет 
+      </div>
+
+      <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('story')" style="width: 28px; height: 28px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        ?
+      </button>
+    </div>
+
+  </div>
+</div>
   <!-- ОКНО ВЫБОРА СЦЕНАРИЯ -->
   <div class="scenario-picker-modal" id="modal-scenario-picker" onclick="if(event.target===this) closeScenarioPicker()">
     <div class="scenario-card-sheet">
@@ -4720,189 +5078,281 @@ button:active,
     </div>
   </div>
 
- <!-- 4. ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ -->
-<div id="tab-cycle" class="tab-content cycle-tab-screen">
-  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+ 
+
+<!-- 5. ГАЛЕРЕЯ -->
+<!-- 5. ГАЛЕРЕЯ -->
+<div id="tab-gallery" class="tab-content">
+  
+  <!-- Верхняя шапка рамки -->
+  <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 14px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden; z-index: 2;">
+    <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span> 
     
-    <!-- Шапка вкладки (в едином премиальном стиле проекта) -->
-    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+    <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+      Назад
+    </button>
+    <div class="custom-b-shimmer" style="font-size: 16px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+      Галерея
+    </div>
+    <button onclick="openGalleryTutorial()" style="height: 28px; width: 28px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;">?</button>
+  </div>
+
+  <!-- Зона скролла: padding-bottom: 70px создает нижний карман, где скролл прячется выше конца рамки -->
+  <div class="gallery-scroll-container" style="flex: 1; overflow-y: auto; overflow-x: hidden; padding-right: 2px; margin-top: 8px; padding-bottom: 70px; max-height: calc(100vh - 140px); box-sizing: border-box;">
+    <div id="pact-gallery-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+      
+      <!-- Кнопка добавления ВСЕГДА первая в HTML -->
+      <label class="pact-gallery-item tactile-btn" style="aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%); border: 1.5px dashed rgba(255, 255, 255, 0.35); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+        <input type="file" accept="image/*" onchange="handleNewGalleryPhoto(event)" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2;">
+        <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: 400; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 1;">
+          +
+        </div>
+      </label>
+<!-- Контейнер для загруженных фоток (новые встают наверх через unshift) -->
+      <div id="pact-saved-photos-container" style="display: contents;"></div>
+
+    </div>
+  </div>
+
+<!-- 3. ЖЁСТКО ЗАФИКСИРОВАННАЯ НИЖНЯЯ КНОПКА (висит поверх скролла в самом низу) -->
+  <button type="button" onclick="handleGallerySecurityInfo()" class="tactile-btn" style="position: absolute; bottom: 8px; left: 8px; right: 8px; flex-shrink: 0; padding: 11px 14px; background: linear-gradient(135deg, rgba(25, 12, 22, 0.98) 0%, rgba(12, 6, 15, 0.99) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; text-align: center; font-size: 13px; color: rgba(214, 205, 222, 0.92); box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.2); letter-spacing: 0.3px; z-index: 10; cursor: pointer; outline: none;">
+    Фотографии конфиденциальны и защищены ключами вашей комнаты
+  </button>
+
+</div>
+</div>
+<script>
+// Отрисовка сохраненных фото (новые уже лежат в начале массива)
+function renderGalleryGrid() {
+  const container = document.getElementById('pact-saved-photos-container');
+  if (!container) return;
+
+  let savedPhotos = JSON.parse(localStorage.getItem('pact_gallery_photos')) || [];
+
+  let html = '';
+  savedPhotos.forEach((photoUrl, index) => {
+    html += `
+      <div class="pact-gallery-item" onclick="openFullPhoto('${photoUrl}')" style="aspect-ratio: 1/1; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255, 255, 255, 0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; position: relative;">
+        <img src="${photoUrl}" alt="Photo ${index}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// Обработка загрузки: добавляем новое фото В НАЧАЛО массива через unshift()
+function handleNewGalleryPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64Image = e.target.result;
+
+    let savedPhotos = JSON.parse(localStorage.getItem('pact_gallery_photos')) || [];
+    
+    // UNSHIFT вместо push — кидает новую фотку строго в самый верх (первой после плюсика)
+    savedPhotos.unshift(base64Image);
+    
+    localStorage.setItem('pact_gallery_photos', JSON.stringify(savedPhotos));
+
+    event.target.value = ''; // Сброс инпута
+    renderGalleryGrid();
+  };
+  reader.readAsDataURL(file);
+}
+
+// Автоматический триггер при открытии вкладки
+document.addEventListener("DOMContentLoaded", () => {
+  const galleryTab = document.getElementById('tab-gallery');
+  if (galleryTab) {
+    renderGalleryGrid();
+
+    const observer = new MutationObserver(() => {
+      const isVisible = window.getComputedStyle(galleryTab).display !== 'none';
+      if (isVisible) {
+        renderGalleryGrid();
+      }
+    });
+
+    observer.observe(galleryTab, { attributes: true, attributeFilter: ['style', 'class'] });
+  }
+});
+</script>
+  
+  
+
+<!-- 4. ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ -->
+<div id="tab-cycle" class="tab-content cycle-tab-screen">
+  <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 12px;">
+    
+    <!-- Шапка вкладки -->
+    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 14px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
       <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span> 
       
       <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
         Назад
       </button>
-
-      <div class="custom-btn-shimmer" style="font-size: 20px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
-        Календарь  ✨
+      <div class="custom-btn-shimmer" style="font-size: 18px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+        Календарь
       </div>
-
       <div style="display: flex; gap: 6px; align-items: center;">
-        <button id="btn-cycle-settings" class="tutorial-help-btn tactile-btn" onclick="openCycleSettingsModal()" title="Настройки цикла" style="height: 28px; padding: 0 8px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-          ⚙️
-        </button>
-        <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('cycle')" style="width: 28px; height: 28px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-          ?
-        </button>
+        <button onclick="PactCalendar.openSettings()" style="height: 28px; width: 28px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;">⚙️</button>
       </div>
     </div>
 
-    <!-- Основная карточка календаря (строго по нашим стандартным границам) -->
-    <div class="card cycle-main-card" style="padding: 16px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative;">
+    <!-- ЕДИНЫЙ ОБЪЕДИНЕННЫЙ КОНТЕЙНЕР (СТАТУСЫ + КАЛЕНДАРЬ + ТУЛТИП ВНУТРИ) -->
+    <div id="calendar-container-box" style="padding: 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 24px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px;">
       
-      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); border-radius: 14px 14px 0 0;"></span>
-
-      <!-- Две аккуратные компактные плашки статусов -->
-      <div class="cycle-widgets-row" style="display: flex; gap: 8px; margin-bottom: 10px;">
-        <!-- Плашка 1: Месячные / До месячных -->
-        <div id="widget-period-pill" style="flex: 1; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 8px 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
+            <div id="global-tooltip-popover" style="display: none; position: absolute; z-index: 99999; background: #FFFFFF; border: 3px solid #1A1A1A; border-radius: 14px; padding: 12px; min-width: 200px; max-width: 250px; max-height: 240px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 4px 12px rgba(0, 0, 0, 0.15); transform-origin: bottom center; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-shrink: 0;">
+            <span id="tooltip-title" style="font-size: 11px; font-weight: 900; color: #7209B7; text-transform: uppercase; letter-spacing: 0.5px;">Подсказка</span>
+            <span onclick="PactCalendar.hideTooltip()" style="cursor: pointer; color: rgba(0,0,0,0.5); font-size: 12px; padding: 0 4px; font-weight: 900;">✕</span>
+          </div>
+          <div id="tooltip-content" style="font-size: 10.5px; font-weight: 700; color: #1A1A1A; line-height: 1.4; display: flex; flex-direction: column; overflow: hidden; flex: 1;"></div>
+        </div>
+            <!-- ГЛОБАЛЬНЫЙ ТУЛТИП (ВЫНЕСЕН В САМОЕ ДНО ДОКУМЕНТА) -->
+              <div id="global-tooltip-popover" style="display: none; position: fixed; z-index: 2147483647; background: #FFFFFF; border: 3px solid #1A1A1A; border-radius: 14px; padding: 12px; min-width: 200px; max-width: 250px; max-height: 240px; box-sizing: border-box; box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 4px 12px rgba(0, 0, 0, 0.15); transform-origin: bottom center; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-shrink: 0;">
+                  <span id="tooltip-title" style="font-size: 11px; font-weight: 900; color: #7209B7; text-transform: uppercase; letter-spacing: 0.5px;">Подсказка</span>
+                  <span onclick="PactCalendar.hideTooltip()" style="cursor: pointer; color: rgba(0,0,0,0.5); font-size: 12px; padding: 0 4px; font-weight: 900;">✕</span>
+                </div>
+                <div id="tooltip-content" style="font-size: 10.5px; font-weight: 700; color: #1A1A1A; line-height: 1.4; display: flex; flex-direction: column; overflow: hidden; flex: 1;"></div>
+              </div>
+            <style>
+            /* Плавная физическая анимация тултипа */
+                @keyframes tooltipSmoothGrow {
+                  0% { 
+                    opacity: 0; 
+                    transform: scale(0.1) translateY(6px); 
+                  }
+                  75% { 
+                    opacity: 1; 
+                    transform: scale(1.03) translateY(-1px); 
+                  }
+                  100% { 
+                    opacity: 1; 
+                    transform: scale(1) translateY(0); 
+                  }
+                }
+            </style>
+      <!-- ВЕРХНЯЯ ЧАСТЬ: Плашки статусов -->
+      <div class="cycle-widgets-row" style="display: flex; gap: 8px;">
+        <div id="widget-period-pill" style="flex: 1; background: rgba(255, 71, 126, 0.18); border: 1px solid rgba(255, 71, 126, 0.4); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(255,255,255,0.1);">
           <div id="cycle-period-status-text" style="font-size: 10.5px; font-weight: 900; color: #fff; text-align: center;">Загрузка...</div>
         </div>
-
-        <!-- Плашка 2: Овуляция / Фертильность -->
-        <div id="widget-ovul-pill" style="flex: 1; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 8px 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
+        <div id="widget-ovul-pill" style="flex: 1; background: rgba(218, 112, 214, 0.15); border: 1px solid rgba(218, 112, 214, 0.35); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(255,255,255,0.1);">
           <div id="cycle-ovul-status-text" style="font-size: 10.5px; font-weight: 900; color: #fff; text-align: center;">Загрузка...</div>
         </div>
       </div>
 
-      <!-- Панель переключения месяцев -->
-      <div class="calendar-month-nav" style="display: flex; justify-content: space-between; align-items: center; background: rgba(10, 6, 14, 0.6); padding: 5px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px;">
-        <button class="month-nav-arrow tactile-btn" id="btn-prev-month" onclick="changeCalendarMonth(-1)" style="background: transparent; border: none; color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;">‹</button>
-        <div class="calendar-month-label" id="calendar-current-month-lbl" style="font-size: 11.5px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.5px;">Октябрь 2026</div>
-        <button class="month-nav-arrow tactile-btn" id="btn-next-month" onclick="changeCalendarMonth(1)" style="background: transparent; border: none; color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;">›</button>
-      </div>
+      <!-- РАЗДЕЛИТЕЛЬНАЯ ЛИНИЯ -->
+      <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent); width: 100%;"></div>
 
-      <!-- Дни недели -->
-      <div class="calendar-weekdays-row" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 9.5px; font-weight: 900; color: var(--text-muted, #aaa); margin-bottom: 5px; text-transform: uppercase;">
-        <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
-      </div>
-
-      <!-- Сетка дней месяца -->
-      <div class="calendar-days-matrix" id="calendar-days-matrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-bottom: 10px;"></div>
-
-      <!-- Панель выбранного дня: описание фазы и события -->
-      <div class="selected-day-panel" id="selected-day-panel" style="background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px; box-sizing: border-box;">
-        <div class="selected-day-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <div>
-            <div class="selected-day-date" id="selected-day-date-str" style="font-size: 11px; font-weight: 900; color: #fff;">Выберите день</div>
-            <div class="selected-day-phase" id="selected-day-phase-str" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted, #aaa);">—</div>
-          </div>
-          <button class="small-btn tactile-btn" onclick="openAddEventModal()" style="height: 26px; padding: 0 8px; background: var(--accent-gradient); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; color: #fff; font-size: 9.5px; font-weight: 900; cursor: pointer;">+ Событие ✨</button>
+      <!-- НИЖНЯЯ ЧАСТЬ: Сам календарь -->
+      <div>
+        <div class="calendar-month-nav" style="display: flex; justify-content: space-between; align-items: center; background: rgba(10, 6, 14, 0.6); padding: 6px 12px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 10px;">
+          <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(-1)" style="background: transparent; border: none; color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;">‹</button>
+          <div class="calendar-month-label" id="calendar-current-month-lbl" style="font-size: 11.5px; font-weight: 900; color: #fff; text-transform: uppercase;">Октябрь 2026</div>
+          <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(1)" style="background: transparent; border: none; color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;">›</button>
         </div>
 
-        <!-- Список событий на выбранный день -->
-        <div class="day-events-list" id="day-events-list" style="max-height: 75px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
-          <div class="no-events-hint" style="font-size: 9.5px; color: var(--text-muted, #aaa); text-align: center; padding: 4px 0;">Событий на этот день пока нет</div>
+        <div class="calendar-weekdays-row" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 9.5px; font-weight: 900; color: #aaa; margin-bottom: 6px; text-transform: uppercase;">
+          <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
         </div>
+
+        <div class="calendar-days-matrix" id="calendar-days-matrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;"></div>
       </div>
 
     </div>
+
   </div>
+</div>
+<!-- Модалка: Настройки цикла -->
+<div id="cycle-settings-modal" class="modal-overlay" onclick="if(event.target===this) PactCalendar.closeSettings()">
+  <div class="modal-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Настройки цикла ⚙️</h3>
+      <span onclick="PactCalendar.closeSettings()" style="cursor: pointer; color: rgba(255,255,255,0.5); font-size: 14px;">✕</span>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div class="form-group">
+        <label style="font-size:10.5px; font-weight:700; color:#aaa; display:block; margin-bottom: 4px;">Дата начала последних месячных:</label>
+        <input type="date" id="cycle-input-last-date" class="form-control" style="font-size:13px;">
+      </div>
 
-  <!-- СКРИПТ КАЛЕНДАРЯ И ЦИКЛА -->
-  <script>
-    function safeHaptic(type = 'light') {
-      try {
-        if (typeof window.haptic === 'function') window.haptic(type);
-        else window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light');
-      } catch (e) {}
-    }
+      <div class="form-group" style="background: rgba(10, 6, 14, 0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px;">
+        <div style="display:flex; justify-content:space-between; align-items: center; font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.7); margin-bottom: 6px; text-transform: uppercase;">
+          <span>Длительность цикла:</span>
+          <b id="cycle-val-length-lbl" style="color: #D4AF37; font-size: 11px;">28 дней</b>
+        </div>
+        <input type="range" id="cycle-input-cycle-len" min="21" max="40" value="28" style="width: 100%; accent-color: #D4AF37; cursor: pointer;" oninput="document.getElementById('cycle-val-length-lbl').textContent = this.value + ' дней'">
+      </div>
 
-    function safeEscape(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+      <div class="form-group" style="background: rgba(10, 6, 14, 0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px;">
+        <div style="display:flex; justify-content:space-between; align-items: center; font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.7); margin-bottom: 6px; text-transform: uppercase;">
+          <span>Длительность месячных:</span>
+          <b id="cycle-val-period-lbl" style="color: #D4AF37; font-size: 11px;">5 дней</b>
+        </div>
+        <input type="range" id="cycle-input-period-len" min="3" max="10" value="5" style="width: 100%; accent-color: #D4AF37; cursor: pointer;" oninput="document.getElementById('cycle-val-period-lbl').textContent = this.value + ' дней'">
+      </div>
 
-    function toDateKey(d) {
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-
-    const MONTH_NAMES_RU = [
-      'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-      'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-    ];
-
-    let cycleSettings = {
-      lastPeriodDate: '',
-      cycleLength: 28,
-      periodLength: 5
+      <button onclick="PactCalendar.saveSettings()" style="width: 100%; height: 36px; padding: 0 16px; font-size: 10.5px; font-weight: 900; background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(0, 0, 0, 0.3) 100%); border-radius: 9px; border: 1px solid rgba(255, 255, 255, 0.22); color: #fff; cursor: pointer; text-transform: uppercase;">
+        Сохранить настройки
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+  (function() {
+    let state = {
+      settings: { lastPeriodDate: '', cycleLength: 28, periodLength: 5 },
+      events: {},
+      viewYear: new Date().getFullYear(),
+      viewMonth: new Date().getMonth(),
+      activeTooltipDateKey: '',
+      selectedDateKey: ''
     };
 
-    let calendarEvents = {};
-    let calCurrentDate = new Date();
-    let calViewYear = calCurrentDate.getFullYear();
-    let calViewMonth = calCurrentDate.getMonth();
-    let calSelectedDateStr = toDateKey(calCurrentDate);
+    const MONTH_NAMES_RU = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
-    function loadCalendarDataFromStorage() {
+    function toDateKey(d) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function loadData() {
       try {
         const localCycle = localStorage.getItem('pact_cycle_settings');
-        if (localCycle) cycleSettings = { ...cycleSettings, ...JSON.parse(localCycle) };
+        if (localCycle) state.settings = { ...state.settings, ...JSON.parse(localCycle) };
         const localEv = localStorage.getItem('pact_calendar_events');
-        if (localEv) calendarEvents = JSON.parse(localEv) || {};
+        if (localEv) state.events = JSON.parse(localEv) || {};
       } catch (e) {}
 
-      if (!cycleSettings.lastPeriodDate) {
+      if (!state.settings.lastPeriodDate) {
         const d = new Date();
         d.setDate(d.getDate() - 14);
-        cycleSettings.lastPeriodDate = toDateKey(d);
+        state.settings.lastPeriodDate = toDateKey(d);
       }
     }
 
-    function changeCalendarMonth(offset) {
-      safeHaptic('selection');
-      const now = new Date();
-      const minDate = new Date(now.getFullYear(), now.getMonth() - 12, 1);
-      const maxDate = new Date(now.getFullYear(), now.getMonth() + 12, 1);
+    function getPhaseForDate(targetDate) {
+      if (!state.settings.lastPeriodDate) return { phase: 'unknown', cycleDay: 0 };
+      const parts = state.settings.lastPeriodDate.split('-').map(Number);
+      const start = Date.UTC(parts[0], parts[1] - 1, parts[2]);
+      const current = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
 
-      const target = new Date(calViewYear, calViewMonth + offset, 1);
-      if (target < minDate || target > maxDate) return;
+      const cLen = Number(state.settings.cycleLength) || 28;
+      const pLen = Number(state.settings.periodLength) || 5;
 
-      calViewYear = target.getFullYear();
-      calViewMonth = target.getMonth();
-      renderInteractiveCalendar();
-    }
+      const diffDays = Math.floor((current - start) / (1000 * 60 * 60 * 24));
+      let cycleDay = ((diffDays % cLen) + cLen) % cLen + 1;
+      const ovulationDay = Math.max(pLen + 1, cLen - 14);
 
-    function getCyclePhaseForDate(targetDate) {
-      if (!cycleSettings.lastPeriodDate) return { phase: 'unknown', cycleDay: 0 };
-
-      const parts = cycleSettings.lastPeriodDate.split('-').map(Number);
-      if (parts.length < 3 || isNaN(parts[0])) return { phase: 'unknown', cycleDay: 0 };
-
-      const start = new Date(parts[0], parts[1] - 1, parts[2]);
-      start.setHours(0, 0, 0, 0);
-
-      const current = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-      current.setHours(0, 0, 0, 0);
-
-      const diffTime = current.getTime() - start.getTime();
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      const cLen = Number(cycleSettings.cycleLength) || 28;
-      const pLen = Number(cycleSettings.periodLength) || 5;
-
-      let cycleDay = (diffDays % cLen);
-      if (cycleDay < 0) cycleDay += cLen;
-      cycleDay += 1;
-
-      const ovulationDay = Math.max(1, cLen - 14);
-
-      if (cycleDay <= pLen) {
-        return { phase: 'period', cycleDay, dayOfPeriod: cycleDay, totalPeriod: pLen };
-      } else if (cycleDay === ovulationDay) {
-        return { phase: 'ovulation', cycleDay };
-      } else if (cycleDay >= ovulationDay - 4 && cycleDay <= ovulationDay + 1) {
-        return { phase: 'fertile', cycleDay };
-      } else {
-        return { phase: 'regular', cycleDay, daysToPeriod: (cLen - cycleDay + 1) };
-      }
+      if (cycleDay <= pLen) return { phase: 'period', cycleDay, dayOfPeriod: cycleDay, totalPeriod: pLen };
+      if (cycleDay === ovulationDay) return { phase: 'ovulation', cycleDay };
+      if (cycleDay >= ovulationDay - 4 && cycleDay < ovulationDay) return { phase: 'fertile', cycleDay };
+      return { phase: 'regular', cycleDay, daysToPeriod: (cLen - cycleDay + 1) };
     }
 
     function getDaysWord(num) {
@@ -4911,47 +5361,40 @@ button:active,
       return 'дней';
     }
 
-    // Обновление компактных плашек по твоим правилам
-    function updateCycleSummaryCards() {
-      const today = new Date();
-      const info = getCyclePhaseForDate(today);
-
+    function updateSummaryCards() {
+      const info = getPhaseForDate(new Date());
       const periodPill = document.getElementById('widget-period-pill');
       const periodStatusText = document.getElementById('cycle-period-status-text');
-
       const ovulPill = document.getElementById('widget-ovul-pill');
       const ovulStatusText = document.getElementById('cycle-ovul-status-text');
-
-      const cLen = Number(cycleSettings.cycleLength) || 28;
+      const cLen = Number(state.settings.cycleLength) || 28;
       const ovulationDay = Math.max(1, cLen - 14);
 
-      // 1. Логика плашки месячных
       if (periodPill && periodStatusText) {
         if (info.phase === 'period') {
-          periodPill.style.background = 'rgba(255, 71, 126, 0.25)';
-          periodPill.style.borderColor = 'rgba(255, 71, 126, 0.5)';
+          periodPill.style.background = 'rgba(255, 71, 126, 0.3)';
+          periodPill.style.borderColor = 'rgba(255, 71, 126, 0.6)';
           periodStatusText.innerHTML = `🩸 Менструация: день ${info.dayOfPeriod}`;
         } else {
-          periodPill.style.background = 'rgba(10, 6, 14, 0.85)';
-          periodPill.style.borderColor = 'rgba(255,255,255,0.12)';
+          periodPill.style.background = 'rgba(255, 71, 126, 0.12)';
+          periodPill.style.borderColor = 'rgba(255, 71, 126, 0.35)';
           const daysLeft = (cLen - info.cycleDay + 1);
           periodStatusText.innerHTML = `🩸 До месячных: ${daysLeft} ${getDaysWord(daysLeft)}`;
         }
       }
 
-      // 2. Логика плашки овуляции
       if (ovulPill && ovulStatusText) {
         if (info.phase === 'ovulation') {
-          ovulPill.style.background = 'rgba(255, 215, 0, 0.25)';
-          ovulPill.style.borderColor = 'rgba(255, 215, 0, 0.5)';
+          ovulPill.style.background = 'rgba(255, 215, 0, 0.3)';
+          ovulPill.style.borderColor = 'rgba(255, 215, 0, 0.6)';
           ovulStatusText.innerHTML = `🌸 Овуляция (Пик)`;
         } else if (info.phase === 'fertile') {
-          ovulPill.style.background = 'rgba(218, 112, 214, 0.2)';
-          ovulPill.style.borderColor = 'rgba(218, 112, 214, 0.4)';
+          ovulPill.style.background = 'rgba(218, 112, 214, 0.25)';
+          ovulPill.style.borderColor = 'rgba(218, 112, 214, 0.5)';
           ovulStatusText.innerHTML = `✨ Фертильное окно`;
         } else {
-          ovulPill.style.background = 'rgba(10, 6, 14, 0.85)';
-          ovulPill.style.borderColor = 'rgba(255,255,255,0.12)';
+          ovulPill.style.background = 'rgba(218, 112, 214, 0.1)';
+          ovulPill.style.borderColor = 'rgba(218, 112, 214, 0.3)';
           let daysToOvul = ovulationDay - info.cycleDay;
           if (daysToOvul < 0) daysToOvul += cLen;
           ovulStatusText.innerHTML = `🌸 До овуляции: ${daysToOvul} ${getDaysWord(daysToOvul)}`;
@@ -4959,270 +5402,392 @@ button:active,
       }
     }
 
-    function renderInteractiveCalendar() {
-      loadCalendarDataFromStorage();
-      updateCycleSummaryCards();
-
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      const settingsBtn = document.getElementById('btn-cycle-settings');
-      if (settingsBtn) {
-        settingsBtn.style.display = (currentRole === 'male') ? 'none' : 'flex';
-      }
+    function renderCalendar() {
+      loadData();
+      updateSummaryCards();
 
       const monthLbl = document.getElementById('calendar-current-month-lbl');
-      if (monthLbl) monthLbl.textContent = `${MONTH_NAMES_RU[calViewMonth]} ${calViewYear}`;
+      if (monthLbl) monthLbl.textContent = `${MONTH_NAMES_RU[state.viewMonth]} ${state.viewYear}`;
 
       const matrix = document.getElementById('calendar-days-matrix');
       if (!matrix) return;
       matrix.innerHTML = '';
 
-      const firstDayOfMonth = new Date(calViewYear, calViewMonth, 1);
-      const lastDayOfMonth = new Date(calViewYear, calViewMonth + 1, 0);
+      const firstDayOfMonth = new Date(state.viewYear, state.viewMonth, 1);
+      const lastDayOfMonth = new Date(state.viewYear, state.viewMonth + 1, 0);
 
       let startDayOfWeek = firstDayOfMonth.getDay() - 1;
       if (startDayOfWeek === -1) startDayOfWeek = 6;
 
-      const prevMonthLastDay = new Date(calViewYear, calViewMonth, 0).getDate();
+      const prevMonthLastDay = new Date(state.viewYear, state.viewMonth, 0).getDate();
       for (let i = startDayOfWeek - 1; i >= 0; i--) {
         const cell = document.createElement('div');
         cell.className = 'cal-day-cell other-month';
         cell.textContent = prevMonthLastDay - i;
-        cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.25); border-radius: 6px;';
+        cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(255,255,255,0.25); border-radius: 6px;';
         matrix.appendChild(cell);
       }
 
       const todayStr = toDateKey(new Date());
 
       for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-        const thisDate = new Date(calViewYear, calViewMonth, day);
+        const thisDate = new Date(state.viewYear, state.viewMonth, day);
         const dateKey = toDateKey(thisDate);
-        const phaseInfo = getCyclePhaseForDate(thisDate);
+        const phaseInfo = getPhaseForDate(thisDate);
 
         const cell = document.createElement('div');
         cell.className = 'cal-day-cell';
-        cell.textContent = day;
-        cell.style.cssText = 'aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; background: rgba(10, 6, 14, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; cursor: pointer; position: relative; transition: all 0.15s ease;';
+        cell.style.cssText = 'aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; background: rgba(10, 6, 14, 0.6); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; position: relative; transition: transform 0.15s ease, border-color 0.15s ease;';
+
+        if (phaseInfo.phase === 'period') cell.style.background = 'rgba(255, 71, 126, 0.25)';
+        else if (phaseInfo.phase === 'ovulation') cell.style.background = 'rgba(255, 215, 0, 0.25)';
+        else if (phaseInfo.phase === 'fertile') cell.style.background = 'rgba(218, 112, 214, 0.2)';
 
         if (dateKey === todayStr) {
-          cell.style.borderColor = 'rgba(255, 255, 255, 0.6)';
-        }
-        if (dateKey === calSelectedDateStr) {
-          cell.style.background = 'var(--accent-gradient)';
-          cell.style.borderColor = 'rgba(255,255,255,0.4)';
-          cell.style.boxShadow = '0 2px 8px rgba(230, 57, 86, 0.4)';
+          cell.classList.add('today-cell');
         }
 
-        if (phaseInfo.phase === 'period') {
-          cell.style.background = 'rgba(255, 71, 126, 0.25)';
-          cell.style.borderColor = 'rgba(255, 71, 126, 0.5)';
-        } else if (phaseInfo.phase === 'ovulation') {
-          cell.style.background = 'rgba(255, 215, 0, 0.25)';
-          cell.style.borderColor = 'rgba(255, 215, 0, 0.5)';
-        } else if (phaseInfo.phase === 'fertile') {
-          cell.style.background = 'rgba(218, 112, 214, 0.2)';
-          cell.style.borderColor = 'rgba(218, 112, 214, 0.4)';
+        if (dateKey === state.selectedDateKey) {
+          cell.classList.add('selected-day');
         }
 
-        if (calendarEvents[dateKey] && calendarEvents[dateKey].length > 0) {
-          const dot = document.createElement('div');
-          dot.style.cssText = 'width: 3.5px; height: 3.5px; background: #ffd700; border-radius: 50%; position: absolute; bottom: 2px; box-shadow: 0 0 3px #ffd700;';
-          cell.appendChild(dot);
+        const events = state.events[dateKey] || [];
+        if (events.length > 0) {
+          const heartWrapper = document.createElement('div');
+          heartWrapper.style.cssText = 'position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;';
+          
+          heartWrapper.innerHTML = `
+            <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 32 32" style="width: 84%; height: 84%; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));">
+                <path d="M16 28C16 28 4 19.5 4 11.5C4 7.5 7 4.5 11 4.5C13.5 4.5 15.2 6 16 7.5C16.8 6 18.5 4.5 21 4.5C25 4.5 28 7.5 28 11.5C28 19.5 16 28 16 28Z" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span style="position: absolute; font-size: 9.5px; font-weight: 900; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.9);">${day}</span>
+            </div>
+          `;
+          cell.appendChild(heartWrapper);
+        } else {
+          const dayNum = document.createElement('span');
+          dayNum.textContent = day;
+          cell.appendChild(dayNum);
         }
 
-        cell.onclick = () => selectCalendarDay(dateKey);
+        cell.onclick = (e) => {
+          hideTooltip();
+
+          document.querySelectorAll('.cal-day-cell').forEach(c => c.classList.remove('selected-day'));
+          cell.classList.add('selected-day');
+          state.selectedDateKey = dateKey;
+
+          cell.classList.remove('spring-active');
+          void cell.offsetWidth;
+          cell.classList.add('spring-active');
+
+          openDayTooltip(cell, thisDate, dateKey);
+        };
+
         matrix.appendChild(cell);
       }
-
-      renderSelectedDayDetails();
     }
 
-    function selectCalendarDay(dateKey) {
-      safeHaptic('light');
-      calSelectedDateStr = dateKey;
-      renderInteractiveCalendar();
-    }
-
-    function renderSelectedDayDetails() {
-      const parts = calSelectedDateStr.split('-').map(Number);
-      if (parts.length < 3) return;
-      const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-
-      const dateStrEl = document.getElementById('selected-day-date-str');
-      const phaseStrEl = document.getElementById('selected-day-phase-str');
-      const eventsList = document.getElementById('day-events-list');
-
-      const options = { day: 'numeric', month: 'long', weekday: 'long' };
-      if (dateStrEl) dateStrEl.textContent = dateObj.toLocaleDateString('ru-RU', options);
-
-      const info = getCyclePhaseForDate(dateObj);
-      if (phaseStrEl) {
-        if (info.phase === 'period') phaseStrEl.textContent = `🩸 Менструация (День ${info.dayOfPeriod} из ${info.totalPeriod})`;
-        else if (info.phase === 'ovulation') phaseStrEl.textContent = `🌸 Пик овуляции`;
-        else if (info.phase === 'fertile') phaseStrEl.textContent = `✨ Фертильные дни`;
-        else phaseStrEl.textContent = `День цикла: ${info.cycleDay}`;
-      }
-
-      if (!eventsList) return;
-      const events = calendarEvents[calSelectedDateStr] || [];
-
-      if (events.length === 0) {
-        eventsList.innerHTML = `<div class="no-events-hint" style="font-size: 9.5px; color: var(--text-muted, #aaa); text-align: center; padding: 4px 0;">Событий на этот день пока нет</div>`;
-      } else {
-        eventsList.innerHTML = events.map(ev => `
-          <div class="event-item-card" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 5px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700;">
-            <span>${safeEscape(ev.text)}</span>
-            <span style="cursor:pointer; color:#FFA3B5; font-size:12px; padding:0 4px;" onclick="event.stopPropagation(); deleteCalendarEventById('${calSelectedDateStr}', '${ev.id}')">✕</span>
-          </div>
-        `).join('');
-      }
-    }
-
-    function openCycleSettingsModal() {
-      safeHaptic('light');
-      loadCalendarDataFromStorage();
-
-      const dateInput = document.getElementById('cycle-input-last-date');
-      const cLenInput = document.getElementById('cycle-input-cycle-len');
-      const pLenInput = document.getElementById('cycle-input-period-len');
-
-      if (dateInput) dateInput.value = cycleSettings.lastPeriodDate || toDateKey(new Date());
-      if (cLenInput) {
-        cLenInput.value = cycleSettings.cycleLength || 28;
-        const lbl = document.getElementById('cycle-val-length-lbl');
-        if (lbl) lbl.textContent = cLenInput.value + ' дней';
-      }
-      if (pLenInput) {
-        pLenInput.value = cycleSettings.periodLength || 5;
-        const lbl = document.getElementById('cycle-val-period-lbl');
-        if (lbl) lbl.textContent = pLenInput.value + ' дней';
-      }
-
-      document.getElementById('cycle-settings-modal')?.classList.add('active');
-    }
-
-    function closeCycleSettingsModal() {
-      document.getElementById('cycle-settings-modal')?.classList.remove('active');
-    }
-
-    function saveCycleSettings() {
-      const currentRole = window.currentAvatarRole || localStorage.getItem('pact_current_role') || 'female';
-      if (currentRole === 'male') {
-        safeHaptic('warning');
-        if (typeof showToast === 'function') {
-          showToast('Только избранница может сохранять настройки цикла 🌸', 'error');
-        }
-        closeCycleSettingsModal();
-        return;
-      }
+    function showTooltip(targetElement, title, htmlContent) {
+      const tooltip = document.getElementById('global-tooltip-popover');
+      const titleEl = document.getElementById('tooltip-title');
+      const contentEl = document.getElementById('tooltip-content');
       
-      safeHaptic('medium');
-      const dateVal = document.getElementById('cycle-input-last-date')?.value;
-      const cLenVal = Number(document.getElementById('cycle-input-cycle-len')?.value) || 28;
-      const pLenVal = Number(document.getElementById('cycle-input-period-len')?.value) || 5;
+      const container = document.getElementById('calendar-container-box');
+      if (!tooltip || !targetElement || !container) return;
 
-      if (!dateVal) {
-        if (typeof showToast === 'function') showToast('Укажите дату последних месячных', 'error');
-        return;
+      titleEl.textContent = title;
+      contentEl.innerHTML = htmlContent;
+
+      // Включаем абсолютное позиционирование строго внутри общей рамки
+      tooltip.style.cssText += 'display: flex !important; position: absolute !important;';
+      tooltip.style.animation = 'none';
+      
+      const tWidth = tooltip.offsetWidth;
+      const tHeight = tooltip.offsetHeight;
+
+      const targetRect = targetElement.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      // Координаты ячейки относительно нашей общей рамки
+      const cellLeft = targetRect.left - containerRect.left;
+      const cellTop = targetRect.top - containerRect.top;
+      const cellWidth = targetRect.width;
+      const cellHeight = targetRect.height;
+
+      const safetyMargin = 10; // Отступ от внутренних границ рамки
+
+      // Вертикальный расчёт (пытаемся снизу, если не влазит — сверху)
+      let top = cellTop + cellHeight + 6;
+      let originY = 'top';
+
+      if (cellTop + cellHeight + tHeight + safetyMargin > containerRect.height) {
+        top = cellTop - tHeight - 6;
+        originY = 'bottom';
       }
 
-      cycleSettings = {
-        lastPeriodDate: dateVal,
-        cycleLength: cLenVal,
-        periodLength: pLenVal
-      };
-
-      localStorage.setItem('pact_cycle_settings', JSON.stringify(cycleSettings));
-
-      if (window.PactCloud) {
-        window.PactCloud.saveShared({ cycleSettings });
+      // ЖЕСТКИЙ ЛИМИТ: если тултип упирается в верхний край общей рамки
+      if (top < safetyMargin) {
+        top = safetyMargin;
+        originY = 'top';
       }
 
-      closeCycleSettingsModal();
-      renderInteractiveCalendar();
-      if (typeof showToast === 'function') showToast('Настройки цикла обновлены ✨', 'success');
-    }
+      // Горизонтальный расчёт (центрируем, но не даем выходить за бока рамки)
+      let left = cellLeft + (cellWidth / 2) - (tWidth / 2);
+      let originX = 'center';
 
-    function openAddEventModal() {
-      safeHaptic('light');
-      const parts = calSelectedDateStr.split('-').map(Number);
-      const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-      const dateHeader = document.getElementById('event-modal-target-date');
-      if (dateHeader) dateHeader.textContent = dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+      const minLeft = safetyMargin;
+      const maxLeft = containerRect.width - tWidth - safetyMargin;
 
-      const input = document.getElementById('cycle-event-title-input');
-      if (input) input.value = '';
-
-      document.getElementById('cycle-event-modal')?.classList.add('active');
-      setTimeout(() => input?.focus(), 150);
-    }
-
-    function closeCycleEventModal() {
-      document.getElementById('cycle-event-modal')?.classList.remove('active');
-    }
-
-    function setQuickEventPreset(presetText) {
-      safeHaptic('light');
-      const input = document.getElementById('cycle-event-title-input');
-      if (input) input.value = presetText;
-    }
-
-    function saveCalendarEvent() {
-      safeHaptic('medium');
-      const input = document.getElementById('cycle-event-title-input');
-      const text = input ? input.value.trim() : '';
-      if (!text) {
-        if (typeof showToast === 'function') showToast('Введите название события', 'error');
-        return;
+      if (left > maxLeft) {
+        left = maxLeft;
+        originX = 'right';
+      }
+      if (left < minLeft) {
+        left = minLeft;
+        originX = 'left';
       }
 
-      if (!calendarEvents[calSelectedDateStr]) calendarEvents[calSelectedDateStr] = [];
-      calendarEvents[calSelectedDateStr].push({
-        id: 'ev_' + Date.now(),
-        text: text,
-        createdAt: Date.now()
-      });
+      // Применяем координаты
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+      tooltip.style.transformOrigin = `${originX} ${originY}`;
 
-      localStorage.setItem('pact_calendar_events', JSON.stringify(calendarEvents));
+      void tooltip.offsetWidth;
+      tooltip.style.animation = 'tooltipSmoothGrow 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards';
 
-      if (window.PactCloud) {
-        window.PactCloud.saveShared({ calendarEvents });
+      setTimeout(() => {
+        document.addEventListener('click', handleOutsideCall);
+      }, 10);
+    }
+   // 1. Показываем тултип и вешаем глобальный слушатель кликов с небольшой задержкой
+    function showTooltip(targetElement, title, htmlContent) {
+      const tooltip = document.getElementById('global-tooltip-popover');
+      const titleEl = document.getElementById('tooltip-title');
+      const contentEl = document.getElementById('tooltip-content');
+      
+      const container = document.getElementById('calendar-container-box');
+      if (!tooltip || !targetElement || !container) return;
+
+      titleEl.textContent = title;
+      contentEl.innerHTML = htmlContent;
+
+      tooltip.style.cssText += 'display: flex !important; position: absolute !important;';
+      tooltip.style.animation = 'none';
+      
+      const tWidth = tooltip.offsetWidth;
+      const tHeight = tooltip.offsetHeight;
+
+      const targetRect = targetElement.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      const cellLeft = targetRect.left - containerRect.left;
+      const cellTop = targetRect.top - containerRect.top;
+      const cellWidth = targetRect.width;
+      const cellHeight = targetRect.height;
+
+      const safetyMargin = 10; 
+
+      let top = cellTop + cellHeight + 6;
+      let originY = 'top';
+
+      if (cellTop + cellHeight + tHeight + safetyMargin > containerRect.height) {
+        top = cellTop - tHeight - 6;
+        originY = 'bottom';
       }
 
-      closeCycleEventModal();
-      renderInteractiveCalendar();
-      if (typeof showToast === 'function') showToast('Событие добавлено в календарь ✨', 'success');
-    }
-
-    function deleteCalendarEventById(dateKey, eventId) {
-      safeHaptic('light');
-      if (!calendarEvents[dateKey]) return;
-      calendarEvents[dateKey] = calendarEvents[dateKey].filter(e => e.id !== eventId);
-      if (calendarEvents[dateKey].length === 0) delete calendarEvents[dateKey];
-
-      localStorage.setItem('pact_calendar_events', JSON.stringify(calendarEvents));
-      if (window.PactCloud) {
-        window.PactCloud.saveShared({ calendarEvents });
+      if (top < safetyMargin) {
+        top = safetyMargin;
+        originY = 'top';
       }
 
-      renderInteractiveCalendar();
-      if (typeof showToast === 'function') showToast('Событие удалено', 'info');
+      let left = cellLeft + (cellWidth / 2) - (tWidth / 2);
+      let originX = 'center';
+
+      const minLeft = safetyMargin;
+      const maxLeft = containerRect.width - tWidth - safetyMargin;
+
+      if (left > maxLeft) {
+        left = maxLeft;
+        originX = 'right';
+      }
+      if (left < minLeft) {
+        left = minLeft;
+        originX = 'left';
+      }
+
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+      tooltip.style.transformOrigin = `${originX} ${originY}`;
+
+      void tooltip.offsetWidth;
+      tooltip.style.animation = 'tooltipSmoothGrow 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+
+      // АКТИВИРУЕМ СЛУШАТЕЛЬ КЛИКОВ ВНЕ ТУЛТИПА
+      setTimeout(() => {
+        document.addEventListener('click', handleOutsideClick);
+      }, 50);
     }
 
-    // Привязки к window для кнопок
-    window.renderInteractiveCalendar = renderInteractiveCalendar;
-    window.changeCalendarMonth = changeCalendarMonth;
-    window.selectCalendarDay = selectCalendarDay;
-    window.openCycleSettingsModal = openCycleSettingsModal;
-    window.closeCycleSettingsModal = closeCycleSettingsModal;
-    window.saveCycleSettings = saveCycleSettings;
-    window.openAddEventModal = openAddEventModal;
-    window.closeCycleEventModal = closeCycleEventModal;
-    window.setQuickEventPreset = setQuickEventPreset;
-    window.saveCalendarEvent = saveCalendarEvent;
-    window.deleteCalendarEventById = deleteCalendarEventById;
-  </script>
-</div>
+    // 2. Проверяем, куда именно кликнул пользователь
+    function handleOutsideClick(e) {
+      const tooltip = document.getElementById('global-tooltip-popover');
+      if (!tooltip) return;
 
+      const clickedInsideTooltip = tooltip.contains(e.target);
+      const clickedOnCell = e.target.closest('.cal-day-cell');
+
+      // Если клик был НЕ по тултипу и НЕ по ячейке календаря — закрываем
+      if (!clickedInsideTooltip && !clickedOnCell) {
+        hideTooltip();
+      }
+    }
+
+    // 3. Закрываем тултип и ОБЯЗАТЕЛЬНО УДАЛЯЕМ слушатель
+    function hideTooltip() {
+      const tooltip = document.getElementById('global-tooltip-popover');
+      if (tooltip) {
+        tooltip.style.display = 'none';
+        document.removeEventListener('click', handleOutsideClick); // Снимаем слушатель, чтобы не висел в памяти
+      }
+      state.selectedDateKey = '';
+      document.querySelectorAll('.cal-day-cell').forEach(c => c.classList.remove('selected-day'));
+    }
+    function handleOutsideClick(e) {
+      const tooltip = document.getElementById('global-tooltip-popover');
+      if (!tooltip) return;
+      if (!tooltip.contains(e.target) && !e.target.closest('.cal-day-cell')) {
+        hideTooltip();
+      }
+    }
+
+    function hideTooltip() {
+      const tooltip = document.getElementById('global-tooltip-popover');
+      if (tooltip) {
+        tooltip.style.display = 'none';
+        document.removeEventListener('click', handleOutsideClick);
+      }
+      state.selectedDateKey = '';
+      document.querySelectorAll('.cal-day-cell').forEach(c => c.classList.remove('selected-day'));
+    }
+
+    function openDayTooltip(targetElement, dateObj, dateKey) {
+      state.activeTooltipDateKey = dateKey;
+
+      const dateTitle = dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+      const phaseInfo = getPhaseForDate(dateObj);
+
+      let phaseEventHtml = '';
+      if (phaseInfo.phase === 'period') {
+        phaseEventHtml = `<div style="display: flex; align-items: center; background: rgba(255, 71, 126, 0.22); border: 2px solid #ff477e; padding: 6px 9px; border-radius: 8px; margin-bottom: 6px; font-size: 10px; font-weight: 800; color: #1A1A1A;">🩸 Менструация (День ${phaseInfo.dayOfPeriod})</div>`;
+      } else if (phaseInfo.phase === 'ovulation') {
+        phaseEventHtml = `<div style="display: flex; align-items: center; background: rgba(255, 215, 0, 0.22); border: 2px solid #d4af37; padding: 6px 9px; border-radius: 8px; margin-bottom: 6px; font-size: 10px; font-weight: 800; color: #1A1A1A;">🌸 Пик овуляции</div>`;
+      } else if (phaseInfo.phase === 'fertile') {
+        phaseEventHtml = `<div style="display: flex; align-items: center; background: rgba(218, 112, 214, 0.2); border: 2px solid #da70d6; padding: 6px 9px; border-radius: 8px; margin-bottom: 6px; font-size: 10px; font-weight: 800; color: #1A1A1A;">✨ Фертильное окно</div>`;
+      }
+
+      const events = state.events[dateKey] || [];
+      const userEventsHtml = events.map(ev => `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(58, 134, 255, 0.15); border: 2px solid #3a86ff; padding: 6px 9px; border-radius: 8px; margin-bottom: 6px; font-size: 10px; color: #1A1A1A; gap: 6px;">
+          <span style="word-break: break-word; flex: 1; font-weight: 800; color: #1A1A1A;">📝 ${ev.text}</span>
+          <span style="cursor:pointer; color:#ff477e; font-size:12px; padding:0 3px; font-weight:900; flex-shrink:0;" onclick="PactCalendar.deleteEvent('${ev.id}')">✕</span>
+        </div>
+      `).join('');
+
+      const noEventsHtml = !phaseEventHtml && events.length === 0 ? `<div style="font-size: 10px; font-weight: 700; color: #666; margin-bottom: 8px;">Событий нет</div>` : '';
+
+      const content = `
+        <div style="overflow-y: auto; margin-bottom: 8px; flex: 1; padding-right: 2px; max-height: 130px;">
+          ${phaseEventHtml}
+          ${userEventsHtml}
+          ${noEventsHtml}
+        </div>
+        <div style="display: flex; gap: 4px; flex-shrink: 0; margin-top: auto;">
+          <input type="text" id="tooltip-new-ev-input" placeholder="Заметка..." style="flex:1; background: #F4F4F6; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; padding: 5px; color: #1A1A1A; font-size: 10px;">
+          <button onclick="PactCalendar.saveEvent()" style="background: #7209B7; border: none; border-radius: 6px; color: #fff; font-weight: 900; padding: 0 8px; cursor: pointer; font-size: 11px;">+</button>
+        </div>
+      `;
+
+      showTooltip(targetElement, dateTitle, content);
+    }
+
+    window.PactCalendar = {
+      init: renderCalendar,
+      changeMonth: function(offset) {
+        hideTooltip();
+        const target = new Date(state.viewYear, state.viewMonth + offset, 1);
+        state.viewYear = target.getFullYear();
+        state.viewMonth = target.getMonth();
+        renderCalendar();
+      },
+      openSettings: function() {
+        loadData();
+        document.getElementById('cycle-input-last-date').value = state.settings.lastPeriodDate;
+        document.getElementById('cycle-input-cycle-len').value = state.settings.cycleLength;
+        document.getElementById('cycle-val-length-lbl').textContent = state.settings.cycleLength + ' дней';
+        document.getElementById('cycle-input-period-len').value = state.settings.periodLength;
+        document.getElementById('cycle-val-period-lbl').textContent = state.settings.periodLength + ' дней';
+        document.getElementById('cycle-settings-modal')?.classList.add('active');
+      },
+      closeSettings: function() {
+        document.getElementById('cycle-settings-modal')?.classList.remove('active');
+      },
+      saveSettings: function() {
+        const dateVal = document.getElementById('cycle-input-last-date')?.value;
+        const cLenVal = Number(document.getElementById('cycle-input-cycle-len')?.value) || 28;
+        const pLenVal = Number(document.getElementById('cycle-input-period-len')?.value) || 5;
+
+        if (!dateVal) return;
+
+        state.settings = { lastPeriodDate: dateVal, cycleLength: cLenVal, periodLength: pLenVal };
+        localStorage.setItem('pact_cycle_settings', JSON.stringify(state.settings));
+        if (window.PactCloud) window.PactCloud.saveShared({ cycleSettings: state.settings });
+
+        this.closeSettings();
+        renderCalendar();
+      },
+      saveEvent: function() {
+        const input = document.getElementById('tooltip-new-ev-input');
+        const text = input ? input.value.trim() : '';
+        if (!text || !state.activeTooltipDateKey) return;
+
+        if (!state.events[state.activeTooltipDateKey]) state.events[state.activeTooltipDateKey] = [];
+        state.events[state.activeTooltipDateKey].push({ id: 'ev_' + Date.now(), text });
+
+        localStorage.setItem('pact_calendar_events', JSON.stringify(state.events));
+        if (window.PactCloud) window.PactCloud.saveShared({ calendarEvents: state.events });
+        renderCalendar();
+        
+        const activeCell = document.querySelector('.cal-day-cell.selected-day');
+        if (activeCell) {
+          const parts = state.activeTooltipDateKey.split('-').map(Number);
+          openDayTooltip(activeCell, new Date(parts[0], parts[1] - 1, parts[2]), state.activeTooltipDateKey);
+        }
+      },
+      deleteEvent: function(eventId) {
+        if (!state.events[state.activeTooltipDateKey]) return;
+        state.events[state.activeTooltipDateKey] = state.events[state.activeTooltipDateKey].filter(e => e.id !== eventId);
+        if (state.events[state.activeTooltipDateKey].length === 0) delete state.events[state.activeTooltipDateKey];
+
+        localStorage.setItem('pact_calendar_events', JSON.stringify(state.events));
+        if (window.PactCloud) window.PactCloud.saveShared({ calendarEvents: state.events });
+        renderCalendar();
+
+        const activeCell = document.querySelector('.cal-day-cell.selected-day');
+        if (activeCell) {
+          const parts = state.activeTooltipDateKey.split('-').map(Number);
+          openDayTooltip(activeCell, new Date(parts[0], parts[1] - 1, parts[2]), state.activeTooltipDateKey);
+        }
+      },
+      hideTooltip: hideTooltip
+    };
+  })();
+
+  window.onload = function() {
+    PactCalendar.init();
+  };
+</script>
  <!-- ЭКРАН НАСТРОЕК (Стандартный экран приложения) -->
 <div id="tab-settings" class="tab-content">
   <div class="card">
@@ -5498,43 +6063,7 @@ button:active,
   </div>
 </div>
 
-  <!-- МОДАЛКА: НАСТРОЙКИ ЦИКЛА -->
-  <div id="cycle-settings-modal" class="modal-overlay" onclick="if(event.target===this) closeCycleSettingsModal()">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 style="color:#fff; font-size:13px; font-weight:800; margin:0; text-transform:uppercase;">Настройки цикла ⚙️</h3>
-        <span class="modal-close-btn" onclick="closeCycleSettingsModal()">✕</span>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
-        <div class="form-group">
-          <label style="font-size:10.5px; font-weight:700; color:var(--text-muted);">Дата начала последних месячных:</label>
-          <input type="date" id="cycle-input-last-date" class="form-control" style="font-size:13px; padding:10px;">
-        </div>
-
-        <div class="form-group">
-          <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:700; color:var(--text-muted);">
-            <span>Длительность цикла:</span>
-            <b id="cycle-val-length-lbl" style="color:#FF8599;">28 дней</b>
-          </div>
-          <input type="range" id="cycle-input-cycle-len" min="21" max="40" value="28" style="accent-color:var(--accent-color);" oninput="document.getElementById('cycle-val-length-lbl').textContent = this.value + ' дней'">
-        </div>
-
-        <div class="form-group">
-          <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:700; color:var(--text-muted);">
-            <span>Длительность месячных:</span>
-            <b id="cycle-val-period-lbl" style="color:#FF8599;">5 дней</b>
-          </div>
-          <input type="range" id="cycle-input-period-len" min="3" max="10" value="5" style="accent-color:var(--accent-color);" oninput="document.getElementById('cycle-val-period-lbl').textContent = this.value + ' дней'">
-        </div>
-
-        <p style="font-size:9.5px; color:var(--text-muted); line-height:1.4;">
-          Данные автоматически синхронизируются в комнате пары, чтобы оба партнёра понимали фазы тела и настроение.
-        </p>
-
-        <button class="action-roll-btn" onclick="saveCycleSettings()">Сохранить настройки ✨</button>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- МОДАЛКА: ДОБАВЛЕНИЕ ЛИЧНОГО СОБЫТИЯ / ПРАЗДНИКА -->
   <div id="cycle-event-modal" class="modal-overlay" onclick="if(event.target===this) closeCycleEventModal()">
@@ -5974,10 +6503,9 @@ button:active,
     </div>
   </div>
   
-
 <!-- 9. ЖРЕБИЙ -->
 <div id="tab-randomizer" class="tab-content">
-  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
     
     <!-- Шапка вкладки -->
     <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
@@ -5996,76 +6524,45 @@ button:active,
       </button>
     </div>
 
-    <!-- 1. Секция: Интерактивная зона с мини-ячейками сверху и переключением монета / 3D кубик -->
-    <div style="padding: 16px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative;">
+    <!-- 1. Секция: Рамка монетки уменьшена по высоте, а сама монетка внутри крупная -->
+    <div style="padding: 4px 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative;">
       <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); border-radius: 14px 14px 0 0;"></span>
 
       <!-- Холст для золотого дождя -->
       <canvas id="burst-canvas-coin" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;"></canvas>
 
-      
-
-      <!-- ВАРИАНТ А: МОНЕТКА -->
+      <!-- Монетка (рамка компактная 160px, монетка внутри крупная) -->
       <div id="tool-view-coin" style="display: block;">
-        <div class="coin-stage tactile-coin" onclick="tossCanvasCoin()" style="cursor: pointer; text-align: center; padding: 6px 0; position: relative; z-index: 60; -webkit-tap-highlight-color: transparent;">
+        <div class="coin-stage tactile-coin" onclick="tossCanvasCoin()" style="cursor: pointer; text-align: center; padding: 0; position: relative; z-index: 60; -webkit-tap-highlight-color: transparent;">
           <div id="coinTossWrapper" style="will-change: transform; position: relative; z-index: 70;">
-            <div style="width: 180px; height: 180px; margin: 0 auto 6px auto; filter: drop-shadow(0 14px 26px rgba(0,0,0,0.9)); pointer-events: none;">
-              <canvas id="coinCanvas" width="360" height="360" style="width: 100%; height: 100%; display: block;"></canvas>
+            <div style="width: 156px; height: 156px; margin: 0 auto; filter: drop-shadow(0 12px 22px rgba(0,0,0,0.9)); pointer-events: none;">
+              <canvas id="coinCanvas" width="312" height="312" style="width: 100%; height: 100%; display: block;"></canvas>
             </div>
-            <div id="coinShadowEl" style="width: 120px; height: 14px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; margin: 0 auto; filter: blur(3px);"></div>
+            <div id="coinShadowEl" style="width: 100px; height: 8px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; margin: 2px auto 0 auto; filter: blur(2px);"></div>
           </div>
         </div>
       </div>
-
-      <!-- ВАРИАНТ Б: НАСТОЯЩИЙ 3D КУБИК -->
-      <div id="tool-view-dice" style="display: none;">
-        <div style="text-align: center; padding: 10px 0; position: relative; z-index: 60;">
-          
-          <!-- Сцена 3D кубика -->
-          <div style="perspective: 600px; width: 80px; height: 80px; margin: 15px auto 20px auto;">
-            <div id="cube3d" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.15, 0.85, 0.35, 1.2);">
-              <div style="position: absolute; width: 80px; height: 80px; background: rgba(25, 15, 35, 0.95); border: 2px solid rgba(255,215,0,0.6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #ffd700; box-shadow: inset 0 0 12px rgba(255,215,0,0.3); transform: rotateY(0deg) translateZ(40px);">1</div>
-              <div style="position: absolute; width: 80px; height: 80px; background: rgba(25, 15, 35, 0.95); border: 2px solid rgba(255,215,0,0.6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #ffd700; box-shadow: inset 0 0 12px rgba(255,215,0,0.3); transform: rotateY(180deg) translateZ(40px);">2</div>
-              <div style="position: absolute; width: 80px; height: 80px; background: rgba(25, 15, 35, 0.95); border: 2px solid rgba(255,215,0,0.6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #ffd700; box-shadow: inset 0 0 12px rgba(255,215,0,0.3); transform: rotateY(90deg) translateZ(40px);">3</div>
-              <div style="position: absolute; width: 80px; height: 80px; background: rgba(25, 15, 35, 0.95); border: 2px solid rgba(255,215,0,0.6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #ffd700; box-shadow: inset 0 0 12px rgba(255,215,0,0.3); transform: rotateY(-90deg) translateZ(40px);">4</div>
-              <div style="position: absolute; width: 80px; height: 80px; background: rgba(25, 15, 35, 0.95); border: 2px solid rgba(255,215,0,0.6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #ffd700; box-shadow: inset 0 0 12px rgba(255,215,0,0.3); transform: rotateX(90deg) translateZ(40px);">5</div>
-              <div style="position: absolute; width: 80px; height: 80px; background: rgba(25, 15, 35, 0.95); border: 2px solid rgba(255,215,0,0.6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #ffd700; box-shadow: inset 0 0 12px rgba(255,215,0,0.3); transform: rotateX(-90deg) translateZ(40px);">6</div>
-            </div>
-          </div>
-
-          <!-- Текст результата кубика -->
-          <div id="cube3d-result" style="font-size: 12px; font-weight: 800; color: #fff; margin-bottom: 14px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); min-height: 18px;">
-            Нажмите, чтобы бросить 3D кубик
-          </div>
-
-          <!-- Кнопка броска 3D кубика -->
-          <button class="small-btn tactile-btn" onclick="rollTrue3DDice()" style="height: 38px; width: 100%; padding: 0 18px; font-size: 11px; font-weight: 900; background: var(--accent-gradient); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(230, 57, 86, 0.45), inset 0 1px 2px rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px;">
-            Бросить 3D кубик 🎲
-          </button>
-        </div>
-      </div>
-
     </div>
 
-    <!-- 2. Секция: Случайное число -->
-    <div style="padding: 16px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: hidden;">
+    <!-- 2. Секция: Случайное число (крупные цифры, аккуратно подтянутые наверх) -->
+    <div style="padding: 12px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: hidden;">
       <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
 
       <canvas id="burst-canvas-dice" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;"></canvas>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; z-index: 11;">
-        <span style="font-size: 11.5px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Случайное число (1-N)</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; position: relative; z-index: 11;">
+        <span style="font-size: 11px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Случайное число (1-N)</span>
         <div style="display: flex; align-items: center; gap: 6px; background: rgba(10, 6, 14, 0.8); padding: 4px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
-          <span style="font-size: 9.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Макс:</span>
-          <input type="number" id="dice-max-input" value="10" min="2" max="9999" style="width: 45px; background: transparent; border: none; color: #fff; font-weight: 900; font-size: 12px; text-align: center; outline: none;">
+          <span style="font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Макс:</span>
+          <input type="number" id="dice-max-input" value="10" min="2" max="9999" style="width: 42px; background: transparent; border: none; color: #fff; font-weight: 900; font-size: 11.5px; text-align: center; outline: none;">
         </div>
       </div>
 
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; position: relative; z-index: 11;">
-        <div id="dice-display-num" style="width: 100%; font-size: 46px; font-weight: 900; color: #fff; background: rgba(10, 6, 14, 0.95); padding: 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: inset 0 4px 8px rgba(0,0,0,0.7); text-align: center; letter-spacing: 2px;">?</div>
-        <div id="dice-status-lbl" style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-align: center;">Нажмите кнопку ниже для генерации</div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; z-index: 11;">
+        <!-- Большие крупные цифры -->
+        <div id="dice-display-num" style="width: 100%; font-size: 44px; font-weight: 900; color: #fff; background: rgba(10, 6, 14, 0.95); padding: 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: inset 0 4px 8px rgba(0,0,0,0.7); text-align: center; letter-spacing: 2px;">?</div>
         
-        <button class="small-btn tactile-btn" onclick="rollRandomNumber()" style="height: 40px; width: 100%; padding: 0 18px; font-size: 11.5px; font-weight: 900; background: var(--accent-gradient); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(230, 57, 86, 0.45), inset 0 1px 2px rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px;">
+        <button class="small-btn tactile-btn" onclick="rollRandomNumber()" style="height: 38px; width: 100%; padding: 0 18px; font-size: 11px; font-weight: 900; background: var(--accent-gradient); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(230, 57, 86, 0.45), inset 0 1px 2px rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px;">
           Испытать судьбу ✨
         </button>
       </div>
@@ -6081,48 +6578,6 @@ button:active,
 
   <!-- Скрипты -->
   <script>
-    // Переключение между монеткой и 3D кубиком в том же окне
-    function switchMainTool(tool) {
-      try { tg?.HapticFeedback?.selectionChanged?.(); } catch(e) {}
-      
-      const viewCoin = document.getElementById('tool-view-coin');
-      const viewDice = document.getElementById('tool-view-dice');
-      const btnCoin = document.getElementById('cell-btn-coin');
-      const btnDice = document.getElementById('cell-btn-dice');
-
-      if (tool === 'coin') {
-        viewCoin.style.display = 'block';
-        viewDice.style.display = 'none';
-
-        btnCoin.style.background = 'var(--accent-gradient)';
-        btnCoin.style.border = '1px solid rgba(255,255,255,0.25)';
-        btnCoin.style.color = '#fff';
-        btnCoin.style.fontWeight = '900';
-        btnCoin.style.boxShadow = '0 3px 10px rgba(230, 57, 86, 0.4)';
-
-        btnDice.style.background = 'rgba(10, 6, 14, 0.8)';
-        btnDice.style.border = '1px solid rgba(255, 255, 255, 0.12)';
-        btnDice.style.color = 'var(--text-muted)';
-        btnDice.style.fontWeight = '800';
-        btnDice.style.boxShadow = 'none';
-      } else {
-        viewCoin.style.display = 'none';
-        viewDice.style.display = 'block';
-
-        btnDice.style.background = 'var(--accent-gradient)';
-        btnDice.style.border = '1px solid rgba(255,255,255,0.25)';
-        btnDice.style.color = '#fff';
-        btnDice.style.fontWeight = '900';
-        btnDice.style.boxShadow = '0 3px 10px rgba(230, 57, 86, 0.4)';
-
-        btnCoin.style.background = 'rgba(10, 6, 14, 0.8)';
-        btnCoin.style.border = '1px solid rgba(255, 255, 255, 0.12)';
-        btnCoin.style.color = 'var(--text-muted)';
-        btnCoin.style.fontWeight = '800';
-        btnCoin.style.boxShadow = 'none';
-      }
-    }
-
     const coinCanvas = document.getElementById('coinCanvas');
     const coinCtx = coinCanvas ? coinCanvas.getContext('2d') : null;
 
@@ -6134,7 +6589,6 @@ button:active,
     let currentCoinSide = 'venera';
     let isTossingCoin = false;
 
-    // Умный плавный рандом для монеты
     let currentStreakSide = null;
     let currentStreakCount = 0;
 
@@ -6164,7 +6618,8 @@ button:active,
       coinCtx.save();
       coinCtx.translate(coinCanvas.width / 2, coinCanvas.height / 2);
 
-      const radius = 160;
+      // Крупный радиус под холст 312x312, чтобы сама монетка была большой внутри рамки
+      const radius = 156;
 
       if (Math.abs(scaleY) < 0.98) {
         let edgeHeight = Math.round(18 * (1 - Math.abs(scaleY)));
@@ -6195,7 +6650,7 @@ button:active,
       coinCtx.fillStyle = '#5c3d00';
       coinCtx.fill();
       coinCtx.lineWidth = 8;
-      coinCtx.strokeStyle = '#382200';
+      coinCtx.strokeStyle = '#221508';
       coinCtx.stroke();
 
       coinCtx.beginPath();
@@ -6204,7 +6659,7 @@ button:active,
 
       const activeImage = side === 'venera' ? imgVenera : imgMars;
       if (activeImage.complete && activeImage.naturalWidth !== 0) {
-        const drawSize = (side === 'venera') ? 380 : 330;
+        const drawSize = (side === 'venera') ? 380 : 340;
         const offset = -drawSize / 2;
         coinCtx.drawImage(activeImage, offset, offset, drawSize, drawSize);
       } else {
@@ -6226,7 +6681,7 @@ button:active,
       try { tg?.HapticFeedback?.impactOccurred?.('heavy'); } catch(e) {}
 
       let startTime = null;
-      const duration = 1600; 
+      const duration = 1500; 
       const targetSide = getFairCoinSide(); 
       const totalRotations = 2.5; 
       
@@ -6238,13 +6693,13 @@ button:active,
         let progress = (timestamp - startTime) / duration;
 
         if (progress < 1) {
-          let jumpHeight = -Math.sin(progress * Math.PI) * 100;
-          let scaleVal = 1 + Math.sin(progress * Math.PI) * 0.12;
+          let jumpHeight = -Math.sin(progress * Math.PI) * 60;
+          let scaleVal = 1 + Math.sin(progress * Math.PI) * 0.1;
           
           if (wrapper) wrapper.style.transform = `translateY(${jumpHeight}px) scale(${scaleVal})`;
           if (shadow) {
-            let shadowScale = 1 - Math.sin(progress * Math.PI) * 0.5;
-            let shadowAlpha = 1 - Math.sin(progress * Math.PI) * 0.7;
+            let shadowScale = 1 - Math.sin(progress * Math.PI) * 0.4;
+            let shadowAlpha = 1 - Math.sin(progress * Math.PI) * 0.6;
             shadow.style.transform = `scale(${shadowScale})`;
             shadow.style.opacity = shadowAlpha;
           }
@@ -6273,9 +6728,34 @@ button:active,
       requestAnimationFrame(animateCoin);
     }
 
-    
+    function rollRandomNumber() {
+      const maxInput = document.getElementById('dice-max-input');
+      const display = document.getElementById('dice-display-num');
+      if (!maxInput || !display) return;
 
-    // Золотой дождь
+      let maxVal = parseInt(maxInput.value) || 10;
+      if (maxVal < 2) maxVal = 2;
+      if (maxVal > 9999) maxVal = 9999;
+      maxInput.value = maxVal;
+
+      try { tg?.HapticFeedback?.impactOccurred?.('medium'); } catch(e) {}
+
+      let counter = 0;
+      let iterations = 14;
+      let interval = setInterval(() => {
+        let tempRand = Math.floor(Math.random() * maxVal) + 1;
+        display.textContent = tempRand;
+        counter++;
+        if (counter >= iterations) {
+          clearInterval(interval);
+          let finalNum = Math.floor(Math.random() * maxVal) + 1;
+          display.textContent = finalNum;
+          try { tg?.HapticFeedback?.notificationOccurred?.('success'); } catch(e) {}
+          launchGoldRain('burst-canvas-dice');
+        }
+      }, 50);
+    }
+
     function launchGoldRain(canvasId) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
@@ -6289,9 +6769,9 @@ button:active,
 
       let flashAlpha = 0.5;
       let particles = [];
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < 55; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 9 + 2;
+        const speed = Math.random() * 7 + 2;
         particles.push({
           x: cx, y: cy,
           vx: Math.cos(angle) * speed,
@@ -6299,7 +6779,7 @@ button:active,
           size: Math.random() * 4 + 2,
           color: colors[Math.floor(Math.random() * colors.length)],
           alpha: 1,
-          decay: Math.random() * 0.015 + 0.01,
+          decay: Math.random() * 0.018 + 0.01,
           gravity: 0.12,
           rotation: Math.random() * Math.PI,
           rotSpeed: (Math.random() - 0.5) * 0.2,
@@ -6311,7 +6791,7 @@ button:active,
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (flashAlpha > 0) {
-          flashAlpha -= 0.04;
+          flashAlpha -= 0.05;
           ctx.save();
           let grad = ctx.createRadialGradient(cx, cy, 5, cx, cy, canvas.width * 0.5);
           grad.addColorStop(0, `rgba(255, 215, 0, ${Math.max(0, flashAlpha)})`);
@@ -6382,8 +6862,8 @@ button:active,
   <div style="position: absolute; bottom: 2px; right: 2px; background: var(--accent-gradient); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid #0C0A10; box-shadow: 0 0 10px rgba(230,57,86,0.6);">
     📷
   </div>
-</div>
 
+</div>
 <!-- Скрытый системный выбор файла -->
 <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
         <!-- Неоновый статус активной роли над именем -->
@@ -6398,8 +6878,12 @@ button:active,
         </div>
       </div>
       <button class="btn-leave-room" onclick="leaveRoom()">🚪 Сменить комнату / Расторгнуть союз</button>
+    <!-- Кнопка перехода к настройкам (заменяет старую плитку с рабочего стола) -->
+<button class="action-btn" onclick="renderActiveTab('tab-settings')" style="margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; color: #fff; cursor: pointer; font-size: 14px;">
+  <span>⚙️</span> Настройки системы
+</button>
     </div>
-  </div>
+ </div>
 
  <!-- 11. ГАРДЕРОБ -->
 <div id="tab-wardrobe" class="tab-content wardrobe-tab-container">
@@ -6431,8 +6915,8 @@ button:active,
           Назад
         </button>
 
-        <div class="custom-btn-shimmer" style="font-size: 16px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
-  Гардероб ✨
+        <div class="custom-btn-shimmer" style="font-size: 20px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+  Гардероб 
 </div>
 
         <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('wardrobe')" style="width: 30px; height: 30px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 12px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2);">
@@ -6483,8 +6967,8 @@ button:active,
         Назад
       </button>
 
-      <div class="custom-btn-shimmer" style="font-size: 14px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
-        Банк 🏦
+      <div class="custom-btn-shimmer" style="font-size: 20px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+        Банк 
       </div>
 
       <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('bank')" style="width: 28px; height: 28px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
@@ -6492,20 +6976,17 @@ button:active,
       </button>
     </div>
 
-    <!-- Панель баланса с объемным стеклянным градиентом в стиле шапки -->
-    <div style="padding: 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: hidden;">
-      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
-      
-      <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.8px; text-align: center;" id="bank-role-name-lbl">
-        Доступные очки
-      </div>
-      <div class="widget-balance-column" id="bank-wallet-rows" style="display: flex; flex-direction: column; gap: 6px;">
-        <!-- Динамические стеклянные плашки -->
-      </div>
-    </div>
+   <!-- Панель баланса с объемным стеклянным градиентом в стиле шапки -->
+<div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: hidden; cursor: pointer;" onclick="if (!isDesktopEditMode) openSubScreen('tab-bank');">
+  <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
+  
+  <div id="bank-wallet-rows">
+    <!-- Сюда скрипт подставляет колонки в зависимости от роли (female / male) -->
+  </div>
+</div>
 
     <!-- Конвертер очков в том же фирменном объемном стиле -->
-    <div style="padding: 16px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: visible;">
+    <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: visible;">
       <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -6523,7 +7004,7 @@ button:active,
           
           <!-- Кастомная кнопка «Отдать» -->
           <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Отдать:</label>
+            <label style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"></label>
             <div id="custom-conv-from-btn" onclick="toggleConvDropdown('from')" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 10px; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
               <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
                 <span id="conv-from-icon" style="font-size: 13px;">💙</span>
@@ -6535,7 +7016,7 @@ button:active,
 
           <!-- Кастомная кнопка «Получить» -->
           <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Получить:</label>
+            <label style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"></label>
             <div id="custom-conv-to-btn" onclick="toggleConvDropdown('to')" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 10px; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
               <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
                 <span id="conv-to-icon" style="font-size: 13px;">❤️</span>
@@ -6551,17 +7032,13 @@ button:active,
           <input type="number" id="conv-amount-input" class="form-control" placeholder="Кол-во" min="1" value="10" style="flex: 1; padding: 9px; font-size: 12px; font-weight: 800; text-align: center; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; outline: none; color: #fff; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
           
           <button class="small-btn tactile-btn" onclick="executeConversion()" style="height: 38px; padding: 0 18px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, #c92a42 0%, #901a2c 100%); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(201, 42, 66, 0.35), inset 0 1px 2px rgba(255,255,255,0.35);">
-            Обменять ✨
+            Обменять 
           </button>
-        </div>
-        
-        <div style="font-size: 9px; color: var(--text-muted); text-align: center; margin-top: 2px; line-height: 1.3;">
-          Курс: 1 к 1. Лимит сбрасывается 1-го числа.
         </div>
       </div>
     </div>
 <!-- Блок: Награды за инициативу -->
-    <div style="padding: 16px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: visible; margin-top: 2px;">
+    <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: visible; margin-top: 2px;">
       <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -6595,7 +7072,7 @@ button:active,
 
         <!-- Кнопка отправки -->
         <button class="small-btn tactile-btn" onclick="executeReward()" style="height: 38px; width: 100%; padding: 0 18px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, #c92a42 0%, #901a2c 100%); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(201, 42, 66, 0.35), inset 0 1px 2px rgba(255,255,255,0.35);">
-          Отправить награду ✨
+          Отправить награду 
         </button>
 
       </div>
@@ -8390,24 +8867,35 @@ function renderProductCard(item, customActionsHtml = '') {
     let partnerHintIds = [];
 
     // Уведомления Toast
-    function showToast(message, type = 'info') {
+  function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       if (!container) return;
+
+      // Тактильный отклик
       if (type === 'success') tg?.HapticFeedback?.notificationOccurred?.('success');
       else if (type === 'error') tg?.HapticFeedback?.notificationOccurred?.('warning');
       else tg?.HapticFeedback?.impactOccurred?.('light');
 
+      // ЗАЩИТА ОТ СПАМА: Если в контейнере уже висит 2 или больше тостов, удаляем самый старый мгновенно
+      const existingToasts = container.querySelectorAll('.app-toast');
+      if (existingToasts.length >= 2) {
+        existingToasts[0].remove();
+      }
+
       const toast = document.createElement('div');
-      toast.className = `app-toast toast-${type}`;
+      // Больше не используем классы разных цветов (.toast-success / .toast-error), стиль теперь единый премиальный
+      toast.className = `app-toast`;
       toast.innerText = message;
       container.appendChild(toast);
+
       requestAnimationFrame(() => toast.classList.add('visible'));
+
+      // Таймер удаления
       setTimeout(() => {
         toast.classList.remove('visible');
         setTimeout(() => toast.remove(), 300);
-      }, 3000);
+      }, 2800);
     }
-
     // Заставка и навигация
     function hideSplash() {
       const splash = document.getElementById('splash-screen');
@@ -8428,15 +8916,39 @@ function renderProductCard(item, customActionsHtml = '') {
       renderActiveTab(tabId);
     }
 
-    function handleBackAction() {
+  function handleBackAction() {
       tg?.HapticFeedback?.impactOccurred?.('light');
       closeCapsuleToolbar();
+
+      // ЖЕСТКО ГАСИМ И ВЫЖИГАЕМ СТАТУСНУЮ ПЛАШКУ ПРИ ЛЮБОМ НАЗАДЕ
+      const pill = document.getElementById('nav-status-pill');
+      const iconEl = document.getElementById('nav-status-icon');
+      const nameEl = document.getElementById('nav-status-name');
+      
+      if (pill) {
+        pill.classList.remove('active');
+        pill.style.cssText = 'display: none !important;';
+      }
+      if (iconEl) iconEl.textContent = '';
+      if (nameEl) nameEl.textContent = '';
+
+      // Логика стека назад
       if (navStack.length > 1) {
         navStack.pop();
-        renderActiveTab(navStack[navStack.length - 1]);
+        const nextTab = navStack[navStack.length - 1];
+        renderActiveTab(nextTab);
+
+        // Если в истории осталась другая функция (например, перешли из одного подраздела в другой) — возвращаем её статус
+        if (typeof functionMetadata !== 'undefined' && functionMetadata[nextTab]) {
+          showStatusPill(nextTab);
+        }
       } else {
         navStack = ['tab-home'];
         renderActiveTab('tab-home');
+
+        // Подсвечиваем главную кнопку в навбаре, раз мы дома
+        document.querySelectorAll('.nav-bar .nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('nav-home')?.classList.add('active');
       }
     }
 
@@ -8472,18 +8984,20 @@ function renderProductCard(item, customActionsHtml = '') {
 
     let desktopItems = [
       { id: 'w-passion', type: 'widget-passion', span: 4, page: 0 },
-      { id: 'w-balance', type: 'widget-balance', span: 2, page: 0 },
-      { id: 'tile-bank', type: 'tile', title: 'Банк', icon: '💖', target: 'tab-bank', page: 0 },
-      { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '🩱', target: 'tab-wardrobe', page: 0 },
-      { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '🛍️', target: 'tab-shop', page: 0 },
-      { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '🎲', target: 'tab-randomizer', page: 0 },
-      { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '📜', target: 'tab-contract', page: 0 },
-      { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '📅', target: 'tab-cycle', page: 0 },
-      { id: 'tile-ai-advisor', type: 'tile', title: 'Советник', icon: 'ai-star', target: 'tab-ai-advisor', page: 0 },
-      { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '✨', target: 'tab-gifts', page: 0, role: 'upper' },
-      { id: 'tile-settings', type: 'tile', title: 'Настройки', icon: '⚙️', target: 'tab-settings', page: 0, role: 'upper' }
+      { id: 'w-balance', type: 'widget-balance', span: 4, page: 0 },
+      { id: 'tile-bank', type: 'tile', title: 'Банк', icon: '<i class="bi bi-bank"></i>', target: 'tab-bank', page: 0 },
+      { id: 'tile-wardrobe', type: 'tile', title: 'Гардероб', icon: '<i class="bi bi-handbag"></i>', target: 'tab-wardrobe', page: 0 },
+      { id: 'tile-boutique', type: 'tile', title: 'Бутик', icon: '<i class="bi bi-bag-heart"></i>', target: 'tab-shop', page: 0 },
+      { id: 'tile-random', type: 'tile', title: 'Жребий', icon: '<i class="bi bi-dice-5"></i>', target: 'tab-randomizer', page: 0 },
+      { id: 'tile-story', type: 'tile', title: 'Сюжет', icon: '<i class="bi bi-arrow-through-heart"></i>', target: 'tab-story', page: 0, role: 'upper' },
+      { id: 'tile-story-lower', type: 'tile', title: 'Сюжет', icon: '<i class="bi bi-arrow-through-heart"></i>', target: 'tab-story-lower', page: 0, role: 'lower' },
+      { id: 'tile-contract', type: 'tile', title: 'Контракт', icon: '<i class="bi bi-clipboard-heart"></i>', target: 'tab-contract', page: 0 },
+      { id: 'tile-cycle', type: 'tile', title: 'Календарь', icon: '<i class="bi bi-calendar-heart"></i>', target: 'tab-cycle', page: 0 },
+      { id: 'tile-ai-advisor', type: 'tile', title: 'Советник', icon: '<i class="bi bi-person-hearts"></i>', target: 'tab-ai-advisor', page: 0 },
+      { id: 'tile-gifts', type: 'tile', title: 'Желания', icon: '<i class="bi bi-balloon-heart"></i>', target: 'tab-gifts', page: 0, role: 'upper' },
       
     ];
+    
     function saveDesktopItems() {
       localStorage.setItem('pact_desktop_items', JSON.stringify(desktopItems));
     }
@@ -8516,9 +9030,8 @@ function renderProductCard(item, customActionsHtml = '') {
       const viewport = document.getElementById('desktop-viewport');
       if (!viewport) return;
     }  
-    
      
-     
+    // Отрисовка рабочего стола
     // Отрисовка рабочего стола
     function renderDesktop() {
       const pages = [
@@ -8536,94 +9049,121 @@ function renderProductCard(item, customActionsHtml = '') {
         if (item.role === 'lower' && isUserUpper()) return;
         const targetContainer = pages[item.page || 0] || pages[0];
         const wrap = document.createElement('div');
-        wrap.className = `desktop-item-wrapper ${item.span ? 'widget-span-' + item.span : ''}`;
+        wrap.className = `relative select-none touch-pan-x transition-all duration-200 flex justify-center ${item.span ? 'col-span-' + item.span : ''}`;
         wrap.setAttribute('data-id', item.id);
 
-      
-        // ============================
-        const deleteBtn = `<button class="item-delete-btn" onclick="event.stopPropagation(); deleteDesktopItem('${item.id}')">✕</button>`;
+        const deleteBtn = `<button class="absolute -top-1.5 -right-1 w-[22px] h-[22px] rounded-full bg-[#E63956] text-white border-2 border-[#0C0A10] text-[11px] font-bold hidden items-center justify-center cursor-pointer z-10 shadow-md" onclick="deleteDesktopItem('${item.id}');">✕</button>`;
         let inner = '';
 
         if (item.type === 'tile') {
-          let iconHtml = `<span class="tile-emoji">${item.icon}</span>`;
+          let iconHtml = `<span class="text-2xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">${item.icon}</span>`;
           
-          // Для советника (ai-star или tile-ai-advisor) рисуем наш сине-бирюзовый 3D-значок
-          if (item.icon === 'ai-star' || item.id === 'tile-ai-advisor') {
-            iconHtml = `
-              <svg viewBox="0 0 100 100" style="width: 28px; height: 28px; border-radius: 10px; display: block; filter: drop-shadow(0 2px 6px rgba(0, 120, 180, 0.25));">
-                <defs>
-                  <!-- Приглушённый, глубокий сапфирово-бирюзовый градиент -->
-                  <linearGradient id="aiBlueTurquoiseGloss" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#0284c7" />   <!-- Спокойная лазурь -->
-                    <stop offset="45%" stop-color="#0369a1" />  <!-- Океанический синий -->
-                    <stop offset="100%" stop-color="#0f172a" /> <!-- Глубокий ночной цвет -->
-                  </linearGradient>
-                  <!-- Мягкий полупрозрачный блик (без резкой белизны) -->
-                  <linearGradient id="aiGlassReflectionBlue" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
-                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-                  </linearGradient>
-                </defs>
-                <rect width="100" height="100" rx="26" fill="url(#aiBlueTurquoiseGloss)" />
-                <rect x="4" y="3" width="92" height="46" rx="22" fill="url(#aiGlassReflectionBlue)" />
-                <rect width="100" height="100" rx="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
-                <!-- Звезда с мягким матовым сиянием -->
-                <path d="M 50 16 Q 50 50 84 50 Q 50 50 50 84 Q 50 50 16 50 Q 50 50 50 16 Z" fill="#E2E8F0" filter="drop-shadow(0 0 2px rgba(255,255,255,0.4))" />
-              </svg>`;
-          }
-
+         
+/*ИКОНКИ*/
           inner = `
             ${deleteBtn}
-            <div class="desktop-tile">
-              <div class="tile-icon">
+            <button class="bg-[#16121E]/60 hover:bg-[#16121E]/80 border border-white/[0.1] rounded-[20px] p-2.5 flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 group backdrop-blur-xl shadow-sm cursor-pointer w-full aspect-square">
+             <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C4B5FD]/30 to-[#F472B6]/15 border border-[#E879F9]/40 flex items-center justify-center group-hover:scale-105 transition-transform shadow-[0_2px_8px_rgba(232,121,249,0.15)] shrink-0">
                 ${iconHtml}
-                <span class="tile-label">${item.title}</span>
               </div>
-            </div>`;
-         wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen(item.target); };
+              <span class="text-[11.7px] font-semibold text-[#E3E3E3] tracking-tight truncate max-w-[62px]">${item.title}</span>
+            </button>`;
+          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen(item.target); };
+/*ВИДЖИТ СТРАСТИ*/
         } else if (item.type === 'widget-passion') {
           inner = `
             ${deleteBtn}
-            <div class="desktop-widget widget-passion-box">
-              <div class="passion-top-row">
-                <div style="font-size: 10px; font-weight: 800; color: #FF8566;">🌶️ Градус Страсти</div>
-                <div class="passion-peppers-badge">${passion.total} 🌶️</div>
+            <div class="bg-[#16121E]/80 border border-white/[0.12] rounded-[24px] p-4 shadow-[0_12px_35px_rgba(0,0,0,0.6)] backdrop-blur-2xl relative overflow-hidden cursor-pointer w-full">
+              <div class="flex items-center justify-between mb-2">
+        <span class="text-[15px] font-bold text-amber-300 flex items-center gap-1.5 tracking-wide">
+      🌶️ Градус страсти
+    </span>
+                <div class="px-2 py-0.5 bg-amber-500/15 border border-amber-500/35 rounded-full text-[11px] font-bold text-amber-200">
+                  ${passion.total} 🌶️
+                </div>
               </div>
-              <div class="passion-rank-title">${passion.title}</div>
-              <div class="passion-progress-bg">
-                <div class="passion-progress-fill" style="width: ${passion.progressPercent}%;"></div>
+              
+              <div class="text-base font-bold text-white mb-2 tracking-wide">
+                ${passion.title}
               </div>
-              <div class="passion-status-desc">
+
+              <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-2 border border-white/[0.06]">
+                <div class="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full shadow-sm" style="width: ${passion.progressPercent}%;"></div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-[#9A91A5]">
                 <span>${passion.desc}</span>
-                <span style="color: var(--accent-color); font-weight: 700;">В гардероб →</span>
+                <span class="text-amber-300 font-medium hover:text-amber-200 transition-colors flex items-center gap-1">В гардероб →</span>
               </div>
             </div>`;
           wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen('tab-wardrobe'); };
-        } else if (item.type === 'widget-balance') {
+/*ВИДЖИТ БАЛАНСА*/
+   } else if (item.type === 'widget-balance') {
           let colHtml = '';
           if (currentAvatarRole === 'female') {
             colHtml = `
-              <div class="bal-col-row"><span class="bal-col-name">💜 Страсть:</span><span class="bal-col-val ptc">${femaleBalances.ptc}</span></div>
-              <div class="bal-col-row"><span class="bal-col-name">🖤 Покорность:</span><span class="bal-col-val otc">${femaleBalances.otc}</span></div>
-              <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${femaleBalances.stc}</span></div>
+              <div class="flex flex-col items-center justify-center px-1">
+                <span class="text-[12px] text-[#E3E3E3] font-semibold mb-0.5">  Страсть</span>
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-xs text-[#9B51E0]">💜</span>
+                  <span class="text-base font-black text-[#9B51E0]">${femaleBalances.ptc}</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center px-1">
+               <span class="text-[12px] text-[#E3E3E3] font-semibold mb-0.5"> Покорность</span>
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-xs text-white">🖤</span>
+                  <span class="text-base font-black text-white">${femaleBalances.otc}</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center px-1">
+               <span class="text-[12px] text-[#E3E3E3] font-semibold mb-0.5">Секс-токен</span>
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-xs text-rose-400">❤️</span>
+                  <span class="text-base font-black text-rose-400">${femaleBalances.stc}</span>
+                </div>
+              </div>
             `;
           } else {
             colHtml = `
-              <div class="bal-col-row"><span class="bal-col-name">💙 Внимание:</span><span class="bal-col-val att">${maleBalances.atc}</span></div>
-              <div class="bal-col-row"><span class="bal-col-name">💚 Забота:</span><span class="bal-col-val care">${maleBalances.ctc}</span></div>
-              <div class="bal-col-row"><span class="bal-col-name">❤️ Секс-токены:</span><span class="bal-col-val stc">${maleBalances.stc}</span></div>
+              <div class="flex flex-col items-center justify-center px-1">
+                <span class="text-[12px] text-[#E3E3E3] font-semibold mb-0.5"> Внимание</span>
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-xs text-sky-400">💙</span>
+                  <span class="text-base font-black text-sky-400">${maleBalances.atc}</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center px-1">
+                <span class="text-[12px] text-[#E3E3E3] font-semibold mb-0.5"> Забота</span>
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-xs text-emerald-400">💚</span>
+                  <span class="text-base font-black text-emerald-400">${maleBalances.ctc}</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center px-1">
+                <span class="text-[12px] text-[#E3E3E3] font-semibold mb-0.5">Секс-токен</span>
+                <div class="flex items-center justify-center gap-1">
+                  <span class="text-xs text-rose-400">❤️</span>
+                  <span class="text-base font-black text-rose-400">${maleBalances.stc}</span>
+                </div>
+              </div>
             `;
           }
+          
           inner = `
-            ${deleteBtn}
-            <div class="desktop-widget widget-balance-square">
-              <div class="widget-balance-column">${colHtml}</div>
-            </div>`;
-          wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen('tab-bank'); };
+          ${deleteBtn}
+          <div class="w-full bg-[#2A2137] border border-[#5C3D54] rounded-[24px] p-3.5 shadow-[0_4px_12px_#20192A,inset_0_1px_1px_#F4A4B6] backdrop-blur-2xl relative overflow-hidden cursor-pointer">
+            <!-- Тонкий ровный световой контур по верхнему краю без градиентов -->
+            <div class="absolute top-0 inset-x-0 h-[1px] bg-white/15"></div>
+            
+            <div class="grid grid-cols-3 divide-x divide-white/10 w-full text-center">
+              ${colHtml}
+            </div>
+          </div>`;
+        wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen('tab-bank'); };
         }
 
         wrap.innerHTML = inner;
-        attachDragAndDrop(wrap);
         targetContainer.appendChild(wrap);
       });
     }
@@ -8680,17 +9220,17 @@ function renderProductCard(item, customActionsHtml = '') {
 
     // Добавить на робочий стол 
     const availableCatalogItems = [
-      { id: 'w-passion', type: 'widget-passion', span: 4, title: 'Градус Страсти', icon: '🌶️', desc: 'Сумма перчинок и статус вечера' },
-      { id: 'w-balance', type: 'widget-balance', span: 2, title: 'Банк', icon: '💖', desc: 'Квадратный виджет счетов' },
-      { id: 'tile-bank', type: 'tile', target: 'tab-bank', title: 'Баланс', icon: '💖', desc: 'Казна и дисциплина' },
-      { id: 'tile-wardrobe', type: 'tile', target: 'tab-wardrobe', title: 'Гардероб', icon: '🩱', desc: 'Примерка белья и игрушек' },
-      { id: 'tile-boutique', type: 'tile', target: 'tab-shop', title: 'Бутик', icon: '🛍️', desc: 'Белье и девайсы' },
-      { id: 'tile-cycle', type: 'tile', target: 'tab-cycle', title: 'Календарь', icon: '🌸', desc: 'Фазы женского цикла' },
-      { id: 'tile-contract', type: 'tile', target: 'tab-contract', title: 'Контракт', icon: '📜', desc: 'Соглашение пары' },
-      { id: 'tile-random', type: 'tile', target: 'tab-randomizer', title: 'Жребий', icon: '🎲', desc: 'Монетка судьбы и кубик' },
-      { id: 'tile-gifts', type: 'tile', target: 'tab-gifts', title: 'Желания', icon: '✨', desc: 'Подарки и просьбы' },
-      { id: 'tile-chat', type: 'tile', target: 'tab-messenger', title: 'Чат', icon: '💬', desc: 'Диалог' },
-      { id: 'tile-settings', type: 'tile', target: 'tab-settings', title: 'Настройки', icon: '⚙️', desc: 'Управление бюджетом и режимом', page: 0, role: 'upper' }
+      { id: 'w-passion', type: 'widget-passion', span: 4, title: 'Градус Страсти', icon: '<i class="bi bi-heart-arrow"></i>', desc: 'Сумма перчинок и статус вечера' },
+      { id: 'w-balance', type: 'widget-balance', span: 2, title: 'Банк', icon: '<i class="bi bi-bank"></i>', desc: 'Квадратный виджет счетов' },
+      { id: 'tile-bank', type: 'tile', target: 'tab-bank', title: 'Баланс', icon: '<i class="bi bi-bank"></i>', desc: 'Казна и дисциплина' },
+      { id: 'tile-wardrobe', type: 'tile', target: 'tab-wardrobe', title: 'Гардероб', icon: '<i class="bi bi-handbag"></i>', desc: 'Примерка белья и игрушек' },
+      { id: 'tile-boutique', type: 'tile', target: 'tab-shop', title: 'Бутик', icon: '<i class="bi bi-bag-heart"></i>', desc: 'Белье и девайсы' },
+      { id: 'tile-cycle', type: 'tile', target: 'tab-cycle', title: 'Календарь', icon: '<i class="bi bi-calendar-heart"></i>', desc: 'Фазы женского цикла' },
+      { id: 'tile-contract', type: 'tile', target: 'tab-contract', title: 'Контракт', icon: '<i class="bi bi-clipboard-heart"></i>', desc: 'Соглашение пары' },
+      { id: 'tile-story', type: 'tile', target: 'tab-story', title: 'Сюжет', icon: '<i class="bi bi-arrow-through-heart"></i>', desc: 'Сценарии и роли' },
+      { id: 'tile-random', type: 'tile', target: 'tab-randomizer', title: 'Жребий', icon: '<i class="bi bi-dice-5"></i>', desc: 'Монетка судьбы и кубик' },
+      { id: 'tile-gifts', type: 'tile', target: 'tab-gifts', title: 'Желания', icon: '<i class="bi bi-balloon-heart"></i>', desc: 'Подарки и просьбы' },
+      { id: 'tile-chat', type: 'tile', target: 'tab-messenger', title: 'Чат', icon: '<i class="bi bi-chat-left-heart"></i>', desc: 'Диалог' }
     ];
 
    function openAddWidgetModalDirect() {
@@ -12219,15 +12759,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // Исходная конфигурация по умолчанию
-  let aiPersonaConfig = {
-    name: 'Лилит',
-     archetypeKey: 'mentor',
-     icon: 'ai-star',
-    customInstruction: '',
-    isConfigured: false
-  };
-
+    
   // Загружаем сохранённую личность из памяти браузера при каждом запуске
   try {
     const savedPersona = localStorage.getItem('pact_ai_persona_config');
@@ -13082,14 +13614,7 @@ window.addEventListener('click', (e) => {
     }
 
     function syncAdvisorUIName() {
-      // 1. Плитка рабочего стола: жестко держим значок 'ai-star'
-      const tile = desktopItems.find(i => i.id === 'tile-ai-advisor');
-      if (tile) {
-        tile.title = aiPersonaConfig.name || 'Советник';
-        tile.icon = 'ai-star';
-        saveDesktopItems();
-        renderDesktop();
-      }
+ 
 
       // 2. Имя в списке диалогов (вкладка Сообщения)
       const msgName = document.getElementById('messenger-ai-name');
@@ -13287,3 +13812,4 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
+
