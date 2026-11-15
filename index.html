@@ -13076,44 +13076,103 @@ document.addEventListener('DOMContentLoaded', () => {
 }
     
 // ==========================================
-  // ИНИЦИАЛИЗАЦИЯ СВАЙПОВ ЧЕРЕЗ HAMMER.JS
+  // ПЛАВНЫЙ СВАЙП ЗА ПАЛЬЦЕМ (DRAG-TO-SLIDE)
   // ==========================================
   document.addEventListener('DOMContentLoaded', () => {
-    const desktopViewport = document.getElementById('desktop-viewport');
-    if (!desktopViewport) return;
+    const viewport = document.getElementById('desktop-viewport');
+    const track = document.getElementById('desktop-pages-track');
+    if (!viewport || !track) return;
 
-    // Инициализируем Hammer для рабочей зоны стола
-    const hammerManager = new Hammer(desktopViewport);
+    let startX = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let isDragging = false;
+    const totalPages = 3; // Количество страниц на рабочем столе
 
-    // Включаем распознавание горизонтальных свайпов
-    hammerManager.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    // Убедимся, что глобальный индекс страницы существует
+    if (typeof currentDesktopPage === 'undefined') {
+      window.currentDesktopPage = 0;
+    }
 
-    // Обработка свайпа ВЛЕВО (переход на следующий рабочий стол)
-    hammerManager.on('swipeleft', () => {
-      if (typeof currentDesktopPage === 'undefined') {
-        window.currentDesktopPage = 0;
-      }
-      const maxPages = 3; // Всего 3 экрана на рабочем столе
+    // Функция для мгновенного перемещения трека без анимации (пока тянем палец)
+    function setTrackPosition(px) {
+      track.style.transition = 'none';
+      track.style.transform = `translate3d(${px}px, 0, 0)`;
+    }
+
+    // Функция для плавного долетания до нужной страницы после отпускания пальца
+    function snapToPage(pageIndex) {
+      currentDesktopPage = Math.max(0, Math.min(pageIndex, totalPages - 1));
+      const moveX = -currentDesktopPage * viewport.clientWidth;
       
-      if (currentDesktopPage < maxPages - 1) {
-        currentDesktopPage++;
-        goToDesktopPage(currentDesktopPage);
-       
-      }
-    });
+      // Включаем плавную физику transition
+      track.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
+      track.style.transform = `translate3d(${moveX}px, 0, 0)`;
+      
+      prevTranslate = moveX;
 
-    // Обработка свайпа ВПРАВО (переход на предыдущий рабочий стол)
-    hammerManager.on('swiperight', () => {
-      if (typeof currentDesktopPage === 'undefined') {
-        window.currentDesktopPage = 0;
+      // Синхронизируем точки внизу (если у тебя есть эта функция)
+      if (typeof goToDesktopPage === 'function') {
+        // Вызываем обновление точек без повторного дергания transform
+        updatePaginationDots(currentDesktopPage);
       }
+    }
 
-      if (currentDesktopPage > 0) {
-        currentDesktopPage--;
-        goToDesktopPage(currentDesktopPage);
-        try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
+    // Вспомогательная функция для обновления точек пагинации
+    function updatePaginationDots(activeIndex) {
+      const dots = document.querySelectorAll('#desktop-dots-container .desktop-dot');
+      dots.forEach((dot, idx) => {
+        if (idx === activeIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    // 1. Начало касания
+    viewport.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      // Фиксируем текущую позицию трека
+      prevTranslate = -currentDesktopPage * viewport.clientWidth;
+    }, { passive: true });
+
+    // 2. Движение пальца (палец тянет экран)
+    viewport.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const currentX = e.touches[0].clientX;
+      const diffX = currentX - startX;
+      
+      // Вычисляем новое положение
+      currentTranslate = prevTranslate + diffX;
+      setTrackPosition(currentTranslate);
+    }, { passive: true });
+
+    // 3. Отпускание пальца (определяем, куда дотянуть)
+    viewport.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      const movedBy = currentTranslate - prevTranslate;
+      const threshold = viewport.clientWidth / 4; // Четверть экрана для смены страницы
+
+      if (movedBy < -threshold && currentDesktopPage < totalPages - 1) {
+        // Смахнули влево достаточно сильно -> на след. страницу
+        snapToPage(currentDesktopPage + 1);
+      } else if (movedBy > threshold && currentDesktopPage > 0) {
+        // Смахнули вправо достаточно сильно -> на пред. страницу
+        snapToPage(currentDesktopPage - 1);
+      } else {
+        // Вернули обратно на текущую страницу
+        snapToPage(currentDesktopPage);
       }
-    });
+    }, { passive: true });
+
+    // Также обновим функцию goToDesktopPage, если пользователь кликает на точки внизу
+    window.goToDesktopPage = function(pageIndex) {
+      snapToPage(pageIndex);
+    };
   });
 
 // --- МОДУЛЬ НАСТРОЕК (ЭКРАН + ПОДМОДАЛКИ) ---
