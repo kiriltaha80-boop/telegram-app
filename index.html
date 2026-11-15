@@ -8932,11 +8932,14 @@ function renderProductCard(item, customActionsHtml = '') {
       }
       if (iconEl) iconEl.textContent = '';
       if (nameEl) nameEl.textContent = '';
-      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.BackButton) {
-        window.Telegram.WebApp.BackButton.onClick(() => {
-          handleBackAction(); // Вызывает твою родную функцию со стеком
-        });
-      }
+   // Привязываем нативную кнопку «Назад» от Telegram к твоей функции handleBackAction
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.BackButton) {
+      const tgBackButton = window.Telegram.WebApp.BackButton;
+      
+      tgBackButton.onClick(() => {
+        handleBackAction(); // Вызывает твою родную логику со стеком и закрытием экранов
+      });
+    }
       // Логика стека назад
       if (navStack.length > 1) {
         navStack.pop();
