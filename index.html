@@ -4297,6 +4297,24 @@ button:active,
     function switchNavTab(tabId, element) {
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
 
+// При переходе на главную полностью гасим плашку и СКРЫВАЕМ нативную кнопку Назад в Telegram
+      if (tabId === 'tab-home' || tabId === 'nav-home') {
+        if (window.Telegram?.WebApp?.BackButton) {
+          window.Telegram.WebApp.BackButton.hide();
+        }
+      } else {
+        // Если перешли на любой другой экран — ПОКАЗЫВАЕМ нативную стрелочку Назад в Telegram
+        if (window.Telegram?.WebApp?.BackButton) {
+          const tgBack = window.Telegram.WebApp.BackButton;
+          tgBack.show();
+          // Привязываем клик, чтобы при нажатии на стрелочку вверху экран закрывался/возвращал назад
+          tgBack.onClick(() => {
+            handleBackAction();
+          });
+        }
+      }
+
+      hideStatusPill();
       // При переходе на основные вкладки полностью гасим и очищаем плашку
       hideStatusPill();
 
@@ -8914,8 +8932,20 @@ function renderProductCard(item, customActionsHtml = '') {
       if (tabId === 'tab-ai-advisor') { handleAiAdvisorTileClick(); return; }
       if (navStack[navStack.length - 1] !== tabId) navStack.push(tabId);
       renderActiveTab(tabId);
+   
+   
+   
     }
-
+function openSubScreen(screenId) {
+      // Показываем нативную кнопку «Назад» в шапке Telegram при открытии любого подэкрана
+      if (window.Telegram?.WebApp?.BackButton) {
+        const tgBack = window.Telegram.WebApp.BackButton;
+        tgBack.show();
+        tgBack.onClick(() => {
+          handleBackAction();
+        });
+      }
+   }   
   function handleBackAction() {
       tg?.HapticFeedback?.impactOccurred?.('light');
       closeCapsuleToolbar();
