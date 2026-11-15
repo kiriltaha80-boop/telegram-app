@@ -4297,7 +4297,6 @@ button:active,
     function switchNavTab(tabId, element) {
       try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
 
-
       // При переходе на основные вкладки полностью гасим и очищаем плашку
       hideStatusPill();
 
@@ -8932,14 +8931,7 @@ function renderProductCard(item, customActionsHtml = '') {
       }
       if (iconEl) iconEl.textContent = '';
       if (nameEl) nameEl.textContent = '';
-   // Привязываем нативную кнопку «Назад» от Telegram к твоей функции handleBackAction
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.BackButton) {
-      const tgBackButton = window.Telegram.WebApp.BackButton;
-      
-      tgBackButton.onClick(() => {
-        handleBackAction(); // Вызывает твою родную логику со стеком и закрытием экранов
-      });
-    }
+
       // Логика стека назад
       if (navStack.length > 1) {
         navStack.pop();
@@ -8959,21 +8951,7 @@ function renderProductCard(item, customActionsHtml = '') {
         document.getElementById('nav-home')?.classList.add('active');
       }
     }
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.BackButton) {
-        if (navStack.length > 1 && navStack[navStack.length - 1] !== 'tab-home') {
-          window.Telegram.WebApp.BackButton.show();
-        } else {
-          window.Telegram.WebApp.BackButton.hide();
-        }
-      }
-    }
 
-    // Привязываем нативную кнопку «Назад» от Telegram к твоей функции (добавь один раз рядом)
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.BackButton) {
-      window.Telegram.WebApp.BackButton.onClick(() => {
-        handleBackAction();
-      });
-    }
     function renderActiveTab(tabId) {
       document.querySelectorAll('.tab-content:not(#tab-home)').forEach(tab => tab.classList.remove('active'));
       const homeEl = document.getElementById('tab-home');
@@ -8987,17 +8965,6 @@ function renderProductCard(item, customActionsHtml = '') {
         if (homeEl) homeEl.style.filter = 'blur(6px) brightness(0.65)';
       }
 
-      // Внутри функции рендеринга/смены табов (например, renderActiveTab):
-      const tgBack = window.Telegram.WebApp.BackButton;
-      if (tgBack) {
-        // Если в стеке больше 1 элемента (мы не на главной) — показываем нативную стрелочку
-        if (navStack && navStack.length > 1) {
-          tgBack.show();
-        } else {
-          // Если мы дома ('tab-home') — прячем стрелочку
-          tgBack.hide();
-        }
-      }
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       if (tabId === 'tab-home') document.getElementById('nav-home')?.classList.add('active');
       else if (tabId === 'tab-profile') document.getElementById('nav-profile')?.classList.add('active');
