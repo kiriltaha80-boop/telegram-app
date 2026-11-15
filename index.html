@@ -10723,46 +10723,7 @@ window.closeTextInputModal = function() {
   activeTargetFieldId = null;
 };
 
-// ==========================================
-  // ИНИЦИАЛИЗАЦИЯ СВАЙПОВ ЧЕРЕЗ HAMMER.JS
-  // ==========================================
-  document.addEventListener('DOMContentLoaded', () => {
-    const desktopViewport = document.getElementById('desktop-viewport');
-    if (!desktopViewport) return;
 
-    // Инициализируем Hammer для рабочей зоны стола
-    const hammerManager = new Hammer(desktopViewport);
-
-    // Включаем распознавание горизонтальных свайпов
-    hammerManager.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
-
-    // Обработка свайпа ВЛЕВО (переход на следующий рабочий стол)
-    hammerManager.on('swipeleft', () => {
-      if (typeof currentDesktopPage === 'undefined') {
-        window.currentDesktopPage = 0;
-      }
-      const maxPages = 3; // Всего 3 экрана на рабочем столе
-      
-      if (currentDesktopPage < maxPages - 1) {
-        currentDesktopPage++;
-        goToDesktopPage(currentDesktopPage);
-        try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
-      }
-    });
-
-    // Обработка свайпа ВПРАВО (переход на предыдущий рабочий стол)
-    hammerManager.on('swiperight', () => {
-      if (typeof currentDesktopPage === 'undefined') {
-        window.currentDesktopPage = 0;
-      }
-
-      if (currentDesktopPage > 0) {
-        currentDesktopPage--;
-        goToDesktopPage(currentDesktopPage);
-        try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
-      }
-    });
-  });
 // ==========================================
 // 🛠 ПОМЕТКА (ВСТАВИТЬ СЮДА): Функция сохранения товара, 
 // которую мы отлаживали, с правильной проверкой фото и очисткой
@@ -13114,6 +13075,47 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }
     
+// ==========================================
+  // ИНИЦИАЛИЗАЦИЯ СВАЙПОВ ЧЕРЕЗ HAMMER.JS
+  // ==========================================
+  document.addEventListener('DOMContentLoaded', () => {
+    const desktopViewport = document.getElementById('desktop-viewport');
+    if (!desktopViewport) return;
+
+    // Инициализируем Hammer для рабочей зоны стола
+    const hammerManager = new Hammer(desktopViewport);
+
+    // Включаем распознавание горизонтальных свайпов
+    hammerManager.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+
+    // Обработка свайпа ВЛЕВО (переход на следующий рабочий стол)
+    hammerManager.on('swipeleft', () => {
+      if (typeof currentDesktopPage === 'undefined') {
+        window.currentDesktopPage = 0;
+      }
+      const maxPages = 3; // Всего 3 экрана на рабочем столе
+      
+      if (currentDesktopPage < maxPages - 1) {
+        currentDesktopPage++;
+        goToDesktopPage(currentDesktopPage);
+       
+      }
+    });
+
+    // Обработка свайпа ВПРАВО (переход на предыдущий рабочий стол)
+    hammerManager.on('swiperight', () => {
+      if (typeof currentDesktopPage === 'undefined') {
+        window.currentDesktopPage = 0;
+      }
+
+      if (currentDesktopPage > 0) {
+        currentDesktopPage--;
+        goToDesktopPage(currentDesktopPage);
+        try { window.Telegram?.WebApp?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
+      }
+    });
+  });
+
 // --- МОДУЛЬ НАСТРОЕК (ЭКРАН + ПОДМОДАЛКИ) ---
 
 if (!localStorage.getItem('pact_monthly_budget')) {
