@@ -1663,17 +1663,18 @@ button:active,
     /* ========================================================
        3. ВЕРХНЯЯ КОЛБА-БРЕНДИНГ
        ======================================================== */
-    .desktop-header-bar {
-      position: absolute;
-      top: 65px;
-      left: 0;
-      right: 0;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      pointer-events: none;
+    
+.desktop-header-bar {
+      position: fixed !important;
+      top: 60px !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: 42px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 9999 !important; /* Ставим с запасом выше всех окон */
+      pointer-events: none !important; /* Сама полоса прозрачна для кликов, но капсула внутри кликабельна */
     }
 
     .dead-zone-brand {
@@ -1686,26 +1687,18 @@ button:active,
       border-radius: 999px !important;
       cursor: pointer !important;
       user-select: none !important;
-      /* 1. ФОН КОЛБЫ (основной цвет): темно-графитовый с альфа-прозрачностью 88% */
+      /* Визуальный стиль колбы */
       background: #1C1424E0 !important;
       backdrop-filter: blur(20px) !important;
       -webkit-backdrop-filter: blur(20px) !important;
-      /* 2. РАМКИ: боковые и верхняя фаска */
       border: 1px solid #E6395673 !important;
       border-top-color: #D6090959 !important;
-      /* 3. ТЕНИ И ВНУТРЕННИЙ СВЕТОВОЙ ИНСЕТ */
       box-shadow: 0 4px 16px #00000080, 0 0 14px #E6395640, inset 0 1.5px 1.5px #FFCCD5, inset 0 -2px 4px #00000099 !important;
       transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease !important;
     }
 
     .dead-zone-brand:active { transform: scale(0.95) !important; }
-    .dead-zone-brand.active {
-      /* Состояние ACTIVE: градиент изменен на HEX с альфа-каналом */
-      background: linear-gradient(135deg, #2B3445D9, #2A2137E6) !important;
-      border-color: #FFFFFF80 !important;
-      box-shadow: 0 0 22px #E63956B3, inset 0 1.5px 3px #FFFFFF99 !important;
-    }
-
+    
     .brand-shimmer-title {
       font-size: 14px;
       font-weight: 900;
@@ -1713,14 +1706,12 @@ button:active,
       text-transform: uppercase;
       margin: 0;
       white-space: nowrap;
-      /* 4. НАДПИСЬ (градиент текста): переведен в чистые HEX-цвета */
       background: linear-gradient(110deg, #B82342 0%, #E63956 22%, #FFFFFF 50%, #FFA3B5 68%, #B82342 100%);
       background-size: 240% auto;
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: brandShimmerWave 3.4s ease-in-out infinite;
-      /* 5. ТЕНИ ТЕКСТА */
       filter: drop-shadow(0 1.5px 0px #000000F2) drop-shadow(0 4px 6px #000000CC) drop-shadow(0 0 12px #E63956B3);
     }
 
@@ -1730,29 +1721,28 @@ button:active,
       100% { background-position: 0% 50%; }
     }
 
-    
-    widget-catalog-card, 
-.product-card, 
-.item-card {
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-}
+    .widget-catalog-card, 
+    .product-card, 
+    .item-card {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
 
-/* Защита текстового блока внутри */
-.widget-catalog-card .cat-info,
-.product-card .cat-info {
-  min-width: 0 !important;
-  overflow: hidden !important;
-}
+    /* Защита текстового блока внутри */
+    .widget-catalog-card .cat-info,
+    .product-card .cat-info {
+      min-width: 0 !important;
+      overflow: hidden !important;
+    }
 
-/* Обрезка длинного текста */
-.widget-catalog-card .title,
-.product-card .title {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
+    /* Обрезка длинного текста */
+    .widget-catalog-card .title,
+    .product-card .title {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
     /* ========================================================
        4. ЗАСТАВКА (SPLASH SCREEN)
        ======================================================== */
@@ -2232,30 +2222,31 @@ button:active,
       padding: 14px;
       margin-bottom: 12px;
     }
-.tab-content:not(#tab-home) {
+    .tab-content:not(#tab-home) {
       display: none;
       position: fixed;
-      top: 115px;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 98px);
-      left: 12px;
-      right: 12px;
+      top: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
       z-index: 950;
       /* Чуть плотнее фон для объёма */
-      background: rgba(18, 14, 25, 0.86) !important;
+      background: #0E0A14 !important;
       /* Увеличенное размытие и насыщенность для глубокого эффекта стекла */
       backdrop-filter: blur(34px) saturate(200%) !important;
       -webkit-backdrop-filter: blur(34px) saturate(200%) !important;
-      border-radius: 30px !important;
-      /* Тонкая рамка + мощный двойной верхний блик для объёма */
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important; 
-      /* Многослойная глубокая тень и усиленный неоновый ореол */
-      box-shadow: 0 32px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(230, 57, 86, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
-      padding: 16px;
-      overflow-y: hidden !important;
+      border-radius: 0 !important;
+      /* Без внешних рамок по краям экрана — единое стекло */
+      border: none !important;
+      box-shadow: none !important;
+      /* Безопасные отступы внутри: сверху под шапку-колбу бренда, снизу под навбар */
+      padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 100px) 16px !important;
+      box-sizing: border-box;
+      overflow-y: auto !important;
       -webkit-overflow-scrolling: touch;
     }
-
  
 
     .tab-content:not(#tab-home).active {
@@ -5185,80 +5176,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- 4. ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ ЦИКЛА И СОБЫТИЙ -->
 <div id="tab-cycle" class="tab-content cycle-tab-screen">
-  <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 12px;">
+  <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 1px;">
     
     <!-- Шапка вкладки -->
-    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 14px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
-      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span> 
+    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(32, 25, 42, 0.85) 0%, rgba(22, 18, 30, 0.95) 50%, rgba(14, 10, 20, 0.98) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #3B2338; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px #0E0A14, inset 0 1px 2px rgba(244, 164, 134, 0.15); position: relative; overflow: hidden;">
+      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, #F4A486, transparent);"></span> 
       
-      <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+      <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: #2A2137; border: 1px solid #3B2338; border-radius: 8px; color: #F3EEF8; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
         Назад
       </button>
-      <div class="custom-btn-shimmer" style="font-size: 18px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
+      <div class="custom-btn-shimmer" style="font-size: 18px !important; font-weight: 900 !important; letter-spacing: 0.5px !important; color: #F3EEF8;">
         Календарь
       </div>
       <div style="display: flex; gap: 6px; align-items: center;">
-        <button onclick="PactCalendar.openSettings()" style="height: 28px; width: 28px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;">⚙️</button>
+        <button onclick="PactCalendar.openSettings()" style="height: 28px; width: 28px; background: #2A2137; border: 1px solid #3B2338; border-radius: 8px; color: #F3EEF8; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;">⚙️</button>
       </div>
     </div>
 
-    <!-- ЕДИНЫЙ ОБЪЕДИНЕННЫЙ КОНТЕЙНЕР (СТАТУСЫ + КАЛЕНДАРЬ + ТУЛТИП ВНУТРИ) -->
-    <div id="calendar-container-box" style="padding: 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 24px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px;">
+    <!-- ЕДИНЫЙ ОБЪЕДИНЕННЫЙ КОНТЕЙНЕР (СТАТУСЫ + КАЛЕНДАРЬ) -->
+    <div id="calendar-container-box" style="padding: 14px; background: linear-gradient(135deg, rgba(42, 33, 55, 0.7) 0%, rgba(22, 18, 30, 0.92) 40%, rgba(14, 10, 20, 0.98) 100%); border: 1px solid #3B2338; border-radius: 24px; box-shadow: 0 8px 25px #0E0A14, inset 0 1.5px 2px rgba(244, 164, 134, 0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px;">
       
-            <div id="global-tooltip-popover" style="display: none; position: absolute; z-index: 99999; background: #FFFFFF; border: 3px solid #1A1A1A; border-radius: 14px; padding: 12px; min-width: 200px; max-width: 250px; max-height: 240px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 4px 12px rgba(0, 0, 0, 0.15); transform-origin: bottom center; flex-direction: column;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-shrink: 0;">
-            <span id="tooltip-title" style="font-size: 11px; font-weight: 900; color: #7209B7; text-transform: uppercase; letter-spacing: 0.5px;">Подсказка</span>
-            <span onclick="PactCalendar.hideTooltip()" style="cursor: pointer; color: rgba(0,0,0,0.5); font-size: 12px; padding: 0 4px; font-weight: 900;">✕</span>
-          </div>
-          <div id="tooltip-content" style="font-size: 10.5px; font-weight: 700; color: #1A1A1A; line-height: 1.4; display: flex; flex-direction: column; overflow: hidden; flex: 1;"></div>
-        </div>
-            <!-- ГЛОБАЛЬНЫЙ ТУЛТИП (ВЫНЕСЕН В САМОЕ ДНО ДОКУМЕНТА) -->
-              <div id="global-tooltip-popover" style="display: none; position: fixed; z-index: 2147483647; background: #FFFFFF; border: 3px solid #1A1A1A; border-radius: 14px; padding: 12px; min-width: 200px; max-width: 250px; max-height: 240px; box-sizing: border-box; box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 4px 12px rgba(0, 0, 0, 0.15); transform-origin: bottom center; flex-direction: column;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-shrink: 0;">
-                  <span id="tooltip-title" style="font-size: 11px; font-weight: 900; color: #7209B7; text-transform: uppercase; letter-spacing: 0.5px;">Подсказка</span>
-                  <span onclick="PactCalendar.hideTooltip()" style="cursor: pointer; color: rgba(0,0,0,0.5); font-size: 12px; padding: 0 4px; font-weight: 900;">✕</span>
-                </div>
-                <div id="tooltip-content" style="font-size: 10.5px; font-weight: 700; color: #1A1A1A; line-height: 1.4; display: flex; flex-direction: column; overflow: hidden; flex: 1;"></div>
-              </div>
-            <style>
-            /* Плавная физическая анимация тултипа */
-                @keyframes tooltipSmoothGrow {
-                  0% { 
-                    opacity: 0; 
-                    transform: scale(0.1) translateY(6px); 
-                  }
-                  75% { 
-                    opacity: 1; 
-                    transform: scale(1.03) translateY(-1px); 
-                  }
-                  100% { 
-                    opacity: 1; 
-                    transform: scale(1) translateY(0); 
-                  }
-                }
-            </style>
+      <style>
+        /* Плавная физическая анимация тултипа */
+        @keyframes tooltipSmoothGrow {
+          0% { 
+            opacity: 0; 
+            transform: scale(0.1) translateY(6px); 
+          }
+          75% { 
+            opacity: 1; 
+            transform: scale(1.03) translateY(-1px); 
+          }
+          100% { 
+            opacity: 1; 
+            transform: scale(1) translateY(0); 
+          }
+        }
+      </style>
+
       <!-- ВЕРХНЯЯ ЧАСТЬ: Плашки статусов -->
       <div class="cycle-widgets-row" style="display: flex; gap: 8px;">
-        <div id="widget-period-pill" style="flex: 1; background: rgba(255, 71, 126, 0.18); border: 1px solid rgba(255, 71, 126, 0.4); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(255,255,255,0.1);">
-          <div id="cycle-period-status-text" style="font-size: 10.5px; font-weight: 900; color: #fff; text-align: center;">Загрузка...</div>
+        <div id="widget-period-pill" style="flex: 1; background: rgba(75, 41, 62, 0.5); border: 1px solid #3B2338; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(244,164,134,0.15);">
+          <div id="cycle-period-status-text" style="font-size: 10.5px; font-weight: 900; color: #F3EEF8; text-align: center;">Загрузка...</div>
         </div>
-        <div id="widget-ovul-pill" style="flex: 1; background: rgba(218, 112, 214, 0.15); border: 1px solid rgba(218, 112, 214, 0.35); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(255,255,255,0.1);">
-          <div id="cycle-ovul-status-text" style="font-size: 10.5px; font-weight: 900; color: #fff; text-align: center;">Загрузка...</div>
+        <div id="widget-ovul-pill" style="flex: 1; background: rgba(92, 61, 84, 0.4); border: 1px solid #3B2338; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(244,164,134,0.15);">
+          <div id="cycle-ovul-status-text" style="font-size: 10.5px; font-weight: 900; color: #F3EEF8; text-align: center;">Загрузка...</div>
         </div>
       </div>
 
       <!-- РАЗДЕЛИТЕЛЬНАЯ ЛИНИЯ -->
-      <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent); width: 100%;"></div>
+      <div style="height: 1px; background: linear-gradient(90deg, transparent, #3B2338, transparent); width: 100%;"></div>
 
       <!-- НИЖНЯЯ ЧАСТЬ: Сам календарь -->
       <div>
-        <div class="calendar-month-nav" style="display: flex; justify-content: space-between; align-items: center; background: rgba(10, 6, 14, 0.6); padding: 6px 12px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 10px;">
-          <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(-1)" style="background: transparent; border: none; color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;">‹</button>
-          <div class="calendar-month-label" id="calendar-current-month-lbl" style="font-size: 11.5px; font-weight: 900; color: #fff; text-transform: uppercase;">Октябрь 2026</div>
-          <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(1)" style="background: transparent; border: none; color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;">›</button>
+        <div class="calendar-month-nav" style="display: flex; justify-content: space-between; align-items: center; background: #110D17; padding: 6px 12px; border-radius: 9px; border: 1px solid #3B2338; margin-bottom: 10px;">
+          <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(-1)" style="background: transparent; border: none; color: #F3EEF8; font-size: 16px; font-weight: 900; cursor: pointer;">‹</button>
+          <div class="calendar-month-label" id="calendar-current-month-lbl" style="font-size: 11.5px; font-weight: 900; color: #F3EEF8; text-transform: uppercase;">Октябрь 2026</div>
+          <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(1)" style="background: transparent; border: none; color: #F3EEF8; font-size: 16px; font-weight: 900; cursor: pointer;">›</button>
         </div>
 
-        <div class="calendar-weekdays-row" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 9.5px; font-weight: 900; color: #aaa; margin-bottom: 6px; text-transform: uppercase;">
+        <div class="calendar-weekdays-row" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 9.5px; font-weight: 900; color: #786E8A; margin-bottom: 6px; text-transform: uppercase;">
           <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
         </div>
 
