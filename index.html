@@ -5787,6 +5787,60 @@ document.addEventListener("DOMContentLoaded", () => {
   window.onload = function() {
     PactCalendar.init();
   };
+const calendarSwipeArea = document.getElementById('calendar-grid-container'); // Твой контейнер сетки
+
+if (calendarSwipeArea && typeof Hammer !== 'undefined') {
+    const mc = new Hammer(calendarSwipeArea);
+    
+    // Включаем распознавание панорамирования по горизонтали
+    mc.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+
+    let currentDeltaX = 0;
+
+    // Когда палец двигается по экрану
+    mc.on('panx', function(e) {
+        currentDeltaX = e.deltaX;
+        // Контейнер плавно двигается за пальцем в реальном времени
+        calendarSwipeArea.style.transition = 'none';
+        calendarSwipeArea.style.transform = `translateX(${currentDeltaX}px)`;
+    });
+
+    // Когда палец отпустили
+    mc.on('panend', function(e) {
+        const threshold = window.innerWidth / 3; // Порог для смены месяца (треть экрана)
+        
+        calendarSwipeArea.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+
+        if (e.deltaX > threshold || e.velocityX > 0.5) {
+            // Свайп вправо (предыдущий месяц) — улетает вправо и меняет месяц
+            calendarSwipeArea.style.transform = `translateX(${window.innerWidth}px)`;
+            setTimeout(() => {
+                // Твоя функция перехода на прошлый месяц
+                prevMonth(); 
+                resetContainerPosition(calendarSwipeArea);
+            }, 250);
+        } else if (e.deltaX < -threshold || e.velocityX < -0.5) {
+            // Свайп влево (следующий месяц) — улетает влево и меняет месяц
+            calendarSwipeArea.style.transform = `translateX(-${window.innerWidth}px)`;
+            setTimeout(() => {
+                // Твоя функция перехода на следующий месяц
+                nextMonth(); 
+                resetContainerPosition(calendarSwipeArea);
+            }, 250);
+        } else {
+            // Если не дотянули — возвращается обратно на место
+            calendarSwipeArea.style.transform = 'translateX(0px)';
+        }
+    });
+}
+
+function resetContainerPosition(el) {
+    el.style.transition = 'none';
+    el.style.transform = 'translateX(0px)';
+    // Принудительный рефлоу
+    el.offsetHeight;
+}
+
 </script>
  <!-- ЭКРАН НАСТРОЕК (Стандартный экран приложения) -->
 <div id="tab-settings" class="tab-content">
