@@ -5229,11 +5229,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <!-- ВЕРХНЯЯ ЧАСТЬ: Плашки статусов -->
       <div class="cycle-widgets-row" style="display: flex; gap: 8px;">
-        <div id="widget-period-pill" style="flex: 1; background: rgba(75, 41, 62, 0.5); border: 1px solid #3B2338; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(244,164,134,0.15);">
-          <div id="cycle-period-status-text" style="font-size: 10.5px; font-weight: 900; color: #F3EEF8; text-align: center;">Загрузка...</div>
+        <div id="widget-period-pill" style="flex: 1; background: #2A2137; border: 2px solid #2A2137; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center;">
+          <div id="cycle-period-status-text" style="font-size: 12px; font-weight: 700; color: #F3EEF8; text-align: center;">Загрузка...</div>
         </div>
-        <div id="widget-ovul-pill" style="flex: 1; background: rgba(92, 61, 84, 0.4); border: 1px solid #3B2338; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1.5px 2px rgba(244,164,134,0.15);">
-          <div id="cycle-ovul-status-text" style="font-size: 10.5px; font-weight: 900; color: #F3EEF8; text-align: center;">Загрузка...</div>
+        <div id="widget-ovul-pill" style="flex: 1; background: #2A2137; border: 2px solid #2A2137; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: center;">
+          <div id="cycle-ovul-status-text" style="font-size: 12px; font-weight: 700; color: #F3EEF8; text-align: center;">Загрузка...</div>
         </div>
       </div>
 
@@ -5244,11 +5244,11 @@ document.addEventListener("DOMContentLoaded", () => {
       <div>
         <div class="calendar-month-nav" style="display: flex; justify-content: space-between; align-items: center; background: #110D17; padding: 6px 12px; border-radius: 9px; border: 1px solid #3B2338; margin-bottom: 10px;">
           <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(-1)" style="background: transparent; border: none; color: #F3EEF8; font-size: 16px; font-weight: 900; cursor: pointer;">‹</button>
-          <div class="calendar-month-label" id="calendar-current-month-lbl" style="font-size: 11.5px; font-weight: 900; color: #F3EEF8; text-transform: uppercase;">Октябрь 2026</div>
+          <div class="calendar-month-label" id="calendar-current-month-lbl" style="font-size: 15px; font-weight: 700; color: #F3EEF8; text-transform: uppercase;">Октябрь 2026</div>
           <button class="month-nav-arrow tactile-btn" onclick="PactCalendar.changeMonth(1)" style="background: transparent; border: none; color: #F3EEF8; font-size: 16px; font-weight: 900; cursor: pointer;">›</button>
         </div>
 
-        <div class="calendar-weekdays-row" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 9.5px; font-weight: 900; color: #786E8A; margin-bottom: 6px; text-transform: uppercase;">
+        <div class="calendar-weekdays-row" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; text-transform: uppercase;">
           <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
         </div>
 
@@ -5362,32 +5362,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (periodPill && periodStatusText) {
         if (info.phase === 'period') {
-          periodPill.style.background = 'rgba(255, 71, 126, 0.3)';
-          periodPill.style.borderColor = 'rgba(255, 71, 126, 0.6)';
-          periodStatusText.innerHTML = `🩸 Менструация: день ${info.dayOfPeriod}`;
+          periodPill.style.background = '#9B1A1A';
+          periodPill.style.borderColor = '#FF477E66';
+          periodStatusText.innerHTML = ` Менструация: день ${info.dayOfPeriod}`;
         } else {
-          periodPill.style.background = 'rgba(255, 71, 126, 0.12)';
-          periodPill.style.borderColor = 'rgba(255, 71, 126, 0.35)';
+          periodPill.style.background = '#9B1A1A';
+          periodPill.style.borderColor = '#FF477E66';
           const daysLeft = (cLen - info.cycleDay + 1);
-          periodStatusText.innerHTML = `🩸 До месячных: ${daysLeft} ${getDaysWord(daysLeft)}`;
+          periodStatusText.innerHTML = ` До месячных: ${daysLeft} ${getDaysWord(daysLeft)}`;
         }
       }
 
       if (ovulPill && ovulStatusText) {
         if (info.phase === 'ovulation') {
-          ovulPill.style.background = 'rgba(255, 215, 0, 0.3)';
-          ovulPill.style.borderColor = 'rgba(255, 215, 0, 0.6)';
-          ovulStatusText.innerHTML = `🌸 Овуляция (Пик)`;
+          ovulPill.style.background = '#4B293E';
+          ovulPill.style.borderColor = '#FFFFFF33';
+          ovulStatusText.innerHTML = ` Овуляция (Пик)`;
         } else if (info.phase === 'fertile') {
-          ovulPill.style.background = 'rgba(218, 112, 214, 0.25)';
-          ovulPill.style.borderColor = 'rgba(218, 112, 214, 0.5)';
-          ovulStatusText.innerHTML = `✨ Фертильное окно`;
+          ovulPill.style.background = '#4B293E';
+          ovulPill.style.borderColor = '#FFFFFF33';
+          ovulStatusText.innerHTML = ` Фертильное окно`;
         } else {
-          ovulPill.style.background = 'rgba(218, 112, 214, 0.1)';
-          ovulPill.style.borderColor = 'rgba(218, 112, 214, 0.3)';
+          ovulPill.style.background = '#4A3D5C';
+          ovulPill.style.borderColor = '#FFFFFF33';
           let daysToOvul = ovulationDay - info.cycleDay;
           if (daysToOvul < 0) daysToOvul += cLen;
-          ovulStatusText.innerHTML = `🌸 До овуляции: ${daysToOvul} ${getDaysWord(daysToOvul)}`;
+          ovulStatusText.innerHTML = ` До овуляции: ${daysToOvul} ${getDaysWord(daysToOvul)}`;
         }
       }
     }
@@ -5427,11 +5427,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const cell = document.createElement('div');
         cell.className = 'cal-day-cell';
-        cell.style.cssText = 'aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; background: rgba(10, 6, 14, 0.6); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; position: relative; transition: transform 0.15s ease, border-color 0.15s ease;';
+        cell.style.cssText = 'aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #fff; background: rgba(10, 6, 14, 0.6); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; position: relative; transition: transform 0.15s ease, border-color 0.15s ease;';
 
-        if (phaseInfo.phase === 'period') cell.style.background = 'rgba(255, 71, 126, 0.25)';
-        else if (phaseInfo.phase === 'ovulation') cell.style.background = 'rgba(255, 215, 0, 0.25)';
-        else if (phaseInfo.phase === 'fertile') cell.style.background = 'rgba(218, 112, 214, 0.2)';
+        if (phaseInfo.phase === 'period') {
+          cell.style.background = '#9B1A1A';                             // Твой глубокий бордово-красный
+          cell.style.border = '1px solid #FF477E';                     // Тонкая аккуратная рамка (можно заменить на #3B2338 для более строгого вида)
+          cell.style.color = '#F3EEF8';                                // Белый текст для контраста
+        } else if (phaseInfo.phase === 'ovulation') {
+          cell.style.background = '#F4A4B6'; 
+          cell.style.border = '2px solid #110D17';
+          cell.style.color = '#0E0A14';     
+        } else if (phaseInfo.phase === 'fertile') {
+          cell.style.background = '#362A45'; 
+          cell.style.border = '1px solid #FFFFFF33';
+          cell.style.color = '#F3EEF8';     
+        }
 
         if (dateKey === todayStr) {
           cell.classList.add('today-cell');
