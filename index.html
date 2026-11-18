@@ -5787,76 +5787,70 @@ document.addEventListener("DOMContentLoaded", () => {
   window.onload = function() {
     PactCalendar.init();
   };
-// Инициализация «яблочного» свайпа для календаря в Pact & Passion
-const calendarContainer = document.getElementById('calendar-grid-container'); // Замени на ID твоего контейнера сетки дней
+document.addEventListener('DOMContentLoaded', function () {
+    const daysMatrix = document.getElementById('calendar-days-matrix');
 
-if (calendarContainer && typeof Hammer !== 'undefined') {
-    const mc = new Hammer(calendarContainer);
-    
-    // Включаем поддержку горизонтального панорамирования (перетаскивания)
-    mc.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
-
-    // Отключаем плавность при начале движения, чтобы сетка шла строго за пальцем без задержки
-    mc.on('panstart', (e) => {
-        calendarContainer.style.transition = 'none';
-    });
-
-    // Во время движения пальца смещаем контейнер по оси X
-    mc.on('panmove', (e) => {
-        calendarContainer.style.transform = `translateX(${e.deltaX}px)`;
-    });
-
-    // Когда палец отпустили — проверяем, докуда дотянули
-    mc.on('panend', (e) => {
-        const threshold = calendarContainer.offsetWidth / 3; // Порог (треть экрана), чтобы засчитать свайп
+    if (daysMatrix && typeof Hammer !== 'undefined') {
+        const mc = new Hammer(daysMatrix);
         
-        // Включаем красивую плавно-упругую анимацию для завершения броска
-        calendarContainer.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+        mc.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
-        if (e.deltaX > threshold || e.velocityX > 0.8) {
-            // Свайп вправо -> улетает вправо, включаем прошлый месяц
-            calendarContainer.style.transform = `translateX(100%)`;
-            setTimeout(() => {
-                // Вызывай свою функцию смены месяца назад
-                if (typeof prevMonth === 'function') {
-                    prevMonth();
-                } else {
-                    state.viewMonth--;
-                    if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear--; }
-                    renderCalendar();
-                }
-                resetPosition();
-            }, 250);
-            
-        } else if (e.deltaX < -threshold || e.velocityX < -0.8) {
-            // Свайп влево -> улетает влево, включаем следующий месяц
-            calendarContainer.style.transform = `translateX(-100%)`;
-            setTimeout(() => {
-                // Вызывай свою функцию смены месяца вперед
-                if (typeof nextMonth === 'function') {
-                    nextMonth();
-                } else {
-                    state.viewMonth++;
-                    if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++; }
-                    renderCalendar();
-                }
-                resetPosition();
-            }, 250);
-            
-        } else {
-            // Если сдвинули чуть-чуть и передумали — плавно возвращаем обратно в центр
-            calendarContainer.style.transform = `translateX(0px)`;
-        }
-    });
-}
+        mc.on('panstart', (e) => {
+            daysMatrix.style.transition = 'none';
+        });
 
-// Вспомогательная функция для сброса позиции после перерисовки
-function resetPosition() {
-    const container = document.getElementById('calendar-grid-container');
-    if (container) {
-        container.style.transition = 'none';
-        container.style.transform = `translateX(0px)`;
-        container.offsetHeight; // Принудительный reflow браузера
+        // Во время тягания пальцем сетка плавно следует за ним и слегка затухает, создавая глубину
+        mc.on('panmove', (e) => {
+            const x = e.deltaX;
+            const progress = Math.min(Math.abs(x) / daysMatrix.offsetWidth, 1);
+            
+            daysMatrix.style.transform = `translateX(${x}px)`;
+            daysMatrix.style.opacity = `${1 - progress * 0.4}`; // Легкое затемнение при сдвиге
+        });
+
+        // Когда палец отпустили
+        mc.on('panend', (e) => {
+            const threshold = daysMatrix.offsetWidth / 3; // Порог для смены месяца
+            
+            daysMatrix.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+
+            if (e.deltaX > threshold || e.velocityX > 0.8) {
+                // Свайп вправо -> уходит вправо, переключаем на прошлый месяц
+                daysMatrix.style.transform = `translateX(100%)`;
+                daysMatrix.style.opacity = '0';
+                
+                setTimeout(() => {
+                    PactCalendar.changeMonth(-1); // Мгновенный перескок данных месяца
+                    resetMatrixPosition();
+                }, 200);
+
+            } else if (e.deltaX < -threshold || e.velocityX < -0.8) {
+                // Свайп влево -> уходит влево, переключаем на следующий месяц
+                daysMatrix.style.transform = `translateX(-100%)`;
+                daysMatrix.style.opacity = '0';
+                
+                setTimeout(() => {
+                    PactCalendar.changeMonth(1); // Мгновенный перескок данных месяца
+                    resetMatrixPosition();
+                }, 200);
+
+            } else {
+                // Если передумал тянуть — плавно возвращаем на место
+                daysMatrix.style.transform = `translateX(0px)`;
+                daysMatrix.style.opacity = '1';
+            }
+        });
+    }
+});
+
+// Плавный возврат сетки на центр после переключения
+function resetMatrixPosition() {
+    const matrix = document.getElementById('calendar-days-matrix');
+    if (matrix) {
+        matrix.style.transition = 'none';
+        matrix.style.transform = `translateX(0px)`;
+        matrix.style.opacity = '1';
+        matrix.offsetHeight; // Рефлоу браузера
     }
 }
 
