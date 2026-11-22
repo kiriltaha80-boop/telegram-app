@@ -9,7 +9,11 @@
   <!-- Telegram WebApp SDK -->
   <!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<!-- Tailwind CSS Play CDN -->
+</head>
+<body>
+  <button id="add-shortcut-btn" style="display: none;">
+    Добавить на рабочий стол
+  </button><!-- Tailwind CSS Play CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Alpine.js Core -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -14027,7 +14031,7 @@ function openProductModal(id) {
         </div>
     `;
 }
-
+// мини апп добавить на робочий стол 
 function closeProductModal() {
     const modalContainer = document.getElementById('modal-container');
     if (modalContainer) {
@@ -14043,7 +14047,34 @@ window.addEventListener('click', (e) => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const tgShortcut = window.Telegram?.WebApp;
+  if (!tgShortcut) return;
 
+  tgShortcut.ready();
+
+  const shortcutBtn = document.getElementById('add-shortcut-btn');
+  if (!shortcutBtn) return;
+
+  if (
+    typeof tgShortcut.checkHomeScreenStatus === 'function' &&
+    typeof tgShortcut.addToHomeScreen === 'function'
+  ) {
+    tgShortcut.checkHomeScreenStatus((status) => {
+      if (status === 'missed' || status === 'unsupported') {
+        shortcutBtn.style.display = 'block';
+      }
+    });
+  }
+
+  shortcutBtn.addEventListener('click', () => {
+    if (typeof tgShortcut.addToHomeScreen === 'function') {
+      tgShortcut.addToHomeScreen();
+    } else {
+      alert('Обновите Telegram или добавьте ярлык через меню приложения.');
+    }
+  });
+});
 
 // 4. Быстрые кнопки-подсказки над полем ввода
     function sendAiQuickPrompt(promptText) {
