@@ -722,6 +722,81 @@ button:active,
       100% { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9), 0 0 28px rgba(230, 57, 86, 0.85); }
     }
 
+
+     /* Анимация песочных часов из 3 иконок */
+    .hourglass-loader {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #F4A4B6;
+      font-size: 46px;
+    }
+
+    .hourglass-loader .hg-step {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+    }
+
+    .hourglass-loader .hg-1 {
+      animation: hgCycle1 1.5s steps(1, end) infinite;
+    }
+
+    .hourglass-loader .hg-2 {
+      animation: hgCycle2 1.5s steps(1, end) infinite;
+    }
+
+    .hourglass-loader .hg-3 {
+      animation: hgCycle3 1.5s steps(1, end) infinite;
+    }
+
+    @keyframes hgCycle1 {
+      0%      { opacity: 1; }
+      33.33%  { opacity: 0; }
+      100%    { opacity: 0; }
+    }
+
+    @keyframes hgCycle2 {
+      0%      { opacity: 0; }
+      33.33%  { opacity: 1; }
+      66.66%  { opacity: 0; }
+      100%    { opacity: 0; }
+    }
+
+    @keyframes hgCycle3 {
+      0%      { opacity: 0; }
+      66.66%  { opacity: 1; }
+      100%    { opacity: 0; }
+    }
+
+    /* Живая анимация для пустой истории (мягкое покачивание + лёгкий поворот стрелки истории) */
+    .empty-history-icon {
+      font-size: 48px;
+      color: #F4A4B6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      animation: historyClockIdle 2.8s ease-in-out infinite;
+      transform-origin: center center;
+    }
+
+    @keyframes historyClockIdle {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+      }
+      35% {
+        transform: translateY(-4px) rotate(-14deg) scale(1.05);
+      }
+      70% {
+        transform: translateY(-2px) rotate(6deg) scale(1.02);
+      }
+    }
     /* Модальные контейнеры */
     .scenario-picker-modal,
     .contract-writer-modal,
@@ -5180,8 +5255,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 20px 0px 12px 2px !important; background: #0E0A14 !important; border: none !important; border-radius: 14px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; box-shadow: none !important; position: relative;">
       
- <div style="font-family: 'Shantell Sans', cursive, sans-serif !important; font-size: 28px !important; font-weight: 700 !important; font-variation-settings: 'wght' 753, 'INFM' 50, 'wdth' 120 !important; letter-spacing: 4px !important; color: #F3EEF8 !important; display: flex; align-items: center; gap: 10px;">
-  <i class="bi bi-calendar-heart" style="font-size: 24px; color: #F3EEF8;"></i>
+<div style="font-family: 'Inter', sans-serif !important; font-size: 24px !important; font-weight: 700 !important; letter-spacing: 3px !important; color: #F3EEF8 !important; display: flex; align-items: center; gap: 10px;">
+  <i class="bi bi-calendar-heart" style="font-size: 22px; color: #F3EEF8;"></i>
   Календарь
 </div>
       
@@ -5252,8 +5327,28 @@ document.addEventListener("DOMContentLoaded", () => {
           <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
         </div>
 
-        <div class="calendar-days-matrix" id="calendar-days-matrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;"></div>
-      </div>
+        <!-- Обертка-лента для бесшовного свайпа -->
+<div id="calendar-viewport" style="position: relative; overflow: hidden; width: 100%;">
+  <!-- Широкая лента на 3 экрана: слева карман, по центру видимый месяц, справа карман -->
+  <div id="calendar-slider-track" style="display: flex; width: 100%; transform: translateX(-33.333%); position: relative; left: 0; will-change: transform;">
+    
+    <!-- Карман слева (Прошлый месяц) -->
+    <div style="width: 33.333%; flex-shrink: 0; padding: 0 2px;">
+      <div id="calendar-matrix-prev" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%;"></div>
+    </div>
+    
+    <!-- Видимый центр (Текущий месяц) -->
+    <div style="width: 33.333%; flex-shrink: 0; padding: 0 2px;">
+      <div class="calendar-days-matrix" id="calendar-days-matrix" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%;"></div>
+    </div>
+    
+    <!-- Карман справа (Следующий месяц) -->
+    <div style="width: 33.333%; flex-shrink: 0; padding: 0 2px;">
+      <div id="calendar-matrix-next" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%;"></div>
+    </div>
+
+  </div>
+</div>
 
     </div>
 
@@ -5788,72 +5883,138 @@ document.addEventListener("DOMContentLoaded", () => {
     PactCalendar.init();
   };
 document.addEventListener('DOMContentLoaded', function () {
-    const daysMatrix = document.getElementById('calendar-days-matrix');
+    const matrix = document.getElementById('calendar-days-matrix');
 
-    if (daysMatrix && typeof Hammer !== 'undefined') {
-        const mc = new Hammer(daysMatrix);
-        
+    if (matrix && typeof Hammer !== 'undefined') {
+        let viewport = matrix.parentElement;
+        if (viewport.id !== 'calendar-viewport') {
+            viewport.style.position = 'relative';
+            viewport.style.overflow = 'hidden';
+            viewport.style.width = '100%';
+        }
+
+        const mc = new Hammer(matrix);
         mc.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
+        let neighborLayer = null;
+        let activeDirection = 0; // -1 (прошлый), 1 (следующий)
+
         mc.on('panstart', (e) => {
-            daysMatrix.style.transition = 'none';
+            matrix.style.transition = 'none';
         });
 
-        // Во время тягания пальцем сетка плавно следует за ним и слегка затухает, создавая глубину
         mc.on('panmove', (e) => {
             const x = e.deltaX;
-            const progress = Math.min(Math.abs(x) / daysMatrix.offsetWidth, 1);
-            
-            daysMatrix.style.transform = `translateX(${x}px)`;
-            daysMatrix.style.opacity = `${1 - progress * 0.4}`; // Легкое затемнение при сдвиге
-        });
 
-        // Когда палец отпустили
-        mc.on('panend', (e) => {
-            const threshold = daysMatrix.offsetWidth / 3; // Порог для смены месяца
-            
-            daysMatrix.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+            // Как только палец сдвинулся больше чем на 10px — мгновенно создаем соседний месяц рядом
+            if (!neighborLayer && Math.abs(x) > 10) {
+                activeDirection = x > 0 ? -1 : 1; // Вправо -> прошлый слева, Влево -> следующий справа
 
-            if (e.deltaX > threshold || e.velocityX > 0.8) {
-                // Свайп вправо -> уходит вправо, переключаем на прошлый месяц
-                daysMatrix.style.transform = `translateX(100%)`;
-                daysMatrix.style.opacity = '0';
+                neighborLayer = document.createElement('div');
+                neighborLayer.style.cssText = 'display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%; position: absolute; top: 0; left: 0; pointer-events: none;';
                 
-                setTimeout(() => {
-                    PactCalendar.changeMonth(-1); // Мгновенный перескок данных месяца
-                    resetMatrixPosition();
-                }, 200);
+                // Рендерим дни соседнего месяца
+                renderNeighborDays(neighborLayer, activeDirection);
+                viewport.appendChild(neighborLayer);
 
-            } else if (e.deltaX < -threshold || e.velocityX < -0.8) {
-                // Свайп влево -> уходит влево, переключаем на следующий месяц
-                daysMatrix.style.transform = `translateX(-100%)`;
-                daysMatrix.style.opacity = '0';
-                
-                setTimeout(() => {
-                    PactCalendar.changeMonth(1); // Мгновенный перескок данных месяца
-                    resetMatrixPosition();
-                }, 200);
+                // Ставим соседа ровно за границу экрана
+                const startOffset = activeDirection === 1 ? viewport.offsetWidth : -viewport.offsetWidth;
+                neighborLayer.style.transform = `translateX(${startOffset}px)`;
+            }
 
-            } else {
-                // Если передумал тянуть — плавно возвращаем на место
-                daysMatrix.style.transform = `translateX(0px)`;
-                daysMatrix.style.opacity = '1';
+            // Синхронно двигаем и текущий месяц, и выезжающего соседа за пальцем
+            matrix.style.transform = `translateX(${x}px)`;
+            if (neighborLayer) {
+                const startOffset = activeDirection === 1 ? viewport.offsetWidth : -viewport.offsetWidth;
+                neighborLayer.style.transform = `translateX(${x + startOffset}px)`;
             }
         });
+
+        mc.on('panend', (e) => {
+            const threshold = viewport.offsetWidth / 3;
+            const transitionStyle = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            
+            matrix.style.transition = transitionStyle;
+            if (neighborLayer) neighborLayer.style.transition = transitionStyle;
+
+            if (e.deltaX > threshold || e.velocityX > 0.8) {
+                // Свайп вправо до конца -> утягиваем текущий вправо, сосед встает по центру
+                const targetOffset = viewport.offsetWidth;
+                matrix.style.transform = `translateX(${targetOffset}px)`;
+                if (neighborLayer) neighborLayer.style.transform = `translateX(0px)`;
+
+                setTimeout(() => {
+                    PactCalendar.changeMonth(-1);
+                    cleanupNeighbor();
+                }, 250);
+
+            } else if (e.deltaX < -threshold || e.velocityX < -0.8) {
+                // Свайп влево до конца -> утягиваем текущий влево, сосед встает по центру
+                const targetOffset = -viewport.offsetWidth;
+                matrix.style.transform = `translateX(${targetOffset}px)`;
+                if (neighborLayer) neighborLayer.style.transform = `translateX(0px)`;
+
+                setTimeout(() => {
+                    PactCalendar.changeMonth(1);
+                    cleanupNeighbor();
+                }, 250);
+
+            } else {
+                // Возврат назад, если не дотянули
+                matrix.style.transform = `translateX(0px)`;
+                if (neighborLayer) {
+                    const startOffset = activeDirection === 1 ? viewport.offsetWidth : -viewport.offsetWidth;
+                    neighborLayer.style.transform = `translateX(${startOffset}px)`;
+                    setTimeout(cleanupNeighbor, 250);
+                }
+            }
+        });
+
+        function cleanupNeighbor() {
+            if (neighborLayer && neighborLayer.parentNode) {
+                neighborLayer.parentNode.removeChild(neighborLayer);
+                neighborLayer = null;
+            }
+            if (matrix) {
+                matrix.style.transition = 'none';
+                matrix.style.transform = 'translateX(0px)';
+                matrix.offsetHeight;
+            }
+        }
     }
 });
 
-// Плавный возврат сетки на центр после переключения
-function resetMatrixPosition() {
-    const matrix = document.getElementById('calendar-days-matrix');
-    if (matrix) {
-        matrix.style.transition = 'none';
-        matrix.style.transform = `translateX(0px)`;
-        matrix.style.opacity = '1';
-        matrix.offsetHeight; // Рефлоу браузера
+// Безопасный рендерер соседнего месяца
+function renderNeighborDays(container, direction) {
+    let targetMonth = state.viewMonth + direction;
+    let targetYear = state.viewYear;
+    if (targetMonth > 11) { targetMonth = 0; targetYear++; }
+    if (targetMonth < 0) { targetMonth = 11; targetYear--; }
+
+    const firstDay = new Date(targetYear, targetMonth, 1);
+    const lastDay = new Date(targetYear, targetMonth + 1, 0);
+
+    let startDay = firstDay.getDay() - 1;
+    if (startDay === -1) startDay = 6;
+
+    const prevLastDay = new Date(targetYear, targetMonth, 0).getDate();
+    
+    for (let i = startDay - 1; i >= 0; i--) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell other-month';
+        cell.textContent = prevLastDay - i;
+        cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(255,255,255,0.25); border-radius: 6px;';
+        container.appendChild(cell);
+    }
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell';
+        cell.textContent = day;
+        cell.style.cssText = 'aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #fff; background: rgba(10, 6, 14, 0.6); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px;';
+        container.appendChild(cell);
     }
 }
-
 </script>
  <!-- ЭКРАН НАСТРОЕК (Стандартный экран приложения) -->
 <div id="tab-settings" class="tab-content">
@@ -7024,58 +7185,63 @@ function resetMatrixPosition() {
 
 <!-- 12. БАНК -->
 <div id="tab-bank" class="tab-content">
-  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+  <div style="display: flex; flex-direction: column; margin-top: 1px;">
     
-    <!-- Шапка в классическом родном стиле -->
-    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 10px 14px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.2) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
-      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);"></span> 
+    <div class="sub-screen-header" style="flex-shrink: 0; margin: 0; padding: 20px 2px 12px 2px !important; background: #0E0A14 !important; border: none !important; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; box-shadow: none !important; position: relative;">
       
-      <button class="back-action-btn tactile-btn" onclick="handleBackAction()" style="height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 10.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-        Назад
-      </button>
-
-      <div class="custom-btn-shimmer" style="font-size: 20px !important; font-weight: 900 !important; letter-spacing: 0.5px !important;">
-        Банк 
+      <div style="font-family: 'Inter', sans-serif !important; font-size: 24px !important; font-weight: 700 !important; letter-spacing: 3px !important; color: #F3EEF8 !important; display: flex; align-items: center; gap: 10px;">
+        <i class="bi bi-bank" style="font-size: 22px; color: #F3EEF8;"></i>
+        Банк
       </div>
 
-      <button class="tutorial-help-btn tactile-btn" onclick="openTutorial('bank')" style="width: 28px; height: 28px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #FFF; font-size: 11px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-        ?
+       <div style="display: flex; align-items: center; gap: 6px;">
+        <!-- Кнопка истории -->
+      <button onclick="openBankHistoryModal()" style="height: 34px; width: 34px; background: transparent !important; border: none !important; color: #F3EEF8 !important; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;" aria-label="История">
+        <i class="bi bi-list-ul" style="font-size: 27px; font-weight: 700 !important;"></i>
       </button>
+
+        <!-- Кнопка туториала -->
+        <button onclick="openTutorial('bank')" style="height: 34px; width: 34px; background: transparent !important; border: none !important; color: #F3EEF8 !important; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;" aria-label="Туториал">
+          <i class="bi bi-question-circle" style="font-size: 27px; font-weight: 700 !important;"></i>
+        </button>
+      </div>
+
     </div>
 
    <!-- Панель баланса с объемным стеклянным градиентом в стиле шапки -->
-<div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: hidden; cursor: pointer;" onclick="if (!isDesktopEditMode) openSubScreen('tab-bank');">
-  <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
-  
-  <div id="bank-wallet-rows">
+<div style="padding: 12px 0; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; position: relative; cursor: pointer;" onclick="if (!isDesktopEditMode) openSubScreen('tab-bank');">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <span style="font-size: 14px; font-weight: 700; color: #F3EEF8; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Баланс</span>
+  </div>
+  <div id="bank-wallet-rows"></div>
+
     <!-- Сюда скрипт подставляет колонки в зависимости от роли (female / male) -->
   </div>
 </div>
 
     <!-- Конвертер очков в том же фирменном объемном стиле -->
-    <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: visible;">
-      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
+<div style="padding: 12px 0; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; position: relative; overflow: visible;">
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <span style="font-size: 11.5px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Конвертер очков</span>
-        <span style="font-size: 9.5px; font-weight: 800; color: #D4AF37; background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(212, 175, 55, 0.35); padding: 3px 9px; border-radius: 7px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);" id="converter-limit-lbl">Лимит: 200 / 200</span>
+        <span style="font-size: 14px; font-weight: 700; color: #F3EEF8; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Конвертер очков</span>
+        <span style="font-size: 13px; font-weight: 700; color: #F4A4B6; background: transparent; border: none; padding: 3px 4px; box-shadow: none;" id="converter-limit-lbl">Лимит: 200 / 200</span>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; flex-direction: column; ">
         
         <!-- Скрытые оригинальные select для логики обмена -->
         <select id="conv-from-select" style="display: none;"></select>
         <select id="conv-to-select" style="display: none;"></select>
 
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: -2px;">
           
           <!-- Кастомная кнопка «Отдать» -->
           <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
             <label style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"></label>
             <div id="custom-conv-from-btn" onclick="toggleConvDropdown('from')" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 10px; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
               <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
-                <span id="conv-from-icon" style="font-size: 13px;">💙</span>
-                <span id="conv-from-label" style="font-size: 10.5px; font-weight: 800; color: #fff; white-space: nowrap;">Внимание</span>
+                <span id="conv-from-icon" style="font-size: 15px;">💙</span>
+                <span id="conv-from-label" style="font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap;">Внимание</span>
               </div>
               <span style="font-size: 8px; color: rgba(255,255,255,0.5); transform: rotate(90deg);">&#10095;</span>
             </div>
@@ -7086,8 +7252,8 @@ function resetMatrixPosition() {
             <label style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"></label>
             <div id="custom-conv-to-btn" onclick="toggleConvDropdown('to')" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 10px; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
               <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
-                <span id="conv-to-icon" style="font-size: 13px;">❤️</span>
-                <span id="conv-to-label" style="font-size: 10.5px; font-weight: 800; color: #fff; white-space: nowrap;">Секс-токены</span>
+                <span id="conv-to-icon" style="font-size: 15px;">❤️</span>
+                <span id="conv-to-label" style="font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap;">Секс-токены</span>
               </div>
               <span style="font-size: 8px; color: rgba(255,255,255,0.5); transform: rotate(90deg);">&#10095;</span>
             </div>
@@ -7096,56 +7262,76 @@ function resetMatrixPosition() {
         </div>
 
         <div style="display: flex; gap: 8px; align-items: center; margin-top: 2px;">
-          <input type="number" id="conv-amount-input" class="form-control" placeholder="Кол-во" min="1" value="10" style="flex: 1; padding: 9px; font-size: 12px; font-weight: 800; text-align: center; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; outline: none; color: #fff; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
+          <input type="number" id="conv-amount-input" class="form-control" placeholder="Кол-во" min="1" value="10" style="flex: 1; padding: 9px; font-size: 15px; font-weight: 700; text-align: center; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; outline: none; color: #fff; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
           
-          <button class="small-btn tactile-btn" onclick="executeConversion()" style="height: 38px; padding: 0 18px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, #c92a42 0%, #901a2c 100%); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(201, 42, 66, 0.35), inset 0 1px 2px rgba(255,255,255,0.35);">
-            Обменять 
-          </button>
+      <button class="small-btn tactile-btn" onclick="executeConversion()" style="height: 38px; padding: 0 18px; font-size: 15px; font-weight: 700; background: #2B3445; border-radius: 10px; border: 1px solid #786E8A; color: #F3EEF8; cursor: pointer; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);">
+        Обменять
+      </button>
         </div>
       </div>
     </div>
 <!-- Блок: Награды за инициативу -->
-    <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(35, 22, 45, 0.85) 40%, rgba(15, 10, 22, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: visible; margin-top: 2px;">
-      <span style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></span>
+   <div style="padding: 12px 0; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; position: relative; overflow: visible; >
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <span style="font-size: 11.5px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Награды за инициативу</span>
-        <span style="font-size: 9.5px; font-weight: 800; color: #D4AF37; background: rgba(212, 175, 55, 0.12); border: 1px solid rgba(212, 175, 55, 0.35); padding: 3px 9px; border-radius: 7px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);" id="reward-limit-lbl">Лимит: 250 / 250</span>
+        <span style="font-size: 14px; font-weight: 700; color: #F3EEF8; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Награды за инициативу</span>
+        <span style="font-size: 13px; font-weight: 700; color: #F4A4B6; background: transparent; border: none; padding: 3px 4px; box-shadow: none;" id="reward-limit-lbl">Лимит: 250 / 250</span>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        
+      <div style="display: flex; flex-direction: column; gap: 5px;">
         <!-- Скрытый оригинальный select для логики -->
         <select id="reward-token-select" style="display: none;"></select>
 
         <!-- Кнопка выбора токена и количество -->
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 0px;">
           
           <!-- Кастомная кнопка (по размеру слова) -->
           <div id="custom-reward-dropdown-btn" onclick="toggleRewardDropdown()" style="flex: 1.1; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span id="reward-selected-icon" style="font-size: 13px;">💚</span>
-              <span id="reward-selected-label" style="font-size: 11px; font-weight: 800; color: #fff;">Забота</span>
+              <span id="reward-selected-icon" style="font-size: 15px;">💚</span>
+              <span id="reward-selected-label" style="font-size: 13px; font-weight: 700; color: #fff;">Забота</span>
             </div>
             <span style="font-size: 9px; color: rgba(255,255,255,0.5); transform: rotate(90deg);">&#10095;</span>
           </div>
 
           <!-- Поле количества -->
-          <input type="number" id="reward-amount-input" class="form-control" placeholder="Кол-во" min="1" value="15" style="flex: 0.9; padding: 9px; font-size: 12px; font-weight: 800; text-align: center; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; outline: none; color: #fff; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
+          <input type="number" id="reward-amount-input" class="form-control" placeholder="Кол-во" min="1" value="15" style="flex: 0.9; padding: 9px; font-size: 15px; font-weight: 700; text-align: center; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; outline: none; color: #fff; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2);">
         </div>
 
         <!-- Поле комментария -->
         <textarea id="reward-comment-input" class="form-control" placeholder="Комментарий (за что начислено)..." rows="2" style="width: 100%; box-sizing: border-box; padding: 9px 10px; font-size: 11px; background: rgba(10, 6, 14, 0.9); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; outline: none; color: #fff; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.2); resize: none; font-family: inherit;"></textarea>
 
         <!-- Кнопка отправки -->
-        <button class="small-btn tactile-btn" onclick="executeReward()" style="height: 38px; width: 100%; padding: 0 18px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, #c92a42 0%, #901a2c 100%); border-radius: 10px; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(201, 42, 66, 0.35), inset 0 1px 2px rgba(255,255,255,0.35);">
-          Отправить награду 
+        <button class="small-btn tactile-btn" onclick="executeReward()" style="height: 42px; width: 100%; padding: 0 18px; font-size: 14px; font-weight: 700; background: #2B3445; border-radius: 10px; border: 1px solid #786E8A; color: #F3EEF8; cursor: pointer; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);">
+          Отправить награду
         </button>
 
       </div>
     </div>
   </div>
 </div>
+<!-- Модалка истории операций Банка -->
+<div id="bank-history-modal" onclick="if (event.target === this) closeBankHistoryModal();" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(6, 4, 10, 0.50); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;">
+  <div style="width: 100%; max-width: 390px; height: 600px; max-height: 85vh; background: #0E0A14; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);">    <!-- Шапка модалки -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;">
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; color: #F3EEF8; text-transform: uppercase; letter-spacing: 0.8px;">
+        <i class="bi bi-list-ul" style="font-size: 29px; color: #F4A4B6;"></i>
+        История баланса 
+      </div>
+      <button onclick="closeBankHistoryModal()" style="width: 30px; height: 30px; background: transparent; border: none; color: rgba(243, 238, 248, 0.7); font-size: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;" aria-label="Закрыть">
+        &times;
+      </button>
+    </div>
+
+    <!-- Список записей -->
+    <!-- Список записей -->
+    <div id="bank-history-list" style="flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 2px;">
+  <!-- Сюда скрипт подставит записи -->
+    </div>
+
+  </div>
+</div>
+
 
 <script>
 // Логика Банка
@@ -7206,19 +7392,19 @@ window.renderBankScreen = function() {
     roleNameLbl.textContent = isMale ? 'Доступные очки • Верхний' : 'Доступные очки • Нижняя';
   }
 
-  function createGlassBalanceCard(emoji, label, value) {
-    return `
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 13.5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));">${emoji}</span>
-          <span style="font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.3px;">${label}</span>
-        </div>
-        <div style="font-size: 13px; font-weight: 900; color: #fff; background: rgba(0, 0, 0, 0.35); padding: 3px 10px; border-radius: 7px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
-          ${value}
-        </div>
+ function createGlassBalanceCard(emoji, label, value) {
+  return `
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 10px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.2);">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 15px;">${emoji}</span>
+        <span style="font-size: 13px; font-weight: 700; color: #F3EEF8; letter-spacing: 0.3px;">${label}</span>
       </div>
-    `;
-  }
+      <div style="font-size: 17px; font-weight: 700; color: #F3EEF8; padding: 2px 4px;">
+        ${value}
+      </div>
+    </div>
+  `;
+}
 
   if (isMale) {
     walletRows.innerHTML = `
@@ -7228,50 +7414,8 @@ window.renderBankScreen = function() {
         ${createGlassBalanceCard('❤️', 'Секс-токены', maleBalances.stc)}
       </div>
     `;
-   window.renderBankScreen = function() {
-  const walletRows = document.getElementById('bank-wallet-rows');
-  const roleNameLbl = document.getElementById('bank-role-name-lbl');
-  const limitLbl = document.getElementById('converter-limit-lbl');
-  const fromSelect = document.getElementById('conv-from-select');
-  const toSelect = document.getElementById('conv-to-select');
-  const rewardLimitLbl = document.getElementById('reward-limit-lbl');
-  
-  if (!walletRows) return;
-
-  const activeRole = window.currentAvatarRole || window.userRole || window.role || 'female';
-  const isMale = (activeRole === 'male' || activeRole === 'Mars');
-
-  if (roleNameLbl) {
-    roleNameLbl.textContent = isMale ? 'Доступные очки • Верхний' : 'Доступные очки • Нижняя';
-  }
-
-  function createGlassBalanceCard(emoji, label, value) {
-    return `
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 13.5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));">${emoji}</span>
-          <span style="font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.3px;">${label}</span>
-        </div>
-        <div style="font-size: 13px; font-weight: 900; color: #fff; background: rgba(0, 0, 0, 0.35); padding: 3px 10px; border-radius: 7px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
-          ${value}
-        </div>
-      </div>
-    `;
-  }
-
-  if (isMale) {
-    walletRows.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        ${createGlassBalanceCard('💙', 'Внимание', maleBalances.atc)}
-        ${createGlassBalanceCard('💚', 'Забота', maleBalances.ctc)}
-        ${createGlassBalanceCard('❤️', 'Секс-токены', maleBalances.stc)}
-      </div>
-    `;
-    // Поле «Отдать» для Верхнего (активен первый пункт «Внимание»)
     document.getElementById('conv-from-label').textContent = 'Внимание';
     document.getElementById('conv-from-icon').textContent = '💙';
-    // И если у тебя в коде выбранное значение конвертера сохраняется в переменную (например, selectedFromToken = 'atc'), то обнови и её:
-    // selectedFromToken = 'atc';
     fromSelect.innerHTML = `
       <option value="atc" selected>Внимание</option>
       <option value="ctc">Забота</option>
@@ -7292,8 +7436,6 @@ window.renderBankScreen = function() {
     `;
     document.getElementById('conv-from-label').textContent = 'Страсть';
     document.getElementById('conv-from-icon').textContent = '💜';
-    // selectedFromToken = 'ptc';
-    // Поле «Отдать» для Нижней (активен первый пункт «Страсть»)
     fromSelect.innerHTML = `
       <option value="ptc" selected>Страсть</option>
       <option value="otc">Покорность</option>
@@ -7306,41 +7448,9 @@ window.renderBankScreen = function() {
     `;
   }
 
-  // Заполняем селектор наград под текущую роль
-  updateRewardTokenSelect();
+  document.getElementById('conv-to-label').textContent = 'Секс-токены';
+  document.getElementById('conv-to-icon').textContent = '❤️';
 
-  // Обновляем лимит наград (250 очков)
-  const now = new Date();
-  const rewardLimitKey = `pact_reward_limit_${now.getFullYear()}_${now.getMonth() + 1}`;
-  const spentRewards = Number(localStorage.getItem(rewardLimitKey)) || 0;
-  const remainingRewards = Math.max(0, 250 - spentRewards);
-  if (rewardLimitLbl) {
-    rewardLimitLbl.textContent = `Лимит: ${remainingRewards} / 250`;
-  }
-
-  const remaining = getRemainingMonthlyLimit();
-  if (limitLbl) limitLbl.textContent = `Лимит: ${remaining} / 200`;
-};
-  } else {
-    walletRows.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        ${createGlassBalanceCard('💜', 'Страсть', femaleBalances.ptc)}
-        ${createGlassBalanceCard('🖤', 'Покорность', femaleBalances.otc)}
-        ${createGlassBalanceCard('❤️', 'Секс-токены', femaleBalances.stc)}
-      </div>
-    `;
-    // ВАЖНО: здесь для девушки должны быть «Страсть» и «Покорность» + selected на первом
-    fromSelect.innerHTML = `
-      <option value="ptc" selected>Страсть</option>
-      <option value="otc">Покорность</option>
-      <option value="stc">Секс-токены</option>
-    `;
-    toSelect.innerHTML = `
-      <option value="ptc">Страсть</option>
-      <option value="otc">Покорность</option>
-      <option value="stc" selected>Секс-токены</option>
-    `;
-  }
   // Заполняем селектор наград под текущую роль
   updateRewardTokenSelect();
 
@@ -7417,10 +7527,20 @@ window.executeConversion = function() {
   try { tg?.HapticFeedback?.notificationOccurred?.('success'); } catch(e) {}
   showToast(`Успешный обмен: -${amount} на +${amount}! ✨`, 'success');
 
+  const fromInfo = tokenMeta[fromKey] || { emoji: '', label: fromKey };
+  const toInfo = tokenMeta[toKey] || { emoji: '', label: toKey };
+  if (typeof window.addBankHistoryEntry === 'function') {
+    window.addBankHistoryEntry({
+      ownerRole: isMale ? 'male' : 'female',
+      source: 'bank',
+      title: 'Конвертация',
+      details: `${fromInfo.emoji} -${amount} ${fromInfo.label} → ${toInfo.emoji} +${amount} ${toInfo.label}`
+    });
+  }
+
   input.value = '10';
   renderBankScreen();
 };
-
 // Функция отправки внеплановой награды за инициативу (генерирует очки «из воздуха» в рамках лимита)
 window.executeReward = function() {
   const tokenSelect = document.getElementById('reward-token-select');
@@ -7484,6 +7604,18 @@ window.executeReward = function() {
   try { tg?.HapticFeedback?.notificationOccurred?.('success'); } catch(e) {}
   showToast(`Награда успешно отправлена: +${amount} очков! ✨`, 'success');
 
+const rewardInfo = tokenMeta[tokenKey] || { emoji: '', label: tokenKey };
+  if (typeof window.addBankHistoryEntry === 'function') {
+    window.addBankHistoryEntry({
+      ownerRole: isMale ? 'female' : 'male',
+      source: 'bank',
+      title: 'Награда за инициативу',
+      details: `${rewardInfo.emoji} +${amount} ${rewardInfo.label}`,
+      comment: comment
+    });
+  }
+
+ 
   // Сброс полей
   amountInput.value = '15';
   commentInput.value = '';
@@ -7680,6 +7812,139 @@ document.addEventListener('click', (e) => {
     }
   }
 });
+
+// История баланса
+ // История баланса
+window.bankHistoryLog = JSON.parse(localStorage.getItem('pact_bank_history_log') || '[]');
+
+function escapeHistoryHtml(text = '') {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getCurrentBankRole() {
+  const activeRole = window.currentAvatarRole || window.userRole || window.role || 'female';
+  return (activeRole === 'male' || activeRole === 'Mars') ? 'male' : 'female';
+}
+
+// Универсальная запись любой операции с очками
+window.addBankHistoryEntry = function({ ownerRole, source = 'bank', title = 'Операция', details = '', comment = '' } = {}) {
+  const now = new Date();
+  const timeStr = now.toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const entry = {
+    id: 'hist_' + Date.now(),
+    ownerRole: ownerRole || getCurrentBankRole(), // 'female' или 'male'
+    source,
+    title,
+    details,
+    comment,
+    time: timeStr
+  };
+
+  window.bankHistoryLog.unshift(entry);
+  if (window.bankHistoryLog.length > 100) window.bankHistoryLog.length = 100;
+
+  localStorage.setItem('pact_bank_history_log', JSON.stringify(window.bankHistoryLog));
+
+  if (typeof window.PactCloud !== 'undefined' && typeof window.PactCloud.saveShared === 'function') {
+    window.PactCloud.saveShared({ bankHistoryLog: window.bankHistoryLog });
+  }
+};
+
+function openBankHistoryModal() {
+  const modal = document.getElementById('bank-history-modal');
+  if (!modal) return;
+  renderBankHistory();
+  modal.style.display = 'flex';
+}
+
+function closeBankHistoryModal() {
+  const modal = document.getElementById('bank-history-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function renderBankHistory() {
+  const listEl = document.getElementById('bank-history-list');
+  if (!listEl) return;
+
+  const currentRole = getCurrentBankRole();
+  const filteredLog = window.bankHistoryLog.filter(item => (item.ownerRole || 'female') === currentRole);
+
+  if (!filteredLog.length) {
+    listEl.innerHTML = `
+      <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 12px; text-align: center; box-sizing: border-box;">
+        <div class="empty-history-icon"><i class="bi bi-clock-history"></i></div>
+        <div style="font-size: 18px; font-weight: 700; color: rgba(243, 238, 248, 0.7);">
+          История пока пуста
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const sourceIcons = {
+    bank: '<i class="bi bi-bank" style="font-size: 22px; color: #F4A4B6;"></i>',
+    shop: '<i class="bi bi-bag-heart" style="font-size: 22px; color: #F4A4B6;"></i>',
+    gift: '<i class="bi bi-gift" style="font-size: 22px; color: #F4A4B6;"></i>'
+  };
+
+  const getStripeColor = (item) => {
+    if (item.source === 'shop' || item.source === 'gift' || String(item.details).includes('Потрачено')) {
+      return 'rgba(190, 78, 98, 0.85)'; // приглушённый винно-красный — покупка
+    }
+    if (String(item.title).includes('Конвертация') || String(item.details).includes('→')) {
+      return 'rgba(160, 152, 168, 0.65)'; // дымчато-серый — обмен
+    }
+    return 'rgba(92, 158, 124, 0.85)'; // приглушённый зелёный — награда за инициативу
+  };
+
+  listEl.innerHTML = filteredLog.map((item, idx) => {
+    const iconHtml = sourceIcons[item.source] || sourceIcons.bank;
+    const stripeColor = getStripeColor(item);
+
+    return `
+      <div style="display: flex; align-items: stretch; gap: 6px; ${idx < filteredLog.length - 1 ? 'margin-bottom: 8px;' : ''}">
+        
+        <!-- Полоска-индикатор перед рамкой -->
+       <div style="width: 3px; flex-shrink: 0; margin: 12px 0; border-radius: 3px; background: ${stripeColor};"></div>
+
+        <!-- Сама карточка -->
+        <div style="flex: 1; min-width: 0; padding: 10px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 12px; display: flex; align-items: center; gap: 12px;">
+          
+          <!-- Крупный значок слева 45x45 -->
+          <div style="width: 45px; height: 45px; flex-shrink: 0; border-radius: 10px; background: rgba(244, 164, 182, 0.08); border: 1px solid rgba(244, 164, 182, 0.22); display: flex; align-items: center; justify-content: center;">
+            ${iconHtml}
+          </div>
+
+          <!-- Информация справа -->
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+              <span style="font-size: 12.5px; font-weight: 800; color: #F3EEF8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                ${escapeHistoryHtml(item.title)}
+              </span>
+              <span style="font-size: 10px; color: rgba(243, 238, 248, 0.45); white-space: nowrap; flex-shrink: 0;">
+                ${escapeHistoryHtml(item.time)}
+              </span>
+            </div>
+            <div style="font-size: 12px; color: #F4A4B6;">${escapeHistoryHtml(item.details)}</div>
+            ${item.comment ? `<div style="font-size: 10.5px; color: rgba(243, 238, 248, 0.65); font-style: italic; word-break: break-word;">«${escapeHistoryHtml(item.comment)}»</div>` : ''}
+          </div>
+
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 </script>
 
   <!-- МОДАЛКА: ДОБАВИТЬ НА ЭКРАН -->
@@ -8120,35 +8385,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================================
     let cartItems = JSON.parse(localStorage.getItem('pact_cart_items')) || [];
 
-    // Добавление товара в корзину (окно ожидания) из бутика
-    window.buyShopItem = function(id) {
-      const product = boutiqueItems.find(p => p.id === id);
-      if (!product) return;
+// Добавление товара в корзину (окно ожидания) из бутика
+window.buyShopItem = function(id) {
+  const product = boutiqueItems.find(p => p.id === id);
+  if (!product) return;
 
-      const existing = cartItems.find(item => item.id === id);
-      if (existing) {
-        showToast('Этот товар уже находится в корзине 🛒', 'info');
-      } else {
-        cartItems.push(product);
-        localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
-        addCartItemToWishes(product);
+  const existing = cartItems.find(item => item.id === id);
+  if (existing) {
+    showToast('Этот товар уже находится в корзине 🛒', 'info');
+  } else {
+    cartItems.push(product);
+    localStorage.setItem('pact_cart_items', JSON.stringify(cartItems));
+    if (typeof addCartItemToWishes === 'function') addCartItemToWishes(product);
 
-    addCartItemToWishes(product);
+    const spentStr = product.priceStc
+      ? `-❤️ ${product.priceStc}`
+      : [
+          product.pricePtc ? `-💜 ${product.pricePtc}` : '',
+          product.priceOtc ? `-🖤 ${product.priceOtc}` : ''
+        ].filter(Boolean).join('  ');
+
+ if (typeof window.addBankHistoryEntry === 'function') {
+      window.addBankHistoryEntry({
+        ownerRole: 'female',
+        source: 'shop',
+        title: `Куплен товар: ${product.title}`,
+        details: `Потрачено: ${spentStr || '0'}`
+      });
+    }
+
 
     updateCartBadge();
     if (typeof renderCartItems === 'function') renderCartItems();
 
     tg?.HapticFeedback?.notificationOccurred?.('success');
     showToast('Предмет добавлен в корзину и в Желания! 🖤✨', 'success');
-  
-        
-        updateCartBadge();
-        if (typeof renderCartItems === 'function') renderCartItems();
-
-        tg?.HapticFeedback?.notificationOccurred?.('success');
-        showToast('Предмет добавлен в корзину  🖤', 'success');
-      }
-    };
+  }
+};
 
     // Обновление красного бейдика с количеством товаров на кнопке
    // 1. Единая функция обновления бейджа корзины
@@ -10405,6 +10678,16 @@ window.executeConversion = function() {
 
   try { tg?.HapticFeedback?.notificationOccurred?.('success'); } catch(e) {}
   showToast(`Успешный обмен: -${amount} на +${amount}! ✨`, 'success');
+const fromInfo = tokenMeta[fromKey] || { emoji: '', label: fromKey };
+  const toInfo = tokenMeta[toKey] || { emoji: '', label: toKey };
+  if (typeof window.addBankHistoryEntry === 'function') {
+    window.addBankHistoryEntry({
+      ownerRole: isMale ? 'male' : 'female',
+      source: 'bank',
+      title: 'Конвертация',
+      details: `${fromInfo.emoji} -${amount} ${fromInfo.label} → ${toInfo.emoji} +${amount} ${toInfo.label}`
+    });
+  }
 
   input.value = '10';
   renderBankScreen();
