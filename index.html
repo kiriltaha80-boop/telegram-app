@@ -13,10 +13,10 @@
 <body>
   <button id="add-shortcut-btn" style="display: none;">
     Добавить на рабочий стол
-  </button>
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png">
-  <!-- Tailwind CSS Play CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
+  </button><!-- Tailwind CSS Play CDN -->
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/IMG_0407.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
 <!-- Alpine.js Core -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <!-- Canvas Confetti -->
@@ -196,8 +196,86 @@ button:active,
       box-sizing: border-box;
     }
 
+    /* качелька переключения язиков  */
+    /* MIT License, Copyright (c) _7948 (BogdanMUIY) */
+    .pact-lang-wrap {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
 
-   
+    .pact-lang-input {
+      display: none;
+    }
+
+    .pact-lang-island {
+      box-sizing: border-box;
+      height: 35px;
+      background: #223243;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      gap: 2px;
+    }
+
+    .pact-lang-btn {
+      box-sizing: border-box;
+      color: rgba(243, 238, 248, 0.55);
+      font-size: 11px;
+      font-weight: 700;
+      width: 44px;
+      height: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      user-select: none;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .pact-lang-indicator {
+      box-sizing: border-box;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 44px;
+      height: 27px;
+      background: #354c66;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 2px 6px rgba(0, 0, 0, 0.35);
+      border-radius: 999px;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    #pact-lang-ru:checked ~ .pact-lang-island .pact-lang-indicator {
+      transform: translateX(0);
+    }
+
+    #pact-lang-ua:checked ~ .pact-lang-island .pact-lang-indicator {
+      transform: translateX(46px);
+    }
+
+    #pact-lang-en:checked ~ .pact-lang-island .pact-lang-indicator {
+      transform: translateX(92px);
+    }
+
+    #pact-lang-ru:checked ~ .pact-lang-island label[for="pact-lang-ru"],
+    #pact-lang-ua:checked ~ .pact-lang-island label[for="pact-lang-ua"],
+    #pact-lang-en:checked ~ .pact-lang-island label[for="pact-lang-en"] {
+      color: #ffffff;
+      transform: translateY(-0.5px);
+    }
+
+    .pact-lang-btn:active {
+      transform: scale(0.92);
+    }
     .ambient-glow {
       position: absolute;
       width: 260px;
@@ -728,7 +806,82 @@ button:active,
       100% { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9), 0 0 28px rgba(230, 57, 86, 0.85); }
     }
 
+  /*  качелька темы  */
+  /* MIT License, Copyright (c) AmIt-DasIT (AmitDas) */
+  .pact-theme-switch {
+  box-sizing: border-box;
+  font-size: 15px; /* 15px * 2em = 30px высота */
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+  flex-shrink: 0;
+}
 
+.pact-theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pact-theme-slider {
+  box-sizing: border-box;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #223243;
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.pact-theme-slider:before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 1.4em;
+  width: 1.4em;
+  border-radius: 20px;
+  left: 0.3em;
+  bottom: 0.3em;
+  background-color: #223243;
+  box-shadow: inset 2px -2px 0 1.8px #fff;
+  transition: 0.4s;
+  animation: pactThemeAnima1 0.3s linear;
+}
+
+@keyframes pactThemeAnima1 {
+  0% {
+    transform: translateX(1.5em);
+  }
+  80% {
+    transform: translateX(-0.3em);
+  }
+  100% {
+    transform: translateX(0em);
+  }
+}
+
+.pact-theme-switch input:checked + .pact-theme-slider:before {
+  background-color: yellow;
+  box-shadow: none;
+  transform: translateX(1.5em);
+  animation: pactThemeAnima 0.3s linear;
+}
+
+@keyframes pactThemeAnima {
+  0% {
+    transform: translateX(0px);
+  }
+  80% {
+    transform: translateX(1.6em);
+  }
+  100% {
+    transform: translateX(1.4em);
+  }
+}
      /* Анимация песочных часов из 3 иконок */
     .hourglass-loader {
       position: relative;
@@ -3009,8 +3162,7 @@ button:active,
       height: 108px;
       margin: 0 auto 12px auto;
       border-radius: 50%;
-      border: 3px solid #E63956;
-      box-shadow: 0 0 22px rgba(230, 57, 86, 0.55);
+      border: 1px solid #4A3D5C;
       overflow: hidden;
       cursor: pointer;
     }
@@ -4257,7 +4409,87 @@ button:active,
   box-sizing: border-box !important;
   padding-bottom: 300px !important; /* Запас снизу, чтобы плашки не перекрывали фото */
 }
+ /* Кнопка настройки в профиле  */
+/* From Uiverse.io by vinodjangid07 - https://uiverse.io/vinodjangid07/hard-panther-43 */
+/* MIT License, Copyright (c) vinodjangid07, vinodjangid07 (Vinod Jangid), vinodjangid07 (Vinod Jangid) */
+.pact-open-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 37px;
+  height: 37px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-radius 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.25s ease,
+              transform 0.15s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-color: #223243;
+}
 
+.pact-open-btn__sign {
+  width: 100%;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pact-open-btn__sign svg {
+  width: 15px;
+  height: 15px;
+}
+
+.pact-open-btn__sign svg path {
+  fill: #F3EEF8;
+}
+
+.pact-open-btn__text {
+  position: absolute;
+  right: 0;
+  width: 0;
+  opacity: 0;
+  color: #F3EEF8;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.25s ease, width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Раскрывается при наведении на всю строку или тапе на телефоне */
+div[onclick*="tab-settings"]:hover .pact-open-btn,
+div[onclick*="tab-settings"]:active .pact-open-btn,
+.pact-open-btn:hover {
+  width: 108px;
+  border-radius: 999px;
+  background-color: #354c66;
+}
+
+div[onclick*="tab-settings"]:hover .pact-open-btn__sign,
+div[onclick*="tab-settings"]:active .pact-open-btn__sign,
+.pact-open-btn:hover .pact-open-btn__sign {
+  width: 32%;
+  padding-left: 10px;
+}
+
+div[onclick*="tab-settings"]:hover .pact-open-btn__text,
+div[onclick*="tab-settings"]:active .pact-open-btn__text,
+.pact-open-btn:hover .pact-open-btn__text {
+  opacity: 1;
+  width: 68%;
+  padding-right: 10px;
+  text-align: center;
+}
+
+div[onclick*="tab-settings"]:active .pact-open-btn {
+  transform: scale(0.95);
+}
  </style>
 </head>
 <body>
@@ -7083,43 +7315,399 @@ function renderNeighborDays(container, direction) {
   </script>
 </div>
   <!-- 10. ЛИЧНЫЙ ПРОФИЛЬ -->
-  <div id="tab-profile" class="tab-content">
-    <div class="card">
-      <div class="sub-screen-header">
-        <button class="back-action-btn" onclick="handleBackAction()"> Назад</button>
-        <div class="screen-title">Личный Профиль</div>
+<!-- 10. ЛИЧНЫЙ ПРОФИЛЬ -->
+<div id="tab-profile" class="tab-content" style="padding-top: calc(16px + env(safe-area-inset-top, 0px));">
+  <div class="card" style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0; background: transparent; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;">
+
+    <!-- 1. Заголовок экрана без полоски -->
+    <div class="sub-screen-header" style="margin-top: 14px; margin-bottom: 0; border: none; background: transparent; box-shadow: none; padding: 4px 2px 0;">
+      <div class="screen-title" style="display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; line-height: 1.2; border: none; text-decoration: none; background: transparent;">
+        <i class="bi bi-person-gear"></i>
+        <span>Личный Профиль</span>
       </div>
-      <div class="profile-card-header">
-      <div class="profile-avatar-container" onclick="triggerAvatarUpload()" style="position: relative; cursor: pointer;">
-  <img id="avatar-img-view" class="profile-avatar-img" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Avatar">
-  <!-- Неоновый значок камеры внизу аватарки -->
-  <div style="position: absolute; bottom: 2px; right: 2px; background: var(--accent-gradient); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid #0C0A10; box-shadow: 0 0 10px rgba(230,57,86,0.6);">
-    📷
+    </div>
+
+<!-- 2. Единый блок профиля: компактная рамка под размер аватара + имя выше + роль -->
+<div id="profile-identity-card" style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);">
+  <div class="profile-avatar-container" onclick="triggerAvatarUpload()" style="position: relative; width: 75px; height: 75px; margin-top: 10px; flex-shrink: 0; cursor: pointer;">
+    <img id="avatar-img-view" class="profile-avatar-img" src="https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/fem_1.png" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: none !important; outline: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);">
   </div>
 
-</div>
-<!-- Скрытый системный выбор файла -->
-<input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
-        <!-- Неоновый статус активной роли над именем -->
-          <div id="profile-role-badge" class="profile-role-badge">
-           <span id="profile-role-badge-text">🗝️ Нижняя </span>
-          </div>
+  <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
 
-          <div class="profile-name-row">
-             <span id="role-toggle-emoji" class="role-toggle-emoji" onclick="toggleRoleByEmoji()">😇</span>
-             <div id="profile-user-name" class="profile-name-clickable" onclick="openNameModal()">Имя</div>
-           </div>
-        </div>
-      </div>
-      <button class="btn-leave-room" onclick="leaveRoom()">🚪 Сменить комнату / Расторгнуть союз</button>
-    <!-- Кнопка перехода к настройкам (заменяет старую плитку с рабочего стола) -->
-<button class="action-btn" onclick="renderActiveTab('tab-settings')" style="margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; color: #fff; cursor: pointer; font-size: 14px;">
-  <span>⚙️</span> Настройки системы
-</button>
+ <div style="flex: 1; min-width: 0; align-self: flex-start; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; padding-top: 0;">
+  <!-- Постоянное отображение имени (ещё выше) -->
+  <div
+    id="profile-name-display"
+    onclick="editProfileName()"
+    style="display: none; font-size: 17px; font-weight: 700; color: #F3EEF8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; cursor: pointer; line-height: 1.05; margin-top: 8px;"
+  >
+    <span id="profile-user-name"></span>
+  </div>
+
+    <!-- Строка «Введите имя» + галочка -->
+    <div id="profile-name-edit-row" style="display: flex; align-items: center; gap: 6px; width: 100%;">
+      <input
+        type="text"
+        id="profile-user-name-input"
+        placeholder="Введите имя"
+        maxlength="32"
+        onkeydown="if (event.key === 'Enter') { event.preventDefault(); saveProfileName(); }"
+        style="flex: 1; min-width: 0; padding: 6px 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 10px; color: #F3EEF8; font-size: 13.5px; font-weight: 700; outline: none; box-sizing: border-box;"
+      >
+      <button
+        type="button"
+        id="save-profile-name-btn"
+        onclick="saveProfileName()"
+        title="Сохранить имя"
+        style="width: 32px; height: 32px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 204, 213, 0.35); border-radius: 10px; color: #FFCCD5; font-size: 15px; cursor: pointer;"
+      >
+        <i class="bi bi-check-circle"></i>
+      </button>
     </div>
- </div>
 
- <!-- 11. ГАРДЕРОБ -->
+    <!-- Роль под именем -->
+    <div id="profile-role-badge" class="profile-role-badge" style="margin: 0; margin-top: 6px;padding: 3px 10px; font-size: 11px; border-radius: 999px;">
+      <span id="profile-role-badge-text">🗝️ Нижняя</span>
+    </div>
+  
+  <!-- Номер комнаты под ролью (при клике копируется) -->
+    <div
+      id="profile-room-code-row"
+      onclick="copyProfileRoomCode()"
+      title="Нажми, чтобы скопировать номер комнаты"
+      style="display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size:13px; color: rgba(243, 238, 248, 0.58); cursor: pointer; line-height: 1.2;"
+    >
+     
+      <span>Комната:</span>
+      <span id="profile-room-code-value" style="font-family: monospace; font-weight: 700; color: rgba(255, 204, 213, 0.9); letter-spacing: 0.4px;">—</span>
+      
+    </div>
+  </div>
+</div>
+  
+<!-- 3. Действия и параметры профиля -->
+<div style="background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; overflow: hidden; box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.35);">
+  <!-- Язык интерфейса -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.07);">
+    <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(145deg, #2B3445, #223243); border: 1px solid rgba(243, 238, 248, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <i class="bi bi-globe-americas" style="color: #F3EEF8; font-size: 25px; line-height: 1;"></i>
+    </div>
+      <div style="min-width: 0;">
+        <div style="font-size: 13.5px; font-weight: 700; color: #F3EEF8;">Язык</div>
+        <div id="profile-lang-subtitle" style="font-size: 11px; color: rgba(243, 238, 248, 0.5);">Русский</div>
+      </div>
+    </div>
+
+    <!-- From Uiverse.io by _7948 - https://uiverse.io/_7948/kind-lizard-11 -->
+    <div class="pact-lang-wrap">
+      <input type="radio" name="pact-lang-radio" id="pact-lang-ru" value="ru" class="pact-lang-input" checked onchange="handleProfileLangSwitch(this)">
+      <input type="radio" name="pact-lang-radio" id="pact-lang-ua" value="ua" class="pact-lang-input" onchange="handleProfileLangSwitch(this)">
+      <input type="radio" name="pact-lang-radio" id="pact-lang-en" value="en" class="pact-lang-input" onchange="handleProfileLangSwitch(this)">
+
+      <div class="pact-lang-island">
+        <label for="pact-lang-ru" class="pact-lang-btn">RU</label>
+        <label for="pact-lang-ua" class="pact-lang-btn">UA</label>
+        <label for="pact-lang-en" class="pact-lang-btn">EN</label>
+        <div class="pact-lang-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+ <!-- Ночной / светлый режим с качелькой -->
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.07);">
+    <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+      <div id="profile-theme-icon" style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(145deg, #2B3445, #223243); border: 1px solid rgba(243, 238, 248, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 25px; line-height: 1; flex-shrink: 0;">🌙</div>
+      <div style="min-width: 0;">
+        <div style="font-size: 13.5px; font-weight: 700; color: #F3EEF8;">Режим темы</div>
+        <div id="profile-theme-subtitle" style="font-size: 11px; color: rgba(243, 238, 248, 0.5);">Ночной режим</div>
+      </div>
+    </div>
+
+    <!-- From Uiverse.io by AmIt-DasIT - https://uiverse.io/AmIt-DasIT/rotten-rat-40 -->
+    <label class="pact-theme-switch" title="Переключить тему">
+      <input type="checkbox" id="profile-theme-checkbox" onchange="handleProfileThemeSwitch(this)">
+      <span class="pact-theme-slider"></span>
+    </label>
+  </div>
+
+<!-- Настройки системы -->
+  <div onclick="if (window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.impactOccurred('light'); renderActiveTab('tab-settings');" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; cursor: pointer;">
+    <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+     <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(145deg, #2B3445, #223243); border: 1px solid rgba(243, 238, 248, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+  <i class="bi bi-sliders" style="color: #F3EEF8; font-size: 25px; line-height: 1; opacity: 0.85;"></i>
+</div>
+      <div style="min-width: 0;">
+        <div id="profile-settings-title" style="font-size: 13.5px; font-weight: 700; color: #F3EEF8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Настройки системы</div>
+        <div id="profile-settings-subtitle" style="font-size: 11px; color: rgba(243, 238, 248, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Звук, вибрация и параметры</div>
+      </div>
+    </div>
+
+    <!-- From Uiverse.io by vinodjangid07 - https://uiverse.io/vinodjangid07/hard-panther-43 -->
+    <!-- MIT License, Copyright (c) vinodjangid07, vinodjangid07 (Vinod Jangid), vinodjangid07 (Vinod Jangid) -->
+    <button type="button" class="pact-open-btn" aria-label="Открыть настройки системы" tabindex="-1">
+      <div class="pact-open-btn__sign">
+        <svg viewBox="0 0 512 512" aria-hidden="true">
+          <path d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"></path>
+        </svg>
+      </div>
+      <div class="pact-open-btn__text">Открыть</div>
+    </button>
+  </div>
+</div>
+    <!-- 4. Выход / смена комнаты -->
+    <button class="btn-leave-room" onclick="leaveRoom()" style="margin-top: 2px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 14px; background: rgba(190, 78, 98, 0.12); border: 1px solid rgba(190, 78, 98, 0.32); border-radius: 14px; color: rgba(242, 152, 168, 0.95); font-size: 13px; font-weight: 700; cursor: pointer;">
+      <span>🚪</span> Сменить комнату / Расторгнуть союз
+    </button>
+
+  </div>
+</div>
+ <script>
+
+// режим темы 
+const PROFILE_THEME_KEY = 'pact_theme';
+
+function getProfileTheme() {
+  try {
+    return localStorage.getItem(PROFILE_THEME_KEY) === 'light' ? 'light' : 'dark';
+  } catch (e) {
+    return 'dark';
+  }
+}
+
+function applyProfileTheme(theme, notify = false) {
+  const isLight = theme === 'light';
+
+  document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
+  document.body.classList.toggle('light-mode', isLight);
+
+  let styleTag = document.getElementById('pact-light-mode-styles');
+  if (!styleTag) {
+    styleTag = document.createElement('style');
+    styleTag.id = 'pact-light-mode-styles';
+    styleTag.textContent = `
+      body.light-mode {
+        background: #F4EFF7 !important;
+        color: #1A1221 !important;
+      }
+      body.light-mode #profile-identity-card,
+      body.light-mode #profile-identity-card + div + div {
+        background: rgba(255, 255, 255, 0.88) !important;
+        border-color: rgba(26, 18, 33, 0.14) !important;
+        color: #1A1221 !important;
+      }
+      body.light-mode #profile-user-name,
+      body.light-mode #profile-user-name-input {
+        color: #1A1221 !important;
+      }
+      body.light-mode #profile-user-name-input {
+        background: rgba(26, 18, 33, 0.05) !important;
+        border-color: rgba(26, 18, 33, 0.18) !important;
+      }
+      body.light-mode #profile-room-code-row {
+        color: rgba(26, 18, 33, 0.65) !important;
+      }
+    `;
+    document.head.appendChild(styleTag);
+  }
+
+const checkbox = document.getElementById('profile-theme-checkbox');
+  const iconEl = document.getElementById('profile-theme-icon');
+  const subEl = document.getElementById('profile-theme-subtitle');
+
+  if (checkbox && checkbox.checked !== isLight) {
+    checkbox.checked = isLight;
+  }
+if (iconEl) {
+    iconEl.innerHTML = isLight
+? '<i class="bi bi-stars" style="color: #F3EEF8; font-size: 25px; line-height: 1;"></i>'
+      : '<i class="bi bi-moon-stars-fill" style="color: #F3EEF8; font-size: 25px; line-height: 1;"></i>';
+
+  }
+  if (subEl) {
+    subEl.textContent = isLight ? 'Светлый режим' : 'Ночной режим';
+  }
+
+  if (notify && typeof showToast === 'function') {
+    showToast(isLight ? 'Светлая тема ☀️' : 'Ночная тема 🌙', 'success');
+  }
+}
+
+function handleProfileThemeSwitch(checkboxEl) {
+  const next = checkboxEl.checked ? 'light' : 'dark';
+  try {
+    localStorage.setItem(PROFILE_THEME_KEY, next);
+  } catch (e) {}
+  applyProfileTheme(next, true);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyProfileTheme(getProfileTheme(), false);
+});
+
+// номер комнаты 
+function syncProfileRoomCode() {
+  const codeEl = document.getElementById('profile-room-code-value');
+  if (!codeEl) return;
+
+  // Проверяем возможные источники кода комнаты в приложении и localStorage
+  const candidates = [
+    typeof currentRoomCode !== 'undefined' ? currentRoomCode : null,
+    typeof roomCode !== 'undefined' ? roomCode : null,
+    window.PactCloud && window.PactCloud.roomId ? window.PactCloud.roomId : null,
+    localStorage.getItem('pact_room_code'),
+    localStorage.getItem('pact_room_id'),
+    localStorage.getItem('roomCode'),
+    localStorage.getItem('room_code')
+  ];
+
+  let resolvedCode = '';
+  for (const val of candidates) {
+    if (val && String(val).trim()) {
+      resolvedCode = String(val).trim();
+      break;
+    }
+  }
+
+  codeEl.textContent = resolvedCode || 'Не в комнате';
+}
+
+function copyProfileRoomCode() {
+  const codeEl = document.getElementById('profile-room-code-value');
+  if (!codeEl) return;
+
+  const code = codeEl.textContent.trim();
+  if (!code || code === '—' || code === 'Не в комнате') return;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).catch(() => {});
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`Код комнаты ${code} скопирован 📋`, 'success');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  syncProfileRoomCode();
+  setTimeout(syncProfileRoomCode, 200);
+  setTimeout(syncProfileRoomCode, 700);
+});
+// сменить имя 
+const PROFILE_NAME_STORAGE_KEY = 'pact_saved_profile_name';
+let isEditingProfileName = false;
+
+function readStoredProfileName() {
+  try {
+    const raw = localStorage.getItem(PROFILE_NAME_STORAGE_KEY);
+    return typeof raw === 'string' ? raw.trim() : '';
+  } catch (e) {
+    return '';
+  }
+}
+
+function writeStoredProfileName(name) {
+  try {
+    if (name) {
+      localStorage.setItem(PROFILE_NAME_STORAGE_KEY, name);
+      localStorage.setItem('pact_user_name', name);
+    } else {
+      localStorage.removeItem(PROFILE_NAME_STORAGE_KEY);
+      localStorage.removeItem('pact_user_name');
+    }
+  } catch (e) {}
+}
+
+function applyProfileNameState() {
+  const input = document.getElementById('profile-user-name-input');
+  const editRow = document.getElementById('profile-name-edit-row');
+  const displayBox = document.getElementById('profile-name-display');
+  const nameView = document.getElementById('profile-user-name');
+  if (!input || !editRow || !displayBox || !nameView) return;
+
+  const savedName = readStoredProfileName();
+
+  // Если имя уже есть в localStorage и пользователь специально не открыл редактирование — всегда показываем имя
+  if (savedName && !isEditingProfileName) {
+    nameView.textContent = savedName;
+    input.value = savedName;
+    editRow.style.display = 'none';
+    displayBox.style.display = 'block';
+  } else {
+    if (!isEditingProfileName) {
+      input.value = '';
+    }
+    displayBox.style.display = 'none';
+    editRow.style.display = 'flex';
+  }
+}
+
+function saveProfileName() {
+  const input = document.getElementById('profile-user-name-input');
+  if (!input) return;
+
+  const trimmedName = input.value.trim();
+  if (!trimmedName) {
+    writeStoredProfileName('');
+    isEditingProfileName = true;
+    applyProfileNameState();
+    input.focus();
+    return;
+  }
+
+  writeStoredProfileName(trimmedName);
+  isEditingProfileName = false;
+  applyProfileNameState();
+
+  if (window.PactCloud && typeof window.PactCloud.saveShared === 'function') {
+    window.PactCloud.saveShared({ profileName: trimmedName });
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('Имя сохранено ✨', 'success');
+  }
+}
+
+function editProfileName() {
+  const input = document.getElementById('profile-user-name-input');
+  isEditingProfileName = true;
+  applyProfileNameState();
+
+  if (input) {
+    input.value = readStoredProfileName();
+    requestAnimationFrame(() => {
+      input.focus();
+      input.select();
+    });
+  }
+}
+
+// Применяем сразу и следим за обновлениями DOM при старте / переключении вкладок,
+// чтобы никакой внешний рендер не вернул «Введите имя» поверх сохранённого имени
+applyProfileNameState();
+document.addEventListener('DOMContentLoaded', applyProfileNameState);
+window.addEventListener('load', applyProfileNameState);
+
+const profileNameObserver = new MutationObserver(() => {
+  const savedName = readStoredProfileName();
+  const editRow = document.getElementById('profile-name-edit-row');
+  if (savedName && !isEditingProfileName && editRow && editRow.style.display !== 'none') {
+    applyProfileNameState();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const target = document.getElementById('profile-identity-card');
+  if (target) {
+    profileNameObserver.observe(target, { childList: true, subtree: true, attributes: true });
+  }
+});
+
+ </script>
+
+
+<!-- 11. ГАРДЕРОБ -->
 <div id="tab-wardrobe" class="tab-content wardrobe-tab-container">
   
   <!-- Жестко убираем любые рамки и фоновые подложки со всего блока гардероба -->
@@ -7381,6 +7969,141 @@ function updateRewardTokenSelect() {
   }
 }
 
+function getMonthlyBankStats(roleKey, currentTotalBalance) {
+  let spent = 0;
+  const log = Array.isArray(window.bankHistoryLog) ? window.bankHistoryLog : [];
+
+  log.forEach((item) => {
+    if ((item.ownerRole || 'female') !== roleKey) return;
+    const details = String(item.details || '');
+    if (item.source === 'shop' || item.source === 'gift' || details.includes('Потрачено')) {
+      const nums = details.match(/\d+/g);
+      if (nums) {
+        spent += nums.reduce((acc, n) => acc + Number(n), 0);
+      }
+    }
+  });
+
+  const earned = Math.max(0, Number(currentTotalBalance) || 0);
+  return { earned, spent };
+}
+
+function buildBalanceDonutHtml(earned, spent) {
+  const total = earned + spent;
+  const cx = 50;
+  const cy = 50;
+  const r = 46;
+
+  function polarToCartesian(angleInDegrees) {
+    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+    return {
+      x: cx + r * Math.cos(angleInRadians),
+      y: cy + r * Math.sin(angleInRadians)
+    };
+  }
+
+  function createSectorPath(startAngle, endAngle) {
+    const start = polarToCartesian(endAngle);
+    const end = polarToCartesian(startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+    return [
+      'M', cx, cy,
+      'L', start.x, start.y,
+      'A', r, r, 0, largeArcFlag, 0, end.x, end.y,
+      'Z'
+    ].join(' ');
+  }
+
+  const earnedColor = 'rgba(92, 158, 124, 0.90)';
+  const spentColor = 'rgba(190, 78, 98, 0.92)';
+  const emptyColor = 'rgba(255, 255, 255, 0.10)';
+
+  let svgContent = '';
+  if (total <= 0) {
+    svgContent = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${emptyColor}"></circle>`;
+  } else if (spent <= 0) {
+    svgContent = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${earnedColor}"></circle>`;
+  } else if (earned <= 0) {
+    svgContent = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${spentColor}"></circle>`;
+  } else {
+    const earnedAngle = (earned / total) * 360;
+    const earnedPath = earnedAngle >= 359.9
+      ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${earnedColor}"></circle>`
+      : `<path d="${createSectorPath(0, earnedAngle)}" fill="${earnedColor}"></path>`;
+    const spentPath = earnedAngle < 0.1
+      ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${spentColor}"></circle>`
+      : `<path d="${createSectorPath(earnedAngle, 360)}" fill="${spentColor}"></path>`;
+    svgContent = `${earnedPath}${spentPath}`;
+  }
+
+  return `
+    <div onclick="event.stopPropagation(); openBankStatsModal();" title="Статистика очков" style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 2px; cursor: pointer;">
+      <svg width="96" height="96" viewBox="0 0 100 100" style="display: block; filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));">
+        ${svgContent}
+      </svg>
+
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 700;">
+        <span style="color: rgba(134, 198, 162, 0.95);">+${earned}</span>
+        <span style="color: rgba(255, 255, 255, 0.25);">•</span>
+        <span style="color: rgba(226, 124, 142, 0.95);">-${spent}</span>
+      </div>
+    </div>
+  `;
+}
+
+window.openBankStatsModal = function() {
+  const activeRole = window.currentAvatarRole || window.userRole || window.role || 'female';
+  const isMale = (activeRole === 'male' || activeRole === 'Mars');
+  const roleKey = isMale ? 'male' : 'female';
+  const totalBalance = isMale
+    ? (Number(maleBalances.atc || 0) + Number(maleBalances.ctc || 0) + Number(maleBalances.stc || 0))
+    : (Number(femaleBalances.ptc || 0) + Number(femaleBalances.otc || 0) + Number(femaleBalances.stc || 0));
+
+  const { earned, spent } = getMonthlyBankStats(roleKey, totalBalance);
+  const sum = Math.max(earned + spent, 1);
+  const earnedPct = Math.round((earned / sum) * 100);
+  const spentPct = Math.round((spent / sum) * 100);
+
+  let modal = document.getElementById('bank-stats-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'bank-stats-modal';
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    modal.style.cssText = 'display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(6, 4, 10, 0.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div style="width: 100%; max-width: 350px; background: #0E0A14; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 15px; font-weight: 700; color: #F3EEF8; text-transform: uppercase; letter-spacing: 0.8px;">Статистика очков</span>
+        <button onclick="document.getElementById('bank-stats-modal').style.display='none'" style="background: transparent; border: none; color: rgba(243, 238, 248, 0.7); font-size: 28px; line-height: 1; cursor: pointer;">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="padding: 10px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(92, 158, 124, 0.35); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: rgba(134, 198, 162, 0.95);">Получено (в банке)</div>
+            <div style="font-size: 10.5px; color: rgba(243, 238, 248, 0.5);">Сумма всех токенов (${earnedPct}%)</div>
+          </div>
+          <div style="font-size: 18px; font-weight: 800; color: #F3EEF8;">+${earned}</div>
+        </div>
+
+        <div style="padding: 10px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(190, 78, 98, 0.35); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: rgba(226, 124, 142, 0.95);">Потрачено</div>
+            <div style="font-size: 10.5px; color: rgba(243, 238, 248, 0.5);">Покупки и подарки (${spentPct}%)</div>
+          </div>
+          <div style="font-size: 18px; font-weight: 800; color: #F3EEF8;">-${spent}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+  try { tg?.HapticFeedback?.impactOccurred?.('light'); } catch(e) {}
+};
+
 window.renderBankScreen = function() {
   const walletRows = document.getElementById('bank-wallet-rows');
   const roleNameLbl = document.getElementById('bank-role-name-lbl');
@@ -7398,26 +8121,32 @@ window.renderBankScreen = function() {
     roleNameLbl.textContent = isMale ? 'Доступные очки • Верхний' : 'Доступные очки • Нижняя';
   }
 
- function createGlassBalanceCard(emoji, label, value) {
-  return `
-    <div style="display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 10px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.2);">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 15px;">${emoji}</span>
-        <span style="font-size: 13px; font-weight: 700; color: #F3EEF8; letter-spacing: 0.3px;">${label}</span>
+  function createCleanBalanceRow(emoji, label, value) {
+    return `
+      <div style="display: flex; align-items: center; justify-content: flex-start; gap: 10px; padding: 4px 2px;">
+        <div style="display: flex; align-items: center; gap: 7px; min-width: 132px;">
+          <span style="font-size: 14px;">${emoji}</span>
+          <span style="font-size: 13px; font-weight: 700; color: #F3EEF8; white-space: nowrap;">${label}</span>
+        </div>
+        <div style="font-size: 15px; font-weight: 800; color: #F3EEF8;">
+          ${value}
+        </div>
       </div>
-      <div style="font-size: 17px; font-weight: 700; color: #F3EEF8; padding: 2px 4px;">
-        ${value}
-      </div>
-    </div>
-  `;
-}
+    `;
+  }
 
   if (isMale) {
+    const totalMale = Number(maleBalances.atc || 0) + Number(maleBalances.ctc || 0) + Number(maleBalances.stc || 0);
+    const stats = getMonthlyBankStats('male', totalMale);
+
     walletRows.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        ${createGlassBalanceCard('💙', 'Внимание', maleBalances.atc)}
-        ${createGlassBalanceCard('💚', 'Забота', maleBalances.ctc)}
-        ${createGlassBalanceCard('❤️', 'Секс-токены', maleBalances.stc)}
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.25);">
+        <div style="flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+          ${createCleanBalanceRow('💙', 'Внимание', maleBalances.atc)}
+          ${createCleanBalanceRow('💚', 'Забота', maleBalances.ctc)}
+          ${createCleanBalanceRow('❤️', 'Секс-токены', maleBalances.stc)}
+        </div>
+        ${buildBalanceDonutHtml(stats.earned, stats.spent)}
       </div>
     `;
     document.getElementById('conv-from-label').textContent = 'Внимание';
@@ -7433,11 +8162,17 @@ window.renderBankScreen = function() {
       <option value="stc" selected>Секс-токены</option>
     `;
   } else {
+    const totalFemale = Number(femaleBalances.ptc || 0) + Number(femaleBalances.otc || 0) + Number(femaleBalances.stc || 0);
+    const stats = getMonthlyBankStats('female', totalFemale);
+
     walletRows.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        ${createGlassBalanceCard('💜', 'Страсть', femaleBalances.ptc)}
-        ${createGlassBalanceCard('🖤', 'Покорность', femaleBalances.otc)}
-        ${createGlassBalanceCard('❤️', 'Секс-токены', femaleBalances.stc)}
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(10, 6, 14, 0.85); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.25);">
+        <div style="flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+          ${createCleanBalanceRow('💜', 'Страсть', femaleBalances.ptc)}
+          ${createCleanBalanceRow('🖤', 'Покорность', femaleBalances.otc)}
+          ${createCleanBalanceRow('❤️', 'Секс-токены', femaleBalances.stc)}
+        </div>
+        ${buildBalanceDonutHtml(stats.earned, stats.spent)}
       </div>
     `;
     document.getElementById('conv-from-label').textContent = 'Страсть';
@@ -7456,7 +8191,6 @@ window.renderBankScreen = function() {
 
   document.getElementById('conv-to-label').textContent = 'Секс-токены';
   document.getElementById('conv-to-icon').textContent = '❤️';
-
   // Заполняем селектор наград под текущую роль
   updateRewardTokenSelect();
 
@@ -10498,31 +11232,27 @@ function updateRoleEmojiUI() {
 
 
     // Функция обновления плашки статуса роли над именем
-   function updateProfileRoleBadge() {
+function updateProfileRoleBadge() {
   const badge = document.getElementById('profile-role-badge');
   const textEl = document.getElementById('profile-role-badge-text');
   if (!badge || !textEl) return;
 
-  // Определяем текущую роль ('male' / 'upper' или 'female' / 'lower')
   const roleKey = currentAvatarRole || 'female';
-  
-  // Получаем информацию о роли (иконку, текст и цвет)
+
   const info = (typeof window.getRoleInfo === 'function')
     ? window.getRoleInfo(roleKey)
-    : { 
-        name: roleKey === 'male' ? 'Верхний' : 'Нижняя', 
-        icon: roleKey === 'male' ? '👑' : '🗝️', 
-        color: roleKey === 'male' ? '#7DD3FC' : '#FF8599' 
+    : {
+        name: roleKey === 'male' ? 'Верхний' : 'Нижняя',
+        icon: roleKey === 'male' ? '👑' : '🗝️',
+        color: roleKey === 'male' ? '#7DD3FC' : '#FF8599'
       };
 
-  // Выводим текст и иконку
   textEl.textContent = `${info.icon} ${info.name}`;
-  
-  // Применяем динамические цвета и неоновые тени
-  badge.style.color = info.color;
-  badge.style.borderColor = info.color + '66';
-  badge.style.background = info.color + '22';
-  badge.style.boxShadow = `0 0 14px ${info.color}33`;
+
+  badge.style.color = '#F3EEF8';
+ badge.style.border = '1px solid #FFCCD5';
+  badge.style.background = 'rgba(255, 255, 255, 0.06)';
+  badge.style.boxShadow = 'none';
 }
    // Стандартные аватарки по умолчанию
 const DEFAULT_AVATAR_MALE = 'https://raw.githubusercontent.com/kiriltaha80-boop/telegram-app/main/avatars/male_1.png';
