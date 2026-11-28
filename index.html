@@ -136,27 +136,26 @@ button:active,
   transform: scale(1) translateY(0);
 }
 :root {
-      --bg-color: #0C0A10;
-      --card-bg: rgba(22, 18, 30, 0.95);
-      --card-border: rgba(230, 57, 86, 0.28);
-      --accent-color: #E63956;
-      --accent-gradient: linear-gradient(135deg, #E63956 0%, #B82342 100%);
-      --accent-soft: rgba(230, 57, 86, 0.15);
-      --passion-color: #9B51E0;
-      --text-main: #F5F3F7;
-      --text-muted: #9A91A5;
-      --border-color: rgba(255, 255, 255, 0.09);
-      --gold: #D4AF37;
-      --gold-gradient: linear-gradient(135deg, #F9E79F 0%, #D4AF37 50%, #9A7D0A 100%);
+  --bg-color: #0E0A14;
+  --card-bg: rgba(34, 50, 67, 0.78);
+  --card-border: rgba(243, 238, 248, 0.14);
+  --accent-color: #354c66;
+  --accent-gradient: linear-gradient(135deg, #354c66 0%, #2B3445 100%);
+  --accent-soft: rgba(53, 76, 102, 0.24);
+  --passion-color: #2B3445;
+  --text-main: #F3EEF8;
+  --text-muted: rgba(243, 238, 248, 0.68);
+  --border-color: rgba(243, 238, 248, 0.14);
+  --gold: #F3EEF8;
+  --gold-gradient: linear-gradient(135deg, #F3EEF8 0%, #354c66 100%);
 
-      /* Палитра благородного вина */
-      --wine-rim: #FF4A6E;
-      --wine-luminous: #B81435;
-      --wine-body: #6E081D;
-      --wine-depth: #3A020E;
-      --wine-abyss: #180106;
-    }
-
+  /* Холодная сталь (вместо палитры вина) */
+  --wine-rim: #354c66;
+  --wine-luminous: #2B3445;
+  --wine-body: #223243;
+  --wine-depth: #141822;
+  --wine-abyss: #0E0A14;
+}
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
@@ -177,8 +176,8 @@ button:active,
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
     body { 
-      background-color: #0C0A10 !important;
-      color: #F5F3F7;
+      background-color: #0B0E14;
+      color: #F3EEF8;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       width: 100vw;
       width: 100dvw;
@@ -195,7 +194,6 @@ button:active,
       flex-direction: column;
       box-sizing: border-box;
     }
-
     /* качелька переключения язиков  */
     /* MIT License, Copyright (c) _7948 (BogdanMUIY) */
     .pact-lang-wrap {
@@ -276,18 +274,15 @@ button:active,
     .pact-lang-btn:active {
       transform: scale(0.92);
     }
-    .ambient-glow {
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      filter: blur(100px);
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.22;
-    }
-    .glow-1 { top: -50px; left: -50px; background: #680C1F; }
-    .glow-2 { bottom: -40px; right: -40px; width: 280px; height: 280px; background: #2B040F; opacity: 0.35; filter: blur(110px); }
+    .ambient-glow,
+    .glow-1,
+    .glow-2 {
+      display: none !important;
+      background: none !important;
+      box-shadow: none !important;
+      filter: none !important;
+      opacity: 0 !important;
+    } 
     .toast-box {
       position: absolute;
       top: 116px;
@@ -316,19 +311,19 @@ button:active,
     }
 
     .welcome-screen {
-      position: absolute;
-      inset: 0;
-      z-index: 5000;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 16px; 
-      padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px calc(env(safe-area-inset-bottom, 0px) + 20px) 18px;
-      background: 
-        radial-gradient(ellipse 110% 40% at 50% 100%, #20040E 0%, rgba(16, 2, 7, 0.78) 45%, transparent 76%),
-        radial-gradient(circle at 50% 8%, #1C0510 0%, #0A080D 72%);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-    }
+    position: absolute;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px calc(env(safe-area-inset-bottom, 0px) + 20px) 18px;
+    background: #0E0A14 !important;
+    background-image: none !important;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+    
     .welcome-screen.hidden {
       opacity: 0;
       transform: scale(1.04);
@@ -1776,22 +1771,81 @@ button:active,
       }
 
       /* Создаем монолитный «корпус» телефона, который физически не может изменить размер */
-      body {
-        width: 393px !important;
-        min-width: 393px !important;
-        max-width: 393px !important;
-        
-        height: 840px !important;
-        min-height: 840px !important;
-        max-height: 840px !important;
-        
-        border-radius: 36px !important;
-        box-shadow: 0 0 80px rgba(0, 0, 0, 0.98), 0 0 0 2px rgba(230, 57, 86, 0.4) !important;
-        position: relative !important;
-        overflow: hidden !important;
-        box-sizing: border-box !important;
-        flex-shrink: 0 !important;
-      }
+   /* Контрастный объёмный контур iPhone 14 Pro (393x852) в холодной стали */
+@media (min-width: 600px) {
+  html {
+    background: #07050A !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    padding: 20px 0 !important;
+  }
+
+  body {
+    width: 393px !important;
+    min-width: 393px !important;
+    max-width: 393px !important;
+
+    height: 852px !important;
+    min-height: 852px !important;
+    max-height: 852px !important;
+
+    background-color: #0E0A14 !important;
+    color: #F3EEF8 !important;
+    border-radius: 55px !important;
+
+    /* Тонкая контрастная грань + объём за счёт теней и блика */
+    border: 1px solid rgba(243, 238, 248, 0.28) !important;
+    box-shadow:
+      0 28px 80px rgba(0, 0, 0, 0.95),
+      0 0 0 1px rgba(53, 76, 102, 0.55),
+      inset 0 1px 0 rgba(243, 238, 248, 0.24),
+      inset 0 -1px 0 rgba(34, 50, 67, 0.75) !important;
+
+    position: relative !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+
+    --sat: 59px;
+    --sab: 34px;
+  }
+
+  /* Dynamic Island */
+  body::before {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    top: 11px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 126px !important;
+    height: 37px !important;
+    background: #000000 !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(243, 238, 248, 0.14) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+  }
+
+  /* Home Indicator */
+  body::after {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    bottom: 8px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 134px !important;
+    height: 5px !important;
+    background: rgba(243, 238, 248, 0.36) !important;
+    border-radius: 999px !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+  }
+}
     }
 
     /* Фоновые неоновые пятна */
@@ -2129,6 +2183,7 @@ button:active,
       padding-top: 120px !important;
       overflow: hidden !important;
       touch-action: pan-x !important;
+      background: transparent !important;
       max-height: calc(100vh - 80px) !important;
     }
 
@@ -10155,26 +10210,24 @@ function renderProductCard(item, customActionsHtml = '') {
             ${deleteBtn}
             <div class="bg-[#16121E]/80 border border-white/[0.12] rounded-[24px] p-4 shadow-[0_12px_35px_rgba(0,0,0,0.6)] backdrop-blur-2xl relative overflow-hidden cursor-pointer w-full">
               <div class="flex items-center justify-between mb-2">
-        <span class="text-[15px] font-bold text-amber-300 flex items-center gap-1.5 tracking-wide">
-      🌶️ Градус страсти
-    </span>
-                <div class="px-2 py-0.5 bg-amber-500/15 border border-amber-500/35 rounded-full text-[11px] font-bold text-amber-200">
-                  ${passion.total} 🌶️
-                </div>
+                <span style="font-weight: 700 !important;" class="text-[19px] font-bold text-[#F3EEF8] flex items-center gap-1.5 tracking-wide">
+                  <i class="bi bi-fire text-[#E63956]" style="font-size: 25px;"></i> Градус страсти
+                </span>
+
               </div>
               
               <div class="text-base font-bold text-white mb-2 tracking-wide">
-                ${passion.title}
+      
               </div>
 
               <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-2 border border-white/[0.06]">
                 <div class="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full shadow-sm" style="width: ${passion.progressPercent}%;"></div>
               </div>
 
-              <div class="flex items-center justify-between text-[11px] text-[#9A91A5]">
+              <div class="flex items-center justify-between text-[12px] font-semibold text-[#F3EEF8]/65">
                 <span>${passion.desc}</span>
-                <span class="text-amber-300 font-medium hover:text-amber-200 transition-colors flex items-center gap-1">В гардероб →</span>
-              </div>
+                <button type="button" class="text-[#F3EEF8] hover:text-white active:scale-[0.98] transition cursor-pointer inline-flex items-center gap-1 bg-transparent border-0 p-0 font-semibold">
+                В гардероб   </div>
             </div>`;
           wrap.onclick = () => { if (!isDesktopEditMode) openSubScreen('tab-wardrobe'); };
 /*ВИДЖИТ БАЛАНСА*/
@@ -10822,7 +10875,7 @@ function getValidPreferences(storageKey) {
         if (item) { total += (item.peppers || 1); countItems++; }
       });
       let title = countItems === 0 ? 'Невинный образ 🕊️' : (total <= 3 ? 'Скромная девочка 🎀' : 'Опасная искусительница 🥀');
-      let desc = countItems === 0 ? 'Ничего не надето' : `${countItems} предмет(ов) на вечер`;
+      let desc = countItems === 0 ? 'Ничего не надето' : ` Выбрано предметов ${countItems}`;
       const progressPercent = Math.min(Math.round((total / 8) * 100), 100);
       return { total, title, desc, progressPercent };
     }
@@ -11431,30 +11484,57 @@ const fromInfo = tokenMeta[fromKey] || { emoji: '', label: fromKey };
 
     
     
-    // Обои
-    const WALLPAPER_PRESETS = {
-      ruby_opal: 'radial-gradient(at 15% 15%, #5E0D20 0%, transparent 55%), #0C0A10',
-      neon_velvet: 'radial-gradient(at 20% 20%, #6E0F48 0%, transparent 50%), #0C0A10',
-      wine_sunset: 'radial-gradient(at 80% 15%, #6B172B 0%, transparent 50%), #0C0A10',
-      gold: 'radial-gradient(circle at 50% 25%, #382407 0%, #080500 100%)'
-    };
+   // Обои рабочего стола (стальные градиенты)
+   const WALLPAPER_PRESETS = {
+  obsidian_plum: {
+    label: 'Тёмная слива',
+    bg: '#0E0A14'
+  },
+  steel_dark: {
+    label: 'Стальной тёмный',
+    bg: '#0E0A14'
+  },
+  slate_blue: {
+    label: 'Холодная сталь',
+    bg: '#2B3445'
+  },
+  deep_accent: {
+    label: 'Глубокий акцент',
+    bg: '#354c66'
+  }
+};
 
-    function setWallpaper(key) {
-      document.body.style.background = WALLPAPER_PRESETS[key] || WALLPAPER_PRESETS.ruby_opal;
-      localStorage.setItem('pact_wallpaper_key', key);
-      closeWallpaperModal();
-    }
+function setWallpaper(key) {
+  const preset = WALLPAPER_PRESETS[key] || WALLPAPER_PRESETS.obsidian_plum;
+  document.body.style.setProperty('background', preset.bg, 'important');
+  document.body.style.setProperty('background-image', 'none', 'important');
+  try {
+    localStorage.setItem('pact_wallpaper_key', key in WALLPAPER_PRESETS ? key : 'obsidian_plum');
+  } catch (e) {}
+  if (typeof renderWallpaperGrid === 'function') renderWallpaperGrid();
+  if (typeof closeWallpaperModal === 'function') closeWallpaperModal();
+}
 
     function renderWallpaperGrid() {
       const slot = document.getElementById('wallpaper-grid-slot');
       if (!slot) return;
-      slot.innerHTML = Object.keys(WALLPAPER_PRESETS).map(k => `
-        <div class="wallpaper-thumb" style="background:${WALLPAPER_PRESETS[k]};" onclick="setWallpaper('${k}')">
-          <span>${k}</span>
-        </div>
-      `).join('');
-    }
+      let currentKey = 'cold_steel';
+      try {
+        currentKey = localStorage.getItem('pact_wallpaper_key') || 'cold_steel';
+      } catch (e) {}
 
+      slot.innerHTML = Object.keys(WALLPAPER_PRESETS).map(k => {
+        const item = WALLPAPER_PRESETS[k];
+        const isActive = k === currentKey;
+        return `
+          <div class="wallpaper-thumb ${isActive ? 'active' : ''}"
+               style="background:${item.bg}; color:#F3EEF8; border:1px solid ${isActive ? '#F3EEF8' : 'rgba(243, 238, 248, 0.18)'};"
+               onclick="setWallpaper('${k}')">
+            <span>${item.label}</span>
+          </div>
+        `;
+      }).join('');
+    }
     // ========================================================
     // ТЕМЫ ЧАТА: IM1.jpeg, mp2.jpeg, mp3.jpeg (ing/incon chat/)
     // ========================================================
